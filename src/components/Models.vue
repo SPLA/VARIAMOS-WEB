@@ -9,6 +9,7 @@
 
                 <div class="left-side">
                   <div onload="main(this)" id="graphContainer" class="model-area"></div>
+                  
                   <div class="properties-area"><b>{{ $t("models_element_properties") }}</b><br />
                     <div id="properties"></div>
                   </div>
@@ -91,7 +92,9 @@ export default{
 }
 
 .model-area{
-  overflow:hidden;
+  overflow-block: scroll;
+  overflow-x: auto;
+  overflow-y: auto;
   height:250px;
   background:url("/static/images/MX/editors/grid.gif");
   cursor:default;
