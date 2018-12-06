@@ -700,7 +700,11 @@ function mxGraph(container, model, renderHint, stylesheet)
  */
 if (mxLoadResources)
 {
-	mxResources.add(mxClient.basePath+'/static/txt/MX/graph');
+	mxResources.add(mxClient.basePath + '/txt/MX/graph');
+}
+else
+{
+	mxClient.defaultBundles.push(mxClient.basePath + '/txt/MX/graph');
 }
 
 /**
@@ -2933,8 +2937,9 @@ mxGraph.prototype.getPreferredPageSize = function(bounds, width, height)
  * ignored. Default is false.
  * ignoreHeight - Optional boolean that specifies if the height should be
  * ignored. Default is false.
+ * maxHeight - Optional maximum height.
  */
-mxGraph.prototype.fit = function(border, keepOrigin, margin, enabled, ignoreWidth, ignoreHeight)
+mxGraph.prototype.fit = function(border, keepOrigin, margin, enabled, ignoreWidth, ignoreHeight, maxHeight)
 {
 	if (this.container != null)
 	{
@@ -2948,7 +2953,7 @@ mxGraph.prototype.fit = function(border, keepOrigin, margin, enabled, ignoreWidt
 		// Adds spacing and border from css
 		var cssBorder = this.getBorderSizes();
 		var w1 = this.container.offsetWidth - cssBorder.x - cssBorder.width - 1;
-		var h1 = this.container.offsetHeight - cssBorder.y - cssBorder.height - 1;
+		var h1 = (maxHeight != null) ? maxHeight : this.container.offsetHeight - cssBorder.y - cssBorder.height - 1;
 		var bounds = this.view.getGraphBounds();
 		
 		if (bounds.width > 0 && bounds.height > 0)
@@ -2974,7 +2979,7 @@ mxGraph.prototype.fit = function(border, keepOrigin, margin, enabled, ignoreWidt
 				h2 = Math.max(h2, this.backgroundImage.height - bounds.y / s);
 			}
 			
-			var b = ((keepOrigin) ? border : 2 * border) + margin;
+			var b = ((keepOrigin) ? border : 2 * border) + margin + 1;
 
 			w1 -= b;
 			h1 -= b;
@@ -3049,8 +3054,8 @@ mxGraph.prototype.sizeDidChange = function()
 	{
 		var border = this.getBorder();
 		
-		var width = Math.max(0, bounds.x + bounds.width + border);
-		var height = Math.max(0, bounds.y + bounds.height + border);
+		var width = Math.max(0, bounds.x + bounds.width + 2 * border * this.view.scale);
+		var height = Math.max(0, bounds.y + bounds.height + 2 * border * this.view.scale);
 		
 		if (this.minimumContainerSize != null)
 		{
@@ -5104,7 +5109,7 @@ mxGraph.prototype.cellsFolded = function(cells, collapse, recurse, checkFoldable
 					if (recurse)
 					{
 						var children = this.model.getChildren(cells[i]);
-						this.foldCells(children, collapse, recurse);
+						this.cellsFolded(children, collapse, recurse);
 					}
 					
 					this.constrainChild(cells[i]);
@@ -6514,8 +6519,8 @@ mxGraph.prototype.getOutlineConstraint = function(point, terminalState, me)
 		
 		point = new mxPoint((point.x - bounds.x) * sx - dx + bounds.x, (point.y - bounds.y) * sy - dy + bounds.y);
 		
-		var x = Math.round((point.x - bounds.x) * 1000 / bounds.width) / 1000;
-		var y = Math.round((point.y - bounds.y) * 1000 / bounds.height) / 1000;
+		var x = (bounds.width == 0) ? 0 : Math.round((point.x - bounds.x) * 1000 / bounds.width) / 1000;
+		var y = (bounds.height == 0) ? 0 : Math.round((point.y - bounds.y) * 1000 / bounds.height) / 1000;
 		
 		return new mxConnectionConstraint(new mxPoint(x, y), false);
 	}
@@ -6666,7 +6671,8 @@ mxGraph.prototype.getConnectionPoint = function(vertex, constraint)
 		var r1 = 0;
 		
 		// Bounds need to be rotated by 90 degrees for further computation
-		if (direction != null)
+		if (direction != null && mxUtils.getValue(vertex.style,
+			mxConstants.STYLE_ANCHOR_POINT_DIRECTION, 1) == 1)
 		{
 			if (direction == mxConstants.DIRECTION_NORTH)
 			{
@@ -6682,7 +6688,8 @@ mxGraph.prototype.getConnectionPoint = function(vertex, constraint)
 			}
 
 			// Bounds need to be rotated by 90 degrees for further computation
-			if (direction == mxConstants.DIRECTION_NORTH || direction == mxConstants.DIRECTION_SOUTH)
+			if (direction == mxConstants.DIRECTION_NORTH ||
+				direction == mxConstants.DIRECTION_SOUTH)
 			{
 				bounds.rotate90();
 			}
@@ -8907,6 +8914,21 @@ mxGraph.prototype.getTooltipForCell = function(cell)
 };
 
 /**
+ * Function: getLinkForCell
+ * 
+ * Returns the string to be used as the link for the given cell. This
+ * implementation returns null.
+ * 
+ * Parameters:
+ * 
+ * cell - <mxCell> whose tooltip should be returned.
+ */
+mxGraph.prototype.getLinkForCell = function(cell)
+{
+	return null;
+};
+
+/**
  * Function: getCursorForMouseEvent
  * 
  * Returns the cursor value to be used for the CSS of the shape for the
@@ -9279,7 +9301,7 @@ mxGraph.prototype.isCellsLocked = function()
 };
 
 /**
- * Function: setLocked
+ * Function: setCellsLocked
  * 
  * Sets if any cell may be moved, sized, bended, disconnected, edited or
  * selected.
@@ -12291,7 +12313,7 @@ mxGraph.prototype.isEventIgnored = function(evtName, me, sender)
 		this.mouseUpRedirect = null;
 		this.eventSource = null;
 	}
-	else if (this.eventSource != null && me.getSource() != this.eventSource)
+	else if (!mxClient.IS_GC && this.eventSource != null && me.getSource() != this.eventSource)
 	{
 		result = true;
 	}

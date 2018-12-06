@@ -36,9 +36,7 @@ mxCodecRegistry.register(function()
 	 */
 	codec.isReference = function(obj, attr, value, isWrite)
 	{
-		if (attr == 'child' &&
-			(obj.previous != null ||
-			!isWrite))
+		if (attr == 'child' && (obj.previous != null || !isWrite))
 		{
 			return true;
 		}
@@ -136,9 +134,19 @@ mxCodecRegistry.register(function()
 		// parent must be restored on the cell for the case where the cell was
 		// added. This is needed for the local model to identify the cell as a
 		// new cell and register the ID.
-		obj.child.parent = obj.previous;
-		obj.previous = obj.parent;
-		obj.previousIndex = obj.index;
+        if (obj.child != null)
+        {
+            if (obj.child.parent != null && obj.previous != null &&
+                obj.child.parent != obj.previous)
+            {
+            	
+                obj.previous = obj.child.parent;
+            }
+
+            obj.child.parent = obj.previous;
+            obj.previous = obj.parent;
+            obj.previousIndex = obj.index;
+        }
 
 		return obj;
 	};

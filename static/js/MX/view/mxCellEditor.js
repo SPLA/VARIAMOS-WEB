@@ -268,7 +268,8 @@ mxCellEditor.prototype.init = function ()
 	{
 		this.textarea.style.minHeight = '1em';
 	}
-	
+
+	this.textarea.style.position = ((this.isLegacyEditor())) ? 'absolute' : 'relative';
 	this.installListeners(this.textarea);
 };
 
@@ -312,6 +313,17 @@ mxCellEditor.prototype.getCurrentValue = function(state)
 };
 
 /**
+ * Function: isCancelEditingKeyEvent
+ * 
+ * Returns true if <escapeCancelsEditing> is true and shift, control and meta
+ * are not pressed.
+ */
+mxCellEditor.prototype.isCancelEditingKeyEvent = function(evt)
+{
+	return this.escapeCancelsEditing || mxEvent.isShiftDown(evt) || mxEvent.isControlDown(evt) || mxEvent.isMetaDown(evt);
+};
+
+/**
  * Function: installListeners
  * 
  * Installs listeners for focus, change and standard key event handling.
@@ -339,7 +351,7 @@ mxCellEditor.prototype.installListeners = function(elt)
 			}
 			else if (evt.keyCode == 27 /* Escape */)
 			{
-				this.graph.stopEditing(this.escapeCancelsEditing || mxEvent.isShiftDown(evt));
+				this.graph.stopEditing(this.isCancelEditingKeyEvent(evt));
 				mxEvent.consume(evt);
 			}
 		}
@@ -574,11 +586,19 @@ mxCellEditor.prototype.resize = function()
 				
 		 		// Forces automatic reflow if text is removed from an oversize label and normal word wrap
 				var tmp = Math.round(this.bounds.width / ((document.documentMode == 8) ? scale : scale)) + this.wordWrapPadding;
-				this.textarea.style.width = tmp + 'px';
-				
-				if (this.textarea.scrollWidth > tmp)
+
+				if (this.textarea.style.position != 'relative')
 				{
-					this.textarea.style.width = this.textarea.scrollWidth + 'px';
+					this.textarea.style.width = tmp + 'px';
+					
+					if (this.textarea.scrollWidth > tmp)
+					{
+						this.textarea.style.width = this.textarea.scrollWidth + 'px';
+					}
+				}
+				else
+				{
+					this.textarea.style.maxWidth = tmp + 'px';
 				}
 			}
 			else
@@ -661,6 +681,40 @@ mxCellEditor.prototype.focusLost = function()
 mxCellEditor.prototype.getBackgroundColor = function(state)
 {
 	return null;
+};
+
+/**
+ * Function: isLegacyEditor
+ * 
+ * Returns true if max-width is not supported or if the SVG root element in
+ * in the graph does not have CSS position absolute. In these cases the text
+ * editor must use CSS position absolute to avoid an offset but it will have
+ * a less accurate line wrapping width during the text editing preview. This
+ * implementation returns true for IE8- and quirks mode or if the CSS position
+ * of the SVG element is not absolute.
+ */
+mxCellEditor.prototype.isLegacyEditor = function()
+{
+	if (mxClient.IS_VML)
+	{
+		return true;
+	}
+	else
+	{
+		var absoluteRoot = false;
+		
+		if (mxClient.IS_SVG)
+		{
+			var root = this.graph.view.getDrawPane().ownerSVGElement;
+			
+			if (root != null)
+			{
+				absoluteRoot = mxUtils.getCurrentStyle(root).position == 'absolute';
+			}
+		}
+		
+		return !absoluteRoot;
+	}
 };
 
 /**
@@ -808,6 +862,37 @@ mxCellEditor.prototype.isSelectText = function()
 };
 
 /**
+ * Function: isSelectText
+ * 
+ * Returns <selectText>.
+ */
+mxCellEditor.prototype.clearSelection = function()
+{
+	var selection = null;
+	
+	if (window.getSelection)
+	{
+		selection = window.getSelection();
+	}
+	else if (document.selection)
+	{
+		selection = document.selection;
+	}
+	
+	if (selection != null)
+	{
+		if (selection.empty)
+		{
+			selection.empty();
+		}
+		else if (selection.removeAllRanges)
+		{
+			selection.removeAllRanges();
+		}
+	}
+};
+
+/**
  * Function: stopEditing
  *
  * Stops the editor and applies the value if cancel is false.
@@ -832,6 +917,7 @@ mxCellEditor.prototype.stopEditing = function(cancel)
 		this.trigger = null;
 		this.bounds = null;
 		this.textarea.blur();
+		this.clearSelection();
 		
 		if (this.textarea.parentNode != null)
 		{

@@ -9,11 +9,13 @@ var main = function main(container,model_type,model_specific_main,m_code="")
 	}
 	else
 	{
+		var graph = "";
+
 		// Disables the built-in context menu
 		mxEvent.disableContextMenu(container);
 		
 		// Creates the graph inside the given container
-		var graph = new mxGraph(container);
+		graph = new mxGraph(container);
 		
 		// Matches DnD inside the graph
 		mxDragSource.prototype.getDropTarget = function(graph, x, y)
@@ -61,7 +63,6 @@ var main = function main(container,model_type,model_specific_main,m_code="")
 			var codec = new mxCodec(doc);
 			codec.decode(doc.documentElement, graph.getModel());
 		}
-		
 	}
 
 	function addVertex(graph, icon, w, h, style, type, namepalette, attributes)

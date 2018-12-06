@@ -230,6 +230,13 @@ mxSvgCanvas2D.prototype.imageOffset = 0;
 mxSvgCanvas2D.prototype.strokeTolerance = 0;
 
 /**
+ * Variable: minStrokeWidth
+ * 
+ * Minimum stroke width for output.
+ */
+mxSvgCanvas2D.prototype.minStrokeWidth = 1;
+
+/**
  * Variable: refCount
  * 
  * Local counter for references in SVG export.
@@ -695,7 +702,7 @@ mxSvgCanvas2D.prototype.updateFill = function()
  */
 mxSvgCanvas2D.prototype.getCurrentStrokeWidth = function()
 {
-	return Math.max(1, this.format(this.state.strokeWidth * this.state.scale));
+	return Math.max(this.minStrokeWidth, Math.max(0.01, this.format(this.state.strokeWidth * this.state.scale)));
 };
 
 /**
@@ -1335,7 +1342,7 @@ mxSvgCanvas2D.prototype.updateText = function(x, y, w, h, align, valign, wrap, o
 		var oh = 0;
 		
 		// Padding avoids clipping on border and wrapping for differing font metrics on platforms
-		var padX = 2;
+		var padX = 0;
 		var padY = 2;
 
 		var sizeDiv = div;
@@ -1356,14 +1363,22 @@ mxSvgCanvas2D.prototype.updateText = function(x, y, w, h, align, valign, wrap, o
 				ow = Math.min(ow, w);
 			}
 			
-			div.style.width = ow + 'px';
+			div.style.width = Math.round(ow + 1) + 'px';
+		}
+
+		ow = (group.mxCachedFinalOffsetWidth != null) ? group.mxCachedFinalOffsetWidth : sizeDiv.offsetWidth;
+		oh = (group.mxCachedFinalOffsetHeight != null) ? group.mxCachedFinalOffsetHeight : sizeDiv.offsetHeight;
+		
+		if (this.cacheOffsetSize)
+		{
+			group.mxCachedOffsetWidth = tmp;
+			group.mxCachedFinalOffsetWidth = ow;
+			group.mxCachedFinalOffsetHeight = oh;
 		}
 		
-		ow = ((group.mxCachedFinalOffsetWidth != null) ? group.mxCachedFinalOffsetWidth :
-			sizeDiv.offsetWidth) + padX;
-		oh = ((group.mxCachedFinalOffsetHeight != null) ? group.mxCachedFinalOffsetHeight :
-			sizeDiv.offsetHeight) - 2;
-
+		ow += padX;
+		oh -= 2;
+		
 		if (clip)
 		{
 			oh = Math.min(oh, h);
@@ -1559,7 +1574,7 @@ mxSvgCanvas2D.prototype.text = function(x, y, w, h, str, align, valign, wrap, fo
 					var tmp = div2.offsetWidth;
 					
 					// Workaround for adding padding twice in IE8/IE9 standards mode if label is wrapped
-					var padDx = 0;
+					padDx = 0;
 					
 					// For export, if no wrapping occurs, we add a large padding to make
 					// sure there is no wrapping even if the text metrics are different.

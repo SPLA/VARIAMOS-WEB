@@ -397,7 +397,11 @@ function mxEditor(config)
  */
 if (mxLoadResources)
 {
-	mxResources.add(mxClient.basePath+'/static/txt/MX/editor');
+	mxResources.add(mxClient.basePath + '/txt/MX/editor');
+}
+else
+{
+	mxClient.defaultBundles.push(mxClient.basePath + '/txt/MX/editor');
 }
 
 /**

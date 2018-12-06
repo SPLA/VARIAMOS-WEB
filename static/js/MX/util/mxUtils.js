@@ -85,7 +85,7 @@ var mxUtils =
 	 */
 	getCurrentStyle: function()
 	{
-		if (mxClient.IS_IE)
+		if (mxClient.IS_IE && (document.documentMode == null || document.documentMode < 9))
 		{
 			return function(element)
 			{
@@ -658,7 +658,14 @@ var mxUtils =
 		{
 			return function()
 			{
-				window.getSelection().removeAllRanges();
+				if (window.getSelection().empty)
+				{
+					window.getSelection().empty();
+				}
+				else if (window.getSelection().removeAllRanges)
+				{
+					window.getSelection().removeAllRanges();
+				}
 			};
 		}
 		else
@@ -693,7 +700,12 @@ var mxUtils =
 			
 			if (node.nodeType == mxConstants.NODETYPE_TEXT)
 			{
-				result.push(node.value);
+				var value =  mxUtils.trim(mxUtils.getTextContent(node));
+				
+				if (value.length > 0)
+				{
+					result.push(indent + mxUtils.htmlEntities(value) + '\n');
+				}
 			}
 			else
 			{
@@ -940,7 +952,8 @@ var mxUtils =
 	 */
 	getTextContent: function(node)
 	{
-		if (node.innerText !== undefined)
+		// Only IE10-
+		if (mxClient.IS_IE && node.innerText !== undefined)
 		{
 			return node.innerText;
 		}
