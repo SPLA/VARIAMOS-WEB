@@ -4,7 +4,7 @@
     <div class="card mb-3">
             <div class="card-header">
               <font-awesome-icon icon="chart-area" />
-              {{ $t("models_area") }}</div>
+              {{ $t("models_area") }} - {{ $route.params.type }} {{ $t("models_model") }}</div>
             <div class="card-body">
 
                 <div class="left-side">
@@ -16,8 +16,9 @@
 
                 <div class="right-side">
                 
-                  <div id="tbContainer" class="pallete-area">
+                  <div class="pallete-area">
                   <b>{{ $t("models_palette") }}</b><br /><br />
+                  <div id="tbContainer"></div>
                   </div>
                   <div class="other-area"><b>{{ $t("models_other_features") }}</b><br /><br />
                     <div class="button-area">
@@ -28,7 +29,9 @@
 
                 </div>
 
-                <div><input type="hidden" id="model_code" @change="persist()" v-model="model_code"></div>
+                <div><input type="hidden" id="model_code" @change="persist()" v-model="model_code" />
+                <input type="hidden" id="current_type" v-bind:value="$route.params.type" />
+                </div>
               
               </div>
 
@@ -41,6 +44,7 @@
 <script>
 import main from '@/assets/js/models/model_main.js'
 import feature_main from '@/assets/js/models/feature.js'
+import component_main from '@/assets/js/models/component.js'
 
 export default{
   data: function(){
@@ -48,24 +52,42 @@ export default{
       model_code: ""
     }
   },
-  mounted:  function(){
-    var m_code="";
-    if (localStorage.model_code) {
-      this.model_code = localStorage.model_code;
-      if(this.model_code!=""){
-        m_code=this.model_code;
-      }
-    }
-
-    main(document.getElementById('graphContainer'), 'feature', feature_main, m_code);
-    
+  mounted: function(){
+    this.initialize_mx();
   },
   methods: {
     persist() {
+      var type=this.$route.params.type;
       var newCode=document.getElementById('model_code').value;
-      localStorage.model_code = newCode;
+      localStorage[type] = newCode;
+    },
+    initialize_mx(){
+      var m_code="";
+      var type=this.$route.params.type;
+      if (localStorage[type]) {
+        this.model_code = localStorage[type];
+        if(this.model_code!=""){
+          m_code=this.model_code;
+        }
+      }
+
+      if(type=="feature"){
+        main(document.getElementById('graphContainer'), 'feature', feature_main, m_code);
+      }else if (type=="component"){
+        main(document.getElementById('graphContainer'), 'component', component_main, m_code);
+      }
     }
-  }
+  },
+  watch:{
+    $route (to, from){
+      document.getElementById('tbContainer').innerHTML="";
+      document.getElementById('buttonXML').innerHTML="";
+      document.getElementById('buttonRESET').innerHTML="";
+      document.getElementById('buttonSAVE').innerHTML="";
+      document.getElementById('graphContainer').innerHTML="";
+      this.initialize_mx();
+    }
+  } 
 }
 </script>
 

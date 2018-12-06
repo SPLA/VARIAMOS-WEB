@@ -3,6 +3,7 @@
   "models_other_features": "Other Features",
   "models_palette": "Palette",
   "models_area": "Modeling Area",
+  "models_model": "model",
 
   "about_team": "Team",
   "about_team_list": "- Luisa - Daniel - Angela - Esteban",
@@ -13,6 +14,8 @@
   "app_search": "Search",
   "app_menu_home": "Home",
   "app_menu_models": "Models",
+  "app_menu_feature": "Feature",
+  "app_menu_component": "Component",
   "app_menu_about": "About",
   "app_menu_reports": "Reports",
   "app_dashboard": "Dashboard",
