@@ -1,0 +1,22 @@
+{
+  "models_element_properties": "Element properties",
+  "models_other_features": "Other Features",
+  "models_palette": "Palette",
+  "models_area": "Modeling Area",
+
+  "about_team": "Team",
+  "about_team_list": "- Luisa - Daniel - Angela - Esteban",
+
+  "home_welcome": "Welcome to VariaMos web",
+
+  "app_variamos": "VariaMos",
+  "app_search": "Search",
+  "app_menu_home": "Home",
+  "app_menu_models": "Models",
+  "app_menu_about": "About",
+  "app_menu_reports": "Reports",
+  "app_dashboard": "Dashboard",
+  "app_share": "Share",
+  "app_export": "Export",
+  "app_week": "This week"
+}
