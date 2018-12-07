@@ -9,7 +9,8 @@
 
               <div class="button-area">
                     <div id="buttonXML"></div><div id="buttonRESET"></div>
-                    <div id="buttonSAVE"></div>
+                    <div id="buttonSAVE"></div><div id="buttonUNDO"></div>
+                    <div id="buttonREDO"></div>
               </div>
 
               <div>
@@ -108,6 +109,8 @@ export default{
       document.getElementById('buttonXML').innerHTML="";
       document.getElementById('buttonRESET').innerHTML="";
       document.getElementById('buttonSAVE').innerHTML="";
+      document.getElementById('buttonUNDO').innerHTML="";
+      document.getElementById('buttonREDO').innerHTML="";
       this.initialize_mx(2);
     }
   }
