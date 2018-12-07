@@ -8,7 +8,7 @@
             <div class="card-body">
 
                 <div class="left-side">
-                  <div onload="main(this)" id="graphContainer" class="model-area"></div>
+                  <div id="graphContainer" class="model-area"></div>
                   <div class="properties-area"><b>{{ $t("models_element_properties") }}</b><br />
                     <div id="properties"></div>
                   </div>
@@ -49,45 +49,60 @@ import component_main from '@/assets/js/models/component.js'
 export default{
   data: function(){
     return {
-      model_code: ""
+      model_code: "",
+      graph:"",
+      toolbar:"",
+      keyHandler:""
     }
   },
   mounted: function(){
-    this.initialize_mx();
+    //initialize graph main variables
+    this.graph = new mxGraph(document.getElementById('graphContainer'));
+    this.toolbar = new mxToolbar(document.getElementById('tbContainer'));
+    this.keyHandler = new mxKeyHandler(this.graph);
+    this.initialize_mx(1);
   },
   methods: {
     persist() {
+      //save model in localstorage
       var type=this.$route.params.type;
       var newCode=document.getElementById('model_code').value;
       localStorage[type] = newCode;
     },
-    initialize_mx(){
+    initialize_mx(counter){
+      //counter equals 1 load the entire mxGraph 
+      //counter equals 2 only setup the elements
       var m_code="";
       var type=this.$route.params.type;
+      //preload the saved model if exists
       if (localStorage[type]) {
         this.model_code = localStorage[type];
         if(this.model_code!=""){
           m_code=this.model_code;
         }
       }
-
       if(type=="feature"){
-        main(document.getElementById('graphContainer'), 'feature', feature_main, m_code);
+        main(this.graph,this.toolbar,this.keyHandler,document.getElementById('graphContainer'), 'feature', feature_main, m_code, counter);
       }else if (type=="component"){
-        main(document.getElementById('graphContainer'), 'component', component_main, m_code);
+        main(this.graph,this.toolbar,this.keyHandler,document.getElementById('graphContainer'), 'component', component_main, m_code, counter);
       }
     }
   },
+  beforeRouteLeave(to, from, next){
+    //destroy the window key events before leaving
+    this.keyHandler.destroy();
+    next();
+  },
   watch:{
     $route (to, from){
+      //remove the buttons and palette content when there is a change in the component route
       document.getElementById('tbContainer').innerHTML="";
       document.getElementById('buttonXML').innerHTML="";
       document.getElementById('buttonRESET').innerHTML="";
       document.getElementById('buttonSAVE').innerHTML="";
-      document.getElementById('graphContainer').innerHTML="";
-      this.initialize_mx();
+      this.initialize_mx(2);
     }
-  } 
+  }
 }
 </script>
 

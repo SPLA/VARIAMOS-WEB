@@ -6,7 +6,7 @@ var component_main = function component_main(graph)
 	return elements;
 	
 	function component_constraints(graph){
-
+		graph.multiplicities=[]; //reset multiplicities
 	}
 
 	function component_elements(){

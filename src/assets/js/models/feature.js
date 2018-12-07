@@ -6,6 +6,7 @@ var feature_main = function feature_main(graph)
 	return elements;
 	
 	function feature_constraints(graph){
+		graph.multiplicities=[]; //reset multiplicities
 		graph.multiplicities.push(new mxMultiplicity(
 				  true, "root", null, null, 0, 0, ["root","leaf","general"],
 				  "Invalid connection",

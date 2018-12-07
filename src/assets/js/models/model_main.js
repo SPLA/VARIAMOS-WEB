@@ -1,5 +1,5 @@
 //main function
-var main = function main(container,model_type,model_specific_main,m_code="")
+var main = function main(graph,toolbar,keyHandler,container,model_type,model_specific_main,m_code="",counter)
 {
 	// Checks if the browser is supported
 	if (!mxClient.isBrowserSupported())
@@ -9,55 +9,48 @@ var main = function main(container,model_type,model_specific_main,m_code="")
 	}
 	else
 	{
-		var graph = "";
+		if(counter==1){
+			// Disables the built-in context menu
+			mxEvent.disableContextMenu(container);
+			
+			// Matches DnD inside the graph
+			mxDragSource.prototype.getDropTarget = function(graph, x, y){
+				var cell = graph.getCellAt(x, y);
+				
+				if (!graph.isValidDropTarget(cell)){
+					cell = null;
+				}
+				
+				return cell;
+			};
+			
+			//setup graph config
+			setup_graph_config(graph);
+			//setup keys
+			setup_keys(keyHandler,graph);
+			//setup buttons
+			setup_buttons(graph);
+			//setup properties
+			setup_properties(graph);
+			//setup label changed
+			setup_label_changed(graph);
+			//setup custom elements
+			setup_elements(graph, model_specific_main, toolbar);
+		}else{	
+			//setup custom elements
+			setup_elements(graph, model_specific_main, toolbar);
+		}
+	}
 
-		// Disables the built-in context menu
-		mxEvent.disableContextMenu(container);
-		
-		// Creates the graph inside the given container
-		graph = new mxGraph(container);
-		
-		// Matches DnD inside the graph
-		mxDragSource.prototype.getDropTarget = function(graph, x, y)
-		{
-			var cell = graph.getCellAt(x, y);
-			
-			if (!graph.isValidDropTarget(cell))
-			{
-				cell = null;
-			}
-			
-			return cell;
-		};
-		
-		// Creates the div for the toolbar
-		var tbContainer = document.getElementById('tbContainer');
-		// Creates new toolbar without event processing
-		var toolbar = new mxToolbar(tbContainer);
-		// Stops editing on enter or escape keypress
-		var keyHandler = new mxKeyHandler(graph);
-		
-		//setup graph config
-		setup_graph_config(graph);
-		//setup keys
-		setup_keys(keyHandler,graph);
-		//setup buttons
-		setup_buttons(graph);
-		//setup properties
-		setup_properties(graph);
-		//setup label changed
-		setup_label_changed(graph);
-		
-		/* execute feature_main or component_main, etc */
+	function setup_elements(graph, model_specific_main, toolbar){
 		var elements="";
 		elements=model_specific_main(graph);
 		
 		for (var i = 0; i < elements.length; i++) {
-			addVertex(graph, elements[i].src, elements[i].wd, elements[i].hg, '', elements[i].type, elements[i].pname, elements[i].attr);
+			addVertex(graph, toolbar, elements[i].src, elements[i].wd, elements[i].hg, '', elements[i].type, elements[i].pname, elements[i].attr);
 		}
 
-
-		//load saved model
+		//load saved model if exists
 		if(m_code!=""){
 			var doc = mxUtils.parseXml(m_code);
 			var codec = new mxCodec(doc);
@@ -65,7 +58,7 @@ var main = function main(container,model_type,model_specific_main,m_code="")
 		}
 	}
 
-	function addVertex(graph, icon, w, h, style, type, namepalette, attributes)
+	function addVertex(graph, toolbar, icon, w, h, style, type, namepalette, attributes)
 	{
 		var doc = mxUtils.createXmlDocument();
 		var node = doc.createElement(type);
@@ -195,12 +188,6 @@ var main = function main(container,model_type,model_specific_main,m_code="")
 			if(cell.isEdge()){
 				//missing 
 			}else{
-				// Writes the title
-				/*var center = document.createElement('center');
-				mxUtils.writeln(center, cell.value.nodeName + ' (' + cell.id + ')');
-				div.appendChild(center);
-				mxUtils.br(div);*/
-
 				// Creates the form from the attributes of the user object
 				var form = new mxForm("properties-table");
 
@@ -243,7 +230,6 @@ var main = function main(container,model_type,model_specific_main,m_code="")
 							cell, attribute.nodeName,
 							newValue);
 					graph.getModel().execute(edit);
-					//graph.updateCellSize(cell);
 				}
 				finally
 				{

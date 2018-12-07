@@ -185,8 +185,6 @@ mxKeyHandler.prototype.setEnabled = function(enabled)
  */
 mxKeyHandler.prototype.bindKey = function(code, funct)
 {
-	//console.log(code);
-	//console.log(funct);
 	this.normalKeys[code] = funct;
 };
 

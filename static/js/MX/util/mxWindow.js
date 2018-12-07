@@ -226,35 +226,35 @@ mxWindow.prototype.constructor = mxWindow;
  * 
  * URL of the image to be used for the close icon in the titlebar.
  */
-mxWindow.prototype.closeImage = mxClient.imageBasePath + '/close.gif';
+mxWindow.prototype.closeImage = mxClient.imageBasePath + '/MX/close.gif';
 
 /**
  * Variable: minimizeImage
  * 
  * URL of the image to be used for the minimize icon in the titlebar.
  */
-mxWindow.prototype.minimizeImage = mxClient.imageBasePath + '/minimize.gif';
+mxWindow.prototype.minimizeImage = mxClient.imageBasePath + '/MX/minimize.gif';
 	
 /**
  * Variable: normalizeImage
  * 
  * URL of the image to be used for the normalize icon in the titlebar.
  */
-mxWindow.prototype.normalizeImage = mxClient.imageBasePath + '/normalize.gif';
+mxWindow.prototype.normalizeImage = mxClient.imageBasePath + '/MX/normalize.gif';
 	
 /**
  * Variable: maximizeImage
  * 
  * URL of the image to be used for the maximize icon in the titlebar.
  */
-mxWindow.prototype.maximizeImage = mxClient.imageBasePath + '/maximize.gif';
+mxWindow.prototype.maximizeImage = mxClient.imageBasePath + '/MX/maximize.gif';
 
 /**
  * Variable: normalizeImage
  * 
  * URL of the image to be used for the resize icon.
  */
-mxWindow.prototype.resizeImage = mxClient.imageBasePath + '/resize.gif';
+mxWindow.prototype.resizeImage = mxClient.imageBasePath + '/MX/resize.gif';
 
 /**
  * Variable: visible
