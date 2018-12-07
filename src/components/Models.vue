@@ -71,7 +71,7 @@ export default{
     },
     initialize_mx(counter){
       //counter equals 1 load the entire mxGraph 
-      //counter equals 2 only setup the elements
+      //counter equals 2 setup the elements and buttons
       var m_code="";
       var type=this.$route.params.type;
       //preload the saved model if exists

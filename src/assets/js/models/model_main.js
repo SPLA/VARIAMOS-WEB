@@ -36,7 +36,9 @@ var main = function main(graph,toolbar,keyHandler,container,model_type,model_spe
 			setup_label_changed(graph);
 			//setup custom elements
 			setup_elements(graph, model_specific_main, toolbar);
-		}else{	
+		}else{
+			//setup buttons
+			setup_buttons(graph);
 			//setup custom elements
 			setup_elements(graph, model_specific_main, toolbar);
 		}
