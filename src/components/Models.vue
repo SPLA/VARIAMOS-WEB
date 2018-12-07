@@ -61,7 +61,8 @@ export default{
       model_code: "",
       graph:"",
       toolbar:"",
-      keyHandler:""
+      keyHandler:"",
+      undoManager:""
     }
   },
   mounted: function(){
@@ -69,6 +70,7 @@ export default{
     this.graph = new mxGraph(document.getElementById('graphContainer'));
     this.toolbar = new mxToolbar(document.getElementById('tbContainer'));
     this.keyHandler = new mxKeyHandler(this.graph);
+    this.undoManager = new mxUndoManager();
     this.initialize_mx(1);
   },
   methods: {
@@ -92,9 +94,9 @@ export default{
         }
       }
       if(type=="feature"){
-        main(this.graph,this.toolbar,this.keyHandler,document.getElementById('graphContainer'), 'feature', feature_main, m_code, counter, setup_elements, setup_buttons, setup_keys, setup_properties);
+        main(this.graph,this.toolbar,this.keyHandler,document.getElementById('graphContainer'), 'feature', feature_main, m_code, counter, setup_elements, setup_buttons, setup_keys, setup_properties,this.undoManager);
       }else if (type=="component"){
-        main(this.graph,this.toolbar,this.keyHandler,document.getElementById('graphContainer'), 'component', component_main, m_code, counter, setup_elements, setup_buttons, setup_keys, setup_properties);
+        main(this.graph,this.toolbar,this.keyHandler,document.getElementById('graphContainer'), 'component', component_main, m_code, counter, setup_elements, setup_buttons, setup_keys, setup_properties,this.undoManager);
       }
     }
   },
@@ -108,6 +110,8 @@ export default{
       //remove the palette content when there is a change in the component route
       document.getElementById('tbContainer').innerHTML="";
       this.initialize_mx(2);
+      //clear undo redo history
+      this.undoManager.clear();
     }
   }
 }

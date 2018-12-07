@@ -1,4 +1,4 @@
-var setup_buttons = function setup_buttons(graph){
+var setup_buttons = function setup_buttons(graph,undoManager){
     /* begin buttonxml */
     // Adds an option to view the XML of the graph
     buttonXML.appendChild(mxUtils.button_with_icon('View XML', function()
@@ -38,7 +38,6 @@ var setup_buttons = function setup_buttons(graph){
     },"save"));
     /* end buttonsave */
 
-    var undoManager = new mxUndoManager();
     var listener = function(sender, evt)
     {
         undoManager.undoableEditHappened(evt.getProperty('edit'));
@@ -48,9 +47,13 @@ var setup_buttons = function setup_buttons(graph){
 
     /* begin buttonUNDO */
     var buttonUNDO = document.getElementById('buttonUNDO');
+    //clear undo redo history
+    undoManager.clear();
     buttonUNDO.appendChild(mxUtils.button_with_icon('Undo', function()
     {
-        undoManager.undo();
+        if(undoManager.canUndo()){
+            undoManager.undo();
+        }
     },"undo"));
     /* end buttonUNDO */
 
@@ -58,7 +61,9 @@ var setup_buttons = function setup_buttons(graph){
     var buttonREDO = document.getElementById('buttonREDO');
     buttonREDO.appendChild(mxUtils.button_with_icon('Redo', function()
     {
-        undoManager.redo();
+        if(undoManager.canRedo()){
+            undoManager.redo();
+        }
     },"redo"));
     /* end buttonREDO */
 

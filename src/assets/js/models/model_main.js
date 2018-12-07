@@ -1,5 +1,5 @@
 //main function
-var main = function main(graph,toolbar,keyHandler,container,model_type,model_specific_main,m_code="",counter,setup_elements,setup_buttons,setup_keys,setup_properties)
+var main = function main(graph,toolbar,keyHandler,container,model_type,model_specific_main,m_code="",counter,setup_elements,setup_buttons,setup_keys,setup_properties,undoManager)
 {
 	// Checks if the browser is supported
 	if (!mxClient.isBrowserSupported())
@@ -29,8 +29,6 @@ var main = function main(graph,toolbar,keyHandler,container,model_type,model_spe
 			setup_graph_config(graph);
 			//setup keys
 			setup_keys(keyHandler,graph);
-			//setup buttons
-			setup_buttons(graph);
 			//setup properties
 			setup_properties(graph);
 			//setup label changed
@@ -39,6 +37,8 @@ var main = function main(graph,toolbar,keyHandler,container,model_type,model_spe
 			setup_elements(graph, model_specific_main, toolbar);
 			//setup saved model
 			setup_saved_model(m_code);
+			//setup buttons
+			setup_buttons(graph,undoManager);
 		}
 		//counter equals 2 setup the elements
 		else{
