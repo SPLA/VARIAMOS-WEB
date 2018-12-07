@@ -42,9 +42,13 @@
 </template>
 
 <script>
+import setup_elements from '@/assets/js/models/setup_elements.js'
+import setup_buttons from '@/assets/js/models/setup_buttons.js'
+import setup_keys from '@/assets/js/models/setup_keys.js'
+import setup_properties from '@/assets/js/models/setup_properties.js'
 import main from '@/assets/js/models/model_main.js'
-import feature_main from '@/assets/js/models/feature.js'
-import component_main from '@/assets/js/models/component.js'
+import feature_main from '@/assets/js/models/custom/feature.js'
+import component_main from '@/assets/js/models/custom/component.js'
 
 export default{
   data: function(){
@@ -82,9 +86,9 @@ export default{
         }
       }
       if(type=="feature"){
-        main(this.graph,this.toolbar,this.keyHandler,document.getElementById('graphContainer'), 'feature', feature_main, m_code, counter);
+        main(this.graph,this.toolbar,this.keyHandler,document.getElementById('graphContainer'), 'feature', feature_main, m_code, counter, setup_elements, setup_buttons, setup_keys, setup_properties);
       }else if (type=="component"){
-        main(this.graph,this.toolbar,this.keyHandler,document.getElementById('graphContainer'), 'component', component_main, m_code, counter);
+        main(this.graph,this.toolbar,this.keyHandler,document.getElementById('graphContainer'), 'component', component_main, m_code, counter, setup_elements, setup_buttons, setup_keys, setup_properties);
       }
     }
   },
