@@ -91,3 +91,25 @@ body {
 
 .border-top { border-top: 1px solid #e5e5e5; }
 .border-bottom { border-bottom: 1px solid #e5e5e5; }
+
+.button-area button{
+  border: 1px solid rgba(0,0,0,.125);
+  border-radius: 0px;
+  border-bottom: 0px !important;
+  border-top: 0px !important;
+  border-left: 0px !important;
+}
+
+.button-area button i{
+padding-right: 5px;
+}
+
+.btn-model-area:focus{
+  outline: 0px !important;
+  box-shadow: none;
+}
+
+.btn-model-area:hover{
+  outline: 0px !important;
+  box-shadow: none;
+}

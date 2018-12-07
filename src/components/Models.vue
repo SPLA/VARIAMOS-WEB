@@ -3,9 +3,16 @@
 
     <div class="card mb-3">
             <div class="card-header">
-              <font-awesome-icon icon="chart-area" />
+              <i class="fas fa-chart-area"></i>
               {{ $t("models_area") }} - {{ $route.params.type }} {{ $t("models_model") }}</div>
             <div class="card-body">
+
+              <div class="button-area">
+                    <div id="buttonXML"></div><div id="buttonRESET"></div>
+                    <div id="buttonSAVE"></div>
+              </div>
+
+              <div>
 
                 <div class="left-side">
                   <div id="graphContainer" class="model-area"></div>
@@ -21,10 +28,6 @@
                   <div id="tbContainer"></div>
                   </div>
                   <div class="other-area"><b>{{ $t("models_other_features") }}</b><br /><br />
-                    <div class="button-area">
-                    <div id="buttonXML"></div>&nbsp;<div id="buttonRESET"></div>&nbsp;
-                    <div id="buttonSAVE"></div>
-                    </div>
                   </div>
 
                 </div>
@@ -33,6 +36,7 @@
                 <input type="hidden" id="current_type" v-bind:value="$route.params.type" />
                 </div>
               
+              </div>
               </div>
 
             <div class="card-footer small text-muted"></div>
@@ -114,6 +118,9 @@ export default{
 <style scoped>
 .button-area{
   display:inline-flex;
+  border-bottom: 2px solid rgba(0,0,0,.125);
+  border-top: 1px solid rgba(0,0,0,.125);
+  width: 100%;
 }
 
 .card-header {
