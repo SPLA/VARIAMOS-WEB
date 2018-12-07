@@ -11,13 +11,14 @@ var main = function main(container,model_type,model_specific_main,m_code="")
 	}
 	else
 	{
-		
+		var outline = document.getElementById('outlineContainer');
 		// Disables the built-in context menu
 		mxEvent.disableContextMenu(container);
 		
 		// Creates the graph inside the given container
 		var graph = new mxGraph(container);
-			
+		var outln = new mxOutline(graph, outline);
+		
 		// Matches DnD inside the graph
 		mxDragSource.prototype.getDropTarget = function(graph, x, y)
 		{
@@ -96,7 +97,7 @@ var main = function main(container,model_type,model_specific_main,m_code="")
 	function setup_scrollbar_config(graph){
 
 		
-		graph.scrollTileSize = new mxRectangle(0, 0, 400, 400);	
+		graph.scrollTileSize = new mxRectangle(0, 0, 200, 200);	
 		/**
 		 * Specifies the size of the size for "tiles" to be used for a graph with
 		 * scrollbars but no visible background page. A good value is large
@@ -112,8 +113,9 @@ var main = function main(container,model_type,model_specific_main,m_code="")
 		 */
 		graph.getPagePadding = function()
 		{
-			return new mxPoint(Math.max(0, Math.round(graph.container.offsetWidth - 34)),
-					Math.max(0, Math.round(graph.container.offsetHeight - 34)));
+			return new mxPoint(Math.max(0, Math.round(graph.container.offsetWidth - 400)),
+					Math.max(0, Math.round(graph.container.offsetHeight - 400)));
+					c
 		};
 		
 		/**
@@ -134,9 +136,10 @@ var main = function main(container,model_type,model_specific_main,m_code="")
 		graph.getPageLayout = function()
 		{
 			var size = (this.pageVisible) ? this.getPageSize() : this.scrollTileSize;
-			console.log(size);
+			
+
 			var bounds = this.getGraphBounds();
-			console.log(bounds);
+			
 		if (bounds.width == 0 || bounds.height == 0)
 		{
 			return new mxRectangle(0, 0, 1, 1);
@@ -212,8 +215,8 @@ var main = function main(container,model_type,model_specific_main,m_code="")
 				var size = this.getPageSize();
 				
 				// Updates the minimum graph size
-				var minw = Math.ceil(2 * pad.x / this.view.scale + pages.width * size.width);
-				var minh = Math.ceil(2 * pad.y / this.view.scale + pages.height * size.height);
+				var minw = Math.ceil(pad.x / this.view.scale + pages.width * size.width);
+				var minh = Math.ceil(pad.y / this.view.scale + pages.height * size.height);
 				
 				var min = graph.minimumGraphSize;
 				
@@ -257,13 +260,10 @@ var main = function main(container,model_type,model_specific_main,m_code="")
 			var bounds = graph.getGraphBounds();
 			console.log(bounds);
 			var width = Math.max(bounds.width, graph.scrollTileSize.width * graph.view.scale);
-			console.log("width :"+width);
+			
 			var height = Math.max(bounds.height, graph.scrollTileSize.height * graph.view.scale);
-			console.log("height: "+height);
 			graph.container.scrollTop = Math.floor(Math.max(0, bounds.y - Math.max(20, (graph.container.clientHeight - height) / 4)));
-			console.log("scrolltop: "+Math.floor(Math.max(0, bounds.y - Math.max(20, (graph.container.clientHeight - height) / 4))));
 			graph.container.scrollLeft = Math.floor(Math.max(0, bounds.x - Math.max(0, (graph.container.clientWidth - width) / 2)));
-			console.log("scrollleft" +Math.floor(Math.max(0, bounds.x - Math.max(0, (graph.container.clientWidth - width) / 2))))
 		}, 0);
 	}
 

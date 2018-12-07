@@ -21,6 +21,9 @@
                   <b>{{ $t("models_palette") }}</b><br /><br />
                   </div>
                   <div class="other-area"><b>{{ $t("models_other_features") }}</b><br /><br />
+                    <div id="outlineContainer"
+style="z-index:1;overflow:hidden;top:0px;left:20%;width:160px;height:120px;background:transparent;border-style:solid;border-color:lightgray;">
+                  </div>
                     <div class="button-area">
                     <div id="buttonXML"></div>&nbsp;<div id="buttonRESET"></div>&nbsp;
                     <div id="buttonSAVE"></div>
