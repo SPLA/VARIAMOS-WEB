@@ -57,6 +57,13 @@ var setup_buttons = function setup_buttons(graph){
     {
         undoManager.redo();
     },"redo"));
+
+
+    var buttonSHOW = document.getElementById('buttonSHOW');
+    buttonSHOW.appendChild(mxUtils.button_with_icon('Show', function()
+    {
+        mxUtils.show(graph);
+    },"image"));
 }
 
 export default setup_buttons
