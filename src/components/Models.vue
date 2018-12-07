@@ -80,7 +80,8 @@ export default{
     },
     initialize_mx(counter){
       //counter equals 1 load the entire mxGraph 
-      //counter equals 2 setup the elements and buttons
+      //counter equals 2 setup the elements
+      this.model_code="";
       var m_code="";
       var type=this.$route.params.type;
       //preload the saved model if exists
@@ -104,14 +105,8 @@ export default{
   },
   watch:{
     $route (to, from){
-      //remove the buttons and palette content when there is a change in the component route
+      //remove the palette content when there is a change in the component route
       document.getElementById('tbContainer').innerHTML="";
-      document.getElementById('buttonXML').innerHTML="";
-      document.getElementById('buttonRESET').innerHTML="";
-      document.getElementById('buttonSAVE').innerHTML="";
-      document.getElementById('buttonUNDO').innerHTML="";
-      document.getElementById('buttonREDO').innerHTML="";
-      document.getElementById('buttonSHOW').innerHTML="";
       this.initialize_mx(2);
     }
   }

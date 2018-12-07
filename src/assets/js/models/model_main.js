@@ -40,10 +40,8 @@ var main = function main(graph,toolbar,keyHandler,container,model_type,model_spe
 			//setup saved model
 			setup_saved_model(m_code);
 		}
-		//counter equals 2 setup the elements and buttons
+		//counter equals 2 setup the elements
 		else{
-			//setup buttons
-			setup_buttons(graph);
 			//setup custom elements
 			setup_elements(graph, model_specific_main, toolbar);
 			//setup saved model
@@ -89,6 +87,8 @@ var main = function main(graph,toolbar,keyHandler,container,model_type,model_spe
 			var doc = mxUtils.parseXml(m_code);
 			var codec = new mxCodec(doc);
 			codec.decode(doc.documentElement, graph.getModel());
+		}else{
+			graph.getModel().clear();
 		}
 	}
 }

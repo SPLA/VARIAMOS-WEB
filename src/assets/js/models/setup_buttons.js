@@ -46,24 +46,29 @@ var setup_buttons = function setup_buttons(graph){
     graph.getModel().addListener(mxEvent.UNDO, listener);
     graph.getView().addListener(mxEvent.UNDO, listener);
 
+    /* begin buttonUNDO */
     var buttonUNDO = document.getElementById('buttonUNDO');
     buttonUNDO.appendChild(mxUtils.button_with_icon('Undo', function()
     {
         undoManager.undo();
     },"undo"));
+    /* end buttonUNDO */
 
+    /* begin buttonREDO */
     var buttonREDO = document.getElementById('buttonREDO');
     buttonREDO.appendChild(mxUtils.button_with_icon('Redo', function()
     {
         undoManager.redo();
     },"redo"));
+    /* end buttonREDO */
 
-
+    /* begin buttonSHOW */
     var buttonSHOW = document.getElementById('buttonSHOW');
     buttonSHOW.appendChild(mxUtils.button_with_icon('Show', function()
     {
         mxUtils.show(graph);
     },"image"));
+    /* end buttonSHOW */
 }
 
 export default setup_buttons
