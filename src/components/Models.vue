@@ -33,7 +33,7 @@
 
                 </div>
 
-                <div><input type="hidden" id="model_code" @change="persist()" v-model="model_code" />
+                <div><input type="hidden" id="model_code" @change="persist()" v-model="modelCode" />
                 <input type="hidden" id="current_type" v-bind:value="$route.params.type" />
                 </div>
               

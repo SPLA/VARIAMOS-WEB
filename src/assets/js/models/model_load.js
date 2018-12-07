@@ -1,3 +1,10 @@
+/*
+
+Layers:
+layer0 (root child at position 0) belongs to "Feature model"
+layer1 (root child at position 1) belongs to "Component model"
+
+*/
 var model_load = function model_load(graph,m_code){
     var layers = {}; 
     var models = ["feature","component"]; //represent the available models
@@ -14,7 +21,9 @@ var model_load = function model_load(graph,m_code){
             if(i<maxVal){
                 layers[models[i]]=root.getChildAt(i);
             }else{
-                layers[models[i]]=root.insert(new mxCell());
+                var cell=new mxCell();
+                layers[models[i]]=root.insert(cell);
+                cell.setId(i+1);
             }
         }
     }else{
