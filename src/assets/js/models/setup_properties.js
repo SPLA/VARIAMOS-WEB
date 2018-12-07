@@ -10,13 +10,10 @@ var setup_properties = function setup_properties(graph){
     function selectionChanged(graph)
 	{
 		var div = document.getElementById('properties');
-
 		// Forces focusout in IE
 		graph.container.focus();
-
 		// Clears the DIV the non-DOM way
 		div.innerHTML = '';
-
 		// Gets the selection cell
 		var cell = graph.getSelectionCell();
 
@@ -31,7 +28,6 @@ var setup_properties = function setup_properties(graph){
 			}else{
 				// Creates the form from the attributes of the user object
 				var form = new mxForm("properties-table");
-
 				var attrs = cell.value.attributes;
 				
 				for (var i = 0; i < attrs.length; i++)

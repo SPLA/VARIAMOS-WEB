@@ -1,5 +1,5 @@
 //main function
-var main = function main(graph,toolbar,keyHandler,container,model_type,model_specific_main,m_code="",counter,setup_elements,setup_buttons,setup_keys,setup_properties,undoManager)
+var main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model_type,model_specific_main,counter,setup_elements,setup_buttons,setup_keys,setup_properties,undoManager)
 {
 	// Checks if the browser is supported
 	if (!mxClient.isBrowserSupported())
@@ -9,6 +9,10 @@ var main = function main(graph,toolbar,keyHandler,container,model_type,model_spe
 	}
 	else
 	{
+		var currentLayer="";
+		currentLayer=layers[model_type]; //current layer to be displayed (feature, component, etc)
+		graph.setDefaultParent(currentLayer); //any new graphic element will be connected with this parent
+
 		//counter equals 1 load the entire mxGraph 
 		if(counter==1){
 			// Disables the built-in context menu
@@ -34,19 +38,20 @@ var main = function main(graph,toolbar,keyHandler,container,model_type,model_spe
 			//setup label changed
 			setup_label_changed(graph);
 			//setup custom elements
-			setup_elements(graph, model_specific_main, toolbar);
-			//setup saved model
-			setup_saved_model(m_code);
+			setup_elements(graph,model_specific_main,toolbar);
 			//setup buttons
 			setup_buttons(graph,undoManager);
-		}
-		//counter equals 2 setup the elements
-		else{
+		}else{
+			//counter equals 2 only setup the elements (palette)
 			//setup custom elements
-			setup_elements(graph, model_specific_main, toolbar);
-			//setup saved model
-			setup_saved_model(m_code);
+			setup_elements(graph,model_specific_main,toolbar);		
 		}
+
+		//hidden all elements that do not belong to the current layer (parent)
+		for (var key in layers) {
+			mxModel.setVisible(layers[key], false);
+		}
+		mxModel.setVisible(currentLayer, true);
 	}
 
 	function setup_graph_config(graph){
@@ -79,17 +84,6 @@ var main = function main(graph,toolbar,keyHandler,container,model_type,model_spe
 
 		  cellLabelChanged.apply(this, arguments);
 		};
-	}
-		
-	function setup_saved_model(m_code){
-		//load saved model if exists
-		if(m_code!=""){
-			var doc = mxUtils.parseXml(m_code);
-			var codec = new mxCodec(doc);
-			codec.decode(doc.documentElement, graph.getModel());
-		}else{
-			graph.getModel().clear();
-		}
 	}
 }
 

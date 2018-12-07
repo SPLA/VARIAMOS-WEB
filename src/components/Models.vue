@@ -52,52 +52,56 @@ import setup_buttons from '@/assets/js/models/setup_buttons.js'
 import setup_keys from '@/assets/js/models/setup_keys.js'
 import setup_properties from '@/assets/js/models/setup_properties.js'
 import main from '@/assets/js/models/model_main.js'
+import model_load from '@/assets/js/models/model_load.js'
 import feature_main from '@/assets/js/models/custom/feature.js'
 import component_main from '@/assets/js/models/custom/component.js'
 
 export default{
   data: function(){
     return {
-      model_code: "",
+      modelCode: "",
       graph:"",
       toolbar:"",
       keyHandler:"",
-      undoManager:""
+      undoManager:"",
+      layers:{},
+      modelFunctions:{},
+      currentFunction:"",
+      mxModel:"",
+      modelType:""
     }
   },
   mounted: function(){
-    //initialize graph main variables
+    //preload the saved model if exists
+    if (localStorage["model_code"]) {
+        this.modelCode = localStorage["model_code"];
+    }
     this.graph = new mxGraph(document.getElementById('graphContainer'));
+    //load saved model into the graph if exists, and return layers
+    this.layers=model_load(this.graph,this.modelCode);
+
+    this.modelFunctions = {
+      "feature":feature_main,
+      "component":component_main
+    }
+    this.modelType=this.$route.params.type; //based on URL Route
+    this.currentFunction=this.modelFunctions[this.modelType];
     this.toolbar = new mxToolbar(document.getElementById('tbContainer'));
     this.keyHandler = new mxKeyHandler(this.graph);
     this.undoManager = new mxUndoManager();
+    this.mxModel = this.graph.getModel();
+
     this.initialize_mx(1);
   },
   methods: {
     persist() {
       //save model in localstorage
-      var type=this.$route.params.type;
-      var newCode=document.getElementById('model_code').value;
-      localStorage[type] = newCode;
+      localStorage["model_code"] = document.getElementById('model_code').value;
     },
     initialize_mx(counter){
       //counter equals 1 load the entire mxGraph 
-      //counter equals 2 setup the elements
-      this.model_code="";
-      var m_code="";
-      var type=this.$route.params.type;
-      //preload the saved model if exists
-      if (localStorage[type]) {
-        this.model_code = localStorage[type];
-        if(this.model_code!=""){
-          m_code=this.model_code;
-        }
-      }
-      if(type=="feature"){
-        main(this.graph,this.toolbar,this.keyHandler,document.getElementById('graphContainer'), 'feature', feature_main, m_code, counter, setup_elements, setup_buttons, setup_keys, setup_properties,this.undoManager);
-      }else if (type=="component"){
-        main(this.graph,this.toolbar,this.keyHandler,document.getElementById('graphContainer'), 'component', component_main, m_code, counter, setup_elements, setup_buttons, setup_keys, setup_properties,this.undoManager);
-      }
+      //counter equals 2 only setup the elements (palette)
+      main(this.graph,this.layers,this.mxModel,this.toolbar,this.keyHandler,document.getElementById('graphContainer'), this.modelType, this.currentFunction, counter, setup_elements, setup_buttons, setup_keys, setup_properties,this.undoManager);
     }
   },
   beforeRouteLeave(to, from, next){
@@ -109,6 +113,8 @@ export default{
     $route (to, from){
       //remove the palette content when there is a change in the component route
       document.getElementById('tbContainer').innerHTML="";
+      this.modelType=this.$route.params.type;
+      this.currentFunction=this.modelFunctions[this.modelType];
       this.initialize_mx(2);
       //clear undo redo history
       this.undoManager.clear();
