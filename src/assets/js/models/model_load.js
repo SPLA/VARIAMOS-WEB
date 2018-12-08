@@ -5,9 +5,8 @@ layer0 (root child at position 0) belongs to "Feature model"
 layer1 (root child at position 1) belongs to "Component model"
 
 */
-var model_load = function model_load(graph,m_code){
+var model_load = function model_load(graph,models,m_code){
     var layers = {}; 
-    var models = ["feature","component"]; //represent the available models
     if(m_code!=""){
         //load saved model
         var doc = mxUtils.parseXml(m_code);

@@ -66,24 +66,25 @@ export default{
       undoManager:"",
       layers:{},
       modelFunctions:{},
+      models:[],
       currentFunction:"",
       mxModel:"",
       modelType:""
     }
   },
   mounted: function(){
+    this.models = ["feature","component"]; //represent the available models
+    this.modelFunctions = {
+      "feature":feature_main,
+      "component":component_main
+    }
     //preload the saved model if exists
     if (localStorage["model_code"]) {
         this.modelCode = localStorage["model_code"];
     }
     this.graph = new mxGraph(document.getElementById('graphContainer'));
     //load saved model into the graph if exists, and return layers
-    this.layers=model_load(this.graph,this.modelCode);
-
-    this.modelFunctions = {
-      "feature":feature_main,
-      "component":component_main
-    }
+    this.layers=model_load(this.graph,this.models,this.modelCode);
     this.modelType=this.$route.params.type; //based on URL Route
     this.currentFunction=this.modelFunctions[this.modelType];
     this.toolbar = new mxToolbar(document.getElementById('tbContainer'));
@@ -92,6 +93,8 @@ export default{
     this.mxModel = this.graph.getModel();
 
     this.initialize_mx(1);
+    //clear undo redo history
+    this.undoManager.clear();
   },
   methods: {
     persist() {
@@ -140,7 +143,6 @@ export default{
   padding: 0px;
   background-color: white;
 }
-
 
 .properties-area, .other-area{
   border-top: 1px solid rgba(0,0,0,.125);

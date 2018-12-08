@@ -41,7 +41,7 @@ var main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model
 			setup_elements(graph,model_specific_main,toolbar);
 			//setup buttons
 			setup_buttons(graph,undoManager);
-
+			//setup custom shapes
 			setup_custom_shapes();
 		}else{
 			//counter equals 2 only setup the elements (palette)
