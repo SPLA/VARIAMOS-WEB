@@ -1,5 +1,5 @@
 //main function
-var main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model_type,model_specific_main,counter,setup_elements,setup_buttons,setup_keys,setup_properties,undoManager)
+var main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model_type,model_specific_main,counter,setupFunctions,undoManager)
 {
 	// Checks if the browser is supported
 	if (!mxClient.isBrowserSupported())
@@ -32,21 +32,25 @@ var main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model
 			//setup graph config
 			setup_graph_config(graph);
 			//setup keys
-			setup_keys(keyHandler,graph);
+			setupFunctions["setup_keys"](keyHandler,graph);
 			//setup properties
-			setup_properties(graph);
+			setupFunctions["setup_properties"](graph);
 			//setup label changed
 			setup_label_changed(graph);
 			//setup custom elements
-			setup_elements(graph,model_specific_main,toolbar);
+			setupFunctions["setup_elements"](graph,model_specific_main,toolbar);
+			//setup connections
+			setupFunctions["setup_connections"](graph);
 			//setup buttons
-			setup_buttons(graph,undoManager);
+			setupFunctions["setup_buttons"](graph,undoManager);
 			//setup custom shapes
 			setup_custom_shapes();
 		}else{
-			//counter equals 2 only setup the elements (palette)
+			//counter equals 2 only setup the elements (palette) and connections
 			//setup custom elements
-			setup_elements(graph,model_specific_main,toolbar);		
+			setupFunctions["setup_elements"](graph,model_specific_main,toolbar);	
+			//setup connections
+			setupFunctions["setup_connections"](graph);	
 		}
 
 		//hidden all elements that do not belong to the current layer (parent)

@@ -49,6 +49,7 @@
 </template>
 
 <script>
+import setup_connections from '@/assets/js/models/setup_connections.js'
 import setup_elements from '@/assets/js/models/setup_elements.js'
 import setup_buttons from '@/assets/js/models/setup_buttons.js'
 import setup_keys from '@/assets/js/models/setup_keys.js'
@@ -68,6 +69,7 @@ export default{
       undoManager:"",
       layers:{},
       modelFunctions:{},
+      setupFunctions:{},
       models:[],
       currentFunction:"",
       mxModel:"",
@@ -79,6 +81,13 @@ export default{
     this.modelFunctions = {
       "feature":feature_main,
       "component":component_main
+    }
+    this.setupFunctions = {
+      "setup_connections":setup_connections,
+      "setup_buttons":setup_buttons,
+      "setup_keys":setup_keys,
+      "setup_properties":setup_properties,
+      "setup_elements":setup_elements
     }
     //preload the saved model if exists
     if (localStorage["model_code"]) {
@@ -105,13 +114,16 @@ export default{
     },
     initialize_mx(counter){
       //counter equals 1 load the entire mxGraph 
-      //counter equals 2 only setup the elements (palette)
-      main(this.graph,this.layers,this.mxModel,this.toolbar,this.keyHandler,document.getElementById('graphContainer'), this.modelType, this.currentFunction, counter, setup_elements, setup_buttons, setup_keys, setup_properties,this.undoManager);
+      //counter equals 2 only setup the elements (palette) and connections
+      var graphContainer = document.getElementById('graphContainer');
+      main(this.graph,this.layers,this.mxModel,this.toolbar,this.keyHandler,graphContainer,this.modelType,this.currentFunction,counter,this.setupFunctions,this.undoManager);
     }
   },
   beforeRouteLeave(to, from, next){
     //destroy the window key events before leaving
     this.keyHandler.destroy();
+    //destroy connection handler events
+    this.graph.connectionHandler.destroy();
     next();
   },
   watch:{
@@ -120,6 +132,8 @@ export default{
       document.getElementById('tbContainer').innerHTML="";
       this.modelType=this.$route.params.type;
       this.currentFunction=this.modelFunctions[this.modelType];
+      //remove connection listener events
+      this.graph.connectionHandler.removeListener(this.graph.connectionHandler.connections_fun);
       this.initialize_mx(2);
       //clear undo redo history
       this.undoManager.clear();
