@@ -3,7 +3,7 @@ var setup_elements = function setup_elements(graph, model_specific_main, toolbar
     elements=model_specific_main(graph);
     
     for (var i = 0; i < elements.length; i++) {
-        addVertex(graph, toolbar, elements[i].src, elements[i].wd, elements[i].hg, '', elements[i].type, elements[i].pname, elements[i].attr);
+        addVertex(graph, toolbar, elements[i].src, elements[i].wd, elements[i].hg, elements[i].style, elements[i].type, elements[i].pname, elements[i].attr);
     }
 
     function addVertex(graph, toolbar, icon, w, h, style, type, namepalette, attributes)

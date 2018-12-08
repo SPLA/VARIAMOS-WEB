@@ -8,7 +8,7 @@ var feature_main = function feature_main(graph)
 	function feature_constraints(graph){
 		graph.multiplicities=[]; //reset multiplicities
 		graph.multiplicities.push(new mxMultiplicity(
-				  true, "root", null, null, 0, 0, ["root","leaf","general"],
+				  true, "root", null, null, 0, 0, null,
 				  "Invalid connection",
 				  "Only shape targets allowed"));
 		graph.multiplicities.push(new mxMultiplicity(
@@ -22,9 +22,9 @@ var feature_main = function feature_main(graph)
 	}
 
 	function feature_elements(){
-		var root = {src:"static/images/models/feature/rectangle.gif", wd:100, hg:40, type:"root", pname:"Root Feature", attr:""};
-		var general = {src:"static/images/models/feature/rectangle.gif", wd:100, hg:40, type:"general", pname:"General Feature", attr:""};
-		var leaf = {src:"static/images/models/feature/rectangle.gif", wd:100, hg:40, type:"leaf", pname:"Leaf Feature", attr:""};
+		var root = {src:"static/images/models/feature/rectangle.png", wd:100, hg:35, type:"root", style:"", pname:"Root Feature", attr:""};
+		var general = {src:"static/images/models/feature/rectangle.png", wd:100, hg:35, type:"general", style:"", pname:"General Feature", attr:""};
+		var leaf = {src:"static/images/models/feature/rectangle.png", wd:100, hg:35, type:"leaf", style:"", pname:"Leaf Feature", attr:""};
 		
 		var elements=[];
 		elements[0]=root;

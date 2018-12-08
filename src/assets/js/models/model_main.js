@@ -41,6 +41,8 @@ var main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model
 			setup_elements(graph,model_specific_main,toolbar);
 			//setup buttons
 			setup_buttons(graph,undoManager);
+
+			setup_custom_shapes();
 		}else{
 			//counter equals 2 only setup the elements (palette)
 			//setup custom elements
@@ -54,12 +56,38 @@ var main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model
 		mxModel.setVisible(currentLayer, true);
 	}
 
+	function setup_custom_shapes(){
+		function CustomShape()
+		{
+			mxShape.call(this);
+		};
+		mxUtils.extend(CustomShape, mxShape);
+
+		// Replaces existing actor shape
+		mxCellRenderer.registerShape('customShape', CustomShape);
+		
+		// Loads the stencils into the registry
+		var req = mxUtils.load('/static/xml/MX/custom_shapes.xml');
+		var root = req.getDocumentElement();
+		var shape = root.firstChild;
+		
+		while (shape != null)
+		{
+			if (shape.nodeType == mxConstants.NODETYPE_ELEMENT)
+			{
+				mxStencilRegistry.addStencil(shape.getAttribute('name'), new mxStencil(shape));
+			}
+			shape = shape.nextSibling;
+		}
+	}
+
 	function setup_graph_config(graph){
 		graph.dropEnabled = true;
 		graph.setConnectable(true); // Enables new connections in the graph
 		graph.setMultigraph(false);
 		graph.setAllowDanglingEdges(false);
 		graph.setDisconnectOnMove(false);
+		new mxRubberband(graph); // Enables rectangular selection
 	}
 
 	function setup_label_changed(graph){		
