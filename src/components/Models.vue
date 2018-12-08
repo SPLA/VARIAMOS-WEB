@@ -13,22 +13,24 @@
                     <div id="buttonREDO"></div><div id="buttonSHOW"></div>
               </div>
 
-              <div>
+              <div class="row main_area">
 
-                <div class="left-side">
+                <div class="col-sm-9 left-area">
+                <!--<div class="col-md-9 left-side">-->
                   <div id="graphContainer" class="model-area"></div>
                   <div class="properties-area"><b>{{ $t("models_element_properties") }}</b><br />
                     <div id="properties"></div>
                   </div>
                 </div>
 
-                <div class="right-side">
-                
+                <!--<div class="col-md-3 right-side">-->
+                <div class="col-sm-3 right-area">
                   <div class="pallete-area">
                   <b>{{ $t("models_palette") }}</b><br /><br />
                   <div id="tbContainer"></div>
                   </div>
-                  <div class="other-area"><b>{{ $t("models_other_features") }}</b><br /><br />
+                  <div class="other-area"><b>{{ $t("models_navigator") }}</b>
+                  <div id="navigator" class="navigator"></div>
                   </div>
 
                 </div>
@@ -128,6 +130,38 @@ export default{
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+@media (max-width: 992px){
+  .right-area, .left-area{
+    flex: 100%;
+    max-width: 100%;
+  }
+  .right-area{
+    border-left: 0px !important;
+  }
+}
+
+.main_area{
+  margin-right: 0px;
+  margin-left: 0px;
+}
+
+.left-area{
+  padding-right: 0px;
+  padding-left: 0px;
+}
+
+.right-area{
+  padding-right: 0px;
+  padding-left: 0px;
+  border-top: 1px solid rgba(0,0,0,.125);
+  border-left: 1px solid rgba(0,0,0,.125);
+}
+
+.navigator{
+  border: 2px solid rgba(0,0,0,.125);
+  margin-top: 10px;
+}
+
 .button-area{
   display:inline-flex;
   border-bottom: 2px solid rgba(0,0,0,.125);
@@ -156,17 +190,6 @@ export default{
   cursor:default;
   padding-right: 0px; 
   padding-left: 0px;
-}
-
-.left-side{
-	float: left;
-  width:70%;
-  border-right: 1px solid rgba(0,0,0,.125);
-}
-
-.right-side{
-	width: 30%;
-  float: left;
 }
 
 .pallete-area{

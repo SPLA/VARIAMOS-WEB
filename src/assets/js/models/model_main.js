@@ -88,6 +88,7 @@ var main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model
 		graph.setAllowDanglingEdges(false);
 		graph.setDisconnectOnMove(false);
 		new mxRubberband(graph); // Enables rectangular selection
+		new mxOutline(graph, document.getElementById('navigator'));
 	}
 
 	function setup_label_changed(graph){		
