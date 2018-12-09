@@ -1,9 +1,10 @@
 var feature_main = function feature_main(graph)
 {
 	feature_constraints(graph);
-	var elements=[];
-    elements= feature_elements();
-	return elements;
+	var data=[];
+	data[0]=feature_elements();
+	data[1]=feature_relations();
+	return data;
 	
 	function feature_constraints(graph){
 		graph.multiplicities=[]; //reset multiplicities
@@ -38,6 +39,30 @@ var feature_main = function feature_main(graph)
 		elements[3]=association;
 		
 		return elements;
+	}
+
+	function feature_relations(){
+		var relations=[];
+		relations[0]={
+			"source":["general","leaf"],
+			"rel_source_target":"and",
+			"target":["general","leaf","root"],
+			"attributes":[{
+				"name":"relType",
+				"def_value":"mandatory"
+			}]
+		};
+		relations[1]={
+			"source":["association"],
+			"rel_source_target":"and",
+			"target":["general","root"],
+			"attributes":[{
+				"name":"relType",
+				"def_value":"mandatory"
+			}]
+		};
+	
+		return relations;
 	}
 	
 }

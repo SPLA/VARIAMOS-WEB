@@ -2238,10 +2238,3 @@ mxConnectionHandler.prototype.destroy = function()
 		this.escapeHandler = null;
 	}
 };
-
-/**
- * Variable: connections_fun
- * 
- * Reference to the connection function
- */
-mxConnectionHandler.prototype.connections_fun = null;

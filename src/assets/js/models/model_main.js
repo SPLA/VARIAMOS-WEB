@@ -15,6 +15,11 @@ var main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model
 		currentLayer=layers[model_type]; //current layer to be displayed (feature, component, etc)
 		graph.setDefaultParent(currentLayer); //any new graphic element will be connected with this parent
 
+		var data=[], elements=[], relations=[];
+		data=model_specific_main(graph); //specific model data
+		elements=data[0];
+		relations=data[1];
+
 		//counter equals 1 load the entire mxGraph 
 		if(counter==1){
 			// Disables the built-in context menu
@@ -30,7 +35,7 @@ var main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model
 				
 				return cell;
 			};
-			
+
 			//setup graph config
 			setup_graph_config(graph);
 			//setup scrollbar config
@@ -42,19 +47,19 @@ var main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model
 			//setup label changed
 			setup_label_changed(graph);
 			//setup custom elements
-			setupFunctions["setup_elements"](graph,model_specific_main,toolbar);
-			//setup connections
-			setupFunctions["setup_connections"](graph);
+			setupFunctions["setup_elements"](graph,elements,toolbar);
+			//setup relations
+			setupFunctions["setup_relations"](graph,relations);
 			//setup buttons
 			setupFunctions["setup_buttons"](graph,undoManager);
 			//setup custom shapes
 			setup_custom_shapes();
 		}else{
-			//counter equals 2 only setup the elements (palette) and connections
+			//counter equals 2 only setup the elements (palette) and relations
 			//setup custom elements
-			setupFunctions["setup_elements"](graph,model_specific_main,toolbar);	
-			//setup connections
-			setupFunctions["setup_connections"](graph);	
+			setupFunctions["setup_elements"](graph,elements,toolbar);	
+			//setup relations
+			setupFunctions["setup_relations"](graph,relations);	
 		}
 
 		//hidden all elements that do not belong to the current layer (parent)
@@ -96,6 +101,7 @@ var main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model
 		graph.setAllowDanglingEdges(false);
 		graph.setDisconnectOnMove(false);
 		graph.setPanning(true);
+		graph.setCellsEditable(false);
 		new mxRubberband(graph); // Enables rectangular selection
 		new mxOutline(graph, document.getElementById('navigator'));
 	}	
@@ -277,7 +283,11 @@ var main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model
 		{
 		  if (mxUtils.isNode(cell.value))
 		  {
-		    return cell.getAttribute('label', '')
+			if(cell.isEdge()){
+				return cell.getAttribute('relType', '')
+			}else{
+				return cell.getAttribute('label', '') 
+			}
 		  }
 		};
 		

@@ -51,7 +51,7 @@
 </template>
 
 <script>
-import setup_connections from '@/assets/js/models/setup_connections.js'
+import setup_relations from '@/assets/js/models/setup_relations.js'
 import setup_elements from '@/assets/js/models/setup_elements.js'
 import setup_buttons from '@/assets/js/models/setup_buttons.js'
 import setup_keys from '@/assets/js/models/setup_keys.js'
@@ -85,7 +85,7 @@ export default{
       "component":component_main
     }
     this.setupFunctions = {
-      "setup_connections":setup_connections,
+      "setup_relations":setup_relations,
       "setup_buttons":setup_buttons,
       "setup_keys":setup_keys,
       "setup_properties":setup_properties,
@@ -124,8 +124,6 @@ export default{
   beforeRouteLeave(to, from, next){
     //destroy the window key events before leaving
     this.keyHandler.destroy();
-    //destroy connection handler events
-    this.graph.connectionHandler.destroy();
     next();
   },
   watch:{
@@ -134,8 +132,6 @@ export default{
       document.getElementById('tbContainer').innerHTML="";
       this.modelType=this.$route.params.type;
       this.currentFunction=this.modelFunctions[this.modelType];
-      //remove connection listener events
-      this.graph.connectionHandler.removeListener(this.graph.connectionHandler.connections_fun);
       this.initialize_mx(2);
       //clear undo redo history
       this.undoManager.clear();
