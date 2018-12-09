@@ -2,7 +2,7 @@ var setup_relations = function setup_relations(graph,relations){
     graph.connectionHandler.insertEdge = function(parent, id, value, source, target, style)
     {
         var doc = mxUtils.createXmlDocument();
-        var node = doc.createElement('relation');
+        var node = doc.createElement('rel_'+source.getAttribute("type")+'_'+target.getAttribute("type"));
         node.setAttribute('type', 'relation');
 
         if(relations){
