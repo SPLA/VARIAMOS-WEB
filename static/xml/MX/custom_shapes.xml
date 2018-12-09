@@ -1,0 +1,36 @@
+<shapes>
+<!-- begin component model -->
+<shape name="package" aspect="variable">
+	<background>
+		<rect x="0" y="20" w="100" h="80"/>
+		<fillstroke/>
+		<rect x="0" y="0" w="45" h="20"/>
+		<fillstroke/>
+   </background>
+	<foreground>
+		<fillstroke/>
+	</foreground>
+</shape>
+
+<shape name="file" aspect="variable">
+	<background>
+		<path>
+			<move x="10" y="0"/>
+			<line x="70" y="0"/>
+			<quad x1="70" y1="0" x2="90" y2="30"/>
+			<line x="90" y="100"/>
+			<line x="10" y="100"/>
+			<line x="10" y="0"/>
+			<close/>
+			<move x="70" y="0"/>
+			<line x="70" y="30"/>
+			<line x="90" y="30"/>
+			<close/>
+		</path>		
+	</background>
+	<foreground>
+		<fillstroke/>
+	</foreground>
+</shape>
+<!-- end component model -->
+</shapes>

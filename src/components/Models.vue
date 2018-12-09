@@ -3,37 +3,44 @@
 
     <div class="card mb-3">
             <div class="card-header">
-              <font-awesome-icon icon="chart-area" />
-              {{ $t("models_area") }}</div>
+              <i class="fas fa-chart-area"></i>
+              {{ $t("models_area") }} - {{ $route.params.type }} {{ $t("models_model") }}</div>
             <div class="card-body">
 
-                <div class="left-side">
-                  <div onload="main(this)" id="graphContainer" class="model-area"></div>
-                  
+              <div class="button-area">
+                    <div id="buttonXML"></div><div id="buttonRESET"></div>
+                    <div id="buttonSAVE"></div><div id="buttonUNDO"></div>
+                    <div id="buttonREDO"></div><div id="buttonSHOW"></div>
+                    <div id="buttonDOWNLOAD"></div>
+              </div>
+
+              <div class="row main_area">
+
+                <div class="col-sm-9 left-area">
+                <!--<div class="col-md-9 left-side">-->
+                  <div id="graphContainer" class="model-area"></div>
                   <div class="properties-area"><b>{{ $t("models_element_properties") }}</b><br />
                     <div id="properties"></div>
                   </div>
                 </div>
 
-                <div class="right-side">
-                
-                  <div id="tbContainer" class="pallete-area">
+                <!--<div class="col-md-3 right-side">-->
+                <div class="col-sm-3 right-area">
+                  <div class="pallete-area">
                   <b>{{ $t("models_palette") }}</b><br /><br />
+                  <div id="tbContainer"></div>
                   </div>
-                  <div class="other-area"><b>{{ $t("models_other_features") }}</b><br /><br />
-                    <div id="outlineContainer"
-style="z-index:1;overflow:hidden;top:0px;left:20%;width:160px;height:120px;background:transparent;border-style:solid;border-color:lightgray;">
-                  </div>
-                    <div class="button-area">
-                    <div id="buttonXML"></div>&nbsp;<div id="buttonRESET"></div>&nbsp;
-                    <div id="buttonSAVE"></div>
-                    </div>
+                  <div class="other-area"><b>{{ $t("models_navigator") }}</b>
+                  <div id="navigator" class="navigator"></div>
                   </div>
 
                 </div>
 
-                <div><input type="hidden" id="model_code" @change="persist()" v-model="model_code"></div>
+                <div><input type="hidden" id="model_code" @change="persist()" v-model="modelCode" />
+                <input type="hidden" id="current_type" v-bind:value="$route.params.type" />
+                </div>
               
+              </div>
               </div>
 
             <div class="card-footer small text-muted"></div>
@@ -43,31 +50,94 @@ style="z-index:1;overflow:hidden;top:0px;left:20%;width:160px;height:120px;backg
 </template>
 
 <script>
+import setup_connections from '@/assets/js/models/setup_connections.js'
+import setup_elements from '@/assets/js/models/setup_elements.js'
+import setup_buttons from '@/assets/js/models/setup_buttons.js'
+import setup_keys from '@/assets/js/models/setup_keys.js'
+import setup_properties from '@/assets/js/models/setup_properties.js'
 import main from '@/assets/js/models/model_main.js'
-import feature_main from '@/assets/js/models/feature.js'
+import model_load from '@/assets/js/models/model_load.js'
+import feature_main from '@/assets/js/models/custom/feature.js'
+import component_main from '@/assets/js/models/custom/component.js'
 
 export default{
   data: function(){
     return {
-      model_code: ""
+      modelCode: "",
+      graph:"",
+      toolbar:"",
+      keyHandler:"",
+      undoManager:"",
+      layers:{},
+      modelFunctions:{},
+      setupFunctions:{},
+      models:[],
+      currentFunction:"",
+      mxModel:"",
+      modelType:""
     }
   },
-  mounted:  function(){
-    var m_code="";
-    if (localStorage.model_code) {
-      this.model_code = localStorage.model_code;
-      if(this.model_code!=""){
-        m_code=this.model_code;
-      }
+  mounted: function(){
+    this.models = ["feature","component"]; //represent the available models
+    this.modelFunctions = {
+      "feature":feature_main,
+      "component":component_main
     }
+    this.setupFunctions = {
+      "setup_connections":setup_connections,
+      "setup_buttons":setup_buttons,
+      "setup_keys":setup_keys,
+      "setup_properties":setup_properties,
+      "setup_elements":setup_elements
+    }
+    //preload the saved model if exists
+    if (localStorage["model_code"]) {
+        this.modelCode = localStorage["model_code"];
+    }
+    this.graph = new mxGraph(document.getElementById('graphContainer'));
+    //load saved model into the graph if exists, and return layers
+    this.layers=model_load(this.graph,this.models,this.modelCode);
+    this.modelType=this.$route.params.type; //based on URL Route
+    this.currentFunction=this.modelFunctions[this.modelType];
+    this.toolbar = new mxToolbar(document.getElementById('tbContainer'));
+    this.keyHandler = new mxKeyHandler(this.graph);
+    this.undoManager = new mxUndoManager();
+    this.mxModel = this.graph.getModel();
 
-    main(document.getElementById('graphContainer'), 'feature', feature_main, m_code);
-    
+    this.initialize_mx(1);
+    //clear undo redo history
+    this.undoManager.clear();
   },
   methods: {
     persist() {
-      var newCode=document.getElementById('model_code').value;
-      localStorage.model_code = newCode;
+      //save model in localstorage
+      localStorage["model_code"] = document.getElementById('model_code').value;
+    },
+    initialize_mx(counter){
+      //counter equals 1 load the entire mxGraph 
+      //counter equals 2 only setup the elements (palette) and connections
+      var graphContainer = document.getElementById('graphContainer');
+      main(this.graph,this.layers,this.mxModel,this.toolbar,this.keyHandler,graphContainer,this.modelType,this.currentFunction,counter,this.setupFunctions,this.undoManager);
+    }
+  },
+  beforeRouteLeave(to, from, next){
+    //destroy the window key events before leaving
+    this.keyHandler.destroy();
+    //destroy connection handler events
+    this.graph.connectionHandler.destroy();
+    next();
+  },
+  watch:{
+    $route (to, from){
+      //remove the palette content when there is a change in the component route
+      document.getElementById('tbContainer').innerHTML="";
+      this.modelType=this.$route.params.type;
+      this.currentFunction=this.modelFunctions[this.modelType];
+      //remove connection listener events
+      this.graph.connectionHandler.removeListener(this.graph.connectionHandler.connections_fun);
+      this.initialize_mx(2);
+      //clear undo redo history
+      this.undoManager.clear();
     }
   }
 }
@@ -75,8 +145,43 @@ export default{
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+@media (max-width: 992px){
+  .right-area, .left-area{
+    flex: 100%;
+    max-width: 100%;
+  }
+  .right-area{
+    border-left: 0px !important;
+  }
+}
+
+.main_area{
+  margin-right: 0px;
+  margin-left: 0px;
+}
+
+.left-area{
+  padding-right: 0px;
+  padding-left: 0px;
+}
+
+.right-area{
+  padding-right: 0px;
+  padding-left: 0px;
+  border-top: 1px solid rgba(0,0,0,.125);
+  border-left: 1px solid rgba(0,0,0,.125);
+}
+
+.navigator{
+  border: 2px solid rgba(0,0,0,.125);
+  margin-top: 10px;
+}
+
 .button-area{
   display:inline-flex;
+  border-bottom: 2px solid rgba(0,0,0,.125);
+  border-top: 1px solid rgba(0,0,0,.125);
+  width: 100%;
 }
 
 .card-header {
@@ -87,7 +192,6 @@ export default{
   padding: 0px;
   background-color: white;
 }
-
 
 .properties-area, .other-area{
   border-top: 1px solid rgba(0,0,0,.125);
@@ -103,17 +207,6 @@ export default{
   cursor:default;
   padding-right: 0px; 
   padding-left: 0px;
-}
-
-.left-side{
-	float: left;
-  width:70%;
-  border-right: 1px solid rgba(0,0,0,.125);
-}
-
-.right-side{
-	width: 30%;
-  float: left;
 }
 
 .pallete-area{

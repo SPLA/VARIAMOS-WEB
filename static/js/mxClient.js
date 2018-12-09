@@ -20,9 +20,9 @@ var mxClient =
 	 * 
 	 * versionMajor.versionMinor.buildNumber.revisionNumber
 	 * 
-	 * Current version is 3.7.5.
+	 * Current version is 3.9.11.
 	 */
-	VERSION: '3.7.5',
+	VERSION: '3.9.11',
 
 	/**
 	 * Variable: IS_IE
@@ -238,6 +238,13 @@ var mxClient =
   			  document.location.href.indexOf('https://') < 0,
 
 	/**
+	 * Variable: defaultBundles
+	 * 
+	 * Contains the base names of the default bundles if mxLoadResources is false.
+	 */
+  	defaultBundles: [],
+
+	/**
 	 * Function: isBrowserSupported
 	 *
 	 * Returns true if the current browser is supported, that is, if
@@ -300,6 +307,34 @@ var mxClient =
 	},
 	
 	/**
+	 * Function: loadResources
+	 * 
+	 * Helper method to load the default bundles if mxLoadResources is false.
+	 * 
+	 * Parameters:
+	 * 
+	 * fn - Function to call after all resources have been loaded.
+	 * lan - Optional string to pass to <mxResources.add>.
+	 */
+	loadResources: function(fn, lan)
+	{
+		var pending = mxClient.defaultBundles.length;
+		
+		function callback()
+		{
+			if (--pending == 0)
+			{
+				fn();
+			}
+		}
+		
+		for (var i = 0; i < mxClient.defaultBundles.length; i++)
+		{
+			mxResources.add(mxClient.defaultBundles[i], lan, callback);
+		}
+	},
+	
+	/**
 	 * Function: include
 	 *
 	 * Dynamically adds a script node to the document header.
@@ -311,27 +346,8 @@ var mxClient =
 	 */
 	include: function(src)
 	{
-		document.write('<script src="/static/'+src+'"></script>');
-	},
-	
-	/**
-	 * Function: dispose
-	 * 
-	 * Frees up memory in IE by resolving cyclic dependencies between the DOM
-	 * and the JavaScript objects.
-	 */
-	dispose: function()
-	{
-		// Cleans all objects where listeners have been added
-		for (var i = 0; i < mxEvent.objects.length; i++)
-		{
-			if (mxEvent.objects[i].mxListenerList != null)
-			{
-				mxEvent.removeAllListeners(mxEvent.objects[i]);
-			}
-		}
+		document.write('<script src="'+src+'"></script>');
 	}
-
 };
 
 /**
@@ -339,7 +355,8 @@ var mxClient =
  * 
  * Optional global config variable to toggle loading of the two resource files
  * in <mxGraph> and <mxEditor>. Default is true. NOTE: This is a global variable,
- * not a variable of mxClient.
+ * not a variable of mxClient. If this is false, you can use <mxClient.loadResources>
+ * with its callback to load the default bundles asynchronously.
  *
  * (code)
  * <script type="text/javascript">
@@ -438,7 +455,7 @@ if (typeof(mxBasePath) != 'undefined' && mxBasePath.length > 0)
 }
 else
 {
-	mxClient.basePath = '.';
+	mxClient.basePath = './static';
 }
 
 /**
@@ -470,7 +487,7 @@ if (typeof(mxImageBasePath) != 'undefined' && mxImageBasePath.length > 0)
 }
 else
 {
-	mxClient.imageBasePath = '/static/images/MX';	
+	mxClient.imageBasePath = mxClient.basePath + '/images';	
 }
 
 /**
@@ -542,7 +559,7 @@ else
 // Adds all required stylesheets and namespaces
 if (mxLoadStylesheets)
 {
-	mxClient.link('stylesheet', mxClient.basePath + '/static/css/MX/common.css');
+	mxClient.link('stylesheet', mxClient.basePath + '/css/MX/common.css');
 }
 
 /**
@@ -612,9 +629,6 @@ if (mxClient.IS_VML)
 	    {
 	    	mxClient.link('stylesheet', mxClient.basePath + '/css/explorer.css');
 	    }
-	
-		// Cleans up resources when the application terminates
-		window.attachEvent('onunload', mxClient.dispose);
 	}
 }
 

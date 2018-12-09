@@ -85,7 +85,7 @@ var mxUtils =
 	 */
 	getCurrentStyle: function()
 	{
-		if (mxClient.IS_IE)
+		if (mxClient.IS_IE && (document.documentMode == null || document.documentMode < 9))
 		{
 			return function(element)
 			{
@@ -658,7 +658,14 @@ var mxUtils =
 		{
 			return function()
 			{
-				window.getSelection().removeAllRanges();
+				if (window.getSelection().empty)
+				{
+					window.getSelection().empty();
+				}
+				else if (window.getSelection().removeAllRanges)
+				{
+					window.getSelection().removeAllRanges();
+				}
 			};
 		}
 		else
@@ -693,7 +700,12 @@ var mxUtils =
 			
 			if (node.nodeType == mxConstants.NODETYPE_TEXT)
 			{
-				result.push(node.value);
+				var value =  mxUtils.trim(mxUtils.getTextContent(node));
+				
+				if (value.length > 0)
+				{
+					result.push(indent + mxUtils.htmlEntities(value) + '\n');
+				}
 			}
 			else
 			{
@@ -940,7 +952,8 @@ var mxUtils =
 	 */
 	getTextContent: function(node)
 	{
-		if (node.innerText !== undefined)
+		// Only IE10-
+		if (mxClient.IS_IE && node.innerText !== undefined)
 		{
 			return node.innerText;
 		}
@@ -1187,12 +1200,16 @@ var mxUtils =
 	 * doc - Optional document to be used for creating the button. Default is the
 	 * current document.
 	 */
-	button: function(label, funct, doc)
+
+	button_with_icon: function(label, funct, icon_style, doc)
 	{
 		doc = (doc != null) ? doc : document;
 		
 		var button = doc.createElement('button');
-		button.className = "btn btn-sm btn-outline-secondary";
+		button.className = "btn-model-area btn btn-sm btn-outline-secondary";
+		var icon = document.createElement('i');
+		icon.className = "fas "+ "fa-"+icon_style;
+		button.appendChild(icon);
 		mxUtils.write(button, label);
 
 		mxEvent.addListener(button, 'click', function(evt)
@@ -1203,6 +1220,25 @@ var mxUtils =
 		return button;
 	},
 	
+	button: function(label, funct, doc)
+	{
+		doc = (doc != null) ? doc : document;
+		
+		var button = doc.createElement('button');
+		button.className = "btn-model-area btn btn-sm btn-outline-secondary";
+		var icon = document.createElement('i');
+		icon.className = "fas "+ "fa-user";
+		button.appendChild(icon);
+		mxUtils.write(button, label);
+
+		mxEvent.addListener(button, 'click', function(evt)
+		{
+			funct(evt);
+		});
+		
+		return button;
+	},
+
 	/**
 	 * Function: para
 	 * 

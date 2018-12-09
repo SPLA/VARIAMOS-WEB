@@ -19,7 +19,7 @@ export default new Router({
       component: About
     },
     {
-      path: '/models',
+      path: '/models/:type',
       name: 'Models',
       component: Models
     }

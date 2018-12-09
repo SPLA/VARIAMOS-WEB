@@ -8,17 +8,12 @@ import router from './router'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import '../static/css/dashboard.css'
+import '../static/css/fontawesome/all.css'
 import i18n from './i18n'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { faChartArea } from '@fortawesome/free-solid-svg-icons'
 
 Vue.use(BootstrapVue)
 Vue.config.productionTip = false
 Vue.use(VueI18n)
-
-library.add(faChartArea)
-Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 /* eslint-disable no-new */
 new Vue({

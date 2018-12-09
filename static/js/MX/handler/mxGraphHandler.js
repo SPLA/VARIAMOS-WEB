@@ -661,7 +661,7 @@ mxGraphHandler.prototype.removeHint = function() { };
  */
 mxGraphHandler.prototype.roundLength = function(length)
 {
-	return Math.round(length);
+	return Math.round(length * 2) / 2;
 };
 
 /**
@@ -703,12 +703,13 @@ mxGraphHandler.prototype.mouseMove = function(sender, me)
 				this.shape = this.createPreviewShape(this.bounds);
 			}
 			
+			var clone = graph.isCloneEvent(me.getEvent()) && graph.isCellsCloneable() && this.isCloneEnabled();
 			var gridEnabled = graph.isGridEnabledEvent(me.getEvent());
 			var hideGuide = true;
 			
 			if (this.guide != null && this.useGuidesForEvent(me))
 			{
-				delta = this.guide.move(this.bounds, new mxPoint(dx, dy), gridEnabled);
+				delta = this.guide.move(this.bounds, new mxPoint(dx, dy), gridEnabled, clone);
 				hideGuide = false;
 				dx = delta.x;
 				dy = delta.y;
@@ -751,8 +752,6 @@ mxGraphHandler.prototype.mouseMove = function(sender, me)
 			var target = null;
 			var cell = me.getCell();
 
-			var clone = graph.isCloneEvent(me.getEvent()) && graph.isCellsCloneable() && this.isCloneEnabled();
-			
 			if (graph.isDropEnabled() && this.highlightEnabled)
 			{
 				// Contains a call to getCellAt to find the cell under the mouse
@@ -811,8 +810,8 @@ mxGraphHandler.prototype.mouseMove = function(sender, me)
 		// fired on the container with no associated state.
 		mxEvent.consume(me.getEvent());
 	}
-	else if ((this.isMoveEnabled() || this.isCloneEnabled()) && this.updateCursor &&
-		!me.isConsumed() && me.getState() != null && !graph.isMouseDown)
+	else if ((this.isMoveEnabled() || this.isCloneEnabled()) && this.updateCursor && !me.isConsumed() &&
+		(me.getState() != null || me.sourceState != null) && !graph.isMouseDown)
 	{
 		var cursor = graph.getCursorForMouseEvent(me);
 		
@@ -830,7 +829,7 @@ mxGraphHandler.prototype.mouseMove = function(sender, me)
 
 		// Sets the cursor on the original source state under the mouse
 		// instead of the event source state which can be the parent
-		if (me.sourceState != null)
+		if (cursor != null && me.sourceState != null)
 		{
 			me.sourceState.setCursor(cursor);
 		}
@@ -1007,6 +1006,9 @@ mxGraphHandler.prototype.moveCells = function(cells, dx, dy, clone, target, evt)
 	{
 		target = this.graph.getDefaultParent();
 	}
+	
+	// Cloning into locked cells is not allowed
+	clone = clone && !this.graph.isCellLocked(target || this.graph.getDefaultParent());
 	
 	// Passes all selected cells in order to correctly clone or move into
 	// the target cell. The method checks for each cell if its movable.
