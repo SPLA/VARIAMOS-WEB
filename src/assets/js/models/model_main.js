@@ -96,6 +96,7 @@ var main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model
 		graph.setMultigraph(false);
 		graph.setAllowDanglingEdges(false);
 		graph.setDisconnectOnMove(false);
+		graph.setCellsEditable(false);
 		new mxRubberband(graph); // Enables rectangular selection
 		new mxOutline(graph, document.getElementById('navigator'));
 	}
