@@ -31,19 +31,6 @@ var setup_elements = function setup_elements(graph, elements, toolbar){
 
 			var pt = graph.getPointForEvent(evt);
             var vertex = graph.getModel().cloneCell(prototype);
-            
-			if(prototype.getAttribute("type") === "root"){
-               var cells = graph.getModel().cells
-                Object.keys(cells).forEach(function(key) {
-                if(mxUtils.isNode(cells[key]['value'])){
-                    if(cells[key].getAttribute("type") == "root"){
-                        alert("Only 1 root")
-					    return
-                    } 
-                }
-                });
-			}
-
 			vertex.geometry.x = pt.x;
 			vertex.geometry.y = pt.y;
 			
