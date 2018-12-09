@@ -27,7 +27,6 @@ var setup_elements = function setup_elements(graph, elements, toolbar){
         // the mousepointer if there is one.
         var funct = function(graph, evt, cell)
 		{
-            var rootCounter = 0;
 			graph.stopEditing(false);
 
 			var pt = graph.getPointForEvent(evt);
@@ -37,16 +36,11 @@ var setup_elements = function setup_elements(graph, elements, toolbar){
                 Object.keys(cells).forEach(function(key) {
                 if(mxUtils.isNode(cells[key]['value'])){
                     if(cells[key].getAttribute("type") == "root"){
-                        rootCounter ++;
+                        alert("Only 1 root")
+					    return
                     } 
                 }
                 });
-				if(rootCounter >= 1){
-					alert("Only 1 root")
-					return
-				}else{
-					rootCounter ++;
-				}
 			}
 
 			vertex.geometry.x = pt.x;
