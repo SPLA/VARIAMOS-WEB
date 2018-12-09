@@ -30,7 +30,8 @@ var setup_elements = function setup_elements(graph, elements, toolbar){
 			graph.stopEditing(false);
 
 			var pt = graph.getPointForEvent(evt);
-			var vertex = graph.getModel().cloneCell(prototype);
+            var vertex = graph.getModel().cloneCell(prototype);
+            
 			if(prototype.getAttribute("type") === "root"){
                var cells = graph.getModel().cells
                 Object.keys(cells).forEach(function(key) {
