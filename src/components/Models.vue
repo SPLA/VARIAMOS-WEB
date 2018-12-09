@@ -11,7 +11,8 @@
                     <div id="buttonXML"></div><div id="buttonRESET"></div>
                     <div id="buttonSAVE"></div><div id="buttonUNDO"></div>
                     <div id="buttonREDO"></div><div id="buttonSHOW"></div>
-                    <div id="buttonDOWNLOAD"></div>
+                    <div id="buttonDOWNLOAD"></div><div id="buttonLOAD" type ="file"></div>
+                    <input id="file" type ="file" style="visibility:hidden;" >
               </div>
 
               <div class="row main_area">
