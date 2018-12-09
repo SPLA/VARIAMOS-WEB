@@ -1,9 +1,10 @@
 var component_main = function component_main(graph)
 {
 	component_constraints(graph);
-	var elements=[];
-    elements= component_elements();
-	return elements;
+	var data=[];
+	data[0]=component_elements();
+	data[1]=null;
+	return data;
 	
 	function component_constraints(graph){
 		graph.multiplicities=[]; //reset multiplicities

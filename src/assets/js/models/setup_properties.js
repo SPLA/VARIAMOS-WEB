@@ -23,10 +23,7 @@ var setup_properties = function setup_properties(graph){
 		}
 		else
 		{
-			if(cell.isEdge()){
-				//missing 
-			}else{
-				// Creates the form from the attributes of the user object
+			if(cell.value.attributes){
 				var form = new mxForm("properties-table");
 				var attrs = cell.value.attributes;
 				
