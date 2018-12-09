@@ -5,8 +5,6 @@ layer0 (root child at position 0) belongs to "Feature model"
 layer1 (root child at position 1) belongs to "Component model"
 
 */
-var rootCounter = 1;
-
 var model_load = function model_load(graph,models,m_code){
     var layers = {}; 
     if(m_code!=""){
