@@ -34,16 +34,16 @@
                   </div>
                 </div>
 
-                <div>
-                  <input type="hidden" id="model_code" @change="persist()" v-model="modelCode" />
-                  <input type="hidden" id="current_type" v-bind:value="$route.params.type" />
-                  <input id="file" type="file" class="button_hidden" />
-                </div>
-              
               </div>
               </div>
 
             <div class="card-footer small text-muted"></div>
+        </div>
+
+        <div>
+          <input type="hidden" id="model_code" @change="persist()" v-model="modelCode" />
+          <input type="hidden" id="current_type" v-bind:value="$route.params.type" />
+          <input id="file" type="file" class="button_hidden" />
         </div>
   </div>
 
