@@ -1,7 +1,7 @@
 var setup_buttons = function setup_buttons(graph,undoManager){
     /* begin buttonxml */
     // Adds an option to view the XML of the graph
-    buttonXML.appendChild(mxUtils.button_with_icon('View XML', function()
+    buttonXML.appendChild(mxUtils.button_with_icon(messages["setup_buttons_viewxml"], function()
     {
         var encoder = new mxCodec();
         var node = encoder.encode(graph.getModel());
@@ -12,7 +12,7 @@ var setup_buttons = function setup_buttons(graph,undoManager){
     /* begin buttonreset */
     // Adds an option to reset the graph
     var buttonRESET = document.getElementById('buttonRESET');
-    buttonRESET.appendChild(mxUtils.button_with_icon('Reset', function()
+    buttonRESET.appendChild(mxUtils.button_with_icon(messages["setup_buttons_reset"], function()
     {
         graph.removeCells(graph.getChildVertices(graph.getDefaultParent()));
 
@@ -30,7 +30,7 @@ var setup_buttons = function setup_buttons(graph,undoManager){
     /* begin buttonsave */
     // Adds an option to save in localstorage the graph
     var buttonSAVE = document.getElementById('buttonSAVE');
-    buttonSAVE.appendChild(mxUtils.button_with_icon('Save Local', function()
+    buttonSAVE.appendChild(mxUtils.button_with_icon(messages["setup_buttons_save"], function()
     {
         var encoder = new mxCodec();
         var result = encoder.encode(graph.getModel());
@@ -40,12 +40,12 @@ var setup_buttons = function setup_buttons(graph,undoManager){
         model_code.value=xml;
         var event = new Event('change');
         model_code.dispatchEvent(event);
-        alert("Model saved!");
+        alert(messages["setup_buttons_save_model"]);
     },"save"));
 
-    /*begin buttonDownload*/
-    var buttonDOWNLOAD = document.getElementById('buttonDOWNLOAD');
-    buttonDOWNLOAD.appendChild(mxUtils.button_with_icon('Download XML', function()
+    /*begin buttonExport*/
+    var buttonEXPORT = document.getElementById('buttonEXPORT');
+    buttonEXPORT.appendChild(mxUtils.button_with_icon(messages["setup_buttons_export"], function()
     {
         var encoder = new mxCodec();
         var result = encoder.encode(graph.getModel());
@@ -58,7 +58,6 @@ var setup_buttons = function setup_buttons(graph,undoManager){
         var textToSaveAsURL = window.URL.createObjectURL(textToSaveAsBlob);
         var downloadLink = document.createElement("a");
         downloadLink.download = "model.xml";
-        downloadLink.innerHTML = "Download File";
         downloadLink.href = textToSaveAsURL;
         downloadLink.onclick = function(event)
         {
@@ -70,9 +69,9 @@ var setup_buttons = function setup_buttons(graph,undoManager){
         downloadLink.click();
         
     },"download"));
-    /* end buttonDownload */
+    /* end buttonExport */
 
-    /*begin buttonLoad*/
+    /*begin buttonImport*/
     var file = document.getElementById("file")
     file.addEventListener('change', function(event) {
         var fileToLoad = file.files[0];
@@ -91,13 +90,13 @@ var setup_buttons = function setup_buttons(graph,undoManager){
         fileReader.readAsText(fileToLoad, "UTF-8");
         });
 
-    var buttonLOAD = document.getElementById('buttonLOAD');
-    buttonLOAD.appendChild(mxUtils.button_with_icon('Load XML', function()
+    var buttonIMPORT = document.getElementById('buttonIMPORT');
+    buttonIMPORT.appendChild(mxUtils.button_with_icon(messages["setup_buttons_import"], function()
     {   
         file.click();
     },"upload"));
 
-    /* end buttonLoad */
+    /* end buttonImport */
 
     var listener = function(sender, evt)
     {
@@ -110,7 +109,7 @@ var setup_buttons = function setup_buttons(graph,undoManager){
     var buttonUNDO = document.getElementById('buttonUNDO');
     //clear undo redo history
     undoManager.clear();
-    buttonUNDO.appendChild(mxUtils.button_with_icon('Undo', function()
+    buttonUNDO.appendChild(mxUtils.button_with_icon(messages["setup_buttons_undo"], function()
     {
         if(undoManager.canUndo()){
             undoManager.undo();
@@ -120,7 +119,7 @@ var setup_buttons = function setup_buttons(graph,undoManager){
 
     /* begin buttonREDO */
     var buttonREDO = document.getElementById('buttonREDO');
-    buttonREDO.appendChild(mxUtils.button_with_icon('Redo', function()
+    buttonREDO.appendChild(mxUtils.button_with_icon(messages["setup_buttons_redo"], function()
     {
         if(undoManager.canRedo()){
             undoManager.redo();
@@ -130,7 +129,7 @@ var setup_buttons = function setup_buttons(graph,undoManager){
 
     /* begin buttonSHOW */
     var buttonSHOW = document.getElementById('buttonSHOW');
-    buttonSHOW.appendChild(mxUtils.button_with_icon('Show', function()
+    buttonSHOW.appendChild(mxUtils.button_with_icon(messages["setup_buttons_show"], function()
     {
         mxUtils.show(graph);
     },"image"));

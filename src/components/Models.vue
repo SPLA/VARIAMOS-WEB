@@ -11,21 +11,19 @@
                     <div id="buttonXML"></div><div id="buttonRESET"></div>
                     <div id="buttonSAVE"></div><div id="buttonUNDO"></div>
                     <div id="buttonREDO"></div><div id="buttonSHOW"></div>
-                    <div id="buttonDOWNLOAD"></div>
-                    <div id="buttonLOAD" type="file" style="display:none"></div>
+                    <div id="buttonEXPORT"></div>
+                    <div id="buttonIMPORT" type="file" style="display:none"></div>
               </div>
 
               <div class="row main_area">
 
                 <div class="col-sm-9 left-area">
-                <!--<div class="col-md-9 left-side">-->
                   <div id="graphContainer" class="model-area"></div>
                   <div class="properties-area"><b>{{ $t("models_element_properties") }}</b><br />
                     <div id="properties"></div>
                   </div>
                 </div>
 
-                <!--<div class="col-md-3 right-side">-->
                 <div class="col-sm-3 right-area">
                   <div class="pallete-area">
                   <b>{{ $t("models_palette") }}</b><br /><br />

@@ -19,7 +19,7 @@ var setup_properties = function setup_properties(graph){
 
 		if (cell == null)
 		{
-			mxUtils.writeln(div, 'Nothing selected.');
+			mxUtils.writeln(div, messages["setup_properties_nothing"]);
 		}
 		else
 		{

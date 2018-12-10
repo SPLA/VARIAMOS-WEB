@@ -1,7 +1,4 @@
-var setup_elements = function setup_elements(graph, elements, toolbar){
-    //var elements="";
-    //elements=model_specific_main(graph);
-    
+var setup_elements = function setup_elements(graph, elements, toolbar){    
     for (var i = 0; i < elements.length; i++) {
         addVertex(graph, toolbar, elements[i].src, elements[i].wd, elements[i].hg, elements[i].style, elements[i].type, elements[i].pname, elements[i].attr);
     }
@@ -31,7 +28,7 @@ var setup_elements = function setup_elements(graph, elements, toolbar){
 
 			var pt = graph.getPointForEvent(evt);
             var vertex = graph.getModel().cloneCell(prototype);
-			vertex.geometry.x = pt.x;
+            vertex.geometry.x = pt.x;
 			vertex.geometry.y = pt.y;
 			
 			graph.setSelectionCells(graph.importCells([vertex], 0, 0, cell));

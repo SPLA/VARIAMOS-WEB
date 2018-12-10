@@ -2,12 +2,11 @@
 //main function
 var main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model_type,model_specific_main,counter,setupFunctions,undoManager)
 {
-
 	// Checks if the browser is supported
 	if (!mxClient.isBrowserSupported())
 	{
 		// Displays an error message if the browser is not supported.
-		mxUtils.error('Browser is not supported!', 200, false);
+		mxUtils.error(messages["model_main_browser"], 200, false);
 	}
 	else
 	{
