@@ -107,8 +107,6 @@ var main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model
 	}	
 
 	function setup_scrollbar_config(graph){
-
-		
 		graph.scrollTileSize = new mxRectangle(0, 0, 100, 100);	
 		/**
 		 * Specifies the size of the size for "tiles" to be used for a graph with
@@ -127,7 +125,6 @@ var main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model
 		{
 			return new mxPoint(Math.max(0, Math.round(graph.container.offsetWidth - 400)),
 					Math.max(0, Math.round(graph.container.offsetHeight - 400)));
-					c
 		};
 		
 		/**
@@ -214,8 +211,8 @@ var main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model
 				this.translate.y = pad.y / this.scale - (this.y0 || 0) * size.height;
 			}
 					
-					graphViewValidate.apply(this, arguments);
-				};
+			graphViewValidate.apply(this, arguments);
+		};
 				
 		var graphSizeDidChange = graph.sizeDidChange;
 		graph.sizeDidChange = function()

@@ -15,8 +15,13 @@ var setup_buttons = function setup_buttons(graph,undoManager){
     buttonRESET.appendChild(mxUtils.button_with_icon('Reset', function()
     {
         graph.removeCells(graph.getChildVertices(graph.getDefaultParent()));
+
+        var encoder = new mxCodec();
+        var result = encoder.encode(graph.getModel());
+        var xml = mxUtils.getPrettyXml(result);
+    
         var model_code = document.getElementById('model_code');
-        model_code.value="";
+        model_code.value=xml;
         var event = new Event('change');
         model_code.dispatchEvent(event);
     },"eraser"));

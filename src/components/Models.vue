@@ -11,8 +11,8 @@
                     <div id="buttonXML"></div><div id="buttonRESET"></div>
                     <div id="buttonSAVE"></div><div id="buttonUNDO"></div>
                     <div id="buttonREDO"></div><div id="buttonSHOW"></div>
-                    <div id="buttonDOWNLOAD"></div><div id="buttonLOAD" type ="file"></div>
-                    <input id="file" type ="file" style="visibility:hidden;" >
+                    <div id="buttonDOWNLOAD"></div>
+                    <div id="buttonLOAD" type="file" style="display:none"></div>
               </div>
 
               <div class="row main_area">
@@ -39,6 +39,7 @@
 
                 <div><input type="hidden" id="model_code" @change="persist()" v-model="modelCode" />
                 <input type="hidden" id="current_type" v-bind:value="$route.params.type" />
+                <input id="file" type ="file" style="visibility:hidden;" >
                 </div>
               
               </div>
