@@ -3,7 +3,8 @@ var feature_main = function feature_main(graph)
 	feature_constraints(graph);
 	var data=[];
 	data[0]=feature_elements();
-	data[1]=feature_relations();
+	data[1]=null; //custom_attributes
+	data[2]=feature_relations(); //custom_relations
 	return data;
 	
 	function feature_constraints(graph){
@@ -27,10 +28,10 @@ var feature_main = function feature_main(graph)
 	}
 
 	function feature_elements(){
-		var root = {src:"static/images/models/feature/rectangle.png", wd:100, hg:35, type:"root", style:"", pname:"Root Feature", attr:""};
-		var general = {src:"static/images/models/feature/rectangle.png", wd:100, hg:35, type:"general", style:"", pname:"General Feature", attr:""};
-		var leaf = {src:"static/images/models/feature/rectangle.png", wd:100, hg:35, type:"leaf", style:"", pname:"Leaf Feature", attr:""};
-		var association = {src:"static/images/models/feature/association.png", wd:35, hg:35, type:"association", style:"shape=ellipse", pname:"Association", attr:""};
+		var root = {src:"static/images/models/feature/rectangle.png", wd:100, hg:35, type:"root", style:"", pname:"Root Feature"};
+		var general = {src:"static/images/models/feature/rectangle.png", wd:100, hg:35, type:"general", style:"", pname:"General Feature"};
+		var leaf = {src:"static/images/models/feature/rectangle.png", wd:100, hg:35, type:"leaf", style:"", pname:"Leaf Feature"};
+		var association = {src:"static/images/models/feature/association.png", wd:35, hg:35, type:"association", style:"shape=ellipse", pname:"Association"};
 		
 		var elements=[];
 		elements[0]=root;

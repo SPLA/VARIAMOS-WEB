@@ -3,7 +3,8 @@ var component_main = function component_main(graph)
 	component_constraints(graph);
 	var data=[];
 	data[0]=component_elements();
-	data[1]=null;
+	data[1]=component_attributes(); //custom_attributes
+	data[2]=null; //custom_relations
 	return data;
 	
 	function component_constraints(graph){
@@ -19,14 +20,31 @@ var component_main = function component_main(graph)
 	}
 
 	function component_elements(){
-		var packagex = {src:"static/images/models/component/package.png", wd:100, hg:40, style:"shape=package", type:"package", pname:"Package", attr:""};
-		var file = {src:"static/images/models/component/file.png", wd:100, hg:40, style:"shape=file", type:"file", pname:"File", attr:""};
+		var packagex = {src:"static/images/models/component/package.png", wd:100, hg:40, style:"shape=package", type:"package", pname:"Package"};
+		var file = {src:"static/images/models/component/file.png", wd:100, hg:40, style:"shape=file", type:"file", pname:"File"};
 
 		var elements=[];
 		elements[0]=packagex;
 		elements[1]=file;
 		
 		return elements;
+	}
+
+	function component_attributes(){
+		var attributes=[];
+		attributes[0]={
+			"types":["file"],
+			"custom_attributes":[{
+				"name":"filename",
+				"def_value":""
+			},
+			{
+				"name":"destination",
+				"def_value":""
+			}]
+		};
+	
+		return attributes;
 	}
 	
 }
