@@ -12,7 +12,7 @@
                     <div id="buttonSAVE"></div><div id="buttonUNDO"></div>
                     <div id="buttonREDO"></div><div id="buttonSHOW"></div>
                     <div id="buttonEXPORT"></div>
-                    <div id="buttonIMPORT" type="file" style="display:none"></div>
+                    <div id="buttonIMPORT" type="file"></div>
               </div>
 
               <div class="row main_area">
@@ -32,12 +32,12 @@
                   <div class="other-area"><b>{{ $t("models_navigator") }}</b>
                   <div id="navigator" class="navigator"></div>
                   </div>
-
                 </div>
 
-                <div><input type="hidden" id="model_code" @change="persist()" v-model="modelCode" />
-                <input type="hidden" id="current_type" v-bind:value="$route.params.type" />
-                <input id="file" type ="file" style="visibility:hidden;" >
+                <div>
+                  <input type="hidden" id="model_code" @change="persist()" v-model="modelCode" />
+                  <input type="hidden" id="current_type" v-bind:value="$route.params.type" />
+                  <input id="file" type="file" class="button_hidden" />
                 </div>
               
               </div>
@@ -149,6 +149,10 @@ export default{
   .right-area{
     border-left: 0px !important;
   }
+}
+
+.button_hidden{
+  visibility:hidden;
 }
 
 .main_area{

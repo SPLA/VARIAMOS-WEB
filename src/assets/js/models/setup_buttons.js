@@ -43,7 +43,7 @@ var setup_buttons = function setup_buttons(graph,undoManager){
         alert(messages["setup_buttons_save_model"]);
     },"save"));
 
-    /*begin buttonExport*/
+    /* begin buttonExport */
     var buttonEXPORT = document.getElementById('buttonEXPORT');
     buttonEXPORT.appendChild(mxUtils.button_with_icon(messages["setup_buttons_export"], function()
     {
@@ -68,10 +68,10 @@ var setup_buttons = function setup_buttons(graph,undoManager){
      
         downloadLink.click();
         
-    },"download"));
+    },"upload"));
     /* end buttonExport */
 
-    /*begin buttonImport*/
+    /* begin buttonImport */
     var file = document.getElementById("file")
     file.addEventListener('change', function(event) {
         var fileToLoad = file.files[0];
@@ -79,13 +79,11 @@ var setup_buttons = function setup_buttons(graph,undoManager){
         fileReader.onload = function(fileLoadedEvent) 
         {
             var textFromFileLoaded = fileLoadedEvent.target.result;
-            //load saved model
-            console.log(textFromFileLoaded)
-            var doc = mxUtils.parseXml(textFromFileLoaded);
-            var codec = new mxCodec(doc);
-            codec.decode(doc.documentElement, graph.getModel());
-            console.log(graph.getModel());
-            
+            var model_code = document.getElementById('model_code');
+            model_code.value=textFromFileLoaded;
+            var event = new Event('change');
+            model_code.dispatchEvent(event);
+            location.reload();
         }
         fileReader.readAsText(fileToLoad, "UTF-8");
         });
@@ -94,8 +92,7 @@ var setup_buttons = function setup_buttons(graph,undoManager){
     buttonIMPORT.appendChild(mxUtils.button_with_icon(messages["setup_buttons_import"], function()
     {   
         file.click();
-    },"upload"));
-
+    },"download"));
     /* end buttonImport */
 
     var listener = function(sender, evt)
