@@ -38,7 +38,7 @@ var main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model
 			//setup graph config
 			setup_graph_config(graph);
 			//setup scrollbar config
-			setup_scrollbar_config(graph);
+			//setup_scrollbar_config(graph);
 			//setup keys
 			setupFunctions["setup_keys"](keyHandler,graph);
 			//setup properties
