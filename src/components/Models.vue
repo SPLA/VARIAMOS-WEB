@@ -11,6 +11,8 @@
                     <div id="buttonXML"></div><div id="buttonRESET"></div>
                     <div id="buttonSAVE"></div><div id="buttonUNDO"></div>
                     <div id="buttonREDO"></div><div id="buttonSHOW"></div>
+                    <div id="buttonDOWNLOAD"></div><div id="buttonLOAD" type ="file"></div>
+                    <input id="file" type ="file" style="visibility:hidden;" >
               </div>
 
               <div class="row main_area">
@@ -194,7 +196,9 @@ export default{
 }
 
 .model-area{
-  overflow:hidden;
+  overflow-block: scroll;
+  overflow-x: auto;
+  overflow-y: auto;
   height:250px;
   background:url("/static/images/MX/editors/grid.gif");
   cursor:default;

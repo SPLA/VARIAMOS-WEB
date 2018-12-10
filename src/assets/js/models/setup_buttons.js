@@ -25,18 +25,74 @@ var setup_buttons = function setup_buttons(graph,undoManager){
     /* begin buttonsave */
     // Adds an option to save in localstorage the graph
     var buttonSAVE = document.getElementById('buttonSAVE');
-    buttonSAVE.appendChild(mxUtils.button_with_icon('Save LocalStorage', function()
+    buttonSAVE.appendChild(mxUtils.button_with_icon('Save Local', function()
     {
         var encoder = new mxCodec();
         var result = encoder.encode(graph.getModel());
-        var xml = mxUtils.getXml(result);
+        var xml = mxUtils.getPrettyXml(result);
+    
         var model_code = document.getElementById('model_code');
         model_code.value=xml;
         var event = new Event('change');
         model_code.dispatchEvent(event);
         alert("Model saved!");
     },"save"));
-    /* end buttonsave */
+
+    /*begin buttonDownload*/
+    var buttonDOWNLOAD = document.getElementById('buttonDOWNLOAD');
+    buttonDOWNLOAD.appendChild(mxUtils.button_with_icon('Download XML', function()
+    {
+        var encoder = new mxCodec();
+        var result = encoder.encode(graph.getModel());
+        var xml = mxUtils.getPrettyXml(result);
+    
+        var model_code = document.getElementById('model_code');
+        model_code.value=xml;
+    
+        var textToSaveAsBlob = new Blob([model_code.value], {type:"text/xml"});
+        var textToSaveAsURL = window.URL.createObjectURL(textToSaveAsBlob);
+        var downloadLink = document.createElement("a");
+        downloadLink.download = "model.xml";
+        downloadLink.innerHTML = "Download File";
+        downloadLink.href = textToSaveAsURL;
+        downloadLink.onclick = function(event)
+        {
+            document.body.removeChild(event.target);
+        }
+        downloadLink.style.display = "none";
+        document.body.appendChild(downloadLink);
+     
+        downloadLink.click();
+        
+    },"download"));
+    /* end buttonDownload */
+
+    /*begin buttonLoad*/
+    var file = document.getElementById("file")
+    file.addEventListener('change', function(event) {
+        var fileToLoad = file.files[0];
+        var fileReader = new FileReader();
+        fileReader.onload = function(fileLoadedEvent) 
+        {
+            var textFromFileLoaded = fileLoadedEvent.target.result;
+            //load saved model
+            console.log(textFromFileLoaded)
+            var doc = mxUtils.parseXml(textFromFileLoaded);
+            var codec = new mxCodec(doc);
+            codec.decode(doc.documentElement, graph.getModel());
+            console.log(graph.getModel());
+            
+        }
+        fileReader.readAsText(fileToLoad, "UTF-8");
+        });
+
+    var buttonLOAD = document.getElementById('buttonLOAD');
+    buttonLOAD.appendChild(mxUtils.button_with_icon('Load XML', function()
+    {   
+        file.click();
+    },"upload"));
+
+    /* end buttonLoad */
 
     var listener = function(sender, evt)
     {

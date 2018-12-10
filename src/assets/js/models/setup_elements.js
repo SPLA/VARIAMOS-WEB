@@ -26,16 +26,16 @@ var setup_elements = function setup_elements(graph, elements, toolbar){
         // the graph. The cell argument points to the cell under
         // the mousepointer if there is one.
         var funct = function(graph, evt, cell)
-        {
-            graph.stopEditing(false);
+		{
+			graph.stopEditing(false);
 
-            var pt = graph.getPointForEvent(evt);
+			var pt = graph.getPointForEvent(evt);
             var vertex = graph.getModel().cloneCell(prototype);
-            vertex.geometry.x = pt.x;
-            vertex.geometry.y = pt.y;
-            
-            graph.setSelectionCells(graph.importCells([vertex], 0, 0, cell));
-        }
+			vertex.geometry.x = pt.x;
+			vertex.geometry.y = pt.y;
+			
+			graph.setSelectionCells(graph.importCells([vertex], 0, 0, cell));
+		}
         
         var tbContainer = document.getElementById('tbContainer');
         var span = document.createElement('span');
