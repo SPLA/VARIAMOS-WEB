@@ -23,8 +23,9 @@ var setup_relations = function setup_relations(graph,relations){
                 }
             }
         }
-
-        return graph.insertEdge(parent, id, node, source, target, style);
+        
+        var cell = graph.insertEdge(parent, id, node, source, target, style);
+        return cell;
     };
 }
 
