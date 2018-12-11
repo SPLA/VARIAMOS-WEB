@@ -89,14 +89,15 @@ import messages from '@/assets/js/messages.js'
   }
 }
 
+/*
 @media (max-width: 1100px){
   .submenu{ 
     padding-left: 10px !important;
   }
-}
+}*/
 
 .submenu{
-  padding-left: 30px;
+  padding-left: 25px !important;
 }
 
 #mainview {

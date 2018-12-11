@@ -208,7 +208,7 @@ export default{
   overflow-block: scroll;
   overflow-x: auto;
   overflow-y: auto;
-  height:250px;
+  height:350px;
   background:url("/static/images/MX/editors/grid.gif");
   cursor:default;
   padding-right: 0px; 

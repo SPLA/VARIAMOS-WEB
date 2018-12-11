@@ -36,7 +36,7 @@ var setup_properties = function setup_properties(graph,properties_styles){
 						{
 							if(properties_styles[type][j]["attribute"]==attrs[i].nodeName){
 								if(properties_styles[type][j]["input_type"]=="text"){
-									createTextField(graph, form, cell, attrs[i], properties_styles[type][j]["def_display"]);
+									createTextField(graph, form, cell, attrs[i], properties_styles[type][j]);
 									passed = true;
 								}else if(properties_styles[type][j]["input_type"]=="select"){
 									createSelectField(graph, form, cell, attrs[i], properties_styles[type][j]);
@@ -83,8 +83,18 @@ var setup_properties = function setup_properties(graph,properties_styles){
 	/**
 	 * Creates the textfield for the given property.
 	 */
-	function createTextField(graph, form, cell, attribute, def_display)
+	function createTextField(graph, form, cell, attribute, custom)
 	{
+		var def_display=""
+		if(custom!=null){
+			def_display=custom["def_display"];
+			if(custom["display_check_attribute"]){
+				if(custom["display_check_value"]==cell.getAttribute(custom["display_check_attribute"])){
+					def_display=custom["display_check"];
+				}
+			}
+		}
+
 		var input = form.addText(attribute.nodeName, attribute.nodeValue, "text", def_display);
 		
 		if(attribute.nodeName=="type"){

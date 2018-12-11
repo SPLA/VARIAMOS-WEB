@@ -19,7 +19,22 @@ body {
 
 select{
   width: 174px;
-  height: 24px;
+  height: 27px;
+}
+
+.properties-table{
+  display: inline-block;
+}
+
+.tr-unique{
+  padding: 5px;
+  float:left;
+}
+
+.div-text-area{
+  text-align: justify;
+  padding-top: 20px;
+  padding-bottom: 20px;
 }
 
 /*

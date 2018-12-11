@@ -1,5 +1,8 @@
 <template>
   <div>
+    <div class="border-bottom text-left"><h1 class="h2">{{ $t("about_variamos") }}</h1></div>
+    <div class="div-text-area">VariaMos is a modeling tool that incorporates a language to represent and simulate families of systems.</div>
+
     <div class="border-bottom text-left"><h1 class="h2">{{ $t("about_team") }}</h1></div>
     <div class="team-info">
       <img alt="" src="/static/images/team/daniel.jpg" class="pull-left">

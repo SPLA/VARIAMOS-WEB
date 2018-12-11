@@ -13,11 +13,9 @@
  */
 function mxForm(className)
 {
-	this.table = document.createElement('table');
+	this.table = document.createElement('div');
 	this.table.className = className;
-	this.body = document.createElement('tbody');
-	
-	this.table.appendChild(this.body);
+	this.body = this.table;
 };
 
 /**
@@ -188,10 +186,11 @@ mxForm.prototype.addOption = function(combo, label, value, isSelected)
  */
 mxForm.prototype.addField = function(name, input, def_display="")
 {
-	var tr = document.createElement('tr');
+	var tr = document.createElement('div');
 	tr.id="tr-"+name;
+	tr.className="tr-unique";
 	tr.style.display=def_display;
-	var td = document.createElement('td');
+	var td = document.createElement('div');
 	mxUtils.write(td, jsUcfirst(name)+":");
 	tr.appendChild(td);
 	

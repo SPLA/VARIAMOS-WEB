@@ -91,12 +91,18 @@ var feature_main = function feature_main(graph)
 				{
 					"attribute":"lowRange",
 					"input_type":"text",
-					"def_display":"none"
+					"def_display":"none",
+					"display_check_attribute":"bundleType",
+					"display_check_value":"RANGE",
+					"display_check":"",
 				},
 				{
 					"attribute":"highRange",
 					"input_type":"text",
-					"def_display":"none"
+					"def_display":"none",
+					"display_check_attribute":"bundleType",
+					"display_check_value":"RANGE",
+					"display_check":"",
 				}
 			]
 		}
