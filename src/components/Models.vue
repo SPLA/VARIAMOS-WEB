@@ -163,6 +163,7 @@ export default{
 .main_area{
   margin-right: 0px;
   margin-left: 0px;
+  margin-top: -6px;
 }
 
 .left-area{

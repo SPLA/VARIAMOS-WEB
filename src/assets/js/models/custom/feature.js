@@ -16,14 +16,6 @@ var feature_main = function feature_main(graph)
 			"Invalid connection",
 			"Only shape targets allowed"));
 		graph.multiplicities.push(new mxMultiplicity(
-			true, "leaf", null, null, 0, 1, ["root","general","association"],
-			"Only 1 target allowed",
-			"Only shape targets allowed"));
-		graph.multiplicities.push(new mxMultiplicity(
-			true, "general", null, null, 0, 1, ["root","general","association"],
-			"Only 1 target allowed",
-			"Only shape targets allowed"));
-		graph.multiplicities.push(new mxMultiplicity(
 			true, "association", null, null, 0, 1, ["root","general"],
 			"Only 1 target allowed",
 			"Only shape targets allowed"));
