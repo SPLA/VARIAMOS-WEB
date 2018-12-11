@@ -17,6 +17,11 @@ body {
   text-align: left;
 }
 
+select{
+  width: 174px;
+  height: 24px;
+}
+
 /*
  * Sidebar
  */

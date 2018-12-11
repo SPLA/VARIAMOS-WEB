@@ -6,6 +6,7 @@ var component_main = function component_main(graph)
 	data[1]=component_attributes(); //custom attributes
 	data[2]=null; //custom relations
 	data[3]=null; //custom properties styles
+	data[4]=null; //custom labels
 	return data;
 	
 	function component_constraints(graph){

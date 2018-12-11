@@ -3,9 +3,10 @@ var feature_main = function feature_main(graph)
 	feature_constraints(graph);
 	var data=[];
 	data[0]=feature_elements(); //custom elements
-	data[1]=null; //custom attributes
+	data[1]=feature_attributes(); //custom attributes
 	data[2]=feature_relations(); //custom relations
 	data[3]=feature_properties_styles(); //custom properties styles
+	data[4]=feature_labels(); //custom labels
 	return data;
 	
 	function feature_constraints(graph){
@@ -43,6 +44,27 @@ var feature_main = function feature_main(graph)
 		return elements;
 	}
 
+	function feature_attributes(){
+		var attributes=[];
+		attributes[0]={
+			"types":["association"],
+			"custom_attributes":[{
+				"name":"associationType",
+				"def_value":"and"
+			},
+			{
+				"name":"lowRange",
+				"def_value":"1"
+			},
+			{
+				"name":"highRange",
+				"def_value":"1"
+			}]
+		};
+	
+		return attributes;
+	}
+
 	function feature_relations(){
 		var relations=[];
 		relations[0]={
@@ -74,10 +96,24 @@ var feature_main = function feature_main(graph)
 				"attribute":"relType",
 				"input_type":"select",
 				"input_values":["mandatory","optional","requires","excludes"]
+			}],
+			"association":[{
+				"attribute":"associationType",
+				"input_type":"select",
+				"input_values":["and","or","mutex","range"]
 			}]
 		}
 
 		return styles;
+	}
+
+	function feature_labels(){
+		var labels={};
+		labels={
+			"association":"associationType"
+		};
+
+		return labels;
 	}
 	
 }

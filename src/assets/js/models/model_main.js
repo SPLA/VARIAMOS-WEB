@@ -14,12 +14,13 @@ var main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model
 		currentLayer=layers[model_type]; //current layer to be displayed (feature, component, etc)
 		graph.setDefaultParent(currentLayer); //any new graphic element will be connected with this parent
 
-		var data=[], elements=[], attributes=[], relations=[], properties_styles=[];
+		var data=[], c_elements=[], c_attributes=[], c_relations=[], c_properties_styles=[] , c_labels=[];
 		data=model_specific_main(graph); //specific model data
-		elements=data[0];
-		attributes=data[1];
-		relations=data[2];
-		properties_styles=data[3];
+		c_elements=data[0];
+		c_attributes=data[1];
+		c_relations=data[2];
+		c_properties_styles=data[3];
+		c_labels=data[4];
 
 		//counter equals 1 load the entire mxGraph 
 		if(counter==1){
@@ -42,28 +43,30 @@ var main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model
 			//setup keys
 			setupFunctions["setup_keys"](keyHandler,graph);
 			//setup properties
-			setupFunctions["setup_properties"](graph,properties_styles);
+			setupFunctions["setup_properties"](graph,c_properties_styles);
 			//setup label changed
-			setup_label_changed(graph);
+			setup_label_changed(graph,c_labels);
 			//setup custom elements
-			setupFunctions["setup_elements"](graph,elements,attributes,toolbar);
+			setupFunctions["setup_elements"](graph,c_elements,c_attributes,toolbar);
 			//setup relations
-			setupFunctions["setup_relations"](graph,relations);
+			setupFunctions["setup_relations"](graph,c_relations);
 			//setup buttons
 			setupFunctions["setup_buttons"](graph,undoManager);
 			//setup custom shapes
 			setup_custom_shapes();
 		}else{
-			//counter equals 2 only setup the elements (palette), properties and relations
+			//counter equals 2 only setup the labels, elements, properties and relations
+			//setup label changed
+			setup_label_changed(graph,c_labels);
 			//setup properties
-			setupFunctions["setup_properties"](graph,properties_styles);
+			setupFunctions["setup_properties"](graph,c_properties_styles);
 			//setup custom elements
-			setupFunctions["setup_elements"](graph,elements,attributes,toolbar);	
+			setupFunctions["setup_elements"](graph,c_elements,c_attributes,toolbar);	
 			//setup relations
-			setupFunctions["setup_relations"](graph,relations);	
+			setupFunctions["setup_relations"](graph,c_relations);	
 		}
 
-		//hidden all elements that do not belong to the current layer (parent)
+		//hide all elements that do not belong to the current layer (parent)
 		for (var key in layers) {
 			mxModel.setVisible(layers[key], false);
 		}
@@ -100,39 +103,29 @@ var main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model
 		graph.setConnectable(true); // Enables new connections in the graph
 		graph.setMultigraph(false);
 		graph.setAllowDanglingEdges(false);
-		graph.setCellsDisconnectable(false)
+		graph.setCellsDisconnectable(false) // Avoid disconect egdes
 		graph.setDisconnectOnMove(false);
 		graph.setPanning(true);
-		graph.setCellsEditable(false);
+		graph.setCellsEditable(false); // Avoid double click cells
 		new mxRubberband(graph); // Enables rectangular selection
 		new mxOutline(graph, document.getElementById('navigator'));
 	}
 
-	function setup_label_changed(graph){		
+	function setup_label_changed(graph,c_labels){		
 		graph.convertValueToString = function(cell)
 		{
 		  if (mxUtils.isNode(cell.value))
 		  {
-			if(cell.isEdge()){
-				return cell.getAttribute('relType', '')
+			if(c_labels != null && c_labels[cell.getAttribute("type")]){
+				return cell.getAttribute(c_labels[cell.getAttribute("type")], '')
 			}else{
-				return cell.getAttribute('label', '') 
+				if(cell.isEdge()){
+					return cell.getAttribute('relType', '')
+				}else{
+					return cell.getAttribute('label', '') 
+				}
 			}
 		  }
-		};
-		
-		var cellLabelChanged = graph.cellLabelChanged;
-		graph.cellLabelChanged = function(cell, newValue, autoSize)
-		{
-		  if (mxUtils.isNode(cell.value))
-		  {
-		    // Clones the value for correct undo/redo
-		    var elt = cell.value.cloneNode(true);
-		    elt.setAttribute('label', newValue);
-		    newValue = elt;
-		  }
-
-		  cellLabelChanged.apply(this, arguments);
 		};
 	}
 }

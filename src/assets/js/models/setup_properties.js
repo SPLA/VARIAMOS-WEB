@@ -60,10 +60,14 @@ var setup_properties = function setup_properties(graph,properties_styles){
 	 * Creates the select field for the given property.
 	 */
 	function createSelectField(graph, form, cell, attribute, values){
-		var input = form.addCombo(attribute.nodeName, false, 1);
+		var input = form.addCombo(jsUcfirst(attribute.nodeName) + ':', false, 1);
 		for (var i = 0; i < values.length; i++)
 		{
-			form.addOption(input,values[i],values[i],false);
+			if(values[i]==attribute.nodeValue){
+				form.addOption(input,values[i],values[i],true);
+			}else{
+				form.addOption(input,values[i],values[i],false);
+			}
 		}
 
 		executeApplyHandler(graph, form, cell, attribute, input);
