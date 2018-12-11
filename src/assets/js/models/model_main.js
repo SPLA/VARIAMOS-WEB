@@ -105,6 +105,7 @@ var main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model
 		graph.setPanning(true);
 		graph.setCellsEditable(false);
 		new mxRubberband(graph); // Enables rectangular selection
+		graph.maximumGraphBounds = new mxRectangle(0, 0, 2000, 2000);
 		new mxOutline(graph, document.getElementById('navigator'));
 	}
 
