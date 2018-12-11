@@ -115,7 +115,7 @@ export default{
     },
     initialize_mx(counter){
       //counter equals 1 load the entire mxGraph 
-      //counter equals 2 only setup the elements (palette) and connections
+      //counter equals 2 only setup the elements (palette), properties and relations
       var graphContainer = document.getElementById('graphContainer');
       main(this.graph,this.layers,this.mxModel,this.toolbar,this.keyHandler,graphContainer,this.modelType,this.currentFunction,counter,this.setupFunctions,this.undoManager);
     }

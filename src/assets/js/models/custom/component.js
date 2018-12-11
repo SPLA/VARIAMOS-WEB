@@ -2,9 +2,10 @@ var component_main = function component_main(graph)
 {
 	component_constraints(graph);
 	var data=[];
-	data[0]=component_elements();
-	data[1]=component_attributes(); //custom_attributes
-	data[2]=null; //custom_relations
+	data[0]=component_elements(); //custom elements
+	data[1]=component_attributes(); //custom attributes
+	data[2]=null; //custom relations
+	data[3]=null; //custom properties styles
 	return data;
 	
 	function component_constraints(graph){

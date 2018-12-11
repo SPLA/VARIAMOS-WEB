@@ -3,7 +3,7 @@ var setup_relations = function setup_relations(graph,relations){
     {
         var doc = mxUtils.createXmlDocument();
         var node = doc.createElement('rel_'+source.getAttribute("type")+'_'+target.getAttribute("type"));
-        node.setAttribute('type', 'relation');
+        node.setAttribute('type', "relation");
 
         if(relations){
             for (var i = 0; i < relations.length; i++) {

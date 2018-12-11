@@ -2,9 +2,10 @@ var feature_main = function feature_main(graph)
 {
 	feature_constraints(graph);
 	var data=[];
-	data[0]=feature_elements();
-	data[1]=null; //custom_attributes
-	data[2]=feature_relations(); //custom_relations
+	data[0]=feature_elements(); //custom elements
+	data[1]=null; //custom attributes
+	data[2]=feature_relations(); //custom relations
+	data[3]=feature_properties_styles(); //custom properties styles
 	return data;
 	
 	function feature_constraints(graph){
@@ -64,6 +65,19 @@ var feature_main = function feature_main(graph)
 		};
 	
 		return relations;
+	}
+
+	function feature_properties_styles(){
+		var styles={};
+		styles={
+			"relation":[{
+				"attribute":"relType",
+				"input_type":"select",
+				"input_values":["mandatory","optional","requires","excludes"]
+			}]
+		}
+
+		return styles;
 	}
 	
 }

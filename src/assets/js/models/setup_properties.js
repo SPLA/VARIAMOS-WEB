@@ -1,13 +1,13 @@
 
-var setup_properties = function setup_properties(graph){
+var setup_properties = function setup_properties(graph,properties_styles){
     graph.getSelectionModel().addListener(mxEvent.CHANGE, function(sender, evt)
     {
-        selectionChanged(graph);
+        selectionChanged(graph,properties_styles);
     });
 
-    selectionChanged(graph);
+    selectionChanged(graph,properties_styles);
 
-    function selectionChanged(graph)
+    function selectionChanged(graph,properties_styles)
 	{
 		var div = document.getElementById('properties');
 		// Forces focusout in IE
@@ -29,13 +29,44 @@ var setup_properties = function setup_properties(graph){
 				
 				for (var i = 0; i < attrs.length; i++)
 				{
-					createTextField(graph, form, cell, attrs[i]);
+					if(properties_styles!=null && properties_styles[cell.getAttribute("type")]){
+						var type = cell.getAttribute("type");
+						for (var j = 0; j < properties_styles[type].length; j++)
+						{
+							if(properties_styles[type][j]["attribute"]==attrs[i].nodeName){
+								if(properties_styles[type][j]["input_type"]=="text"){
+									createTextField(graph, form, cell, attrs[i]);
+								}else if(properties_styles[type][j]["input_type"]=="select"){
+									createSelectField(graph, form, cell, attrs[i], properties_styles[type][j]["input_values"]);
+								}else{
+									createTextField(graph, form, cell, attrs[i]);
+								}
+							}else{
+								createTextField(graph, form, cell, attrs[i]);
+							}
+						}
+					}else{
+						createTextField(graph, form, cell, attrs[i]);
+					}
 				}
 
 				div.appendChild(form.getTable());
 				mxUtils.br(div);
 			}
 		}
+	}
+
+	/**
+	 * Creates the select field for the given property.
+	 */
+	function createSelectField(graph, form, cell, attribute, values){
+		var input = form.addCombo(attribute.nodeName, false, 1);
+		for (var i = 0; i < values.length; i++)
+		{
+			form.addOption(input,values[i],values[i],false);
+		}
+
+		executeApplyHandler(graph, form, cell, attribute, input);
 	}
 
 	/**
@@ -49,6 +80,11 @@ var setup_properties = function setup_properties(graph){
 			input.disabled="disabled";
 		}
 
+		executeApplyHandler(graph, form, cell, attribute, input);
+
+	}
+
+	function executeApplyHandler(graph, form, cell, attribute, input){
 		var applyHandler = function()
 		{
 			var newValue = input.value || '';

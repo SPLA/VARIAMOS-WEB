@@ -14,11 +14,12 @@ var main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model
 		currentLayer=layers[model_type]; //current layer to be displayed (feature, component, etc)
 		graph.setDefaultParent(currentLayer); //any new graphic element will be connected with this parent
 
-		var data=[], elements=[], attributes=[], relations=[];
+		var data=[], elements=[], attributes=[], relations=[], properties_styles=[];
 		data=model_specific_main(graph); //specific model data
 		elements=data[0];
 		attributes=data[1];
 		relations=data[2];
+		properties_styles=data[3];
 
 		//counter equals 1 load the entire mxGraph 
 		if(counter==1){
@@ -41,7 +42,7 @@ var main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model
 			//setup keys
 			setupFunctions["setup_keys"](keyHandler,graph);
 			//setup properties
-			setupFunctions["setup_properties"](graph);
+			setupFunctions["setup_properties"](graph,properties_styles);
 			//setup label changed
 			setup_label_changed(graph);
 			//setup custom elements
@@ -53,7 +54,9 @@ var main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model
 			//setup custom shapes
 			setup_custom_shapes();
 		}else{
-			//counter equals 2 only setup the elements (palette) and relations
+			//counter equals 2 only setup the elements (palette), properties and relations
+			//setup properties
+			setupFunctions["setup_properties"](graph,properties_styles);
 			//setup custom elements
 			setupFunctions["setup_elements"](graph,elements,attributes,toolbar);	
 			//setup relations
@@ -97,6 +100,7 @@ var main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model
 		graph.setConnectable(true); // Enables new connections in the graph
 		graph.setMultigraph(false);
 		graph.setAllowDanglingEdges(false);
+		graph.setCellsDisconnectable(false)
 		graph.setDisconnectOnMove(false);
 		graph.setPanning(true);
 		graph.setCellsEditable(false);
