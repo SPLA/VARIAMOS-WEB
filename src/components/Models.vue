@@ -8,11 +8,11 @@
             <div class="card-body">
 
               <div class="button-area">
-                    <div id="buttonXML"></div><div id="buttonRESET"></div>
-                    <div id="buttonSAVE"></div><div id="buttonUNDO"></div>
-                    <div id="buttonREDO"></div><div id="buttonSHOW"></div>
-                    <div id="buttonEXPORT"></div>
-                    <div id="buttonIMPORT" type="file"></div>
+                    <div class="button-unique" id="buttonXML"></div><div class="button-unique" id="buttonRESET"></div>
+                    <div class="button-unique" id="buttonSAVE"></div><div class="button-unique" id="buttonUNDO"></div>
+                    <div class="button-unique" id="buttonREDO"></div><div class="button-unique" id="buttonSHOW"></div>
+                    <div class="button-unique" id="buttonEXPORT"></div>
+                    <div class="button-unique" id="buttonIMPORT" type="file"></div>
               </div>
 
               <div class="row main_area">
@@ -115,7 +115,7 @@ export default{
     },
     initialize_mx(counter){
       //counter equals 1 load the entire mxGraph 
-      //counter equals 2 only setup the elements (palette), properties and relations
+      //counter equals 2 only setup the labels, elements, properties and relations
       var graphContainer = document.getElementById('graphContainer');
       main(this.graph,this.layers,this.mxModel,this.toolbar,this.keyHandler,graphContainer,this.modelType,this.currentFunction,counter,this.setupFunctions,this.undoManager);
     }
@@ -151,6 +151,11 @@ export default{
   }
 }
 
+.button-unique{
+  display: -webkit-box;
+  float: left;
+}
+
 .button_hidden{
   visibility:hidden;
 }
@@ -158,6 +163,7 @@ export default{
 .main_area{
   margin-right: 0px;
   margin-left: 0px;
+  margin-top: -6px;
 }
 
 .left-area{
@@ -178,7 +184,7 @@ export default{
 }
 
 .button-area{
-  display:inline-flex;
+  display: inline-block;
   border-bottom: 2px solid rgba(0,0,0,.125);
   border-top: 1px solid rgba(0,0,0,.125);
   width: 100%;
@@ -202,7 +208,7 @@ export default{
   overflow-block: scroll;
   overflow-x: auto;
   overflow-y: auto;
-  height:250px;
+  height:350px;
   background:url("/static/images/MX/editors/grid.gif");
   cursor:default;
   padding-right: 0px; 

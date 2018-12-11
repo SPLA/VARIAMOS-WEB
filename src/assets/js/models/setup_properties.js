@@ -31,22 +31,24 @@ var setup_properties = function setup_properties(graph,properties_styles){
 				{
 					if(properties_styles!=null && properties_styles[cell.getAttribute("type")]){
 						var type = cell.getAttribute("type");
+						var passed = false;
 						for (var j = 0; j < properties_styles[type].length; j++)
 						{
 							if(properties_styles[type][j]["attribute"]==attrs[i].nodeName){
 								if(properties_styles[type][j]["input_type"]=="text"){
-									createTextField(graph, form, cell, attrs[i]);
+									createTextField(graph, form, cell, attrs[i], properties_styles[type][j]);
+									passed = true;
 								}else if(properties_styles[type][j]["input_type"]=="select"){
-									createSelectField(graph, form, cell, attrs[i], properties_styles[type][j]["input_values"]);
-								}else{
-									createTextField(graph, form, cell, attrs[i]);
+									createSelectField(graph, form, cell, attrs[i], properties_styles[type][j]);
+									passed = true;
 								}
-							}else{
-								createTextField(graph, form, cell, attrs[i]);
 							}
 						}
+						if(!passed){
+							createTextField(graph, form, cell, attrs[i], "");
+						}
 					}else{
-						createTextField(graph, form, cell, attrs[i]);
+						createTextField(graph, form, cell, attrs[i], "");
 					}
 				}
 
@@ -59,11 +61,20 @@ var setup_properties = function setup_properties(graph,properties_styles){
 	/**
 	 * Creates the select field for the given property.
 	 */
-	function createSelectField(graph, form, cell, attribute, values){
+	function createSelectField(graph, form, cell, attribute, custom){
+		var values=custom["input_values"];
 		var input = form.addCombo(attribute.nodeName, false, 1);
 		for (var i = 0; i < values.length; i++)
 		{
-			form.addOption(input,values[i],values[i],false);
+			if(values[i]==attribute.nodeValue){
+				form.addOption(input,values[i],values[i],true);
+			}else{
+				form.addOption(input,values[i],values[i],false);
+			}
+		}
+
+		if(custom["onchange"]!=null){
+			input.onchange = custom["onchange"];
 		}
 
 		executeApplyHandler(graph, form, cell, attribute, input);
@@ -72,9 +83,19 @@ var setup_properties = function setup_properties(graph,properties_styles){
 	/**
 	 * Creates the textfield for the given property.
 	 */
-	function createTextField(graph, form, cell, attribute)
+	function createTextField(graph, form, cell, attribute, custom)
 	{
-		var input = form.addText(jsUcfirst(attribute.nodeName) + ':', attribute.nodeValue);
+		var def_display=""
+		if(custom!=null){
+			def_display=custom["def_display"];
+			if(custom["display_check_attribute"]){
+				if(custom["display_check_value"]==cell.getAttribute(custom["display_check_attribute"])){
+					def_display=custom["display_check"];
+				}
+			}
+		}
+
+		var input = form.addText(attribute.nodeName, attribute.nodeValue, "text", def_display);
 		
 		if(attribute.nodeName=="type"){
 			input.disabled="disabled";

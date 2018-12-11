@@ -5,10 +5,16 @@
   "models_area": "Modeling Area",
   "models_model": "model",
 
+  "about_variamos": "About VariaMos",
   "about_team": "Team",
-  "about_team_list": "- Luisa - Daniel - Angela - Esteban",
+  "about_team_daniel": "Daniel Correa",
+  "about_team_daniel_desc": "Received the BSc. Eng in Systems and Informatics Engineering in 2012, and the MSc. degree in Systems and Informatics Engineering in 2015 all of them from the Universidad Nacional de Colombia. Medellin, Colombia. He is currently a PhD candidate in Systems and Informatics Engineering for the Universidad Nacional de Colombia; and he is an auxiliary professor in the Computing and Decision Sciences Department, Universidad Nacional de Colombia. His research interests include: software product lines, software engineering and software frameworks.",
+  "about_team_raul": "Raúl Mazo",
+  "about_team_raul_desc": "Is associate professor at Paris1 Panthéon Sorbonne University from September 2012, and visiting professor at Eafit University (Colombia) from September 2016. He received a BSc. in Computer Science Engineering in 2005 from the University of Antioquia (Medellin, Colombia), a MSc. of Science degree in Information Systems in 2008 and a PhD. degree in Computer Science in 2011, both from the Panthéon Sorbonne University. His research and teaching topics include: software engineering, and (dynamic) product line engineering.",
 
   "home_welcome": "Welcome to VariaMos web",
+
+  "reports_title": "Reports",
 
   "app_variamos": "VariaMos",
   "app_search": "Search",
