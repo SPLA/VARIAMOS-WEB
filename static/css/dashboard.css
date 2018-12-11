@@ -13,6 +13,10 @@ body {
   vertical-align: text-bottom;
 }
 
+.text-left{
+  text-align: left;
+}
+
 /*
  * Sidebar
  */

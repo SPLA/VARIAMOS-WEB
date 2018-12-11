@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>{{ $t("about_team") }}</h1>
+    <div class="border-bottom text-left"><h1 class="h2">{{ $t("about_team") }}</h1></div>
     <div class="team-info">
       <img alt="" src="/static/images/team/daniel.jpg" class="pull-left">
       <div class="pull-left">
@@ -29,6 +29,7 @@ export default {
 .team-info{
     overflow: hidden;
     padding-top: 10px;
+    display: flex;
 }
 
 .team-info span {
@@ -42,7 +43,6 @@ export default {
     border-radius: 150px !important;
     height: 75px;
     padding: 3px;
-    width: 75px;
 }
 
 .pull-left {
@@ -53,11 +53,12 @@ span.team-name {
     color: black;
     font-size: 16px;
     font-weight: 300;
-    margin: 15px 0 7px;
+    margin: 4px 0 7px;
 }
 
 span.team-post {
     color: #656565;
     font-size: 12px;
+    text-align: justify;
 }
 </style>

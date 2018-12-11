@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>{{ $t("reports_title") }}</h1>
+    <div class="border-bottom text-left"><h1 class="h2">{{ $t("reports_title") }}</h1></div>
     <canvas class="my-4 chartjs-render-monitor" id="myChart" width="1076" height="453" style="display: block; width: 1076px; height: 453px;"></canvas>
   </div>
 </template>
