@@ -87,14 +87,14 @@ mxForm.prototype.addButtons = function(okFunct, cancelFunct)
  * 
  * Adds an input for the given name, type and value and returns it.
  */
-mxForm.prototype.addText = function(name, value, type)
+mxForm.prototype.addText = function(name, value, type, def_display)
 {
 	var input = document.createElement('input');
 	
 	input.setAttribute('type', type || 'text');
 	input.value = value;
 	
-	return this.addField(name, input);
+	return this.addField(name, input, def_display);
 };
 
 /**
@@ -186,11 +186,13 @@ mxForm.prototype.addOption = function(combo, label, value, isSelected)
  * Adds a new row with the name and the input field in two columns and
  * returns the given input.
  */
-mxForm.prototype.addField = function(name, input)
+mxForm.prototype.addField = function(name, input, def_display="")
 {
 	var tr = document.createElement('tr');
+	tr.id="tr-"+name;
+	tr.style.display=def_display;
 	var td = document.createElement('td');
-	mxUtils.write(td, name);
+	mxUtils.write(td, jsUcfirst(name)+":");
 	tr.appendChild(td);
 	
 	td = document.createElement('td');

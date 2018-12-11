@@ -16,7 +16,7 @@ var feature_main = function feature_main(graph)
 			"Invalid connection",
 			"Only shape targets allowed"));
 		graph.multiplicities.push(new mxMultiplicity(
-			true, "association", null, null, 0, 1, ["root","general"],
+			true, "bundle", null, null, 0, 1, ["root","general"],
 			"Only 1 target allowed",
 			"Only shape targets allowed"));
 	}
@@ -25,13 +25,13 @@ var feature_main = function feature_main(graph)
 		var root = {src:"static/images/models/feature/rectangle.png", wd:100, hg:35, type:"root", style:"", pname:"Root Feature"};
 		var general = {src:"static/images/models/feature/rectangle.png", wd:100, hg:35, type:"general", style:"", pname:"General Feature"};
 		var leaf = {src:"static/images/models/feature/rectangle.png", wd:100, hg:35, type:"leaf", style:"", pname:"Leaf Feature"};
-		var association = {src:"static/images/models/feature/association.png", wd:35, hg:35, type:"association", style:"shape=ellipse", pname:"Association"};
+		var bundle = {src:"static/images/models/feature/bundle.png", wd:35, hg:35, type:"bundle", style:"shape=ellipse", pname:"Bundle"};
 		
 		var elements=[];
 		elements[0]=root;
 		elements[1]=general;
 		elements[2]=leaf;
-		elements[3]=association;
+		elements[3]=bundle;
 		
 		return elements;
 	}
@@ -39,10 +39,10 @@ var feature_main = function feature_main(graph)
 	function feature_attributes(){
 		var attributes=[];
 		attributes[0]={
-			"types":["association"],
+			"types":["bundle"],
 			"custom_attributes":[{
-				"name":"associationType",
-				"def_value":"and"
+				"name":"bundleType",
+				"def_value":"AND"
 			},
 			{
 				"name":"lowRange",
@@ -67,16 +67,7 @@ var feature_main = function feature_main(graph)
 				"name":"relType",
 				"def_value":"mandatory"
 			}]
-		};
-		relations[1]={
-			"source":["association"],
-			"rel_source_target":"and",
-			"target":["general","root"],
-			"attributes":[{
-				"name":"relType",
-				"def_value":"mandatory"
-			}]
-		};
+		}
 	
 		return relations;
 	}
@@ -85,24 +76,53 @@ var feature_main = function feature_main(graph)
 		var styles={};
 		styles={
 			"relation":[{
-				"attribute":"relType",
-				"input_type":"select",
-				"input_values":["mandatory","optional","requires","excludes"]
-			}],
-			"association":[{
-				"attribute":"associationType",
-				"input_type":"select",
-				"input_values":["and","or","mutex","range"]
-			}]
+					"attribute":"relType",
+					"input_type":"select",
+					"input_values":["mandatory","optional","requires","excludes"]
+				}
+			],
+			"bundle":[
+				{
+					"attribute":"bundleType",
+					"input_type":"select",
+					"input_values":["AND","OR","XOR","RANGE"],
+					"onchange": feature_custom_methods(0)
+				},
+				{
+					"attribute":"lowRange",
+					"input_type":"text",
+					"def_display":"none"
+				},
+				{
+					"attribute":"highRange",
+					"input_type":"text",
+					"def_display":"none"
+				}
+			]
 		}
 
 		return styles;
 	}
 
+	function feature_custom_methods(pos){
+		var methods=[]
+		methods[0]=function(){
+			document.getElementById("tr-lowRange").style.display="none";
+			document.getElementById("tr-highRange").style.display="none";
+			var val = document.getElementById("tr-bundleType").getElementsByTagName('select')[0].value;
+			if(val=="RANGE"){
+				document.getElementById("tr-lowRange").style.display="";
+				document.getElementById("tr-highRange").style.display="";
+			}
+		};
+
+		return methods[pos];
+	}
+
 	function feature_labels(){
 		var labels={};
 		labels={
-			"association":"associationType"
+			"bundle":"bundleType"
 		};
 
 		return labels;

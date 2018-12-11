@@ -31,22 +31,24 @@ var setup_properties = function setup_properties(graph,properties_styles){
 				{
 					if(properties_styles!=null && properties_styles[cell.getAttribute("type")]){
 						var type = cell.getAttribute("type");
+						var passed = false;
 						for (var j = 0; j < properties_styles[type].length; j++)
 						{
 							if(properties_styles[type][j]["attribute"]==attrs[i].nodeName){
 								if(properties_styles[type][j]["input_type"]=="text"){
-									createTextField(graph, form, cell, attrs[i]);
+									createTextField(graph, form, cell, attrs[i], properties_styles[type][j]["def_display"]);
+									passed = true;
 								}else if(properties_styles[type][j]["input_type"]=="select"){
-									createSelectField(graph, form, cell, attrs[i], properties_styles[type][j]["input_values"]);
-								}else{
-									createTextField(graph, form, cell, attrs[i]);
+									createSelectField(graph, form, cell, attrs[i], properties_styles[type][j]);
+									passed = true;
 								}
-							}else{
-								createTextField(graph, form, cell, attrs[i]);
 							}
 						}
+						if(!passed){
+							createTextField(graph, form, cell, attrs[i], "");
+						}
 					}else{
-						createTextField(graph, form, cell, attrs[i]);
+						createTextField(graph, form, cell, attrs[i], "");
 					}
 				}
 
@@ -59,8 +61,9 @@ var setup_properties = function setup_properties(graph,properties_styles){
 	/**
 	 * Creates the select field for the given property.
 	 */
-	function createSelectField(graph, form, cell, attribute, values){
-		var input = form.addCombo(jsUcfirst(attribute.nodeName) + ':', false, 1);
+	function createSelectField(graph, form, cell, attribute, custom){
+		var values=custom["input_values"];
+		var input = form.addCombo(attribute.nodeName, false, 1);
 		for (var i = 0; i < values.length; i++)
 		{
 			if(values[i]==attribute.nodeValue){
@@ -70,15 +73,19 @@ var setup_properties = function setup_properties(graph,properties_styles){
 			}
 		}
 
+		if(custom["onchange"]!=null){
+			input.onchange = custom["onchange"];
+		}
+
 		executeApplyHandler(graph, form, cell, attribute, input);
 	}
 
 	/**
 	 * Creates the textfield for the given property.
 	 */
-	function createTextField(graph, form, cell, attribute)
+	function createTextField(graph, form, cell, attribute, def_display)
 	{
-		var input = form.addText(jsUcfirst(attribute.nodeName) + ':', attribute.nodeValue);
+		var input = form.addText(attribute.nodeName, attribute.nodeValue, "text", def_display);
 		
 		if(attribute.nodeName=="type"){
 			input.disabled="disabled";
