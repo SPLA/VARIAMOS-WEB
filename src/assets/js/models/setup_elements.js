@@ -40,7 +40,6 @@ var setup_elements = function setup_elements(graph, elements, custom_attributes,
             var vertex = graph.getModel().cloneCell(prototype);
             vertex.geometry.x = pt.x;
 			vertex.geometry.y = pt.y;
-			
 			graph.setSelectionCells(graph.importCells([vertex], 0, 0, cell));
 		}
         
