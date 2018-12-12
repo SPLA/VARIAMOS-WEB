@@ -14,7 +14,17 @@ var setup_buttons = function setup_buttons(graph,undoManager){
     var buttonRESET = document.getElementById('buttonRESET');
     buttonRESET.appendChild(mxUtils.button_with_icon(messages["setup_buttons_reset"], function()
     {
-        graph.removeCells(graph.getChildVertices(graph.getDefaultParent()));
+        var removed_cells = graph.removeCells(graph.getChildVertices(graph.getDefaultParent()));
+
+        //remove clons if exist
+        for (var i = 0; i < removed_cells.length; i++) {
+            if(removed_cells[i].isVertex()){
+                var clon = graph.getModel().getCell("clon"+removed_cells[i].getId());
+                if(clon){
+                    clon.removeFromParent();
+                }
+            }
+        }
 
         var encoder = new mxCodec();
         var result = encoder.encode(graph.getModel());
