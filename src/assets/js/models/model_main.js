@@ -70,7 +70,7 @@ var main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model
 		}
 
 		//disable reset current model if binding model
-		update_reset_button(c_type);
+		setup_custom_features_by_type(c_type);
 
 		//hide all elements that do not belong to the current layer (parent)
 		for (var key in layers) {
@@ -79,7 +79,8 @@ var main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model
 		mxModel.setVisible(currentLayer, true);
 	}
 
-	function update_reset_button(c_type){
+	function setup_custom_features_by_type(c_type){
+		//hide reset current model for binding models
 		var buttonRESET = document.getElementById('buttonRESET');
 		if(c_type=="binding"){
 			buttonRESET.style.display="none";

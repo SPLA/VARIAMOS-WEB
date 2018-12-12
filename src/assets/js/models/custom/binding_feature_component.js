@@ -19,7 +19,7 @@ var binding_feature_component_main = function binding_feature_component_main(gra
 			"Only shape targets allowed"));
 		graph.multiplicities.push(new mxMultiplicity(
 			true, "package", null, null, 0, 0, null,
-			"Only 1 target allowed",
+			"Invalid connection",
 			"Only shape targets allowed"));
 	}
 }
