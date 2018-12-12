@@ -1,9 +1,17 @@
-var setup_elements = function setup_elements(graph, elements, custom_attributes, toolbar){    
-    for (var i = 0; i < elements.length; i++) {
-        addVertex(graph, toolbar, elements[i].src, elements[i].wd, elements[i].hg, elements[i].style, elements[i].type, elements[i].pname, custom_attributes);
+var setup_elements = function setup_elements(graph, elements, custom_attributes, c_clon_cells, toolbar, c_type){    
+    
+    if(c_type=="binding"){
+        var tbContainer = document.getElementById('tbContainer');
+        var span = document.createElement('span');
+        span.innerHTML = messages["setup_elements_palette_binding"];
+        tbContainer.appendChild(span);
+    }else{
+        for (var i = 0; i < elements.length; i++) {
+            addVertex(graph, toolbar, elements[i].src, elements[i].wd, elements[i].hg, elements[i].style, elements[i].type, elements[i].pname, custom_attributes, c_clon_cells);
+        }
     }
 
-    function addVertex(graph, toolbar, icon, w, h, style, type, namepalette, custom_attributes)
+    function addVertex(graph, toolbar, icon, w, h, style, type, namepalette, custom_attributes, c_clon_cells)
     {
         var doc = mxUtils.createXmlDocument();
         var node = doc.createElement(type);
@@ -24,23 +32,36 @@ var setup_elements = function setup_elements(graph, elements, custom_attributes,
         vertex.setConnectable(true);
         vertex.setVertex(true);
 
-        addToolbarItem(graph, toolbar, vertex, icon, namepalette);
+        addToolbarItem(graph, toolbar, vertex, icon, namepalette, c_clon_cells);
     }
 
-    function addToolbarItem(graph, toolbar, prototype, image, namepalette)
+    function addToolbarItem(graph, toolbar, prototype, image, namepalette, c_clon_cells)
     {
         // Function that is executed when the image is dropped on
         // the graph. The cell argument points to the cell under
         // the mousepointer if there is one.
         var funct = function(graph, evt, cell)
 		{
-			graph.stopEditing(false);
+            graph.stopEditing(false);
 
-			var pt = graph.getPointForEvent(evt);
+            var pt = graph.getPointForEvent(evt);
             var vertex = graph.getModel().cloneCell(prototype);
             vertex.geometry.x = pt.x;
-			vertex.geometry.y = pt.y;
-			graph.setSelectionCells(graph.importCells([vertex], 0, 0, cell));
+            vertex.geometry.y = pt.y;
+            var new_cells = graph.importCells([vertex], 0, 0, cell);
+            graph.setSelectionCells(new_cells);
+
+            //execute if there are clons for the current model
+            if(c_clon_cells!=null){
+                var type = new_cells[0].getAttribute("type");
+                if(c_clon_cells[type]){ //clon cell in new model
+                    var vertex2 = graph.getModel().cloneCell(vertex);
+                    var parent2 = graph.getModel().getCell(c_clon_cells[type]); //new parent (new model)
+                    var cloned_cells = graph.importCells([vertex2], 0, 0, parent2);
+                    cloned_cells[0].setId("clon"+new_cells[0].getId()); //new Id
+                }
+            }
+
 		}
         
         var tbContainer = document.getElementById('tbContainer');

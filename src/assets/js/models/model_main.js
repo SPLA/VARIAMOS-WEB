@@ -14,6 +14,7 @@ var main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model
 		graph.setDefaultParent(currentLayer); //any new graphic element will be connected with this parent
 
 		var data=[], c_type="", c_elements=[], c_attributes=[], c_relations=[], c_properties_styles=[] , c_labels=[];
+		var c_clon_cells=[];
 		data=model_specific_main(graph); //specific model data
 		c_type=data[0];
 		c_elements=data[1];
@@ -21,6 +22,7 @@ var main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model
 		c_relations=data[3];
 		c_properties_styles=data[4];
 		c_labels=data[5];
+		c_clon_cells=data[6];
 
 		//counter equals 1 load the entire mxGraph 
 		if(counter==1){
@@ -40,45 +42,50 @@ var main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model
 
 			//setup graph config
 			setup_graph_config(graph);
-			//setup label changed
-			setup_label_changed(graph,c_labels);
 			//setup custom shapes
 			setup_custom_shapes();
 			//setup keys
-			setupFunctions["setup_keys"](keyHandler,graph);
+			setupFunctions["setup_keys"](keyHandler,graph,c_type);
 			//setup buttons
 			setupFunctions["setup_buttons"](graph,undoManager);
-
-			if(c_type=="normal"){
-				//setup properties
-				setupFunctions["setup_properties"](graph,c_properties_styles);
-				//setup label changed
-				setup_label_changed(graph,c_labels);
-				//setup custom elements
-				setupFunctions["setup_elements"](graph,c_elements,c_attributes,toolbar);
-				//setup relations
-				setupFunctions["setup_relations"](graph,c_relations);
-			}
-			
+			//setup properties
+			setupFunctions["setup_properties"](graph,c_properties_styles,c_type);
+			//setup custom elements
+			setupFunctions["setup_elements"](graph,c_elements,c_attributes,c_clon_cells,toolbar,c_type);
+			//setup label changed
+			setup_label_changed(graph,c_labels);
+			//setup relations
+			setupFunctions["setup_relations"](graph,c_relations);
 		}else{
-			if(c_type=="normal"){
-				//counter equals 2 only setup the labels, elements, properties and relations
-				//setup label changed
-				setup_label_changed(graph,c_labels);
-				//setup properties
-				setupFunctions["setup_properties"](graph,c_properties_styles);
-				//setup custom elements
-				setupFunctions["setup_elements"](graph,c_elements,c_attributes,toolbar);	
-				//setup relations
-				setupFunctions["setup_relations"](graph,c_relations);
-			}
+			//setup properties
+			setupFunctions["setup_properties"](graph,c_properties_styles,c_type);
+			//setup keys
+			setupFunctions["setup_keys"](keyHandler,graph,c_type);
+			//setup custom elements
+			setupFunctions["setup_elements"](graph,c_elements,c_attributes,c_clon_cells,toolbar,c_type);
+			//setup label changed
+			setup_label_changed(graph,c_labels);	
+			//setup relations
+			setupFunctions["setup_relations"](graph,c_relations);
 		}
+
+		//disable reset current model if binding model
+		update_reset_button(c_type);
 
 		//hide all elements that do not belong to the current layer (parent)
 		for (var key in layers) {
 			mxModel.setVisible(layers[key], false);
 		}
 		mxModel.setVisible(currentLayer, true);
+	}
+
+	function update_reset_button(c_type){
+		var buttonRESET = document.getElementById('buttonRESET');
+		if(c_type=="binding"){
+			buttonRESET.style.display="none";
+		}else{
+			buttonRESET.style.display="";
+		}
 	}
 
 	function setup_custom_shapes(){

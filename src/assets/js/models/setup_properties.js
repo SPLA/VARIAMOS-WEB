@@ -1,13 +1,13 @@
 
-var setup_properties = function setup_properties(graph,properties_styles){
+var setup_properties = function setup_properties(graph,properties_styles,c_type){
     graph.getSelectionModel().addListener(mxEvent.CHANGE, function(sender, evt)
     {
-        selectionChanged(graph,properties_styles);
+        selectionChanged(graph,properties_styles,c_type);
     });
 
-    selectionChanged(graph,properties_styles);
+    selectionChanged(graph,properties_styles,c_type);
 
-    function selectionChanged(graph,properties_styles)
+    function selectionChanged(graph,properties_styles,c_type)
 	{
 		var div = document.getElementById('properties');
 		// Forces focusout in IE
@@ -17,43 +17,52 @@ var setup_properties = function setup_properties(graph,properties_styles){
 		// Gets the selection cell
 		var cell = graph.getSelectionCell();
 
-		if (cell == null)
-		{
-			mxUtils.writeln(div, messages["setup_properties_nothing"]);
-		}
-		else
-		{
-			if(cell.value.attributes){
-				var form = new mxForm("properties-table");
-				var attrs = cell.value.attributes;
-				
-				for (var i = 0; i < attrs.length; i++)
-				{
-					if(properties_styles!=null && properties_styles[cell.getAttribute("type")]){
-						var type = cell.getAttribute("type");
-						var passed = false;
-						for (var j = 0; j < properties_styles[type].length; j++)
-						{
-							if(properties_styles[type][j]["attribute"]==attrs[i].nodeName){
-								if(properties_styles[type][j]["input_type"]=="text"){
-									createTextField(graph, form, cell, attrs[i], properties_styles[type][j]);
-									passed = true;
-								}else if(properties_styles[type][j]["input_type"]=="select"){
-									createSelectField(graph, form, cell, attrs[i], properties_styles[type][j]);
-									passed = true;
+		if(c_type=="binding"){
+			if (cell == null)
+			{
+				mxUtils.writeln(div, messages["setup_properties_nothing"]);
+			}else{
+				mxUtils.writeln(div, messages["setup_properties_binding"]);
+			}
+		}else{
+			if (cell == null)
+			{
+				mxUtils.writeln(div, messages["setup_properties_nothing"]);
+			}
+			else
+			{
+				if(cell.value.attributes){
+					var form = new mxForm("properties-table");
+					var attrs = cell.value.attributes;
+					
+					for (var i = 0; i < attrs.length; i++)
+					{
+						if(properties_styles!=null && properties_styles[cell.getAttribute("type")]){
+							var type = cell.getAttribute("type");
+							var passed = false;
+							for (var j = 0; j < properties_styles[type].length; j++)
+							{
+								if(properties_styles[type][j]["attribute"]==attrs[i].nodeName){
+									if(properties_styles[type][j]["input_type"]=="text"){
+										createTextField(graph, form, cell, attrs[i], properties_styles[type][j]);
+										passed = true;
+									}else if(properties_styles[type][j]["input_type"]=="select"){
+										createSelectField(graph, form, cell, attrs[i], properties_styles[type][j]);
+										passed = true;
+									}
 								}
 							}
-						}
-						if(!passed){
+							if(!passed){
+								createTextField(graph, form, cell, attrs[i], "");
+							}
+						}else{
 							createTextField(graph, form, cell, attrs[i], "");
 						}
-					}else{
-						createTextField(graph, form, cell, attrs[i], "");
 					}
-				}
 
-				div.appendChild(form.getTable());
-				mxUtils.br(div);
+					div.appendChild(form.getTable());
+					mxUtils.br(div);
+				}
 			}
 		}
 	}
@@ -121,6 +130,16 @@ var setup_properties = function setup_properties(graph,properties_styles){
 							cell, attribute.nodeName,
 							newValue);
 					graph.getModel().execute(edit);
+					
+					//update cloned cell
+					var clon = graph.getModel().getCell("clon"+cell.getId());
+					console.log(clon);
+					if(clon){
+						var edit2 = new mxCellAttributeChange(
+							clon, attribute.nodeName,
+							newValue);
+						graph.getModel().execute(edit2);
+					}
 				}
 				finally
 				{

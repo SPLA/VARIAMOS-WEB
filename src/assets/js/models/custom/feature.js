@@ -8,6 +8,7 @@ var feature_main = function feature_main(graph)
 	data[3]=feature_relations(); //custom relations
 	data[4]=feature_properties_styles(); //custom properties styles
 	data[5]=feature_labels(); //custom labels
+	data[6]=feature_clon_cells(); //custom clon cells
 	return data;
 	
 	function feature_constraints(graph){
@@ -133,6 +134,15 @@ var feature_main = function feature_main(graph)
 		};
 
 		return labels;
+	}
+
+	function feature_clon_cells(){
+		var clons={};
+		clons={
+			"leaf":"binding_feature_component"
+		};
+
+		return clons;
 	}
 	
 }

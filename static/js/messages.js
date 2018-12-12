@@ -12,5 +12,10 @@ var messages={
     "setup_buttons_show":"Show",
     "setup_buttons_save_model":"Model Saved!",
 
-    "setup_properties_nothing":"Nothing Selected."
+    "setup_keys_remove_binding":"Operation not valid in binding models",
+
+    "setup_properties_nothing":"Nothing Selected",
+    "setup_properties_binding":"Properties not allowed to change in a binding model",
+
+    "setup_elements_palette_binding":"Palette not available in binding models"
 }
