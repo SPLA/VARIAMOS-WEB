@@ -104,6 +104,8 @@ mxUndoManager.prototype.history = null;
  */
 mxUndoManager.prototype.indexOfNextAdd = 0;
 
+mxUndoManager.prototype.cloned = {};
+
 /**
  * Function: isEmpty
  * 
@@ -122,6 +124,7 @@ mxUndoManager.prototype.isEmpty = function()
 mxUndoManager.prototype.clear = function()
 {
 	this.history = [];
+	this.cloned = {};
 	this.indexOfNextAdd = 0;
 	this.fireEvent(new mxEventObject(mxEvent.CLEAR));
 };
@@ -145,9 +148,17 @@ mxUndoManager.prototype.undo = function()
 {
     while (this.indexOfNextAdd > 0)
     {
-        var edit = this.history[--this.indexOfNextAdd];
-        edit.undo();
+		var edit = this.history[--this.indexOfNextAdd];
 
+		if(this.cloned[this.indexOfNextAdd]=="clon"){
+			edit.undo();
+			//undo clon
+			var edit2 = this.history[--this.indexOfNextAdd];
+			edit2.undo();
+		}else{
+			edit.undo();
+		}
+		
 		if (edit.isSignificant())
         {
         	this.fireEvent(new mxEventObject(mxEvent.UNDO, 'edit', edit));
@@ -177,8 +188,16 @@ mxUndoManager.prototype.redo = function()
     
     while (this.indexOfNextAdd < n)
     {
-        var edit =  this.history[this.indexOfNextAdd++];
-        edit.redo();
+		var edit =  this.history[this.indexOfNextAdd++];
+
+		if(this.cloned[this.indexOfNextAdd]=="clon"){
+			edit.redo();
+			//redo clon
+			var edit2 = this.history[this.indexOfNextAdd++];
+			edit2.redo();
+		}else{
+			edit.redo();
+		}
         
         if (edit.isSignificant())
         {
@@ -202,7 +221,15 @@ mxUndoManager.prototype.undoableEditHappened = function(undoableEdit)
 	{
 		this.history.shift();
 	}
-	
+
+	if(undoableEdit.changes[0]!=null){
+		if(undoableEdit.changes[0].parent!=null){
+			if(undoableEdit.changes[0].parent.id=="binding_feature_component"){
+				this.cloned[this.history.length]="clon";
+			}
+		}
+	}
+
 	this.history.push(undoableEdit);
 	this.indexOfNextAdd = this.history.length;
 	this.fireEvent(new mxEventObject(mxEvent.ADD, 'edit', undoableEdit));

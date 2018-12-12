@@ -131,6 +131,7 @@ var setup_buttons = function setup_buttons(graph,undoManager){
     buttonUNDO.appendChild(mxUtils.button_with_icon(messages["setup_buttons_undo"], function()
     {
         if(undoManager.canUndo()){
+            //console.log(undoManager.history);
             undoManager.undo();
         }
     },"undo"));
