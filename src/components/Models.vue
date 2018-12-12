@@ -9,6 +9,7 @@
 
               <div class="button-area">
                     <div class="button-unique" id="buttonXML"></div><div class="button-unique" id="buttonRESET"></div>
+                    <div class="button-unique" id="buttonRESETALL"></div>
                     <div class="button-unique" id="buttonSAVE"></div><div class="button-unique" id="buttonUNDO"></div>
                     <div class="button-unique" id="buttonREDO"></div><div class="button-unique" id="buttonSHOW"></div>
                     <div class="button-unique" id="buttonEXPORT"></div>
@@ -59,6 +60,7 @@ import main from '@/assets/js/models/model_main.js'
 import model_load from '@/assets/js/models/model_load.js'
 import feature_main from '@/assets/js/models/custom/feature.js'
 import component_main from '@/assets/js/models/custom/component.js'
+import binding_feature_component_main from '@/assets/js/models/custom/binding_feature_component.js'
 
 export default{
   data: function(){
@@ -78,10 +80,11 @@ export default{
     }
   },
   mounted: function(){
-    this.models = ["feature","component"]; //represent the available models
+    this.models = ["feature","component","binding_feature_component"]; //represent the available models
     this.modelFunctions = {
       "feature":feature_main,
-      "component":component_main
+      "component":component_main,
+      "binding_feature_component":binding_feature_component_main
     }
     this.setupFunctions = {
       "setup_relations":setup_relations,

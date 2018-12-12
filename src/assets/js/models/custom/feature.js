@@ -2,11 +2,12 @@ var feature_main = function feature_main(graph)
 {
 	feature_constraints(graph);
 	var data=[];
-	data[0]=feature_elements(); //custom elements
-	data[1]=feature_attributes(); //custom attributes
-	data[2]=feature_relations(); //custom relations
-	data[3]=feature_properties_styles(); //custom properties styles
-	data[4]=feature_labels(); //custom labels
+	data[0]="normal" //custom type
+	data[1]=feature_elements(); //custom elements
+	data[2]=feature_attributes(); //custom attributes
+	data[3]=feature_relations(); //custom relations
+	data[4]=feature_properties_styles(); //custom properties styles
+	data[5]=feature_labels(); //custom labels
 	return data;
 	
 	function feature_constraints(graph){

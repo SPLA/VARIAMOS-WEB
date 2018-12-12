@@ -1,13 +1,14 @@
 /*
 
 Layers:
-layer0 (root child at position 0) belongs to "Feature model"
-layer1 (root child at position 1) belongs to "Component model"
+layer0 (root child with id="feature") belongs to "Feature model"
+layer1 (root child with id="component") belongs to "Component model"
+layer2 (root child with id="binding_feature_component") belongs to "Binding Feature Component model"
 
 */
 var model_load = function model_load(graph,models,m_code){
     var layers = {}; 
-    if(m_code!=""){
+    if(m_code){
         //load saved model
         var doc = mxUtils.parseXml(m_code);
         var codec = new mxCodec(doc);
@@ -18,18 +19,36 @@ var model_load = function model_load(graph,models,m_code){
         var maxVal = root.getChildCount();
         for (var i = 0; i < models.length; i++) {
             if(i<maxVal){
-                layers[models[i]]=root.getChildAt(i);
+                var current_cell = root.getChildAt(i);
+                var c_id = current_cell.getId();
+                if(c_id==models[i]){
+                    layers[models[i]]=current_cell;
+                }else{
+                    var valid_cell=false;
+                    for (var j = 0; j < models.length; j++) {
+                        if(c_id==models[j]){
+                            layers[models[j]]=current_cell;
+                            valid_cell=true;
+                        }
+                    }
+                    
+                    if(!valid_cell){
+                        console.log("error invalid cell");
+                    }
+                }
             }else{
                 var cell=new mxCell();
                 layers[models[i]]=root.insert(cell);
-                cell.setId(i+1);
+                cell.setId(models[i]);
             }
         }
     }else{
         //create base model (first child represent feature model, second child component model, etc)
         var root = new mxCell();
         for (var i = 0; i < models.length; i++) {
-            layers[models[i]]=root.insert(new mxCell());
+            var m_cell =new mxCell();
+            m_cell.setId(models[i]);
+            layers[models[i]]=root.insert(m_cell);
         }
         graph.getModel().setRoot(root);
     }

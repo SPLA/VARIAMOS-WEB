@@ -42,6 +42,13 @@
                             {{ $t("app_menu_component") }}
                             </router-link>
                           </li>
+                          <li class="nav-item">
+                            <router-link class="nav-link" to="/models/binding_feature_component">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline>
+                            <line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                            {{ $t("app_menu_binding_f_c") }}
+                            </router-link>
+                          </li>
                         </ul>
 
                     </li>
@@ -61,7 +68,7 @@
                 </div>
               </nav>
 
-              <main role="main" class="top-main col-md-9 ml-sm-auto col-lg-10 pt-3 px-4"><div class="chartjs-size-monitor" style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;"><div class="chartjs-size-monitor-expand" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"><div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div></div><div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"><div style="position:absolute;width:200%;height:200%;left:0; top:0"></div></div></div>
+              <main role="main" class="top-main col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
 
                 <div class="container">
                   <div id="mainview">
@@ -75,10 +82,6 @@
     
   </div>
 </template>
-
-<script>
-import messages from '@/assets/js/messages.js'
-</script>
 
 <style>
 @media (min-width: 768px){

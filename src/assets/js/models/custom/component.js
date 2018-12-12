@@ -2,11 +2,12 @@ var component_main = function component_main(graph)
 {
 	component_constraints(graph);
 	var data=[];
-	data[0]=component_elements(); //custom elements
-	data[1]=component_attributes(); //custom attributes
-	data[2]=null; //custom relations
-	data[3]=null; //custom properties styles
-	data[4]=null; //custom labels
+	data[0]="normal" //custom type
+	data[1]=component_elements(); //custom elements
+	data[2]=component_attributes(); //custom attributes
+	data[3]=null; //custom relations
+	data[4]=null; //custom properties styles
+	data[5]=null; //custom labels
 	return data;
 	
 	function component_constraints(graph){

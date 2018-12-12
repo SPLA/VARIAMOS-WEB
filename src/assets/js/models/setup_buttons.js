@@ -27,6 +27,18 @@ var setup_buttons = function setup_buttons(graph,undoManager){
     },"eraser"));
     /* end buttonreset */
 
+    /* begin buttonreset */
+    // Adds an option to reset the graph
+    var buttonRESETALL = document.getElementById('buttonRESETALL');
+    buttonRESETALL.appendChild(mxUtils.button_with_icon(messages["setup_buttons_reset_all"], function()
+    {
+        model_code.value="";
+        var event = new Event('change');
+        model_code.dispatchEvent(event);
+        location.reload();
+    },"eraser"));
+    /* end buttonreset */
+
     /* begin buttonsave */
     // Adds an option to save in localstorage the graph
     var buttonSAVE = document.getElementById('buttonSAVE');
