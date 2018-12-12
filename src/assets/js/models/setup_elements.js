@@ -55,10 +55,13 @@ var setup_elements = function setup_elements(graph, elements, custom_attributes,
             if(c_clon_cells!=null){
                 var type = new_cells[0].getAttribute("type");
                 if(c_clon_cells[type]){ //clon cell in new model
-                    var vertex2 = graph.getModel().cloneCell(vertex);
-                    var parent2 = graph.getModel().getCell(c_clon_cells[type]); //new parent (new model)
-                    var cloned_cells = graph.importCells([vertex2], 0, 0, parent2);
-                    cloned_cells[0].setId("clon"+new_cells[0].getId()); //new Id
+
+                    graph.getModel().prefix="clon"; //cloned cell contains clon prefix
+                    graph.getModel().nextId=graph.getModel().nextId-1;
+                    var vertex2 = graph.getModel().cloneCell(new_cells[0]);
+                    var parent2 = graph.getModel().getCell(c_clon_cells[type]);
+                    graph.importCells([vertex2], 0, 0, parent2);
+                    graph.getModel().prefix=""; //restart prefix
                 }
             }
 

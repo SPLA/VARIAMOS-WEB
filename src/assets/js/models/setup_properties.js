@@ -131,9 +131,8 @@ var setup_properties = function setup_properties(graph,properties_styles,c_type)
 							newValue);
 					graph.getModel().execute(edit);
 					
-					//update cloned cell
+					//update cloned cell if exists
 					var clon = graph.getModel().getCell("clon"+cell.getId());
-					console.log(clon);
 					if(clon){
 						var edit2 = new mxCellAttributeChange(
 							clon, attribute.nodeName,
