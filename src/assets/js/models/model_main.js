@@ -44,32 +44,21 @@ var main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model
 			setup_graph_config(graph);
 			//setup custom shapes
 			setup_custom_shapes();
-			//setup keys
-			setupFunctions["setup_keys"](keyHandler,graph,c_type);
 			//setup buttons
 			setupFunctions["setup_buttons"](graph,undoManager);
-			//setup properties
-			setupFunctions["setup_properties"](graph,c_properties_styles,c_type);
-			//setup custom elements
-			setupFunctions["setup_elements"](graph,c_elements,c_attributes,c_clon_cells,toolbar,c_type);
-			//setup label changed
-			setup_label_changed(graph,c_labels);
-			//setup relations
-			setupFunctions["setup_relations"](graph,c_relations);
-		}else{
-			//setup properties
-			setupFunctions["setup_properties"](graph,c_properties_styles,c_type);
-			//setup keys
-			setupFunctions["setup_keys"](keyHandler,graph,c_type);
-			//setup custom elements
-			setupFunctions["setup_elements"](graph,c_elements,c_attributes,c_clon_cells,toolbar,c_type);
-			//setup label changed
-			setup_label_changed(graph,c_labels);	
-			//setup relations
-			setupFunctions["setup_relations"](graph,c_relations);
 		}
 
-		//disable reset current model if binding model
+		//setup properties
+		setupFunctions["setup_properties"](graph,c_properties_styles,c_type);
+		//setup keys
+		setupFunctions["setup_keys"](keyHandler,graph,c_type);
+		//setup custom elements
+		setupFunctions["setup_elements"](graph,c_elements,c_attributes,c_clon_cells,toolbar,c_type);
+		//setup label changed
+		setup_label_changed(graph,c_labels);	
+		//setup relations
+		setupFunctions["setup_relations"](graph,c_relations);
+		//setup custom features by model type
 		setup_custom_features_by_type(c_type);
 
 		//hide all elements that do not belong to the current layer (parent)
@@ -80,7 +69,7 @@ var main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model
 	}
 
 	function setup_custom_features_by_type(c_type){
-		//hide reset current model for binding models
+		//hide "reset current model" button for binding models
 		var buttonRESET = document.getElementById('buttonRESET');
 		if(c_type=="binding"){
 			buttonRESET.style.display="none";
@@ -137,8 +126,10 @@ var main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model
 				return cell.getAttribute(c_labels[cell.getAttribute("type")], '')
 			}else{
 				if(cell.isEdge()){
+					//default attribute showed in drawing area for edges is relType
 					return cell.getAttribute('relType', '')
 				}else{
+					//default attribute showed in drawing area for vertex is label
 					return cell.getAttribute('label', '') 
 				}
 			}

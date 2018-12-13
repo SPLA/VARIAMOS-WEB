@@ -22,6 +22,7 @@ var setup_properties = function setup_properties(graph,properties_styles,c_type)
 			{
 				mxUtils.writeln(div, messages["setup_properties_nothing"]);
 			}else{
+				//binding models do not allow to modify properties
 				mxUtils.writeln(div, messages["setup_properties_binding"]);
 			}
 		}else{
@@ -94,7 +95,7 @@ var setup_properties = function setup_properties(graph,properties_styles,c_type)
 	 */
 	function createTextField(graph, form, cell, attribute, custom)
 	{
-		var def_display=""
+		var def_display="" //default display is true for all attributes
 		if(custom!=null){
 			def_display=custom["def_display"];
 			if(custom["display_check_attribute"]){

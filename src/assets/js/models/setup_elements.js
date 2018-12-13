@@ -1,11 +1,13 @@
 var setup_elements = function setup_elements(graph, elements, custom_attributes, c_clon_cells, toolbar, c_type){    
     
     if(c_type=="binding"){
+        //disable palette for "binding" models
         var tbContainer = document.getElementById('tbContainer');
         var span = document.createElement('span');
         span.innerHTML = messages["setup_elements_palette_binding"];
         tbContainer.appendChild(span);
     }else{
+        //add elements to the palette
         for (var i = 0; i < elements.length; i++) {
             addVertex(graph, toolbar, elements[i].src, elements[i].wd, elements[i].hg, elements[i].style, elements[i].type, elements[i].pname, custom_attributes, c_clon_cells);
         }
@@ -18,6 +20,7 @@ var setup_elements = function setup_elements(graph, elements, custom_attributes,
         node.setAttribute('label', type);
         node.setAttribute('type', type);
 
+        //include custom attributes
         if(custom_attributes){
             for (var z = 0; z < custom_attributes.length; z++) {
                 if((custom_attributes[z]["types"].indexOf(type) > -1)){
@@ -51,11 +54,10 @@ var setup_elements = function setup_elements(graph, elements, custom_attributes,
             var new_cells = graph.importCells([vertex], 0, 0, cell);
             graph.setSelectionCells(new_cells);
 
-            //execute if there are clons for the current model
+            //execute if there are clons for the current element
             if(c_clon_cells!=null){
                 var type = new_cells[0].getAttribute("type");
-                if(c_clon_cells[type]){ //clon cell in new model
-
+                if(c_clon_cells[type]){ //clon cell in a new model
                     graph.getModel().prefix="clon"; //cloned cell contains clon prefix
                     graph.getModel().nextId=graph.getModel().nextId-1;
                     var vertex2 = graph.getModel().cloneCell(new_cells[0]);

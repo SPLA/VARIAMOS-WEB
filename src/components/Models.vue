@@ -65,18 +65,18 @@ import binding_feature_component_main from '@/assets/js/models/custom/binding_fe
 export default{
   data: function(){
     return {
-      modelCode: "",
-      graph:"",
-      toolbar:"",
-      keyHandler:"",
-      undoManager:"",
-      layers:{},
+      modelCode: "", //stores the model code when saved
+      graph:"", //mxGraph object
+      toolbar:"", //mxToolbar
+      keyHandler:"", //mxKeyHandler
+      undoManager:"", //mxUndoManager
+      layers:{}, //model layers
       modelFunctions:{},
       setupFunctions:{},
-      models:[],
+      models:[], //available models
       currentFunction:"",
-      mxModel:"",
-      modelType:""
+      mxModel:"", //mxGraphModel
+      modelType:"" 
     }
   },
   mounted: function(){
@@ -117,8 +117,7 @@ export default{
       localStorage["model_code"] = document.getElementById('model_code').value;
     },
     initialize_mx(counter){
-      //counter equals 1 load the entire mxGraph 
-      //counter equals 2 only setup the labels, elements, properties and relations
+      //counter equals 1 load the entire mxGraph
       var graphContainer = document.getElementById('graphContainer');
       main(this.graph,this.layers,this.mxModel,this.toolbar,this.keyHandler,graphContainer,this.modelType,this.currentFunction,counter,this.setupFunctions,this.undoManager);
     }

@@ -5,6 +5,7 @@ var setup_relations = function setup_relations(graph,relations){
         var node = doc.createElement('rel_'+source.getAttribute("type")+'_'+target.getAttribute("type"));
         node.setAttribute('type', "relation");
 
+        //setup custom attributes for relations
         if(relations){
             for (var i = 0; i < relations.length; i++) {
                 if(relations[i]["rel_source_target"]=="and"){
