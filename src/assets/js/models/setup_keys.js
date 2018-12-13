@@ -27,7 +27,9 @@ var setup_keys = function setup_keys(keyHandler,graph,c_type){
                     if(removed_cells[i].isVertex()){
                         var clon = graph.getModel().getCell("clon"+removed_cells[i].getId());
                         if(clon){
-                            clon.removeFromParent();
+                            var cells=[]
+                            cells[0]=clon;
+                            graph.removeCells(cells);
                         }
                     }
                 }

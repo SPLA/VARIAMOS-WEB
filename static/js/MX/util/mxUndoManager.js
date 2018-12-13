@@ -154,7 +154,6 @@ mxUndoManager.prototype.undo = function()
     while (this.indexOfNextAdd > 0)
     {
 		var edit = this.history[--this.indexOfNextAdd];
-
 		if(this.cloned[this.indexOfNextAdd]=="clon"){
 			edit.undo();
 			//undo clon
@@ -228,8 +227,9 @@ mxUndoManager.prototype.undoableEditHappened = function(undoableEdit)
 	}
 
 	if(undoableEdit.changes[0]!=null){
-		if(undoableEdit.changes[0].parent!=null){
-			if(undoableEdit.changes[0].parent.id=="binding_feature_component"){
+		if(undoableEdit.changes[0].child!=null){
+			var id=undoableEdit.changes[0].child.id;
+			if(id.includes('clon')){
 				this.cloned[this.history.length]="clon";
 			}
 		}
