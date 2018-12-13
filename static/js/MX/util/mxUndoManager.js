@@ -104,6 +104,11 @@ mxUndoManager.prototype.history = null;
  */
 mxUndoManager.prototype.indexOfNextAdd = 0;
 
+/**
+ * Variable: cloned
+ * 
+ * Contains the cloned history
+ */
 mxUndoManager.prototype.cloned = {};
 
 /**
