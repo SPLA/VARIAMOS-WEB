@@ -2,10 +2,21 @@
   <div>
 
     <div class="card mb-3">
-            <div class="card-header">
-              <i class="fas fa-chart-area"></i>
-              {{ $t("models_area") }} - {{ $route.params.type }} {{ $t("models_model") }}</div>
             <div class="card-body">
+
+              <div class="button-area button-header">
+                 <nav class="navbar navbar-expand-lg navbar-light bg-light nav_domain">
+                  <div id="navbarSupportedContent">
+                    <ul class="navbar-nav navbar-nav2 mr-auto">
+                     <li class="nav-item"><a class="nav-link nav-text"><i class="fas fa-chart-area"></i>
+                 {{ $t("models_area") }} - {{ $route.params.type }} {{ $t("models_model") }}</a></li>
+                      <!-- model actions -->
+                      <DomainImplementation /> 
+                      <Verification /> 
+                    </ul>
+                  </div>
+                </nav>
+              </div>
 
               <div class="button-area">
                     <div class="button-unique" id="buttonSAVE"></div>
@@ -66,6 +77,10 @@ import feature_main from '@/assets/js/models/custom/feature.js'
 import component_main from '@/assets/js/models/custom/component.js'
 import binding_feature_component_main from '@/assets/js/models/custom/binding_feature_component.js'
 
+/* import actions */
+import DomainImplementation from './model_actions/DomainImplementation'
+import Verification from './model_actions/Verification'
+
 export default{
   data: function(){
     return {
@@ -82,6 +97,10 @@ export default{
       mxModel:"", //mxGraphModel
       modelType:"" 
     }
+  },
+  components: {
+    DomainImplementation,
+    Verification
   },
   mounted: function(){
     this.models = ["feature","component","binding_feature_component"]; //represent the available models
@@ -157,6 +176,18 @@ export default{
   }
 }
 
+.button-header{
+  border-radius: calc(.25rem - 1px) calc(.25rem - 1px) 0 0;
+}
+
+.nav_domain{
+  padding: 2px;
+}
+
+.nav-text{
+  color: rgba(0,0,0,.7)!important;
+}
+
 .button-unique{
   display: -webkit-box;
   float: left;
@@ -192,7 +223,6 @@ export default{
 .button-area{
   display: inline-block;
   border-bottom: 2px solid rgba(0,0,0,.125);
-  border-top: 1px solid rgba(0,0,0,.125);
   width: 100%;
 }
 

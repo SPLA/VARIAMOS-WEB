@@ -28,5 +28,17 @@
   "app_dashboard": "Dashboard",
   "app_share": "Share",
   "app_export": "Export",
-  "app_week": "This week"
+  "app_week": "This week",
+
+  "domain_implementation":"Domain Implementation",
+  "domain_implementation_set_params":"Set Derivation Parameters",
+  "domain_implementation_execute":"Execute Derivation",
+  "domain_implementation_verify":"Verify Derivation",
+  "domain_implementation_customize":"Customize Derivation",
+
+  "verification":"Verification",
+  "verification_root":"More than one root element",
+  "verification_dead":"Dead elements",
+  "verification_false":"False optional elements"
+
 }

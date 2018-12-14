@@ -22,6 +22,17 @@ select{
   height: 27px;
 }
 
+@media (min-width: 300px){
+  .nav-link {
+    padding-right: .5rem !important;
+    padding-left: .5rem !important;
+    
+  }
+  .navbar-nav2 {
+    flex-direction: row !important;
+  }
+}
+
 .properties-table{
   display: inline-block;
 }
