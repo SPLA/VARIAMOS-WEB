@@ -24,6 +24,10 @@ var main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model
 		c_labels=data[5];
 		c_clon_cells=data[6];
 
+		//collect functions that are used in multiple places
+		var reused_functions=[];
+		reused_functions=get_reused_functions(graph,c_type);
+
 		//counter equals 1 load the entire mxGraph 
 		if(counter==1){
 			// Disables the built-in context menu
@@ -44,14 +48,14 @@ var main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model
 			setup_graph_config(graph);
 			//setup custom shapes
 			setup_custom_shapes();
-			//setup buttons
-			setupFunctions["setup_buttons"](graph,undoManager);
 		}
-
+		
+		//setup buttons
+		setupFunctions["setup_buttons"](graph,undoManager,reused_functions);
 		//setup properties
 		setupFunctions["setup_properties"](graph,c_properties_styles,c_type);
 		//setup keys
-		setupFunctions["setup_keys"](keyHandler,graph,c_type);
+		setupFunctions["setup_keys"](keyHandler,graph,reused_functions);
 		//setup custom elements
 		setupFunctions["setup_elements"](graph,c_elements,c_attributes,c_clon_cells,toolbar,c_type);
 		//setup label changed
@@ -135,6 +139,49 @@ var main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model
 			}
 		  }
 		};
+	}
+
+	function get_reused_functions(graph,c_type){
+		var reused_functions=[];
+		reused_functions[0]=function(evt)
+		{
+			if (graph.isEnabled())
+			{
+				if(c_type=="binding"){
+					console.log("binding");
+					//binding models allow to remove egdes but not vertexs
+					var cells = graph.getSelectionCells();
+					var vertex = false;
+					for (var i = 0; i < cells.length; i++) {
+						if(cells[i].isVertex()){
+							vertex = true;
+							alert(messages["setup_keys_remove_binding"]);
+							break;
+						}
+					}
+
+					if(!vertex){
+						graph.removeCells();
+					}
+				}else{
+					var removed_cells=graph.removeCells();
+
+					//remove clons if exist
+					for (var i = 0; i < removed_cells.length; i++) {
+						if(removed_cells[i].isVertex()){
+							var clon = graph.getModel().getCell("clon"+removed_cells[i].getId());
+							if(clon){
+								var cells=[]
+								cells[0]=clon;
+								graph.removeCells(cells);
+							}
+						}
+					}
+				}
+			}
+		}
+
+		return reused_functions;
 	}
 }
 

@@ -8,12 +8,16 @@
             <div class="card-body">
 
               <div class="button-area">
-                    <div class="button-unique" id="buttonXML"></div><div class="button-unique" id="buttonRESET"></div>
+                    <div class="button-unique" id="buttonSAVE"></div>
+                    <div class="button-unique" id="buttonUNDO"></div>
+                    <div class="button-unique" id="buttonREDO"></div>
+                    <div class="button-unique" id="buttonSHOW"></div>
+                    <div class="button-unique" id="buttonDELETE"></div>
+                    <div class="button-unique" id="buttonRESET"></div>
                     <div class="button-unique" id="buttonRESETALL"></div>
-                    <div class="button-unique" id="buttonSAVE"></div><div class="button-unique" id="buttonUNDO"></div>
-                    <div class="button-unique" id="buttonREDO"></div><div class="button-unique" id="buttonSHOW"></div>
                     <div class="button-unique" id="buttonEXPORT"></div>
                     <div class="button-unique" id="buttonIMPORT" type="file"></div>
+                    <div class="button-unique" id="buttonXML"></div>
               </div>
 
               <div class="row main_area">

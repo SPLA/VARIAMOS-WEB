@@ -10,6 +10,7 @@ var messages={
     "setup_buttons_undo":"Undo",
     "setup_buttons_redo":"Redo",
     "setup_buttons_show":"Show",
+    "setup_buttons_delete":"Delete",
     "setup_buttons_save_model":"Model Saved!",
 
     "setup_keys_remove_binding":"It is not allowed to remove 'Vertexs' in binding models",

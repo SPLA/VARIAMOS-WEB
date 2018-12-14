@@ -1,41 +1,7 @@
-var setup_keys = function setup_keys(keyHandler,graph,c_type){
+var setup_keys = function setup_keys(keyHandler,graph,reused_functions){
     //allows removing elements with supr key
-    keyHandler.bindKey(46, function(evt)
-    {
-        if (graph.isEnabled())
-        {
-            if(c_type=="binding"){
-                //binding models allow to remove egdes but not vertexs
-                var cells = graph.getSelectionCells();
-                var vertex = false;
-                for (var i = 0; i < cells.length; i++) {
-                    if(cells[i].isVertex()){
-                        vertex = true;
-                        alert(messages["setup_keys_remove_binding"]);
-                        break;
-                    }
-                }
 
-                if(!vertex){
-                    graph.removeCells();
-                }
-            }else{
-                var removed_cells=graph.removeCells();
-
-                //remove clons if exist
-                for (var i = 0; i < removed_cells.length; i++) {
-                    if(removed_cells[i].isVertex()){
-                        var clon = graph.getModel().getCell("clon"+removed_cells[i].getId());
-                        if(clon){
-                            var cells=[]
-                            cells[0]=clon;
-                            graph.removeCells(cells);
-                        }
-                    }
-                }
-            }
-        }
-    });
+    keyHandler.bindKey(46, reused_functions[0]);
 
     /* zoomin, zoomout the model with ctrl + mousewheel */
     mxEvent.addMouseWheelListener(function (evt, up) {
