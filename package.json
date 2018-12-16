@@ -11,6 +11,7 @@
     "start": "node build/dev-server.js"
   },
   "dependencies": {
+    "axios": "^0.18.0",
     "popper.js": "^1.12.9",
     "vue": "^2.5.2",
     "vue-i18n": "^8.0.0",

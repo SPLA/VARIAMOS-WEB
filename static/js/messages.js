@@ -18,5 +18,7 @@ var messages={
     "setup_properties_nothing":"Nothing Selected",
     "setup_properties_binding":"Properties not allowed to change in a binding model",
 
-    "setup_elements_palette_binding":"Palette not available in binding models"
+    "setup_elements_palette_binding":"Palette not available in binding models",
+
+    "model_actions_backend_problem":" || Back-End problem"
 }

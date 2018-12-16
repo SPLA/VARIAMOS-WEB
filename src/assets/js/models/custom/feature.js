@@ -55,7 +55,14 @@ var feature_main = function feature_main(graph)
 				"def_value":"1"
 			}]
 		};
-	
+		attributes[1]={
+			"types":["leaf"],
+			"custom_attributes":[{
+				"name":"selected",
+				"def_value":"1"
+			}]
+
+		};
 		return attributes;
 	}
 

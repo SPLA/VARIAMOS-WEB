@@ -4,14 +4,14 @@
     <div class="card mb-3">
             <div class="card-body">
 
-              <div class="button-area button-header">
+              <div class="button-header">
                  <nav class="navbar navbar-expand-lg navbar-light bg-light nav_domain">
                   <div id="navbarSupportedContent">
                     <ul class="navbar-nav navbar-nav2 mr-auto">
                      <li class="nav-item"><a class="nav-link nav-text"><i class="fas fa-chart-area"></i>
-                 {{ $t("models_area") }} - {{ $route.params.type }} {{ $t("models_model") }}</a></li>
+                      {{ $t("models_area") }} - {{ $route.params.type }} {{ $t("models_model") }}</a></li>
                       <!-- model actions -->
-                      <DomainImplementation /> 
+                      <DomainImplementation :current_graph="graph" /> 
                       <Verification /> 
                     </ul>
                   </div>
@@ -85,16 +85,16 @@ export default{
   data: function(){
     return {
       modelCode: "", //stores the model code when saved
-      graph:"", //mxGraph object
-      toolbar:"", //mxToolbar
-      keyHandler:"", //mxKeyHandler
-      undoManager:"", //mxUndoManager
+      graph: new Object(), //mxGraph object
+      toolbar: new Object(), //mxToolbar
+      keyHandler: new Object(), //mxKeyHandler
+      undoManager: new Object(), //mxUndoManager
       layers:{}, //model layers
       modelFunctions:{},
       setupFunctions:{},
       models:[], //available models
       currentFunction:"",
-      mxModel:"", //mxGraphModel
+      mxModel: new Object(), //mxGraphModel
       modelType:"" 
     }
   },
@@ -178,6 +178,7 @@ export default{
 
 .button-header{
   border-radius: calc(.25rem - 1px) calc(.25rem - 1px) 0 0;
+  border-bottom: 2px solid rgba(0,0,0,.125);
 }
 
 .nav_domain{
@@ -222,7 +223,7 @@ export default{
 
 .button-area{
   display: inline-block;
-  border-bottom: 2px solid rgba(0,0,0,.125);
+  border-bottom: 1px solid rgba(0,0,0,.125);
   width: 100%;
 }
 

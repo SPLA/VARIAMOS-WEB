@@ -8,7 +8,6 @@
       <a class="dropdown-item">{{ $t("verification_dead") }}</a>
       <a class="dropdown-item">{{ $t("verification_false") }}</a>
     </div>
-
   </li>
 </template>
 
