@@ -1,4 +1,4 @@
-var messages={
+messages={
     "model_main_browser":"Browser is not supported!",
 
     "setup_buttons_viewxml":"View XML",

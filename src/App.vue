@@ -83,6 +83,10 @@
   </div>
 </template>
 
+<script>
+import messages from '@/assets/js/messages.js'
+</script>
+
 <style>
 @media (min-width: 768px){
   .top-main{

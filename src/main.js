@@ -4,7 +4,8 @@ import Vue from 'vue'
 import VueI18n from 'vue-i18n'
 import App from './App'
 import router from './router'
-import '../static/css/bootstrap.min.css'
+import 'bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import '../static/css/dashboard.css'
 import '../static/css/fontawesome/all.css'
 import i18n from './i18n'
