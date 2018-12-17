@@ -39,7 +39,7 @@ export default {
         data: this.model_data
       })
       .then(response => {
-        console.log(response.data);
+        alert(response.data);
       })
       .catch(e => {
         this.errors.push(e); 
