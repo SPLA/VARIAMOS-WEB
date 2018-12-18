@@ -46,7 +46,6 @@ var di_actions = function di_actions(graph,selected_method)
         
         return complete_data;
     }
-
 }
 
 export default di_actions

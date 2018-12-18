@@ -138,6 +138,9 @@ export default{
     persist() {
       //save model in localstorage
       localStorage["model_code"] = document.getElementById('model_code').value;
+      var c_header = modalH3("Success","success");
+      var c_body = modalSimpleText(messages["setup_buttons_save_model"]);
+      setupModal(c_header,c_body);
     },
     initialize_mx(counter){
       //counter equals 1 load the entire mxGraph

@@ -67,7 +67,6 @@ var setup_buttons = function setup_buttons(graph,undoManager,reused_functions){
         model_code.value=xml;
         var event = new Event('change');
         model_code.dispatchEvent(event);
-        alert(messages["setup_buttons_save_model"]);
     },"save"));
 
     /* begin buttonExport */

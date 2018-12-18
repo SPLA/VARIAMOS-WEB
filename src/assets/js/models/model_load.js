@@ -33,7 +33,7 @@ var model_load = function model_load(graph,models,m_code){
                     }
                     
                     if(!valid_cell){
-                        console.log("error invalid cell");
+                        console.log(messages["model_load_invalid_cell"]);
                     }
                 }
             }else{

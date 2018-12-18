@@ -1,5 +1,6 @@
 messages={
     "model_main_browser":"Browser is not supported!",
+    "model_load_invalid_cell":"error invalid cell",
 
     "setup_buttons_viewxml":"View XML",
     "setup_buttons_reset":"Reset Current Model",
