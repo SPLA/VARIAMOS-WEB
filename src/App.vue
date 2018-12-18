@@ -85,6 +85,7 @@
 
 <script>
 import messages from '@/assets/js/messages.js'
+export default {}
 </script>
 
 <style>

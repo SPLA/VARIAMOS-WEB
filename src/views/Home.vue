@@ -1,6 +1,6 @@
 <template>
-  <div class="hello">
-    <img src="/static/logo.png">
+  <div class="home">
+    <img alt="VariaMos logo" src="../assets/images/logo.png">
     <h1>{{ $t("home_welcome") }}</h1>
   </div>
 </template>

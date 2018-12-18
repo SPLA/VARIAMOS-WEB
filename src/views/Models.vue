@@ -78,8 +78,8 @@ import component_main from '@/assets/js/models/custom/component.js'
 import binding_feature_component_main from '@/assets/js/models/custom/binding_feature_component.js'
 
 /* import actions */
-import DomainImplementation from './model_actions/DomainImplementation'
-import Verification from './model_actions/Verification'
+import DomainImplementation from '../components/model_actions/DomainImplementation'
+import Verification from '../components/model_actions/Verification'
 
 export default{
   data: function(){
@@ -246,7 +246,7 @@ export default{
   overflow-x: auto;
   overflow-y: auto;
   height:350px;
-  background:url("/static/images/MX/editors/grid.gif");
+  background:url("/images/MX/editors/grid.gif");
   cursor:default;
   padding-right: 0px; 
   padding-left: 0px;

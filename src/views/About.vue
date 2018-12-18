@@ -5,14 +5,14 @@
 
     <div class="border-bottom text-left"><h1 class="h2">{{ $t("about_team") }}</h1></div>
     <div class="team-info">
-      <img alt="" src="/static/images/team/daniel.jpg" class="pull-left">
+      <img alt="" src="../assets/images/team/daniel.jpg" class="pull-left">
       <div class="pull-left">
         <span class="team-name">{{ $t("about_team_daniel") }}</span>
         <span class="team-post">{{ $t("about_team_daniel_desc") }}</span>
       </div>
     </div>
     <div class="team-info">
-      <img alt="" src="/static/images/team/raul.jpg" class="pull-left">
+      <img alt="" src="../assets/images/team/raul.jpg" class="pull-left">
       <div class="pull-left">
         <span class="team-name">{{ $t("about_team_raul") }}</span>
         <span class="team-post">{{ $t("about_team_raul_desc") }}</span>

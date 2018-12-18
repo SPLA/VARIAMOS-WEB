@@ -455,7 +455,7 @@ if (typeof(mxBasePath) != 'undefined' && mxBasePath.length > 0)
 }
 else
 {
-	mxClient.basePath = './static';
+	mxClient.basePath = './';
 }
 
 /**

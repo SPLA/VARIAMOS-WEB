@@ -1,33 +1,31 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from '@/components/Home'
-import About from '@/components/About'
-import Models from '@/components/Models'
-import Reports from '@/components/Reports'
 
 Vue.use(Router)
 
 export default new Router({
+  mode: 'history',
+  base: process.env.BASE_URL,
   routes: [
     {
       path: '/',
-      name: 'Home',
-      component: Home
+      name: 'home',
+      component: () => import('./views/Home.vue')
     },
     {
       path: '/about',
-      name: 'About',
-      component: About
+      name: 'about',
+      component: () => import('./views/About.vue')
     },
     {
       path: '/models/:type',
       name: 'Models',
-      component: Models
+      component: () => import('./views/Models.vue')
     },
     {
       path: '/reports',
       name: 'Reports',
-      component: Reports
+      component: () => import('./views/Reports.vue')
     }
   ]
 })
