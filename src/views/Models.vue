@@ -12,7 +12,7 @@
                       {{ $t("models_area") }} - {{ $route.params.type }} {{ $t("models_model") }}</a></li>
                       <!-- model actions -->
                       <DomainImplementation :current_graph="graph" /> 
-                      <Verification /> 
+                      <Verification :current_graph="graph" /> 
                     </ul>
                   </div>
                 </nav>

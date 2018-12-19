@@ -52,7 +52,7 @@ export default {
       if (localStorage["domain_implementation_main_path"]) {
         this.errors=[];
         this.model_data=JSON.stringify(di_actions(this.current_graph,"execute"));
-        axios.post(localStorage["domain_implementation_main_path"]+'execute', {
+        axios.post(localStorage["domain_implementation_main_path"]+'DomainImplementation/execute', {
           data: this.model_data
         })
         .then(response => {
