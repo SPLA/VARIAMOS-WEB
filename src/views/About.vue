@@ -11,13 +11,23 @@
         <span class="team-post">{{ $t("about_team_daniel_desc") }}</span>
       </div>
     </div>
-    <div class="team-info">
+    <div class="team-info pad-20">
       <img alt="" src="../assets/images/team/raul.jpg" class="pull-left">
       <div class="pull-left">
         <span class="team-name">{{ $t("about_team_raul") }}</span>
         <span class="team-post">{{ $t("about_team_raul_desc") }}</span>
       </div>
     </div>
+
+    <div class="border-bottom text-left"><h1 class="h2">{{ $t("about_past_versions") }}</h1></div>
+    <div class="div-text-area">
+      <b>{{ $t("about_team_past_copy1") }}</b> {{ $t("about_team_past_authors1") }}
+      <br /><br />
+      <b>{{ $t("about_team_past_copy2") }}</b> {{ $t("about_team_past_authors2") }}
+      <br /><br />
+      <b>{{ $t("about_team_past_copy3") }}</b> {{ $t("about_team_past_authors3") }}
+    </div>
+
   </div>
 </template>
 
