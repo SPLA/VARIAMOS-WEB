@@ -30,15 +30,31 @@
   "app_export": "Export",
   "app_week": "This week",
 
+  "modal_save":"Save",
+  "modal_success":"Success",
+  "modal_error":"Error",
+  "models_save_model":"Model Saved!",
+  "models_actions_derivation_response": "Derivation response",
+
   "domain_implementation":"Domain Implementation",
   "domain_implementation_set_params":"Set Derivation Parameters",
   "domain_implementation_execute":"Execute Derivation",
   "domain_implementation_verify":"Verify Derivation",
   "domain_implementation_customize":"Customize Derivation",
+  "domain_implementation_pool_path":"Server Component Pool Path",
+  "domain_implementation_derived_path":"Server Derived Project Path",
+  "domain_implementation_path_problem":"Please setup BackEnd and Derivation parameters first",
+
+  "model_actions_backend_problem":" || Back-End problem",
+
+  "backend_title":"BackEnd",
+  "backend_setup":"BackEnd Setup",
+  "backend_setup_path":"BackEnd Server Path",
 
   "verification":"Verification",
   "verification_root":"More than one root element",
   "verification_dead":"Dead elements",
-  "verification_false":"False optional elements"
+  "verification_false":"False optional elements",
+  "verification_path_problem":"Please setup BackEnd parameters first"
 
 }

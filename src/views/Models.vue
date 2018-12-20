@@ -11,6 +11,7 @@
                      <li class="nav-item"><a class="nav-link nav-text"><i class="fas fa-chart-area"></i>
                       {{ $t("models_area") }} - {{ $route.params.type }} {{ $t("models_model") }}</a></li>
                       <!-- model actions -->
+                      <BackEnd /> 
                       <DomainImplementation :current_graph="graph" /> 
                       <Verification :current_graph="graph" /> 
                     </ul>
@@ -80,6 +81,7 @@ import binding_feature_component_main from '@/assets/js/models/custom/binding_fe
 /* import actions */
 import DomainImplementation from '../components/model_actions/DomainImplementation'
 import Verification from '../components/model_actions/Verification'
+import BackEnd from '../components/model_actions/BackEnd'
 
 export default{
   data: function(){
@@ -99,6 +101,7 @@ export default{
     }
   },
   components: {
+    BackEnd,
     DomainImplementation,
     Verification
   },
@@ -139,8 +142,8 @@ export default{
       //save model in localstorage
       localStorage["model_code"] = document.getElementById('model_code').value;
       if(document.getElementById('model_code').value!=""){
-        var c_header = modalH3("Success","success");
-        var c_body = modalSimpleText(messages["setup_buttons_save_model"]);
+        var c_header = modalH3(this.$t("modal_success"),"success");
+        var c_body = modalSimpleText(this.$t("models_save_model"));
         setupModal(c_header,c_body);
       }
     },

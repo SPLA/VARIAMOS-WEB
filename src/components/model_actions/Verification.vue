@@ -44,13 +44,13 @@ export default {
         })
         .catch(e => {
           this.errors.push(e); 
-          var c_header = modalH3("Error","error");
-          var c_body = modalSimpleText(e + messages["model_actions_backend_problem"]);
+          var c_header = modalH3(this.$t("modal_error"),"error");
+          var c_body = modalSimpleText(e + this.$t("model_actions_backend_problem"));
           setupModal(c_header,c_body);
         });
       }else{
-        var c_header = modalH3("Error","error");
-        var c_body = modalSimpleText("Please configure derivation parameters first");
+        var c_header = modalH3(this.$t("modal_error"),"error");
+        var c_body = modalSimpleText(this.$t("verification_path_problem"));
         setupModal(c_header,c_body);
       }
       
@@ -58,7 +58,6 @@ export default {
   }
 }
 </script>
-
 
 <style scoped>
 </style>

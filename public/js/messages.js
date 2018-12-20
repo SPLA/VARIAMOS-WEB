@@ -12,7 +12,6 @@ const messages={
     "setup_buttons_redo":"Redo",
     "setup_buttons_show":"Show",
     "setup_buttons_delete":"Delete",
-    "setup_buttons_save_model":"Model Saved!",
 
     "setup_keys_remove_binding":"It is not allowed to remove 'Vertexs' in binding models",
 
@@ -24,7 +23,5 @@ const messages={
     "setup_relations_bidirectional":"Bidirectional edges not allowed",
 
     "feature_custom_range_check":"High range must be greater or equal than low range",
-    "feature_custom_root_check":"Only one root allowed",
-
-    "model_actions_backend_problem":" || Back-End problem"
+    "feature_custom_root_check":"Only one root allowed"
 }
