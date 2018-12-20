@@ -9,6 +9,7 @@ var feature_main = function feature_main(graph)
 	data[4]=feature_properties_styles(); //custom properties styles
 	data[5]=feature_labels(); //custom labels
 	data[6]=feature_clon_cells(); //custom clon cells
+	data[7]=feature_constraints_in_creation(); //custom constraints in element creation
 	return data;
 	
 	function feature_constraints(graph){
@@ -104,6 +105,7 @@ var feature_main = function feature_main(graph)
 					"display_check_attribute":"bundleType",
 					"display_check_value":"RANGE",
 					"display_check":"",
+					"onchangerestrictive": feature_custom_methods(1)
 				},
 				{
 					"attribute":"highRange",
@@ -112,6 +114,7 @@ var feature_main = function feature_main(graph)
 					"display_check_attribute":"bundleType",
 					"display_check_value":"RANGE",
 					"display_check":"",
+					"onchangerestrictive": feature_custom_methods(1)
 				}
 			]
 		}
@@ -130,6 +133,27 @@ var feature_main = function feature_main(graph)
 				document.getElementById("tr-highRange").style.display="";
 			}
 		};
+		methods[1]=function(){
+			var lowRange = document.getElementById("input-lowRange").value;
+			var highRange = document.getElementById("input-highRange").value;
+			if(lowRange>highRange){
+				alert(messages["feature_custom_range_check"]);
+				return false;
+			}
+			return true;
+		};
+		methods[2]=function(graph){
+			var feature_root = graph.getModel().getCell("feature");    
+			var feature_vertices = graph.getModel().getChildVertices(feature_root);
+
+			for (var i = 0; i < feature_vertices.length; i++) {
+				if(feature_vertices[i].getAttribute("type")=="root"){
+					alert(messages["feature_custom_root_check"]);
+					return false;
+				}
+			}
+			return true;
+		};
 
 		return methods[pos];
 	}
@@ -141,6 +165,15 @@ var feature_main = function feature_main(graph)
 		};
 
 		return labels;
+	}
+
+	function feature_constraints_in_creation(){
+		var constraints_ic={};
+		constraints_ic={
+			"root":feature_custom_methods(2)
+		};
+
+		return constraints_ic;
 	}
 
 	function feature_clon_cells(){

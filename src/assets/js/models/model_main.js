@@ -14,7 +14,7 @@ var main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model
 		graph.setDefaultParent(currentLayer); //any new graphic element will be connected with this parent
 
 		var data=[], c_type="", c_elements=[], c_attributes=[], c_relations=[], c_properties_styles=[] , c_labels=[];
-		var c_clon_cells=[];
+		var c_clon_cells=[], c_constraints_ic=[];
 		data=model_specific_main(graph); //specific model data
 		c_type=data[0];
 		c_elements=data[1];
@@ -23,6 +23,7 @@ var main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model
 		c_properties_styles=data[4];
 		c_labels=data[5];
 		c_clon_cells=data[6];
+		c_constraints_ic=data[7];
 
 		//collect functions that are used in multiple places
 		var reused_functions=[];
@@ -57,7 +58,7 @@ var main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model
 		//setup keys
 		setupFunctions["setup_keys"](keyHandler,graph,reused_functions);
 		//setup custom elements
-		setupFunctions["setup_elements"](graph,c_elements,c_attributes,c_clon_cells,toolbar,c_type);
+		setupFunctions["setup_elements"](graph,c_elements,c_attributes,c_clon_cells,c_constraints_ic,toolbar,c_type);
 		//setup label changed
 		setup_label_changed(graph,c_labels);	
 		//setup relations

@@ -133,8 +133,6 @@ var setup_buttons = function setup_buttons(graph,undoManager,reused_functions){
     /* begin buttonUNDO */
     var buttonUNDO = document.getElementById('buttonUNDO');
     buttonUNDO.innerHTML="";
-    //clear undo redo history
-    undoManager.clear();
     buttonUNDO.appendChild(mxUtils.button_with_icon(messages["setup_buttons_undo"], function()
     {
         if(undoManager.canUndo()){

@@ -5,6 +5,16 @@ var setup_relations = function setup_relations(graph,relations){
         var node = doc.createElement('rel_'+source.getAttribute("type")+'_'+target.getAttribute("type"));
         node.setAttribute('type', "relation");
 
+        //by default bidirectional edges are not allowed (disjoint)
+        if(target.edges != null && target.edges.length>0){
+            for (var i = 0; i < target.edges.length; i++) {
+                if(target.edges[i].target.getId()==source.getId()){
+                    alert(messages["setup_relations_bidirectional"]);
+                    return null;
+                }
+            }
+        }
+
         //setup custom attributes for relations
         if(relations){
             for (var i = 0; i < relations.length; i++) {

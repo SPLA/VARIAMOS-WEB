@@ -21,5 +21,10 @@ messages={
 
     "setup_elements_palette_binding":"Palette not available in binding models",
 
+    "setup_relations_bidirectional":"Bidirectional edges not allowed",
+
+    "feature_custom_range_check":"High range must be greater or equal than low range",
+    "feature_custom_root_check":"Only one root allowed",
+
     "model_actions_backend_problem":" || Back-End problem"
 }

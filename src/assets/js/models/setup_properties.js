@@ -87,7 +87,7 @@ var setup_properties = function setup_properties(graph,properties_styles,c_type)
 			input.onchange = custom["onchange"];
 		}
 
-		executeApplyHandler(graph, form, cell, attribute, input);
+		executeApplyHandler(graph, form, cell, attribute, input, custom);
 	}
 
 	/**
@@ -107,21 +107,31 @@ var setup_properties = function setup_properties(graph,properties_styles,c_type)
 
 		var input = form.addText(attribute.nodeName, attribute.nodeValue, "text", def_display);
 		
+		//attribute type can not be modified
 		if(attribute.nodeName=="type"){
 			input.disabled="disabled";
 		}
 
-		executeApplyHandler(graph, form, cell, attribute, input);
+		executeApplyHandler(graph, form, cell, attribute, input, custom);
 
 	}
 
-	function executeApplyHandler(graph, form, cell, attribute, input){
+	function executeApplyHandler(graph, form, cell, attribute, input, custom){
 		var applyHandler = function()
 		{
 			var newValue = input.value || '';
 			var oldValue = cell.getAttribute(attribute.nodeName, '');
+			var onchange_allowed = true;
 
-			if (newValue != oldValue)
+			//check custom changes that are not allowed
+			if(custom["onchangerestrictive"]!=null){
+				onchange_allowed = custom["onchangerestrictive"]();
+				if(!onchange_allowed){
+					input.value=oldValue;
+				}
+			}
+
+			if (newValue != oldValue && onchange_allowed)
 			{
 				graph.getModel().beginUpdate();
 				

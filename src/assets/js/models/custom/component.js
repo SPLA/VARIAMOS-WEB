@@ -9,6 +9,7 @@ var component_main = function component_main(graph)
 	data[4]=null; //custom properties styles
 	data[5]=null; //custom labels
 	data[6]=component_clon_cells(); //custom clon cells
+	data[7]=null; //custom constraints in element creation
 	return data;
 	
 	function component_constraints(graph){

@@ -9,6 +9,7 @@ var binding_feature_component_main = function binding_feature_component_main(gra
 	data[4]=null; //custom properties styles
 	data[5]=null; //custom labels
 	data[6]=null; //custom clon cells
+	data[7]=null; //custom constraints in element creation
     return data;
     
     function binding_f_c_constraints(graph){

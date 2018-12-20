@@ -8,7 +8,6 @@
 <script>
 import '@/assets/js/chart/Chart.min.js'
 
-
 export default {
   mounted: function(){
     var ctx = document.getElementById("myChart");

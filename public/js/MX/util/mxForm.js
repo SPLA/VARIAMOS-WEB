@@ -90,6 +90,7 @@ mxForm.prototype.addText = function(name, value, type, def_display)
 	var input = document.createElement('input');
 	
 	input.setAttribute('type', type || 'text');
+	input.id="input-"+name;
 	input.value = value;
 	
 	return this.addField(name, input, def_display);
@@ -144,6 +145,7 @@ mxForm.prototype.addTextarea = function(name, value, rows)
 mxForm.prototype.addCombo = function(name, isMultiSelect, size)
 {
 	var select = document.createElement('select');
+	select.id="select-"+name;
 	
 	if (size != null)
 	{

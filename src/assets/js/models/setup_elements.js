@@ -1,4 +1,4 @@
-var setup_elements = function setup_elements(graph, elements, custom_attributes, c_clon_cells, toolbar, c_type){    
+var setup_elements = function setup_elements(graph, elements, custom_attributes, c_clon_cells, c_constraints_ic, toolbar, c_type){    
     
     if(c_type=="binding"){
         //disable palette for "binding" models
@@ -9,11 +9,11 @@ var setup_elements = function setup_elements(graph, elements, custom_attributes,
     }else{
         //add elements to the palette
         for (var i = 0; i < elements.length; i++) {
-            addVertex(graph, toolbar, elements[i].src, elements[i].wd, elements[i].hg, elements[i].style, elements[i].type, elements[i].pname, custom_attributes, c_clon_cells);
+            addVertex(graph, toolbar, elements[i].src, elements[i].wd, elements[i].hg, elements[i].style, elements[i].type, elements[i].pname, custom_attributes, c_clon_cells, c_constraints_ic);
         }
     }
 
-    function addVertex(graph, toolbar, icon, w, h, style, type, namepalette, custom_attributes, c_clon_cells)
+    function addVertex(graph, toolbar, icon, w, h, style, type, namepalette, custom_attributes, c_clon_cells, c_constraints_ic)
     {
         var doc = mxUtils.createXmlDocument();
         var node = doc.createElement(type);
@@ -35,35 +35,47 @@ var setup_elements = function setup_elements(graph, elements, custom_attributes,
         vertex.setConnectable(true);
         vertex.setVertex(true);
 
-        addToolbarItem(graph, toolbar, vertex, icon, namepalette, c_clon_cells);
+        if(c_constraints_ic != null && c_constraints_ic[type]){
+            addToolbarItem(graph, toolbar, vertex, icon, namepalette, c_clon_cells, c_constraints_ic[type]);
+        }else{
+            addToolbarItem(graph, toolbar, vertex, icon, namepalette, c_clon_cells, "");
+        }
     }
 
-    function addToolbarItem(graph, toolbar, prototype, image, namepalette, c_clon_cells)
+    function addToolbarItem(graph, toolbar, prototype, image, namepalette, c_clon_cells, c_constraints_ic)
     {
         // Function that is executed when the image is dropped on
         // the graph. The cell argument points to the cell under
         // the mousepointer if there is one.
         var funct = function(graph, evt, cell)
 		{
-            graph.stopEditing(false);
+            var oncreation_allowed = true;
 
-            var pt = graph.getPointForEvent(evt);
-            var vertex = graph.getModel().cloneCell(prototype);
-            vertex.geometry.x = pt.x;
-            vertex.geometry.y = pt.y;
-            var new_cells = graph.importCells([vertex], 0, 0, cell);
-            graph.setSelectionCells(new_cells);
+            if(c_constraints_ic!=""){
+                oncreation_allowed = c_constraints_ic(graph);
+            }
 
-            //execute if there are clons for the current element
-            if(c_clon_cells!=null){
-                var type = new_cells[0].getAttribute("type");
-                if(c_clon_cells[type]){ //clon cell in a new model
-                    graph.getModel().prefix="clon"; //cloned cell contains clon prefix
-                    graph.getModel().nextId=graph.getModel().nextId-1;
-                    var vertex2 = graph.getModel().cloneCell(new_cells[0]);
-                    var parent2 = graph.getModel().getCell(c_clon_cells[type]);
-                    graph.importCells([vertex2], 0, 0, parent2);
-                    graph.getModel().prefix=""; //restart prefix
+            if(oncreation_allowed){
+                graph.stopEditing(false);
+                var pt = graph.getPointForEvent(evt);
+                var vertex = graph.getModel().cloneCell(prototype);
+                vertex.geometry.x = pt.x;
+                vertex.geometry.y = pt.y;
+
+                var new_cells = graph.importCells([vertex], 0, 0, cell);
+                graph.setSelectionCells(new_cells);
+
+                //execute if there are clons for the current element
+                if(c_clon_cells!=null){
+                    var type = new_cells[0].getAttribute("type");
+                    if(c_clon_cells[type]){ //clon cell in a new model
+                        graph.getModel().prefix="clon"; //cloned cell contains clon prefix
+                        graph.getModel().nextId=graph.getModel().nextId-1;
+                        var vertex2 = graph.getModel().cloneCell(new_cells[0]);
+                        var parent2 = graph.getModel().getCell(c_clon_cells[type]);
+                        graph.importCells([vertex2], 0, 0, parent2);
+                        graph.getModel().prefix=""; //restart prefix
+                    }
                 }
             }
 
