@@ -3,7 +3,7 @@
 
     <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
           <router-link  to="./" class="navbar-brand col-sm-3 col-md-2 mr-0">{{ $t("app_variamos") }}</router-link>
-          <input class="form-control form-control-dark w-100" type="text" v-bind:placeholder="$t('app_search')" v-bind:aria-label="$t('app_search')">
+          <input class="form-control form-control-dark w-100 height-100" type="text" v-bind:placeholder="$t('app_search')" v-bind:aria-label="$t('app_search')">
           <ul class="navbar-nav px-3">
             <li class="nav-item text-nowrap">
               <a class="nav-link">Sign out</a>
@@ -51,6 +51,33 @@
                           </li>
                         </ul>
 
+                    </li>
+                    <li class="nav-item">
+                      <router-link class="nav-link" to="/applies">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather">
+                        <circle cx="12" cy="12" r="10" />
+                        <circle cx="12" cy="12" r="5" />
+                        </svg>
+                        {{ $t("app_menu_applies") }}
+                      </router-link>
+                    </li>
+                    <li class="nav-item">
+                      <router-link class="nav-link" to="/hlvl">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather">
+                        <circle cx="12" cy="12" r="10" />
+                        <circle cx="12" cy="12" r="5" />
+                        </svg>
+                        {{ $t("app_menu_hlvl") }}
+                      </router-link>
+                    </li>
+                    <li class="nav-item">
+                      <router-link class="nav-link" to="/fragop">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather">
+                        <circle cx="12" cy="12" r="10" />
+                        <circle cx="12" cy="12" r="5" />
+                        </svg>
+                        {{ $t("app_menu_fragop") }}
+                      </router-link>
                     </li>
                     <li class="nav-item">
                       <router-link class="nav-link" to="/about">
@@ -129,6 +156,10 @@ export default {
       flex: 0 0 83%;
       max-width: 83%;
   }
+}
+
+.height-100 {
+    height: 100% !important;
 }
 
 .dropdown-item.active, .dropdown-item:active {

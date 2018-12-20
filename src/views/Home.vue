@@ -1,7 +1,10 @@
 <template>
-  <div class="home">
-    <img alt="VariaMos logo" src="../assets/images/logo.png">
-    <h1>{{ $t("home_welcome") }}</h1>
+  <div>
+    <div class="border-bottom text-left"><h1 class="h2">{{ $t("home_variamos") }}</h1></div>
+    <div class="div-text-area">VariaMos is a modeling tool that incorporates a language to represent and simulate families of systems.
+      <br /><br />
+      <img src="@/assets/images/logo.png" />
+    </div>
   </div>
 </template>
 

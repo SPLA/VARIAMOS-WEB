@@ -26,6 +26,21 @@ export default new Router({
       path: '/reports',
       name: 'Reports',
       component: () => import('./views/Reports.vue')
+    },
+    {
+      path: '/applies',
+      name: 'Applies',
+      component: () => import('./views/Applies.vue')
+    },
+    {
+      path: '/fragop',
+      name: 'FragOP',
+      component: () => import('./views/FragOP.vue')
+    },
+    {
+      path: '/hlvl',
+      name: 'HLVL',
+      component: () => import('./views/HLVL.vue')
     }
   ]
 })
