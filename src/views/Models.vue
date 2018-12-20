@@ -252,7 +252,7 @@ export default{
   overflow-x: auto;
   overflow-y: auto;
   height:350px;
-  background:url("/images/MX/editors/grid.gif");
+  background:url("/variamosweb/images/MX/editors/grid.gif");
   cursor:default;
   padding-right: 0px; 
   padding-left: 0px;

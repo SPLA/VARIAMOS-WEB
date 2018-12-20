@@ -25,8 +25,8 @@ var component_main = function component_main(graph)
 	}
 
 	function component_elements(){
-		var packagex = {src:"/images/models/component/package.png", wd:100, hg:40, style:"shape=package", type:"package", pname:"Package"};
-		var file = {src:"/images/models/component/file.png", wd:100, hg:40, style:"shape=file", type:"file", pname:"File"};
+		var packagex = {src:projectPath+"images/models/component/package.png", wd:100, hg:40, style:"shape=package", type:"package", pname:"Package"};
+		var file = {src:projectPath+"images/models/component/file.png", wd:100, hg:40, style:"shape=file", type:"file", pname:"File"};
 
 		var elements=[];
 		elements[0]=packagex;

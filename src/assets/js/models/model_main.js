@@ -94,7 +94,7 @@ var main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model
 		mxCellRenderer.registerShape('customShape', CustomShape);
 		
 		// Loads the stencils into the registry
-		var req = mxUtils.load('/xml/MX/custom_shapes.xml');
+		var req = mxUtils.load(projectPath+'xml/MX/custom_shapes.xml');
 		var root = req.getDocumentElement();
 		var shape = root.firstChild;
 		

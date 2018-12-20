@@ -25,10 +25,10 @@ var feature_main = function feature_main(graph)
 	}
 
 	function feature_elements(){
-		var root = {src:"/images/models/feature/rectangle.png", wd:100, hg:35, type:"root", style:"", pname:"Root Feature"};
-		var general = {src:"/images/models/feature/rectangle.png", wd:100, hg:35, type:"general", style:"", pname:"General Feature"};
-		var leaf = {src:"/images/models/feature/rectangle.png", wd:100, hg:35, type:"leaf", style:"", pname:"Leaf Feature"};
-		var bundle = {src:"/images/models/feature/bundle.png", wd:35, hg:35, type:"bundle", style:"shape=ellipse", pname:"Bundle"};
+		var root = {src:projectPath+"images/models/feature/rectangle.png", wd:100, hg:35, type:"root", style:"", pname:"Root Feature"};
+		var general = {src:projectPath+"images/models/feature/rectangle.png", wd:100, hg:35, type:"general", style:"", pname:"General Feature"};
+		var leaf = {src:projectPath+"images/models/feature/rectangle.png", wd:100, hg:35, type:"leaf", style:"", pname:"Leaf Feature"};
+		var bundle = {src:projectPath+"images/models/feature/bundle.png", wd:35, hg:35, type:"bundle", style:"shape=ellipse", pname:"Bundle"};
 		
 		var elements=[];
 		elements[0]=root;
