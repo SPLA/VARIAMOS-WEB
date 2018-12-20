@@ -109,7 +109,6 @@
 </template>
 
 <script>
-import messages from '../public/js/messages.js'
 export default {
   data: function(){
     return {
@@ -156,7 +155,7 @@ export default {
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.7);
-  display: table;
+  display: none;
   transition: opacity .3s ease;
 }
 .modal-wrapper {

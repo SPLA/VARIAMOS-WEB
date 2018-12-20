@@ -1,4 +1,4 @@
-messages={
+const messages={
     "model_main_browser":"Browser is not supported!",
     "model_load_invalid_cell":"error invalid cell",
 
