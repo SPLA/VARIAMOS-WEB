@@ -1,10 +1,9 @@
 var setup_elements = function setup_elements(graph, elements, custom_attributes, c_clon_cells, c_constraints_ic, toolbar, c_type){    
-    
-    if(c_type=="binding"){
+    if(elements==null){
         //disable palette for "binding" models
         var tbContainer = document.getElementById('tbContainer');
         var span = document.createElement('span');
-        span.innerHTML = messages["setup_elements_palette_binding"];
+        span.innerHTML = messages["setup_elements_palette_no_elements"];
         tbContainer.appendChild(span);
     }else{
         //add elements to the palette
@@ -73,6 +72,7 @@ var setup_elements = function setup_elements(graph, elements, custom_attributes,
                         graph.getModel().nextId=graph.getModel().nextId-1;
                         var vertex2 = graph.getModel().cloneCell(new_cells[0]);
                         var parent2 = graph.getModel().getCell(c_clon_cells[type]);
+                        graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#DCDCDC", [vertex2]); //different background for a cloned cell
                         graph.importCells([vertex2], 0, 0, parent2);
                         graph.getModel().prefix=""; //restart prefix
                     }

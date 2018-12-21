@@ -54,7 +54,7 @@ var main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model
 		//setup buttons
 		setupFunctions["setup_buttons"](graph,undoManager,reused_functions);
 		//setup properties
-		setupFunctions["setup_properties"](graph,c_properties_styles,c_type);
+		setupFunctions["setup_properties"](graph,c_properties_styles);
 		//setup keys
 		setupFunctions["setup_keys"](keyHandler,graph,reused_functions);
 		//setup custom elements
@@ -152,16 +152,18 @@ var main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model
 					console.log("binding");
 					//binding models allow to remove egdes but not vertexs
 					var cells = graph.getSelectionCells();
-					var vertex = false;
+					var contain_clons = false;
 					for (var i = 0; i < cells.length; i++) {
 						if(cells[i].isVertex()){
-							vertex = true;
-							alert(messages["setup_keys_remove_binding"]);
-							break;
+							if(cells[i].getId().includes("clon")){ //cloned elements are not allowed to remove directly
+								contain_clons = true;
+								alert(messages["setup_keys_remove_cloned"]);
+								break;
+							}
 						}
 					}
 
-					if(!vertex){
+					if(!contain_clons){
 						graph.removeCells();
 					}
 				}else{

@@ -13,12 +13,12 @@ const messages={
     "setup_buttons_show":"Show",
     "setup_buttons_delete":"Delete",
 
-    "setup_keys_remove_binding":"It is not allowed to remove 'Vertexs' in binding models",
+    "setup_keys_remove_cloned":"It is not allowed to remove 'Cloned' elements directly",
 
     "setup_properties_nothing":"Nothing Selected",
-    "setup_properties_binding":"Properties not allowed to change in a binding model",
+    "setup_properties_clon":"Properties not allowed to change for a cloned element",
 
-    "setup_elements_palette_binding":"Palette not available in binding models",
+    "setup_elements_palette_no_elements":"Palette not available (no elements)",
 
     "setup_relations_bidirectional":"Bidirectional edges not allowed",
 

@@ -1,13 +1,13 @@
 
-var setup_properties = function setup_properties(graph,properties_styles,c_type){
+var setup_properties = function setup_properties(graph,properties_styles){
     graph.getSelectionModel().addListener(mxEvent.CHANGE, function(sender, evt)
     {
-        selectionChanged(graph,properties_styles,c_type);
+        selectionChanged(graph,properties_styles);
     });
 
-    selectionChanged(graph,properties_styles,c_type);
+    selectionChanged(graph,properties_styles);
 
-    function selectionChanged(graph,properties_styles,c_type)
+    function selectionChanged(graph,properties_styles)
 	{
 		var div = document.getElementById('properties');
 		// Forces focusout in IE
@@ -17,21 +17,16 @@ var setup_properties = function setup_properties(graph,properties_styles,c_type)
 		// Gets the selection cell
 		var cell = graph.getSelectionCell();
 
-		if(c_type=="binding"){
-			if (cell == null)
-			{
-				mxUtils.writeln(div, messages["setup_properties_nothing"]);
+		
+		if (cell == null)
+		{
+			mxUtils.writeln(div, messages["setup_properties_nothing"]);
+		}
+		else
+		{
+			if(cell.getId().includes("clon")){
+				mxUtils.writeln(div, messages["setup_properties_clon"]);
 			}else{
-				//binding models do not allow to modify properties
-				mxUtils.writeln(div, messages["setup_properties_binding"]);
-			}
-		}else{
-			if (cell == null)
-			{
-				mxUtils.writeln(div, messages["setup_properties_nothing"]);
-			}
-			else
-			{
 				if(cell.value.attributes){
 					var form = new mxForm("properties-table");
 					var attrs = cell.value.attributes;
