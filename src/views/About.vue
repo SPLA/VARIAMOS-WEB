@@ -11,7 +11,7 @@
         <span class="team-post">{{ $t("about_team_daniel_desc") }}</span>
       </div>
     </div>
-    <div class="team-info pad-20">
+    <div class="team-info pad-40">
       <img alt="" src="../assets/images/team/raul.jpg" class="pull-left">
       <div class="pull-left">
         <span class="team-name">{{ $t("about_team_raul") }}</span>

@@ -45,11 +45,11 @@ select{
 .div-text-area{
   text-align: justify;
   padding-top: 20px;
-  padding-bottom: 20px;
+  padding-bottom: 40px;
 }
 
-.pad-20{
-  padding-bottom: 20px;
+.pad-40{
+  padding-bottom: 40px;
 }
 
 /*
