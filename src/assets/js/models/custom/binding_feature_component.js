@@ -69,6 +69,7 @@ var binding_feature_component_main = function binding_feature_component_main(gra
 				{
 					"attribute":"lowRange",
 					"input_type":"text",
+					"input_text_type":"number",
 					"def_display":"none",
 					"display_check_attribute":"bundleType",
 					"display_check_value":"RANGE",
@@ -78,6 +79,7 @@ var binding_feature_component_main = function binding_feature_component_main(gra
 				{
 					"attribute":"highRange",
 					"input_type":"text",
+					"input_text_type":"number",
 					"def_display":"none",
 					"display_check_attribute":"bundleType",
 					"display_check_value":"RANGE",

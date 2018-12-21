@@ -45,6 +45,9 @@ var setup_properties = function setup_properties(graph,properties_styles){
 									}else if(properties_styles[type][j]["input_type"]=="select"){
 										createSelectField(graph, form, cell, attrs[i], properties_styles[type][j]);
 										passed = true;
+									}else if(properties_styles[type][j]["input_type"]=="checkbox"){
+										createCheckboxField(graph, form, cell, attrs[i], properties_styles[type][j]);
+										passed = true;
 									}
 								}
 							}
@@ -64,11 +67,25 @@ var setup_properties = function setup_properties(graph,properties_styles){
 	}
 
 	/**
+	 * Creates the checkbox field for the given property.
+	 */
+	function createCheckboxField(graph, form, cell, attribute, custom){
+
+		var def_display = getDisplayValue(cell,custom);
+		var input = form.addCheckbox(attribute.nodeName, attribute.nodeValue, def_display);
+
+		executeApplyHandler(graph, form, cell, attribute, input, custom);
+	}
+
+	/**
 	 * Creates the select field for the given property.
 	 */
 	function createSelectField(graph, form, cell, attribute, custom){
+
 		var values=custom["input_values"];
-		var input = form.addCombo(attribute.nodeName, false, 1);
+		var def_display = getDisplayValue(cell,custom);
+		var input = form.addCombo(attribute.nodeName, false, 1, def_display);
+
 		for (var i = 0; i < values.length; i++)
 		{
 			if(values[i]==attribute.nodeValue){
@@ -76,10 +93,6 @@ var setup_properties = function setup_properties(graph,properties_styles){
 			}else{
 				form.addOption(input,values[i],values[i],false);
 			}
-		}
-
-		if(custom["onchange"]!=null){
-			input.onchange = custom["onchange"];
 		}
 
 		executeApplyHandler(graph, form, cell, attribute, input, custom);
@@ -90,15 +103,7 @@ var setup_properties = function setup_properties(graph,properties_styles){
 	 */
 	function createTextField(graph, form, cell, attribute, custom)
 	{
-		var def_display="" //default display is true for all attributes
-		if(custom!=null){
-			def_display=custom["def_display"];
-			if(custom["display_check_attribute"]){
-				if(custom["display_check_value"]==cell.getAttribute(custom["display_check_attribute"])){
-					def_display=custom["display_check"];
-				}
-			}
-		}
+		var def_display = getDisplayValue(cell,custom);
 
 		var input = form.addText(attribute.nodeName, attribute.nodeValue, "text", def_display);
 		
@@ -112,9 +117,23 @@ var setup_properties = function setup_properties(graph,properties_styles){
 	}
 
 	function executeApplyHandler(graph, form, cell, attribute, input, custom){
+
+		//apply custom configurations
+		applyCustomElements(input, custom);
+
 		var applyHandler = function()
 		{
-			var newValue = input.value || '';
+			var newValue = "";
+
+			if(input.type=="checkbox"){
+				newValue = "false";
+				if(input.checked){
+					newValue = "true";
+				}
+			}else{
+				newValue = input.value || '';
+			}
+
 			var oldValue = cell.getAttribute(attribute.nodeName, '');
 			var onchange_allowed = true;
 
@@ -176,6 +195,35 @@ var setup_properties = function setup_properties(graph,properties_styles){
 			// that stores the focused field and invoke blur
 			// explicitely where we do the graph.focus above.
 			mxEvent.addListener(input, 'blur', applyHandler);
+		}
+	}
+
+	function getDisplayValue(cell,custom){
+		var def_display = "";
+ 		if(custom!=null && custom["def_display"]!=null){
+			def_display=custom["def_display"];
+			if(custom["display_check_attribute"]){
+				if(custom["display_check_value"]==cell.getAttribute(custom["display_check_attribute"])){
+					def_display=custom["display_check"];
+				}
+			}
+		}
+
+		return def_display;
+	}
+
+	function applyCustomElements(input, custom){
+		if(custom!=null){
+			//add onchange listener
+			if(custom["onchange"]!=null){
+				input.onchange = custom["onchange"];
+			}
+
+			//custom input type
+			if(custom["input_text_type"]){
+				var type=custom["input_text_type"];
+				input.setAttribute('type', type);
+			}
 		}
 	}
 }

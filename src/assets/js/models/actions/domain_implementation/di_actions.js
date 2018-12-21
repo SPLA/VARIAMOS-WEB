@@ -16,7 +16,7 @@ var di_actions = function di_actions(graph,selected_method)
         for (var i = 0; i < binding_relations.length; i++) {
             var source = binding_relations[i].source;
             var target = binding_relations[i].target;
-            if(source.getAttribute("selected")==1){ //only selected leaf features are analyzed
+            if(source.getAttribute("selected")=="true"){ //only selected leaf features are analyzed
                 var label = target.getAttribute("label");
                 var clon_id = target.getId();
                 var id = clon_id.replace("clon", "");

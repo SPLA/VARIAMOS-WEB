@@ -101,15 +101,16 @@ mxForm.prototype.addText = function(name, value, type, def_display)
  * 
  * Adds a checkbox for the given name and value and returns the textfield.
  */
-mxForm.prototype.addCheckbox = function(name, value)
+mxForm.prototype.addCheckbox = function(name, value, def_display="")
 {
 	var input = document.createElement('input');
-	
+
+	input.id="input-"+name;
 	input.setAttribute('type', 'checkbox');
-	this.addField(name, input);
+	this.addField(name, input, def_display);
 
 	// IE can only change the checked value if the input is inside the DOM
-	if (value)
+	if (value=="true")
 	{
 		input.checked = true;
 	}
@@ -142,7 +143,7 @@ mxForm.prototype.addTextarea = function(name, value, rows)
  * 
  * Adds a combo for the given name and returns the combo.
  */
-mxForm.prototype.addCombo = function(name, isMultiSelect, size)
+mxForm.prototype.addCombo = function(name, isMultiSelect, size, def_display="")
 {
 	var select = document.createElement('select');
 	select.id="select-"+name;
@@ -157,7 +158,7 @@ mxForm.prototype.addCombo = function(name, isMultiSelect, size)
 		select.setAttribute('multiple', 'true');
 	}
 	
-	return this.addField(name, select);
+	return this.addField(name, select, def_display);
 };
 
 /**

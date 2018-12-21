@@ -60,7 +60,7 @@ var feature_main = function feature_main(graph)
 			"types":["leaf"],
 			"custom_attributes":[{
 				"name":"selected",
-				"def_value":"1"
+				"def_value":"true"
 			}]
 
 		};
@@ -85,6 +85,11 @@ var feature_main = function feature_main(graph)
 	function feature_properties_styles(){
 		var styles={};
 		styles={
+			"leaf":[{
+					"attribute":"selected",
+					"input_type":"checkbox"
+				}
+			],
 			"relation":[{
 					"attribute":"relType",
 					"input_type":"select",
@@ -101,6 +106,7 @@ var feature_main = function feature_main(graph)
 				{
 					"attribute":"lowRange",
 					"input_type":"text",
+					"input_text_type":"number",
 					"def_display":"none",
 					"display_check_attribute":"bundleType",
 					"display_check_value":"RANGE",
@@ -110,6 +116,7 @@ var feature_main = function feature_main(graph)
 				{
 					"attribute":"highRange",
 					"input_type":"text",
+					"input_text_type":"number",
 					"def_display":"none",
 					"display_check_attribute":"bundleType",
 					"display_check_value":"RANGE",

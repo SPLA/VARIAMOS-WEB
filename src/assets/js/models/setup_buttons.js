@@ -157,8 +157,9 @@ var setup_buttons = function setup_buttons(graph,undoManager,reused_functions){
     buttonSHOW.innerHTML="";
     buttonSHOW.appendChild(mxUtils.button_with_icon(messages["setup_buttons_show"], function()
     {
-        mxUtils.show(graph);
-    },"image"));
+        var preview = new mxPrintPreview(graph, 1);
+		preview.open();
+    },"print"));
     /* end buttonSHOW */
 
     /* begin buttonDELETE */
