@@ -63,7 +63,7 @@ export default {
 }
 
 span.team-name {
-    color: black;
+    color: blue;
     font-size: 16px;
     font-weight: 300;
     margin: 4px 0 7px;
