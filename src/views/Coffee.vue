@@ -1,8 +1,9 @@
 <template>
   <div>
-    <div class="border-bottom text-left"><h1 class="h2">{{ $t("app_menu_hlvl") }}</h1></div>
+    <div class="border-bottom text-left"><h1 class="h2">{{ $t("app_menu_coffee") }}</h1></div>
     <div class="div-text-area">Coming soon...
       <br /><br />
+      <img src="@/assets/images/coffee.png" />
     </div>
   </div>
 </template>

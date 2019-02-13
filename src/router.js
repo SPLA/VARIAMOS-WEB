@@ -38,9 +38,9 @@ export default new Router({
       component: () => import('./views/FragOP.vue')
     },
     {
-      path: '/hlvl',
-      name: 'HLVL',
-      component: () => import('./views/HLVL.vue')
+      path: '/coffee',
+      name: 'Coffee',
+      component: () => import('./views/Coffee.vue')
     }
   ]
 })
