@@ -20,6 +20,7 @@
               </div>
 
               <div class="button-area">
+                    <div class="button-unique" id="buttonCOFFEE"></div>
                     <div class="button-unique" id="buttonSAVE"></div>
                     <div class="button-unique" id="buttonUNDO"></div>
                     <div class="button-unique" id="buttonREDO"></div>
