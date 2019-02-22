@@ -82,8 +82,12 @@ import binding_feature_component_main from '@/assets/js/models/custom/binding_fe
 import DomainImplementation from '../components/model_actions/DomainImplementation'
 import Verification from '../components/model_actions/Verification'
 import BackEnd from '../components/model_actions/BackEnd'
+import Bus from '../assets/js/common/bus.js'
 
 export default{
+  props:[
+    'activetab'
+  ],
   data: function(){
     return {
       modelCode: "", //stores the model code when saved
@@ -161,13 +165,19 @@ export default{
   watch:{
     $route (to, from){
       //remove the palette content when there is a change in the component route
-      document.getElementById('tbContainer').innerHTML="";
-      this.modelType=this.$route.params.type;
-      this.currentFunction=this.modelFunctions[this.modelType];
-      this.undoManager = new mxUndoManager();
-      this.initialize_mx(2);
+      // document.getElementById('tbContainer').innerHTML="";
+      // this.modelType=this.$route.params.type;
+      // this.currentFunction=this.modelFunctions[this.modelType];
+      // this.undoManager = new mxUndoManager();
+      // this.initialize_mx(2);
       //clear undo redo history
-      this.undoManager.clear();
+      // this.undoManager.clear();
+    },
+    mxModel:{
+      handler(val) {
+          Bus.$emit('manageelement',this.graph.getChildCells(this.graph.getDefaultParent(), true, true));
+      },
+      deep:true
     }
   }
 }
