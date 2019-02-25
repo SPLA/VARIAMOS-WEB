@@ -1,5 +1,5 @@
 <template>
-<div>
+	<div>
                     <div v-if="data.length !== 0" style="margin-right:10px; margin-bottom:10px;">
                         <cotalogue ref="cotalogue" :data="data"></cotalogue>
                     </div>
@@ -127,7 +127,7 @@
 							</Modal>
                         </div>
                     </div>
-                </div>
+    </div>
 </template>
 
 <script>

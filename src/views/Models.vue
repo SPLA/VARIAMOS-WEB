@@ -92,11 +92,11 @@ import Bus from '../assets/js/common/bus.js'
 
 export default{
   props:[
-    'activetab',
-    'mxgraphsetEnable'
+    'activetab'
   ],
   data: function(){
     return {
+      mxgraphsetEnable: false,
       modellist:[{
 			  value: "feature",
 			  label: 'Feature model'
@@ -160,6 +160,12 @@ export default{
     this.initialize_mx(1);
     //clear undo redo history
     this.undoManager.clear();
+    Bus.$on('updateactivetab', data =>{ //set the editable mxgraph based on active tab
+      if(data === this.activetab)
+        this.mxgraphsetEnable = true;
+      else  
+        this.mxgraphsetEnable = false;
+    });
   },
   methods: {
     persist() {
