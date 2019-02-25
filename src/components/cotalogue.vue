@@ -177,19 +177,8 @@ export default {
 			var _this = this;
 			clearTimeout(_this.clickNum);
 			_this.clickNum = setTimeout(()=>{
-				if(_this.data[index].data.nodeType === 1)
-				{
-					if(_this.data[index].data.open == true) //if project is open, set it closed
-					{
-						_this.data[index].data.open = !_this.data[index].data.open;	
-					}
-					else // if project is not open, check other open projects. Only one project is allowed to be open
-					{
-						_this.data[index].data.open = !_this.data[index].data.open;
-					}
-				}
-				else
-					_this.data[index].data.open = !_this.data[index].data.open;
+				Bus.$emit('updatedata',_this.data);
+				_this.data[index].data.open = !_this.data[index].data.open;
 			}, 250);
 		},
 		clickme(index){
@@ -198,12 +187,12 @@ export default {
 				item.data.isSelected = false;
 			});
 			_this.data[index].data.isSelected = true;
-			if(_this.data[index].data.modeltype == 1)
+			//if(_this.data[index].data.modeltype == 1)
 				_this.$router.push("/models/feature");
-			else if(_this.data[index].data.modeltype == 2) 
-                _this.$router.push("/models/component");
-            else if(_this.data[index].data.modeltype == 3)
-                _this.$router.push("/models/binding_feature_component");
+			// else if(_this.data[index].data.modeltype == 2) 
+            //     _this.$router.push("/models/component");
+            // else if(_this.data[index].data.modeltype == 3)
+            //     _this.$router.push("/models/binding_feature_component");
 			if(_this.data[index].data.nodeType === 3)
 				Bus.$emit('clickactivetab',_this.data[index].data.nodeName);
 			else if(_this.data[index].data.level === 1 && _this.data[index].data.open)

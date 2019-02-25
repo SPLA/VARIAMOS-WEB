@@ -59,12 +59,12 @@ export default{
         },
         clickactivetab (index) {
             this.activetab = this.data[index].data.nodeName;
-            if(this.data[index].data.modeltype == 1)
+            // if(this.data[index].data.modeltype == 1)
 				this.$router.push("/models/feature");
-			else if(this.data[index].data.modeltype == 2) 
-                this.$router.push("/models/component");
-            else if(this.data[index].data.modeltype == 3)
-                this.$router.push("/models/binding_feature_component");
+			// else if(this.data[index].data.modeltype == 2) 
+            //     this.$router.push("/models/component");
+            // else if(this.data[index].data.modeltype == 3)
+            //     this.$router.push("/models/binding_feature_component");
         }
     },
     mounted () {
