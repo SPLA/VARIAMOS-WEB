@@ -11,7 +11,7 @@
             <div>
 				<div v-if="activetab !== ''" class="tabcontent">
 					<keep-alive>
-						<model :key='activetab' :activetab="activetab" :mxgraphsetEnable="mxgraphisEdited"></model>
+						<model :key='activetab' :activetab="activetab"></model>
 					</keep-alive>
 				</div>
             </div>
@@ -30,8 +30,7 @@ export default{
         return{
             activetab: '',
             onetab: true,
-            data:[],
-            mxgraphisEdited: false
+            data:[]
 		}
     },
     methods:{
@@ -60,7 +59,12 @@ export default{
         },
         clickactivetab (index) {
             this.activetab = this.data[index].data.nodeName;
-			this.$router.push("/models/feature");
+            if(this.data[index].data.modeltype == 1)
+				this.$router.push("/models/feature");
+			else if(this.data[index].data.modeltype == 2) 
+                this.$router.push("/models/component");
+            else if(this.data[index].data.modeltype == 3)
+                this.$router.push("/models/binding_feature_component");
         }
     },
     mounted () {

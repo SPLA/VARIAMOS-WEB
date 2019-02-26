@@ -97,7 +97,7 @@ export default {
         float: left;
     }
     .vue-contextmenu-listWrapper .context-menu-list button i {
-        color: rgb(120, 120, 120);
+        color: #09c;
         padding: 8px 10px;
     }
     .vue-contextmenu-listWrapper .context-menu-list button:hover {

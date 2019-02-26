@@ -42,12 +42,6 @@
                 </div>
 
                 <div class="col-sm-3 right-area">
-                  <div style="padding-top:10px">
-                      <label> Model type: </label>
-									    <Select placeholder="" size="small" v-model="modelType" style="width:200px; padding-left: 10px;" @on-change="changemodeltype()" >
-        								<Option v-for="item in modellist" :value="item.value" :key="item.value">{{ item.label }}</Option>
-    								  </Select>
-							    </div>
                   <div class="pallete-area">
                   <b>{{ $t("models_palette") }}</b><br /><br />
                   <div id="tbContainer"></div>
@@ -96,20 +90,6 @@ export default{
   ],
   data: function(){
     return {
-      mxgraphsetEnable: false,
-      modellist:[{
-			  value: "feature",
-			  label: 'Feature model'
-		  },
-		  {
-			  value: "component",
-			  label: 'Domain component model'
-		  },
-		  {
-			  value: "binding_feature_component",
-			  label: 'Domain binding model'
-      }
-		  ],
       modelCode: "", //stores the model code when saved
       graph: new Object(), //mxGraph object
       toolbar: new Object(), //mxToolbar
@@ -160,12 +140,6 @@ export default{
     this.initialize_mx(1);
     //clear undo redo history
     this.undoManager.clear();
-    Bus.$on('updateactivetab', data =>{ //set the editable mxgraph based on active tab
-      if(data === this.activetab)
-        this.mxgraphsetEnable = true;
-      else  
-        this.mxgraphsetEnable = false;
-    });
   },
   methods: {
     persist() {
@@ -181,13 +155,6 @@ export default{
       //counter equals 1 load the entire mxGraph
       var graphContainer = document.getElementById('graphContainer');
       main(this.graph,this.layers,this.mxModel,this.toolbar,this.keyHandler,graphContainer,this.modelType,this.currentFunction,counter,this.setupFunctions,this.undoManager);
-    },
-    changemodeltype() {
-      document.getElementById('tbContainer').innerHTML="";
-      this.currentFunction=this.modelFunctions[this.modelType];
-      this.undoManager = new mxUndoManager();
-      this.initialize_mx(2);
-      this.undoManager.clear();
     }
   },
   beforeRouteLeave(to, from, next){
@@ -211,9 +178,6 @@ export default{
           Bus.$emit('manageelement',this.graph.getChildCells(this.graph.getDefaultParent(), true, true));
       },
       deep:true
-    },
-    mxgraphsetEnable: function(val){
-      this.graph.setEnabled(val);
     }
   }
 }

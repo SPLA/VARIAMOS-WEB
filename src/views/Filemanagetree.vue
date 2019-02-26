@@ -1,5 +1,5 @@
 <template>
-	<div>
+<div>
                     <div v-if="data.length !== 0" style="margin-right:10px; margin-bottom:10px;">
                         <cotalogue ref="cotalogue" :data="data"></cotalogue>
                     </div>
@@ -43,6 +43,14 @@
 								<label class="col-md-3 control-label"><em>*</em> Diagram name:</label>
 								<div class="col-md-9">
 									<input type="text" class="form-control" maxlength="70" v-model="newDiagram.formval.diagramName" :placeholder="'Please enter a new diagram name'" />
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-md-6 control-label"><em>*</em> Please select the type of model:</label>
+								<div class="col-md-9">
+									<Select placeholder="" v-model="newDiagram.formval.modeltype" style="width:200px">
+        								<Option v-for="item in modellist" :value="item.value" :key="item.value">{{ item.label }}</Option>
+    								</Select>
 								</div>
 							</div>
 						</div>
@@ -127,7 +135,7 @@
 							</Modal>
                         </div>
                     </div>
-    </div>
+                </div>
 </template>
 
 <script>
@@ -141,6 +149,19 @@ export default{
     data: function() {
         return{
 			activetab:'',
+		modellist:[{
+			value: 1,
+			label: 'Feature'
+		},
+		{
+			value: 2,
+			label: 'Component'
+		},
+		{
+			value: 3,
+			label: 'Binding'
+		}
+		],
         data: [],
 			newName: {
 				isshow: false,
@@ -172,7 +193,8 @@ export default{
 					id: null,
 					parentId: null,
 					parentFolder: '',
-					numberofmember: 0
+					numberofmember: 0,
+					modeltype: 0
 				}
 			},
 			newApplication: {
@@ -343,6 +365,13 @@ export default{
 						_this.$Message.warning('Empty is not allowed!');
 					});
 				}
+                else if(_this.newProject.formval.modeltype === 0){
+						_this.newProject.loading = false;
+						_this.$nextTick(() => {
+						_this.newProject.loading = true;
+						_this.$Message.warning('Please select a model type!');
+                    });
+                }
 				else {
 					let temp = this.getnewnodeid();
 					_this.data.unshift({
@@ -356,7 +385,7 @@ export default{
 								nodeType: 1,
 								parentId: -1,
 								projectId: temp,
-								//modeltype: 1,
+								modeltype: 1,
 								contextmenuIndex: 3
 							},
 							numberOfChildren: 2
@@ -371,7 +400,7 @@ export default{
 							nodeType: 1,
 							parentId: temp,
 							projectId: temp,
-							//modeltype: 1,
+							modeltype: 1,
 							contextmenuIndex: 6
 						},
 						numberOfChildren: 0
@@ -386,7 +415,7 @@ export default{
 							nodeType: 1,
 							parentId: temp,
 							projectId: temp,
-							// modeltype: 1,
+							modeltype: 1,
 							contextmenuIndex: 5
 						},
 						numberOfChildren: 1
@@ -401,7 +430,7 @@ export default{
 							nodeType: 1,
 							parentId: temp+2,
 							projectId: temp,
-							// modeltype: 1,
+							modeltype: 1,
 							contextmenuIndex: 1
 						},
 						numberOfChildren: 0
@@ -443,7 +472,7 @@ export default{
 								nodeType: 3,
 								parentId: _this.data[_this.newDiagram.index].data.nodeId,
 								projectId: _this.data[_this.newDiagram.index].data.projectId,
-								// modeltype: 1,
+								modeltype: _this.newDiagram.formval.modeltype,
 								contextmenuIndex: 2
 							},
 							numberOfChildren: 0
@@ -503,7 +532,7 @@ export default{
 								nodeType: 1,
 								parentId: _this.data[_this.newApplication.index].data.nodeId,
 								projectId: _this.data[_this.newApplication.index].data.nodeId,
-								//modeltype: _this.data[_this.newApplication.index].data.modeltype,
+								modeltype: _this.data[_this.newApplication.index].data.modeltype,
 								contextmenuIndex: 5
 							},
 							numberOfChildren: 1
@@ -519,7 +548,7 @@ export default{
 								nodeType: 1,
 								parentId: temp,
 								projectId: _this.data[_this.newApplication.index].data.nodeId,
-								//modeltype: _this.data[_this.newApplication.index].data.modeltype,
+								modeltype: _this.data[_this.newApplication.index].data.modeltype,
 								contextmenuIndex: 1
 							},
 							numberOfChildren: 0
@@ -572,7 +601,7 @@ export default{
 								nodeType: 1,
 								parentId: _this.data[_this.newAdaptation.index].data.nodeId,
 								projectId: _this.data[_this.newAdaptation.index].data.projectId,
-								//modeltype: _this.data[_this.newAdaptation.index].data.modeltype,
+								modeltype: _this.data[_this.newAdaptation.index].data.modeltype,
 								contextmenuIndex: 1
 							},
 							numberOfChildren: 0
@@ -677,6 +706,43 @@ export default{
             Bus.$emit('deletediagram',data);
             Bus.$emit('updatedata',this.data);
 		},
+		// createTask(){
+		// 	var _this = this;
+		// 	if(typeof(_this.newElement.index) === 'undefined'){
+		// 		return
+		// 	}
+		// 	if(!_this.data[_this.newElement.index].data.open){
+		// 		_this.$refs.cotalogue.expand_menu(_this.newElement.index);
+		// 	}
+		// 	setTimeout(()=>{
+		// 		if(_this.newElement.formval.elementName.length){
+		// 			_this.data.splice(_this.newElement.index + 1, 0 , {
+		// 				children: [],
+		// 				data: {
+		// 					open: false,
+		// 					isSelected: false,
+		// 					level: _this.data[_this.newElement.index].data.level + 1,
+		// 					nodeId: this.getnewnodeid(),
+		// 					nodeName: _this.newElement.formval.elementName,
+		// 					nodeType: 2,
+		// 					status: 0,
+		// 					parentId: _this.data[_this.newElement.index].data.nodeId,
+		// 					contextmenuIndex: 3
+		// 				},
+		// 				numberOfChildren: 0
+		// 			});
+		// 			_this.data[_this.newElement.index].numberOfChildren++;
+		// 			_this.newElement.loading = false;
+		// 			_this.newElement.isshow = false;
+		// 		}else{
+		// 			_this.newElement.loading = false;
+		// 			_this.$nextTick(() => {
+		// 				_this.newElement.loading = true;
+		// 				_this.$Message.warning('Empty is not allowed！');
+		// 			});
+		// 		}
+		// 	}, 300);
+		// },
 		deleteTask(data){
 			var _this = this,
 				index = _this.getIndexById(data.data.nodeId);
