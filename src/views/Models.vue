@@ -144,8 +144,8 @@ export default{
       "setup_elements":setup_elements
     }
     //preload the saved model if exists
-    if (localStorage["model_code"]) {
-        this.modelCode = localStorage["model_code"];
+    if (localStorage[this.activetab]) {
+        this.modelCode = localStorage[this.activetab];
     }
     this.graph = new mxGraph(document.getElementById('graphContainer'));
     //load saved model into the graph if exists, and return layers
@@ -170,17 +170,20 @@ export default{
   methods: {
     persist() {
       //save model in localstorage
-      localStorage["model_code"] = document.getElementById('model_code').value;
-      if(document.getElementById('model_code').value!=""){
-        var c_header = modalH3(this.$t("modal_success"),"success");
-        var c_body = modalSimpleText(this.$t("models_save_model"));
-        setupModal(c_header,c_body);
+      if(this.activetab === document.getElementById('model_code').tab)
+      {
+        localStorage[this.activetab] = document.getElementById('model_code').value;
+        if(document.getElementById('model_code').value!=""){
+          var c_header = modalH3(this.$t("modal_success"),"success");
+          var c_body = modalSimpleText(this.$t("models_save_model"));
+          setupModal(c_header,c_body);
+        }
       }
     },
     initialize_mx(counter){
       //counter equals 1 load the entire mxGraph
       var graphContainer = document.getElementById('graphContainer');
-      main(this.graph,this.layers,this.mxModel,this.toolbar,this.keyHandler,graphContainer,this.modelType,this.currentFunction,counter,this.setupFunctions,this.undoManager);
+      main(this.graph,this.layers,this.mxModel,this.toolbar,this.keyHandler,graphContainer,this.modelType,this.currentFunction,counter,this.setupFunctions,this.undoManager,this.activetab);
     },
     changemodeltype() {
       document.getElementById('tbContainer').innerHTML="";

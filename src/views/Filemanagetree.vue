@@ -223,7 +223,17 @@ export default{
 		});
 		//delete diagram
 		Bus.$on('deletedire', data => {
-			this.deleteDire(data);
+			let index = this.getIndexById(data.data.nodeId);
+			for(let i = index + 1; i < this.data.length; i++)
+			{
+				if(this.data[i].data.level < this.data[index].data.level || this.data[i].data.level === this.data[index].data.level)
+				{
+					this.data.splice(index, i - index);
+					break;
+				}
+			}
+			Bus.$emit('deletediagram',data);
+            Bus.$emit('updatedata',this.data);
 		});
 		Bus.$on('deleteproject', data => {
 			let index = this.getIndexById(data.data.nodeId);

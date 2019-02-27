@@ -1,4 +1,4 @@
-var setup_buttons = function setup_buttons(graph,undoManager,reused_functions){
+var setup_buttons = function setup_buttons(graph,undoManager,reused_functions,activetab){
     /* begin buttonxml */
     // Adds an option to view the XML of the graph
     var buttonXML = document.getElementById('buttonXML');
@@ -35,6 +35,7 @@ var setup_buttons = function setup_buttons(graph,undoManager,reused_functions){
     
         var model_code = document.getElementById('model_code');
         model_code.value=xml;
+        model_code.tab=activetab;
         var event = new Event('change');
         model_code.dispatchEvent(event);
     },"eraser"));
@@ -65,6 +66,7 @@ var setup_buttons = function setup_buttons(graph,undoManager,reused_functions){
     
         var model_code = document.getElementById('model_code');
         model_code.value=xml;
+        model_code.tab = activetab;
         var event = new Event('change');
         model_code.dispatchEvent(event);
     },"save"));

@@ -51,7 +51,7 @@
 								style="color:gray;font-size: 16px;padding-right:4px">
 							</i>
 							<i v-if="item.data.nodeType === 3"
-								:class="item.data.open?'fas fa-image':'fas fa-file-image'" aria-hidden="true"
+								:class="item.data.open?'far fa-image':'fas fa-image'" aria-hidden="true"
 								style="color:gray;font-size: 16px;padding-right:4px">
 							</i>
 							<span class="name"
