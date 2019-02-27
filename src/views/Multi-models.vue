@@ -10,7 +10,7 @@
 
             <div>
 				<div v-if="activetab !== ''" class="tabcontent">
-					<keep-alive>
+					<keep-alive v-if="mxgraphreset">
 						<model :key='activetab' :activetab="activetab" :mxgraphsetEnable="mxgraphisEdited"></model>
 					</keep-alive>
 				</div>
@@ -21,6 +21,7 @@
 <script>
 import model from './Models.vue'
 import Bus from '../assets/js/common/bus.js'
+import Vue from 'vue'
 
 export default{
     components:{
@@ -31,7 +32,8 @@ export default{
             activetab: '',
             onetab: true,
             data:[],
-            mxgraphisEdited: false
+            mxgraphisEdited: false,
+            mxgraphreset: true
 		}
     },
     methods:{
@@ -90,7 +92,14 @@ export default{
         });
         Bus.$on('updatedata', data => {
             this.data = data;
-		});
+        });
+        Bus.$on('resetall', data => {
+            this.mxgraphreset = false;
+            Vue.nextTick(()=>{
+                this.mxgraphreset = true;
+                this.activetab = data;
+            },100);
+        });
     },
     watch:{
         activetab: function(val) {

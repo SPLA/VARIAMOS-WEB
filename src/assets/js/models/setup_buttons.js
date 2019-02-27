@@ -1,3 +1,4 @@
+import Bus from '../common/bus.js'
 var setup_buttons = function setup_buttons(graph,undoManager,reused_functions,activetab){
     /* begin buttonxml */
     // Adds an option to view the XML of the graph
@@ -40,7 +41,6 @@ var setup_buttons = function setup_buttons(graph,undoManager,reused_functions,ac
         model_code.dispatchEvent(event);
     },"eraser"));
     /* end buttonreset */
-
     /* begin buttonreset */
     // Adds an option to reset the graph
     var buttonRESETALL = document.getElementById('buttonRESETALL');
@@ -48,9 +48,11 @@ var setup_buttons = function setup_buttons(graph,undoManager,reused_functions,ac
     buttonRESETALL.appendChild(mxUtils.button_with_icon(messages["setup_buttons_reset_all"], function()
     {
         model_code.value="";
+        model_code.tab=activetab;
         var event = new Event('change');
         model_code.dispatchEvent(event);
-        location.reload();
+        Bus.$emit('resetall',activetab);
+        // location.reload();
     },"eraser"));
     /* end buttonreset */
 
@@ -110,9 +112,11 @@ var setup_buttons = function setup_buttons(graph,undoManager,reused_functions,ac
             var textFromFileLoaded = fileLoadedEvent.target.result;
             var model_code = document.getElementById('model_code');
             model_code.value=textFromFileLoaded;
+            model_code.tab = activetab;
             var event = new Event('change');
             model_code.dispatchEvent(event);
-            location.reload();
+            // location.reload();
+            Bus.$emit('resetall',activetab);
         }
         fileReader.readAsText(fileToLoad, "UTF-8");
         });

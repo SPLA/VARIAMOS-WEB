@@ -241,7 +241,6 @@ export default{
 			{
 				if(this.data[i].data.projectId !== data.data.nodeId)
 				{
-					console.log(this.data[i].data.projectId);
 					this.data.splice(index, i - index);
 					break;
 				}
