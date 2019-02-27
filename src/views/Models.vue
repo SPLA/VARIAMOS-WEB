@@ -9,7 +9,7 @@
                   <div id="navbarSupportedContent">
                     <ul class="navbar-nav navbar-nav2 mr-auto">
                      <li class="nav-item"><a class="nav-link nav-text"><i class="fas fa-chart-area"></i>
-                      {{ $t("models_area") }} - {{ $route.params.type }} {{ $t("models_model") }}</a></li>
+                      {{ $t("models_area") }} - {{ modelType }} {{ $t("models_model") }}</a></li>
                       <!-- model actions -->
                       <BackEnd /> 
                       <DomainImplementation :current_graph="graph" /> 
