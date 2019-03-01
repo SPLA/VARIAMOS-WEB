@@ -6,7 +6,7 @@
     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
       <a @click="set_parameters()" class="dropdown-item">{{ $t("domain_implementation_set_params") }}</a>
       <a @click="execute_derivation()" class="dropdown-item">{{ $t("domain_implementation_execute") }}</a>
-      <a class="dropdown-item">{{ $t("domain_implementation_verify") }}</a>
+      <a @click="verify_derivation()" class="dropdown-item">{{ $t("domain_implementation_verify") }}</a>
       <a class="dropdown-item">{{ $t("domain_implementation_customize") }}</a>
     </div>
 
@@ -53,6 +53,31 @@ export default {
         this.errors=[];
         this.model_data=JSON.stringify(di_actions(this.current_graph,"execute"));
         axios.post(localStorage["domain_implementation_main_path"]+'DomainImplementation/execute', {
+          data: this.model_data
+        })
+        .then(response => {
+          var c_header = modalH3(this.$t("models_actions_derivation_response"));
+          var c_body = modalSimpleText(response.data);
+          setupModal(c_header,c_body);
+        })
+        .catch(e => {
+          this.errors.push(e); 
+          var c_header = modalH3(this.$t("modal_error"),"error");
+          console.log(this.$t("model_actions_backend_problem"));
+          var c_body = modalSimpleText(e + this.$t("model_actions_backend_problem"));
+          setupModal(c_header,c_body);
+        });
+      }else{
+        var c_header = modalH3(this.$t("modal_error"),"error");
+        var c_body = modalSimpleText(this.$t("domain_implementation_path_problem"));
+        setupModal(c_header,c_body);
+      }
+    },
+    verify_derivation() {
+      if (localStorage["domain_implementation_main_path"] && localStorage["domain_implementation_pool_path"]) {
+        this.errors=[];
+        this.model_data=JSON.stringify(di_actions(this.current_graph,"verify"));
+        axios.post(localStorage["domain_implementation_main_path"]+'DomainImplementation/verify', {
           data: this.model_data
         })
         .then(response => {
