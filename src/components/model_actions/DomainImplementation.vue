@@ -7,7 +7,7 @@
       <a @click="set_parameters()" class="dropdown-item">{{ $t("domain_implementation_set_params") }}</a>
       <a @click="execute_derivation()" class="dropdown-item">{{ $t("domain_implementation_execute") }}</a>
       <a @click="verify_derivation()" class="dropdown-item">{{ $t("domain_implementation_verify") }}</a>
-      <a class="dropdown-item">{{ $t("domain_implementation_customize") }}</a>
+      <a @click="customize_derivation()" class="dropdown-item">{{ $t("domain_implementation_customize") }}</a>
     </div>
 
   </li>
@@ -21,6 +21,15 @@ export default {
   data: function(){
     return {
       model_data:"",
+      previous_dest:"",
+      previous_cpoint:"",
+      previous_plan:"",
+      customization_data:"",
+      customization_comp_pos:0,
+      customization_comp_max_pos:0,
+      customization_cus_pos:0,
+      customization_cus_max_pos:0,
+      customization_response:"",
       errors:[], //errors
     }
   },
@@ -31,10 +40,9 @@ export default {
    }
   },
   methods: {
+    //Start set parameters
     set_parameters(){
-      // modal header
       var c_header = modalH3(this.$t("domain_implementation_set_params"));
-      // modal body
       var default_vals = "";
       var texts = [this.$t("domain_implementation_pool_path"),this.$t("domain_implementation_derived_path")];
       var inputs = ["server_component_path","server_derived_path"];
@@ -44,10 +52,10 @@ export default {
         default_vals = ["uploads/component_pool/","uploads/component_derived/"];
       }
       var c_body = modalInputTexts(texts,inputs,default_vals);
-      // modal footer
       var c_footer = modalButton(this.$t("modal_save"),this.save_parameters);
       setupModal(c_header,c_body,c_footer);
     },
+    //Start execute derivation
     execute_derivation() {
       if (localStorage["domain_implementation_main_path"] && localStorage["domain_implementation_pool_path"]) {
         this.errors=[];
@@ -73,6 +81,7 @@ export default {
         setupModal(c_header,c_body);
       }
     },
+    //Start verify derivation
     verify_derivation() {
       if (localStorage["domain_implementation_main_path"] && localStorage["domain_implementation_pool_path"]) {
         this.errors=[];
@@ -98,10 +107,165 @@ export default {
         setupModal(c_header,c_body);
       }
     },
+    //Start customize derivation
+    customize_derivation() {
+      this.previous_dest="";
+      if (localStorage["domain_implementation_main_path"] && localStorage["domain_implementation_pool_path"]) {
+        this.errors=[];
+        if(this.customization_data==""){
+          this.customization_data=di_actions(this.current_graph,"customize");
+        }
+
+        if(this.customization_data.length==0){
+          var c_header = modalH3(this.$t("modal_error"),"error");
+          var c_body = modalSimpleText("No components to customize");
+          setupModal(c_header,c_body);
+        }else{
+          if(this.customization_data[0]){
+            this.model_data=JSON.stringify(this.customization_data);
+            axios.post(localStorage["domain_implementation_main_path"]+'DomainImplementation/customize/start', {
+              data: this.model_data
+            })
+            .then(response => {
+              this.customization_response=response.data;
+              this.customization_comp_pos=0;
+              this.customization_cus_pos=0;
+              this.customization_cus_max_pos=0;
+              this.customization_comp_max_pos=this.customization_response.length;
+              var default_vals = ["","","",""];
+              var c_header = modalH3("Start Customization Process");
+              var texts = ["Current file","Default content","New customized content", "Notification"];
+              var inputs = ["current","default","customized","notification"];
+              var c_body = modalCustomization(texts,inputs,default_vals);
+              var c_footer = modalButton("Start/Next",this.run_customization);
+              setupModal(c_header,c_body, c_footer);
+            })
+            .catch(e => {
+              this.errors.push(e); 
+              var c_header = modalH3(this.$t("modal_error"),"error");
+              console.log(this.$t("model_actions_backend_problem"));
+              var c_body = modalSimpleText(e + this.$t("model_actions_backend_problem"));
+              setupModal(c_header,c_body);
+            });
+          }else{
+            var c_header = modalH3("Customization response");
+            var c_body = modalSimpleText("customization completed");
+            setupModal(c_header,c_body);
+          }
+        }
+      }else{
+        var c_header = modalH3(this.$t("modal_error"),"error");
+        var c_body = modalSimpleText(this.$t("domain_implementation_path_problem"));
+        setupModal(c_header,c_body);
+      }
+    },
+    //Start save parameters
     save_parameters(){
       localStorage["domain_implementation_pool_path"] =  document.getElementById('server_component_path').value;
       localStorage["domain_implementation_derived_path"] =  document.getElementById('server_derived_path').value;
       document.getElementById('main_modal').style.display="none";
+    },
+    //Start run customization
+    run_customization(){
+      if(this.customization_comp_pos<this.customization_comp_max_pos){
+        this.customization_cus_max_pos=this.customization_response[this.customization_comp_pos][1];
+        if(this.customization_cus_pos<this.customization_cus_max_pos){
+          var current_pos=2+this.customization_cus_pos*3;
+          document.getElementById('notification').value="";
+          document.getElementById('default').value="";
+          var customized_content="";
+          if(this.previous_dest!=""){
+            customized_content=document.getElementById('customized').value;
+          }
+          document.getElementById('customized').value="";
+          document.getElementById('current').value=this.customization_response[this.customization_comp_pos][current_pos];
+          var destination=this.find_destination_file(this.customization_response[this.customization_comp_pos][current_pos]);
+          if(destination==""){
+            this.previous_dest="";
+            document.getElementById('notification').value="Current file not found, verify the component diagram";
+          }else{
+            document.getElementById('current').value="ID: " + this.customization_response[this.customization_comp_pos][current_pos] + " - DEST: " + destination;
+            var model_datax=[];
+            model_datax[0]=destination;
+            model_datax[1]=this.customization_response[this.customization_comp_pos][current_pos+1];
+            model_datax[2]=this.customization_response[this.customization_comp_pos][current_pos+2];
+            if(this.previous_dest!=""){
+              model_datax[3]=this.previous_dest;
+              model_datax[4]=this.previous_cpoint;
+              model_datax[5]=this.previous_plan;
+              model_datax[6]=customized_content;
+            }
+            this.model_data=JSON.stringify(model_datax);
+            axios.post(localStorage["domain_implementation_main_path"]+'DomainImplementation/customize/next', {
+              data: this.model_data
+            })
+            .then(response => {
+              if(response.data==""){
+                this.previous_dest="";
+                document.getElementById('notification').value="Customization point not found, verify current file";
+              }else{
+                this.previous_dest=destination;
+                this.previous_cpoint=model_datax[1];
+                this.previous_plan=model_datax[2];
+                document.getElementById('default').value=response.data;
+                document.getElementById('customized').value=response.data;
+              }
+            })
+            .catch(e => {
+              this.previous_dest="";
+            });
+
+          }
+          this.customization_cus_pos++;
+        }else{
+          var customized_content=document.getElementById('customized').value;
+          if(this.previous_dest!="" && customized_content!=""){
+            var model_datax=[];
+            model_datax[0]=this.previous_dest;
+            model_datax[1]=this.previous_cpoint;
+            model_datax[2]=this.previous_plan;
+            model_datax[3]=customized_content;
+            this.model_data=JSON.stringify(model_datax);
+            axios.post(localStorage["domain_implementation_main_path"]+'DomainImplementation/customize/onlysave', {
+              data: this.model_data
+            })
+            .then(response => {
+              //
+            })
+            .catch(e => {
+              this.previous_dest="";
+            });
+          }
+          this.previous_dest="";
+          document.getElementById('current').value="";
+          document.getElementById('default').value="";
+          document.getElementById('customized').value="";
+          document.getElementById('notification').value="Component succesfully customized, click Start/Next to continue with another component";
+          this.customization_cus_pos=0;
+          this.customization_comp_pos++;
+        }
+      }else{
+        var c_header = modalH3("Customization response");
+        var c_body = modalSimpleText("Customization completed");
+        setupModal(c_header,c_body);
+      }
+    },
+    find_destination_file(id){
+      //collect the information of the components and files to be customized
+      var component_root = this.current_graph.getModel().getCell("component");    
+      var component_relations = this.current_graph.getModel().getChildEdges(component_root);
+
+      var destination = "";
+
+      for (var i = 0; i < component_relations.length; i++) {
+        var source = component_relations[i].source.getAttribute("label");
+        if(source==id){
+          return component_relations[i].source.getAttribute("destination");
+          break;
+        }
+      }
+
+      return "";
     }
   }
 }
