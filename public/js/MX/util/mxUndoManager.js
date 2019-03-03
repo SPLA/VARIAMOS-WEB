@@ -154,11 +154,17 @@ mxUndoManager.prototype.undo = function()
     while (this.indexOfNextAdd > 0)
     {
 		var edit = this.history[--this.indexOfNextAdd];
+		//console.log(this.cloned);
 		if(this.cloned[this.indexOfNextAdd]=="clon"){
 			edit.undo();
+
 			//undo clon
 			var edit2 = this.history[--this.indexOfNextAdd];
 			edit2.undo();
+
+			//undo style
+			var edit3 = this.history[--this.indexOfNextAdd];
+			edit3.undo();
 		}else{
 			edit.undo();
 		}
@@ -193,12 +199,16 @@ mxUndoManager.prototype.redo = function()
     while (this.indexOfNextAdd < n)
     {
 		var edit =  this.history[this.indexOfNextAdd++];
-
-		if(this.cloned[this.indexOfNextAdd]=="clon"){
+		if(this.cloned[this.indexOfNextAdd+1]=="clon"){
 			edit.redo();
-			//redo clon
+
+			//redo style
 			var edit2 = this.history[this.indexOfNextAdd++];
 			edit2.redo();
+
+			//redo clon
+			var edit3 = this.history[this.indexOfNextAdd++];
+			edit3.redo();
 		}else{
 			edit.redo();
 		}
