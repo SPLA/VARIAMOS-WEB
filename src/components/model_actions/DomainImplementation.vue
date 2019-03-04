@@ -21,6 +21,8 @@ export default {
   data: function(){
     return {
       model_data:"",
+      file_to_upload:"",
+      file_dest:"",
       previous_dest:"",
       previous_cpoint:"",
       previous_plan:"",
@@ -132,13 +134,14 @@ export default {
               this.customization_cus_pos=0;
               this.customization_cus_max_pos=0;
               this.customization_comp_max_pos=this.customization_response.length;
-              var default_vals = ["","","",""];
+              var default_vals = ["","","","",""];
               var c_header = modalH3("Start Customization Process");
-              var texts = ["Current file","Default content","New customized content", "Notification"];
-              var inputs = ["current","default","customized","notification"];
+              var texts = ["Current file","Default content","New customized content", "File to upload","Notification"];
+              var inputs = ["current","default","customized","filetoupload","notification"];
               var c_body = modalCustomization(texts,inputs,default_vals);
               var c_footer = modalButton("Start/Next",this.run_customization);
               setupModal(c_header,c_body, c_footer);
+              document.getElementById('filetoupload').onchange=this.send_file;
             })
             .catch(e => {
               this.errors.push(e); 
@@ -167,6 +170,8 @@ export default {
     },
     //Start run customization
     run_customization(){
+      document.getElementById('filetouploadtr').style.display = "none";
+      document.getElementById('customized').disabled = false;
       if(this.customization_comp_pos<this.customization_comp_max_pos){
         this.customization_cus_max_pos=this.customization_response[this.customization_comp_pos][1];
         if(this.customization_cus_pos<this.customization_cus_max_pos){
@@ -195,14 +200,22 @@ export default {
               model_datax[5]=this.previous_plan;
               model_datax[6]=customized_content;
             }
+
             this.model_data=JSON.stringify(model_datax);
+            document.getElementById('Start/Next').disabled = true;
+            
             axios.post(localStorage["domain_implementation_main_path"]+'DomainImplementation/customize/next', {
               data: this.model_data
             })
             .then(response => {
+              document.getElementById('Start/Next').disabled = false;
               if(response.data==""){
                 this.previous_dest="";
                 document.getElementById('notification').value="Customization point not found, verify current file";
+              }else if(response.data=="file"){
+                this.file_dest=destination;
+                document.getElementById('filetouploadtr').style.display = "";
+                document.getElementById('customized').disabled = true;
               }else{
                 this.previous_dest=destination;
                 this.previous_cpoint=model_datax[1];
@@ -213,6 +226,7 @@ export default {
             })
             .catch(e => {
               this.previous_dest="";
+              document.getElementById('Start/Next').disabled = false;
             });
 
           }
@@ -249,6 +263,27 @@ export default {
         var c_body = modalSimpleText("Customization completed");
         setupModal(c_header,c_body);
       }
+    },
+    send_file(event){
+      let formData = new FormData();
+      formData.append('file', event.target.files[0]);
+      axios.post(localStorage["domain_implementation_main_path"]+'DomainImplementation/uploadfile?dest='+this.file_dest,
+        formData,
+        {
+          headers: {
+              'Content-Type': undefined
+          }
+        })
+      .then(response => {
+        if(response.data=="uploaded"){
+          document.getElementById('notification').value="File succesfully uploaded";
+        }else{
+          document.getElementById('notification').value="Error uploading the file";
+        }
+      })
+      .catch(function(){
+        document.getElementById('notification').value="Error uploading the file";
+      });
     },
     find_destination_file(id){
       //collect the information of the components and files to be customized
