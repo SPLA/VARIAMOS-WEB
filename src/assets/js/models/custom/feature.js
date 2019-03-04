@@ -61,7 +61,7 @@ var feature_main = function feature_main(graph)
 			"types":["leaf"],
 			"custom_attributes":[{
 				"name":"selected",
-				"def_value":"true"
+				"def_value":"false"
 			}]
 
 		};
