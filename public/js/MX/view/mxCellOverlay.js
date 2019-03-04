@@ -63,7 +63,7 @@ function mxCellOverlay(image, tooltip, align, verticalAlign, offset, cursor)
 	this.align = (align != null) ? align : this.align;
 	this.verticalAlign = (verticalAlign != null) ? verticalAlign : this.verticalAlign;
 	this.offset = (offset != null) ? offset : new mxPoint();
-	this.cursor = (cursor != null) ? cursor : 'help';
+	this.cursor = (cursor != null) ? cursor : 'auto';
 };
 
 /**

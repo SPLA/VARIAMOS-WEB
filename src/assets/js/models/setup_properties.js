@@ -119,7 +119,7 @@ var setup_properties = function setup_properties(graph,properties_styles){
 	function executeApplyHandler(graph, form, cell, attribute, input, custom){
 
 		//apply custom configurations
-		applyCustomElements(input, custom);
+		applyCustomElements(input, custom, cell);
 
 		var applyHandler = function()
 		{
@@ -212,10 +212,11 @@ var setup_properties = function setup_properties(graph,properties_styles){
 		return def_display;
 	}
 
-	function applyCustomElements(input, custom){
+	function applyCustomElements(input, custom, cell){
 		if(custom!=null){
 			//add onchange listener
 			if(custom["onchange"]!=null){
+				input.name=cell.getId();
 				input.onchange = custom["onchange"];
 			}
 

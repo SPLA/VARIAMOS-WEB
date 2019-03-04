@@ -13,7 +13,7 @@ var main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model
 		currentLayer=layers[model_type]; //current layer to be displayed (feature, component, etc)
 		graph.setDefaultParent(currentLayer); //any new graphic element will be connected with this parent
 
-		var data=[], c_type="", c_elements=[], c_attributes=[], c_relations=[], c_properties_styles=[] , c_labels=[];
+		var data=[], c_type="", c_overlay="", c_elements=[], c_attributes=[], c_relations=[], c_properties_styles=[] , c_labels=[];
 		var c_clon_cells=[], c_constraints_ic=[];
 		data=model_specific_main(graph); //specific model data
 		c_type=data[0];
@@ -24,6 +24,7 @@ var main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model
 		c_labels=data[5];
 		c_clon_cells=data[6];
 		c_constraints_ic=data[7];
+		c_overlay=data[8];
 
 		//collect functions that are used in multiple places
 		var reused_functions=[];
@@ -65,12 +66,20 @@ var main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model
 		setupFunctions["setup_relations"](graph,c_relations);
 		//setup custom features by model type
 		setup_custom_features_by_type(c_type);
+		//setup overlay
+		setup_overlay(c_overlay);
 
 		//hide all elements that do not belong to the current layer (parent)
 		for (var key in layers) {
 			mxModel.setVisible(layers[key], false);
 		}
 		mxModel.setVisible(currentLayer, true);
+	}
+
+	function setup_overlay(c_overlay){
+		if(c_overlay){
+			c_overlay();
+		}
 	}
 
 	function setup_custom_features_by_type(c_type){

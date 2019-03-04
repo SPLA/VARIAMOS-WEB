@@ -10,6 +10,7 @@ var binding_feature_component_main = function binding_feature_component_main(gra
 	data[5]=binding_f_c_labels(); //custom labels
 	data[6]=null; //custom clon cells
 	data[7]=null; //custom constraints in element creation
+	data[8]=null; //custom overlays
     return data;
     
     function binding_f_c_constraints(graph){
