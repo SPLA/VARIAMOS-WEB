@@ -32,7 +32,6 @@ export default{
             activetab: '',
             onetab: true,
             data:[],
-            activetabs:[],
             mxgraphisEdited: false,
             mxgraphreset: true,
             model_component: '',
@@ -79,27 +78,12 @@ export default{
         }
     },
     mounted () {
-        Bus.$on('deletediagram', diagram => { // check the deleted diagram is same as activetab
-            if(diagram.data.nodeName === this.activetab)
-            {
-                this.onetab = true;
-                for(let i = 0; i < this.data.length; i++)
-                {
-                    if(this.data[i].data.parentId == diagram.data.parentId) 
-                    {
-                        if(this.onetab)
-                        {
-                            this.onetab =! this.onetab;
-                            this.activetab = this.data[i].data.nodeName;
-                        }
-                    }
-                }
-                if(this.onetab)
-                {
-                    this.activetab = '';
-                    this.model_component = '';
-                }
-            }
+        Bus.$on('updatemodel_component3', index =>{
+            this.model_component_index = index;
+            if(index === -1)
+                this.model_component = '';
+            else
+                this.model_component = this.data[index].data.nodeName;
         });
         Bus.$on('updatemodel_component1', index =>{
             this.model_component_index = index;
@@ -129,6 +113,27 @@ export default{
                 this.model_component = data;
             },100);
         });
+        Bus.$on('deletelayer', data =>{
+            this.data = data;
+            this.mxgraphreset = false;
+            Vue.nextTick(()=>{
+                this.mxgraphreset = true;
+                this.activetab = "binding_feature_component";
+                this.$router.push("/models/binding_feature_component");
+                Bus.$emit('updateactivetab',this.activetab);
+            },100);
+        });
+    },
+    watch:{
+        // activetab:function(val){
+        //     if(val === '')
+        //     {
+        //         this.mxgraphreset = false;
+        //         Vue.nextTick(()=>{
+        //             this.mxgraphreset = true;
+        //         },100);
+        //     }
+        // }
     }
 }
 </script>

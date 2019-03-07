@@ -132,7 +132,6 @@ export default{
     this.graph = new mxGraph(document.getElementById('graphContainer'));
     //load saved model into the graph if exists, and return layers
     this.layers=model_load(this.graph,this.models,this.modelCode);
-    console.log(this.layers);
     this.modelType=this.$route.params.type; //based on URL Route
     this.currentFunction=this.modelFunctions[this.modelType];
     this.toolbar = new mxToolbar(document.getElementById('tbContainer'));
@@ -150,6 +149,7 @@ export default{
         var m_cell =new mxCell();
         m_cell.setId(data);
         this.layers[data]=root.insert(m_cell);
+        Bus.$emit('importxml',this.model_component);
       }
     });
     Bus.$on('updatemodel_component2', index =>{ 
@@ -174,9 +174,10 @@ export default{
       {
         localStorage[this.model_component] = document.getElementById('model_code').value;
         if(document.getElementById('model_code').value!=""){
-          var c_header = modalH3(this.$t("modal_success"),"success");
-          var c_body = modalSimpleText(this.$t("models_save_model"));
-          setupModal(c_header,c_body);
+          // var c_header = modalH3(this.$t("modal_success"),"success");
+          // var c_body = modalSimpleText(this.$t("models_save_model"));
+          // setupModal(c_header,c_body);
+          this.$Message.warning('Success!');
         }
       }
     },
@@ -219,6 +220,7 @@ export default{
         this.undoManager = new mxUndoManager();
         this.initialize_mx(2);
         this.undoManager.clear();
+        Bus.$emit('manageelement',this.graph.getChildCells(this.graph.getDefaultParent(), true, true));
       }
     },
     mxModel:{

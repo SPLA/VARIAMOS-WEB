@@ -244,16 +244,24 @@ export default{
 		//delete diagram
 		Bus.$on('deletedire', data => {
 			let index = this.getIndexById(data.data.nodeId);
-			for(let i = index + 1; i < this.data.length; i++)
+			if(this.data[index].data.nodeType === 3)
 			{
-				if(this.data[i].data.level < this.data[index].data.level || this.data[i].data.level === this.data[index].data.level)
-				{
-					this.data.splice(index, i - index);
-					localStorage.removeItem(data.data.nodeName);
-					break;
-				}
+				this.data.splice(index, 1+this.data[index].numberOfChildren);
+				Bus.$emit('deletelayer', this.data);
 			}
-			Bus.$emit('deletediagram',data);
+			else
+			{
+				for(let i = index + 1; i < this.data.length; i++)
+				{
+					if(this.data[i].data.level < this.data[index].data.level || this.data[i].data.level === this.data[index].data.level)
+					{
+						this.data.splice(index, i - index);
+						localStorage.removeItem(data.data.nodeName);
+						break;
+					}	
+				}
+				Bus.$emit('updatemodel_component3',-1);
+			}
             Bus.$emit('updatedata',this.data);
 		});
 		Bus.$on('deleteproject', data => {
@@ -274,11 +282,6 @@ export default{
 		});
 		Bus.$on('updatemodel_component1', index =>{
 			this.model_component_index = index;
-			for(let i = 0; i < this.data.length; i++)
-			{
-				if(this.data[i].data.parentId === this.data[index].data.nodeId && this.data[i].data.nodeType === 3 && index !== -1)
-					this.data[i].data.open = true;
-			}
         });
 		//add update or delete element
 		Bus.$on('manageelement', cells => {
@@ -312,10 +315,10 @@ export default{
 		});
 		 Bus.$on('resetall', data => {
             for(let i = 0; i < this.data.length; i++)
-            {
-                if(this.data[i].data.nodeType === 2)
-                    this.deleteTask(this.data[i]);
-            }
+			{
+				this.data[i].data.open = false;
+			}
+			Bus.$emit('updatemodel_component1',-1);
 		});
 		Bus.$on('updatedata_back', data => {
             this.data = data;
