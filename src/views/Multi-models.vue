@@ -11,7 +11,7 @@
             <div>
 				<div v-if="activetab !== ''" class="tabcontent">
 					<keep-alive v-if="mxgraphreset">
-						<model :key='activetab' :activetab="activetab" :mxgraphsetEnable="mxgraphisEdited"></model>
+						<model :key='model_component' :data="data" :model_component="model_component" :activetab="activetab" :model_component_index="model_component_index" :mxgraphsetEnable="mxgraphisEdited" ></model>
 					</keep-alive>
 				</div>
             </div>
@@ -32,37 +32,49 @@ export default{
             activetab: '',
             onetab: true,
             data:[],
+            activetabs:[],
             mxgraphisEdited: false,
-            mxgraphreset: true
+            mxgraphreset: true,
+            model_component: '',
+            model_component_index: -1
 		}
     },
     methods:{
-        checktabs: function(item){ //set the first one diagram to activetab
-            var projectid = -1;
-            for(let i = 0; i < this.data.length; i++)
-            {
-                if(this.data[i].data.level == 1 && this.data[i].data.open)
-                    projectid = this.data[i].data.nodeId;
-            }
-            if(item.data.projectId === projectid && item.data.nodeType === 3) 
+        checktabs: function(item){ //set the first one diagram to activetab  
+            if(this.model_component_index !== -1 && item.data.parentId === this.data[this.model_component_index].data.nodeId && item.data.nodeType === 3) 
             {
                 if(this.onetab)
                 {
                     this.onetab =! this.onetab;
                     this.activetab = item.data.nodeName;
+                    if(item.data.modeltype == 1)
+				        this.$router.push("/models/feature");
+			        else if(item.data.modeltype == 2) 
+                        this.$router.push("/models/component");
+                    else if(item.data.modeltype == 3)
+                        this.$router.push("/models/binding_feature_component");
+                    Bus.$emit('updateactivetab',this.activetab);
                 }
                 return true;
             }
-            if(projectid === -1)
+            if(this.model_component_index === -1)
             {
                 this.onetab = true;
                 this.activetab = '';
+                this.model_component = '';
+                Bus.$emit('updateactivetab',this.activetab);
             }
             return false;
         },
         clickactivetab (index) {
             this.activetab = this.data[index].data.nodeName;
-			this.$router.push("/models/feature");
+			if(this.data[index].data.modeltype == 1)
+				this.$router.push("/models/feature");
+			else if(this.data[index].data.modeltype == 2) 
+                this.$router.push("/models/component");
+            else if(this.data[index].data.modeltype == 3)
+                this.$router.push("/models/binding_feature_component");
+            Bus.$emit('updateactivetab',this.activetab);
         }
     },
     mounted () {
@@ -84,8 +96,16 @@ export default{
                 if(this.onetab)
                 {
                     this.activetab = '';
+                    this.model_component = '';
                 }
             }
+        });
+        Bus.$on('updatemodel_component', index =>{
+            this.model_component_index = index;
+            if(index === -1)
+                this.model_component = '';
+            else
+                this.model_component = this.data[index].data.nodeName;
         });
         Bus.$on('clickactivetab', data =>{
             this.activetab = data;
@@ -93,18 +113,21 @@ export default{
         Bus.$on('updatedata', data => {
             this.data = data;
         });
-        Bus.$on('resetall', data => {
+        Bus.$on('resetall', data => { //reset the mxgraph component
             this.mxgraphreset = false;
             Vue.nextTick(()=>{
                 this.mxgraphreset = true;
-                this.activetab = data;
+                this.model_component = data;
+                localStorage.clear();
             },100);
         });
-    },
-    watch:{
-        activetab: function(val) {
-            Bus.$emit('updateactivetab',val);
-        }
+        Bus.$on('importxml', data => { //reset the mxgraph component
+            this.mxgraphreset = false;
+            Vue.nextTick(()=>{
+                this.mxgraphreset = true;
+                this.model_component = data;
+            },100);
+        });
     }
 }
 </script>

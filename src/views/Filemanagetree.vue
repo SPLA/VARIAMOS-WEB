@@ -45,6 +45,14 @@
 									<input type="text" class="form-control" maxlength="70" v-model="newDiagram.formval.diagramName" :placeholder="'Please enter a new diagram name'" />
 								</div>
 							</div>
+							<div class="form-group">
+								<label class="col-md-6 control-label"><em>*</em> Please select the type of model:</label>
+								<div class="col-md-9">
+									<Select placeholder="" v-model="newDiagram.formval.modeltype" style="width:200px">
+        								<Option v-for="item in modellist" :value="item.value" :key="item.value">{{ item.label }}</Option>
+    								</Select>
+								</div>
+							</div>
 						</div>
 					</Modal>
 					<Modal
@@ -140,7 +148,16 @@ export default{
     },
     data: function() {
         return{
+			model_component_index: -1,
 			activetab:'',
+		modellist:[{
+			value: 1,
+			label: 'Feature'
+		},
+		{
+			value: 2,
+			label: 'Component'
+		}],
         data: [],
 			newName: {
 				isshow: false,
@@ -172,7 +189,9 @@ export default{
 					id: null,
 					parentId: null,
 					parentFolder: '',
-					numberofmember: 0
+					projectId: -1,
+					numberofmember: 0,
+					modeltype: 0
 				}
 			},
 			newApplication: {
@@ -204,6 +223,7 @@ export default{
 			this.newDiagram.formval.parentId = data.data.nodeId;
 			this.newDiagram.formval.parentFolder = data.data.nodeName;
 			this.newDiagram.formval.numberofmember = data.numberOfChildren;
+			this.newDiagram.formval.projectId = data.data.projectId;
 		});
 
 		Bus.$on('createapplication', data => {
@@ -229,6 +249,7 @@ export default{
 				if(this.data[i].data.level < this.data[index].data.level || this.data[i].data.level === this.data[index].data.level)
 				{
 					this.data.splice(index, i - index);
+					localStorage.removeItem(data.data.nodeName);
 					break;
 				}
 			}
@@ -248,38 +269,25 @@ export default{
 					this.data.splice(index, i - index + 1);
 			}
 		});
-		Bus.$on('updateactivetab', data =>{
-			this.activetab = data;
-			let parentid = -1;
-			for(let i = 0; i < this.data.length; i++)
-			{
-				if(this.data[i].data.nodeType === 3 && this.data[i].data.nodeName == data)
-				{
-					this.data[i].data.open = true;
-					parentid = this.data[i].data.parentId;
-				}
-			}
-			for(let i = 0; i < this.data.length; i++)
-			{
-				if(this.data[i].data.nodeId === parentid)
-					this.data[i].data.open = true;
-			}
-			
-					
+		Bus.$on('updateactivetab', tab =>{
+			this.activetab = tab;
 		});
+		Bus.$on('updatemodel_component', index =>{
+			this.model_component_index = index;
+			for(let i = 0; i < this.data.length; i++)
+			{
+				if(this.data[i].data.parentId === this.data[index].data.nodeId && this.data[i].data.nodeType === 3 && index !== -1)
+					this.data[i].data.open = true;
+			}
+        });
 		//add update or delete element
 		Bus.$on('manageelement', cells => {
-			let projectid = 0;
+			let projectid = this.data[this.model_component_index].data.projectId;
 			let parentid = 0;
 			let parentindex = 0;
             for(var i = 0; i < this.data.length; i++)
             {
-                if(this.data[i].data.open && this.data[i].data.level === 1)
-                    projectid = this.data[i].data.nodeId; 
-            }
-            for(var i = 0; i < this.data.length; i++)
-            {
-                if(this.data[i].data.nodeName == this.activetab && this.data[i].data.projectId === projectid)
+                if(this.data[i].data.nodeName == this.activetab && this.data[i].data.parentId === this.data[this.model_component_index].data.nodeId)
                 {
                     parentid = this.data[i].data.nodeId;
                     parentindex = i;
@@ -301,6 +309,19 @@ export default{
 			this.newName.isshow = true;
 			this.newName.index = this.getIndexById(data.data.nodeId);
 			this.newName.formval.changedName = data.data.nodeName;
+		});
+		 Bus.$on('resetall', data => {
+			 var projectid = -1;
+            for(let i = 0; i < this.data.length; i++)
+            {
+                if(this.data[i].data.level == 1 && this.data[i].data.open)
+                    projectid = this.data[i].data.nodeId;
+            }
+            for(let i = 0; i < this.data.length; i++)
+            {
+                if(this.data[i].data.nodeType === 2 && this.data[i].data.projectId === projectid)
+                    this.deleteTask(this.data[i]);
+            }
 		});
 	},
     methods:{
@@ -365,7 +386,7 @@ export default{
 								nodeType: 1,
 								parentId: -1,
 								projectId: temp,
-								//modeltype: 1,
+								modeltype: 1,
 								contextmenuIndex: 3
 							},
 							numberOfChildren: 2
@@ -380,23 +401,8 @@ export default{
 							nodeType: 1,
 							parentId: temp,
 							projectId: temp,
-							//modeltype: 1,
+							modeltype: 1,
 							contextmenuIndex: 6
-						},
-						numberOfChildren: 0
-					},{
-						children: [],
-						data: {
-							open: false,
-							isSelected: false,
-							level: 2,
-							nodeId: temp+2,
-							nodeName: "Application - default",
-							nodeType: 1,
-							parentId: temp,
-							projectId: temp,
-							// modeltype: 1,
-							contextmenuIndex: 5
 						},
 						numberOfChildren: 1
 					},{
@@ -405,19 +411,80 @@ export default{
 							open: false,
 							isSelected: false,
 							level: 3,
+							nodeId: temp+2,
+							nodeName: "binding_feature_component",
+							nodeType: 3,
+							parentId: temp+1,
+							projectId: temp,
+							modeltype: 3,
+							contextmenuIndex: 0
+						},
+						numberOfChildren: 0
+					},{
+						children: [],
+						data: {
+							open: false,
+							isSelected: false,
+							level: 2,
 							nodeId: temp+3,
+							nodeName: "Application - default",
+							nodeType: 1,
+							parentId: temp,
+							projectId: temp,
+							modeltype: 1,
+							contextmenuIndex: 5
+						},
+						numberOfChildren: 2
+					},{
+						children: [],
+						data: {
+							open: false,
+							isSelected: false,
+							level: 3,
+							nodeId: temp+4,
+							nodeName: "binding_feature_component",
+							nodeType: 3,
+							parentId: temp+3,
+							projectId: temp,
+							modeltype: 3,
+							contextmenuIndex: 0
+						},
+						numberOfChildren: 0
+					},{
+						children: [],
+						data: {
+							open: false,
+							isSelected: false,
+							level: 3,
+							nodeId: temp+5,
 							nodeName: "Adaptation - default",
 							nodeType: 1,
-							parentId: temp+2,
+							parentId: temp+3,
 							projectId: temp,
-							// modeltype: 1,
+							modeltype: 1,
 							contextmenuIndex: 1
+						},
+						numberOfChildren: 1
+					},{
+						children: [],
+						data: {
+							open: false,
+							isSelected: false,
+							level: 4,
+							nodeId: temp+6,
+							nodeName: "binding_feature_component",
+							nodeType: 3,
+							parentId: temp+5,
+							projectId: temp,
+							modeltype: 3,
+							contextmenuIndex: 0
 						},
 						numberOfChildren: 0
 					});
 					_this.newProject.loading = false;
 					_this.newProject.isshow = false;
 				}
+				Bus.$emit('updatedata',this.data);
             }, 300);
 		},
 		createDire(){
@@ -430,7 +497,8 @@ export default{
 			}
 			setTimeout(()=>{
 				if(typeof (_this.data.find(function(data_diagram){
-					return data_diagram.data.nodeName === _this.newDiagram.formval.diagramName && data_diagram.data.parentId == _this.newDiagram.formval.parentId;
+					return data_diagram.data.nodeName === _this.newDiagram.formval.diagramName && data_diagram.data.projectId == _this.newDiagram.formval.projectId
+					&& data_diagram.data.nodeType === 3;
 				}))!=='undefined')
 				{
 					_this.newDiagram.loading = false;
@@ -439,6 +507,13 @@ export default{
 						_this.$Message.warning('Duplicated name!');
 					});
 				}
+				else if(_this.newDiagram.formval.modeltype === 0){
+						_this.newDiagram.loading = false;
+						_this.$nextTick(() => {
+						_this.newDiagram.loading = true;
+						_this.$Message.warning('Please select a model type!');
+                    });
+                }
 				else {
 					if(_this.newDiagram.formval.diagramName.length){
 						_this.data.splice(_this.newDiagram.index + 1, 0 , {
@@ -452,7 +527,7 @@ export default{
 								nodeType: 3,
 								parentId: _this.data[_this.newDiagram.index].data.nodeId,
 								projectId: _this.data[_this.newDiagram.index].data.projectId,
-								// modeltype: 1,
+								modeltype: _this.newDiagram.formval.modeltype,
 								contextmenuIndex: 2
 							},
 							numberOfChildren: 0
@@ -469,7 +544,8 @@ export default{
 						});
 					}
                 }
-                Bus.$emit('updatedata',this.data);
+				Bus.$emit('updatedata',this.data);
+				Bus.$emit('updatelayer',_this.newDiagram.formval.diagramName);
             }, 300);
             
 		},
@@ -512,27 +588,57 @@ export default{
 								nodeType: 1,
 								parentId: _this.data[_this.newApplication.index].data.nodeId,
 								projectId: _this.data[_this.newApplication.index].data.nodeId,
-								//modeltype: _this.data[_this.newApplication.index].data.modeltype,
+								modeltype: _this.data[_this.newApplication.index].data.modeltype,
 								contextmenuIndex: 5
 							},
-							numberOfChildren: 1
-						});
+							numberOfChildren: 2
+						},{
+						children: [],
+						data: {
+							open: false,
+							isSelected: false,
+							level: _this.data[_this.newApplication.index].data.level + 2,
+							nodeId: temp+1,
+							nodeName: "binding_feature_component",
+							nodeType: 3,
+							parentId: temp,
+							projectId: _this.data[_this.newApplication.index].data.nodeId,
+							modeltype: 3,
+							contextmenuIndex: 0
+						},
+						numberOfChildren: 0
+					});
 						_this.data.splice(_this.newApplication.index + tempindex + 1, 0 , {
 							children: [],
 							data: {
 								open: false,
 								isSelected: false,
 								level:  _this.data[_this.newApplication.index].data.level + 2,
-								nodeId:  this.getnewnodeid(),
+								nodeId:  temp+2,
 								nodeName: "Adaptation - " + _this.newApplication.applicationName,
 								nodeType: 1,
 								parentId: temp,
 								projectId: _this.data[_this.newApplication.index].data.nodeId,
-								//modeltype: _this.data[_this.newApplication.index].data.modeltype,
+								modeltype: _this.data[_this.newApplication.index].data.modeltype,
 								contextmenuIndex: 1
 							},
-							numberOfChildren: 0
-						});
+							numberOfChildren: 1
+						},{
+						children: [],
+						data: {
+							open: false,
+							isSelected: false,
+							level: _this.data[_this.newApplication.index].data.level + 3,
+							nodeId: temp+3,
+							nodeName: "binding_feature_component",
+							nodeType: 3,
+							parentId: temp+2,
+							projectId: _this.data[_this.newApplication.index].data.nodeId,
+							modeltype: 3,
+							contextmenuIndex: 0
+						},
+						numberOfChildren: 0
+					});
 						_this.data[_this.newApplication.index].numberOfChildren++;
 						_this.newApplication.loading = false;
 						_this.newApplication.isshow = false;
@@ -570,22 +676,38 @@ export default{
 				}
 				else {
 					if(_this.newAdaptation.adapatationName.length){
+						let temp = this.getnewnodeid();
 						_this.data.splice(_this.newAdaptation.index + 1, 0 , {
 							children: [],
 							data: {
 								open: false,
 								isSelected: false,
 								level:  _this.data[_this.newAdaptation.index].data.level + 1,
-								nodeId:  this.getnewnodeid(),
+								nodeId:  temp,
 								nodeName: "Adaptation - " + _this.newAdaptation.adapatationName,
 								nodeType: 1,
 								parentId: _this.data[_this.newAdaptation.index].data.nodeId,
 								projectId: _this.data[_this.newAdaptation.index].data.projectId,
-								//modeltype: _this.data[_this.newAdaptation.index].data.modeltype,
+								modeltype: _this.data[_this.newAdaptation.index].data.modeltype,
 								contextmenuIndex: 1
 							},
-							numberOfChildren: 0
-						});
+							numberOfChildren: 1
+						},{
+						children: [],
+						data: {
+							open: false,
+							isSelected: false,
+							level: _this.data[_this.newAdaptation.index].data.level + 2,
+							nodeId: temp+1,
+							nodeName: "binding_feature_component",
+							nodeType: 3,
+							parentId: temp,
+							projectId: _this.data[_this.newAdaptation.index].data.projectId,
+							modeltype: 3,
+							contextmenuIndex: 0
+						},
+						numberOfChildren: 0
+					});
 						_this.data[_this.newAdaptation.index].numberOfChildren++;
 						_this.newAdaptation.loading = false;
 						_this.newAdaptation.isshow = false;
@@ -664,27 +786,6 @@ export default{
 				});
 				this.data[parentindex].numberOfChildren++;
 			}
-		},
-		deleteDire(data){
-			var _this = this,
-				index = _this.getIndexById(data.data.nodeId);
-			if(typeof(index) === 'undefined'){
-				return
-			}
-			_this.data.splice(index, 1);
-			
-			for(let i = 0; i < _this.data.length; i++)
-			{
-				if(_this.data[i].data.parentId === data.data.nodeId)
-				{
-					if(_this.data[i].data.nodeType == 2)
-						this.deleteTask(_this.data[i]);
-					else if(_this.data[i].data.nodeType == 1 || _this.data[i].data.nodeType == 3)
-						this.deleteDire(_this.data[i]);
-				}
-			}
-            Bus.$emit('deletediagram',data);
-            Bus.$emit('updatedata',this.data);
 		},
 		deleteTask(data){
 			var _this = this,

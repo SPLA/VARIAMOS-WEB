@@ -1,5 +1,5 @@
 //main function
-var main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model_type,model_specific_main,counter,setupFunctions,undoManager,activetab)
+var main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model_type,model_specific_main,counter,setupFunctions,undoManager,activetab,model_component,treedata)
 {
 	// Checks if the browser is supported
 	if (!mxClient.isBrowserSupported())
@@ -10,7 +10,7 @@ var main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model
 	else
 	{
 		var currentLayer="";
-		currentLayer=layers[model_type]; //current layer to be displayed (feature, component, etc)
+		currentLayer=layers[activetab]; //current layer to be displayed (feature, component, etc)
 		graph.setDefaultParent(currentLayer); //any new graphic element will be connected with this parent
 
 		var data=[], c_type="", c_elements=[], c_attributes=[], c_relations=[], c_properties_styles=[] , c_labels=[];
@@ -52,7 +52,7 @@ var main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model
 		}
 		
 		//setup buttons
-		setupFunctions["setup_buttons"](graph,undoManager,reused_functions,activetab);
+		setupFunctions["setup_buttons"](graph,undoManager,reused_functions,model_component);
 		//setup properties
 		setupFunctions["setup_properties"](graph,c_properties_styles);
 		//setup keys

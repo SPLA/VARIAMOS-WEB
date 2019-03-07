@@ -9,7 +9,7 @@
                   <div id="navbarSupportedContent">
                     <ul class="navbar-nav navbar-nav2 mr-auto">
                      <li class="nav-item"><a class="nav-link nav-text"><i class="fas fa-chart-area"></i>
-                      {{ $t("models_area") }} - {{ modelType }} {{ $t("models_model") }}</a></li>
+                      {{ $t("models_area") }} - {{ $route.params.type }} {{ $t("models_model") }}</a></li>
                       <!-- model actions -->
                       <BackEnd /> 
                       <DomainImplementation :current_graph="graph" /> 
@@ -42,12 +42,6 @@
                 </div>
 
                 <div class="col-sm-3 right-area">
-                  <div style="padding-top:10px">
-                      <label> Model type: </label>
-									    <Select placeholder="" size="small" v-model="modelType" style="width:200px; padding-left: 10px;" @on-change="changemodeltype()" >
-        								<Option v-for="item in modellist" :value="item.value" :key="item.value">{{ item.label }}</Option>
-    								  </Select>
-							    </div>
                   <div class="pallete-area">
                   <b>{{ $t("models_palette") }}</b><br /><br />
                   <div id="tbContainer"></div>
@@ -92,24 +86,11 @@ import Bus from '../assets/js/common/bus.js'
 
 export default{
   props:[
-    'activetab'
+    'activetab','model_component','model_component_index','data'
   ],
   data: function(){
     return {
       mxgraphsetEnable: false,
-      modellist:[{
-			  value: "feature",
-			  label: 'Feature model'
-		  },
-		  {
-			  value: "component",
-			  label: 'Domain component model'
-		  },
-		  {
-			  value: "binding_feature_component",
-			  label: 'Domain binding model'
-      }
-		  ],
       modelCode: "", //stores the model code when saved
       graph: new Object(), //mxGraph object
       toolbar: new Object(), //mxToolbar
@@ -130,7 +111,7 @@ export default{
     Verification
   },
   mounted: function(){
-    this.models = ["feature","component","binding_feature_component"]; //represent the available models
+    //this.models = ["feature","component","binding_feature_component"]; //represent the available models
     this.modelFunctions = {
       "feature":feature_main,
       "component":component_main,
@@ -144,9 +125,10 @@ export default{
       "setup_elements":setup_elements
     }
     //preload the saved model if exists
-    if (localStorage[this.activetab]) {
-        this.modelCode = localStorage[this.activetab];
+    if (localStorage[this.model_component]) {
+        this.modelCode = localStorage[this.model_component];
     }
+    this.models = this.listoftabs(this.model_component_index);
     this.graph = new mxGraph(document.getElementById('graphContainer'));
     //load saved model into the graph if exists, and return layers
     this.layers=model_load(this.graph,this.models,this.modelCode);
@@ -160,9 +142,26 @@ export default{
     this.initialize_mx(1);
     //clear undo redo history
     this.undoManager.clear();
-    Bus.$on('updateactivetab', data =>{ //set the editable mxgraph based on active tab
-      if(data === this.activetab)
+    Bus.$on('updatelayer', data =>{
+      if(this.graph.isEnabled())
+      {
+        var root = this.graph.getModel().getRoot();
+        var m_cell =new mxCell();
+        m_cell.setId(data);
+        this.layers[data]=root.insert(m_cell);
+      }
+    });
+    Bus.$on('updatemodel_component', index =>{ 
+      if(this.data[index].data.nodeName === this.model_component)
+      {
         this.mxgraphsetEnable = true;
+          if (localStorage[this.data[index].data.nodeName])
+          {
+            this.models = this.listoftabs(this.model_component_index);
+            this.modelCode = localStorage[this.data[index].data.nodeName];
+            this.layers=model_load(this.graph,this.models,this.modelCode);
+          }
+      }
       else  
         this.mxgraphsetEnable = false;
     });
@@ -170,9 +169,9 @@ export default{
   methods: {
     persist() {
       //save model in localstorage
-      if(this.activetab === document.getElementById('model_code').tab)
+      if(this.model_component === document.getElementById('model_code').tab)
       {
-        localStorage[this.activetab] = document.getElementById('model_code').value;
+        localStorage[this.model_component] = document.getElementById('model_code').value;
         if(document.getElementById('model_code').value!=""){
           var c_header = modalH3(this.$t("modal_success"),"success");
           var c_body = modalSimpleText(this.$t("models_save_model"));
@@ -183,14 +182,16 @@ export default{
     initialize_mx(counter){
       //counter equals 1 load the entire mxGraph
       var graphContainer = document.getElementById('graphContainer');
-      main(this.graph,this.layers,this.mxModel,this.toolbar,this.keyHandler,graphContainer,this.modelType,this.currentFunction,counter,this.setupFunctions,this.undoManager,this.activetab);
+      main(this.graph,this.layers,this.mxModel,this.toolbar,this.keyHandler,graphContainer,this.modelType,this.currentFunction,counter,this.setupFunctions,this.undoManager,this.activetab,this.model_component,this.data);
     },
-    changemodeltype() {
-      document.getElementById('tbContainer').innerHTML="";
-      this.currentFunction=this.modelFunctions[this.modelType];
-      this.undoManager = new mxUndoManager();
-      this.initialize_mx(2);
-      this.undoManager.clear();
+    listoftabs(index){
+      let activetabs = [];
+      for(let i = 0; i < this.data.length; i++)
+      {
+        if(this.data[i].data.parentId === this.data[index].data.nodeId && this.data[i].data.nodeType === 3)
+          activetabs.push(this.data[i].data.nodeName);
+      }
+      return activetabs;
     }
   },
   beforeRouteLeave(to, from, next){
@@ -199,7 +200,7 @@ export default{
     next();
   },
   watch:{
-    $route (to, from){
+    // $route (to, from){
       //remove the palette content when there is a change in the component route
       // document.getElementById('tbContainer').innerHTML="";
       // this.modelType=this.$route.params.type;
@@ -208,10 +209,25 @@ export default{
       // this.initialize_mx(2);
       //clear undo redo history
       // this.undoManager.clear();
+    activetab: function(val){
+      if(this.graph.isEnabled())
+      {
+        document.getElementById('tbContainer').innerHTML="";
+        this.modelType=this.$route.params.type;
+        this.currentFunction=this.modelFunctions[this.modelType];
+        this.undoManager = new mxUndoManager();
+        this.initialize_mx(2);
+        this.undoManager.clear();
+      }
     },
     mxModel:{
       handler(val) {
           Bus.$emit('manageelement',this.graph.getChildCells(this.graph.getDefaultParent(), true, true));
+          
+          // var encoder = new mxCodec();
+          // var result = encoder.encode(this.graph.getModel());
+          // var xml = mxUtils.getPrettyXml(result);
+          // localStorage[this.model_component] = xml;
       },
       deep:true
     },

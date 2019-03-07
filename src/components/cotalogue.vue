@@ -158,6 +158,14 @@ export default {
 						return false;
 				}
 			}
+			if(this.data[index].data.nodeType === 1)
+			{
+				for(let i = 0; i < this.data.length; i++)
+				{
+					if(this.data[i].data.nodeId === this.data[index].data.projectId && this.data[i].data.open)
+						return true;
+				}
+			}
 			for(let i = 1; i < index+1; i++)
 			{
 				if(this.data[index-i].data.level < this.data[index].data.level)
@@ -177,7 +185,17 @@ export default {
 			var _this = this;
 			clearTimeout(_this.clickNum);
 			_this.clickNum = setTimeout(()=>{
-				Bus.$emit('updatedata',_this.data);
+				if(_this.data[index].data.nodeType === 1 && !_this.data[index].data.open && _this.data[index].data.level !== 1)
+				{
+					for(let i = 0; i < _this.data.length; i++)
+					{
+						if(_this.data[i].data.nodeType === 1 && _this.data[i].data.level !== 1 && i !== index)
+							_this.data[i].data.open = false;
+					}
+					Bus.$emit('updatemodel_component',index);
+				}
+				else if(_this.data[index].data.nodeType === 1 && _this.data[index].data.open)
+					Bus.$emit('updatemodel_component',-1);
 				_this.data[index].data.open = !_this.data[index].data.open;
 			}, 250);
 		},
@@ -187,12 +205,14 @@ export default {
 				item.data.isSelected = false;
 			});
 			_this.data[index].data.isSelected = true;
-			//if(_this.data[index].data.modeltype == 1)
+			if(_this.data[index].data.level === 1)
 				_this.$router.push("/models/feature");
-			// else if(_this.data[index].data.modeltype == 2) 
-            //     _this.$router.push("/models/component");
-            // else if(_this.data[index].data.modeltype == 3)
-            //     _this.$router.push("/models/binding_feature_component");
+			if(_this.data[index].data.modeltype == 1 && _this.data[index].data.nodeType === 3)
+				_this.$router.push("/models/feature");
+			else if(_this.data[index].data.modeltype == 2 && _this.data[index].data.nodeType === 3) 
+                _this.$router.push("/models/component");
+            else if(_this.data[index].data.modeltype == 3 && _this.data[index].data.nodeType === 3)
+                _this.$router.push("/models/binding_feature_component");
 			if(_this.data[index].data.nodeType === 3)
 				Bus.$emit('clickactivetab',_this.data[index].data.nodeName);
 			else if(_this.data[index].data.level === 1 && _this.data[index].data.open)
