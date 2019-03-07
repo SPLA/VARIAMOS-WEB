@@ -75,6 +75,7 @@ export default{
             else if(this.data[index].data.modeltype == 3)
                 this.$router.push("/models/binding_feature_component");
             Bus.$emit('updateactivetab',this.activetab);
+            Bus.$emit('updatemodel_component2',index);
         }
     },
     mounted () {
@@ -100,7 +101,7 @@ export default{
                 }
             }
         });
-        Bus.$on('updatemodel_component', index =>{
+        Bus.$on('updatemodel_component1', index =>{
             this.model_component_index = index;
             if(index === -1)
                 this.model_component = '';

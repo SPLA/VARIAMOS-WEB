@@ -192,11 +192,13 @@ export default {
 						if(_this.data[i].data.nodeType === 1 && _this.data[i].data.level !== 1 && i !== index)
 							_this.data[i].data.open = false;
 					}
-					Bus.$emit('updatemodel_component',index);
+					Bus.$emit('updatemodel_component1',index);
 				}
 				else if(_this.data[index].data.nodeType === 1 && _this.data[index].data.open)
-					Bus.$emit('updatemodel_component',-1);
+					Bus.$emit('updatemodel_component1',-1);
 				_this.data[index].data.open = !_this.data[index].data.open;
+				Bus.$emit('updatedata',this.data);
+				Bus.$emit('updatedata_back',this.data);
 			}, 250);
 		},
 		clickme(index){
@@ -214,7 +216,10 @@ export default {
             else if(_this.data[index].data.modeltype == 3 && _this.data[index].data.nodeType === 3)
                 _this.$router.push("/models/binding_feature_component");
 			if(_this.data[index].data.nodeType === 3)
+			{
 				Bus.$emit('clickactivetab',_this.data[index].data.nodeName);
+				Bus.$emit('updatemodel_component2',this.data[index].data.parentId);
+			}
 			else if(_this.data[index].data.level === 1 && _this.data[index].data.open)
 			{
 					this.contextMenuData.menulists.splice(3,1,[{

@@ -132,6 +132,7 @@ export default{
     this.graph = new mxGraph(document.getElementById('graphContainer'));
     //load saved model into the graph if exists, and return layers
     this.layers=model_load(this.graph,this.models,this.modelCode);
+    console.log(this.layers);
     this.modelType=this.$route.params.type; //based on URL Route
     this.currentFunction=this.modelFunctions[this.modelType];
     this.toolbar = new mxToolbar(document.getElementById('tbContainer'));
@@ -151,7 +152,7 @@ export default{
         this.layers[data]=root.insert(m_cell);
       }
     });
-    Bus.$on('updatemodel_component', index =>{ 
+    Bus.$on('updatemodel_component2', index =>{ 
       if(this.data[index].data.nodeName === this.model_component)
       {
         this.mxgraphsetEnable = true;

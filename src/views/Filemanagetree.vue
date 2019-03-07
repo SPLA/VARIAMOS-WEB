@@ -272,7 +272,7 @@ export default{
 		Bus.$on('updateactivetab', tab =>{
 			this.activetab = tab;
 		});
-		Bus.$on('updatemodel_component', index =>{
+		Bus.$on('updatemodel_component1', index =>{
 			this.model_component_index = index;
 			for(let i = 0; i < this.data.length; i++)
 			{
@@ -311,18 +311,15 @@ export default{
 			this.newName.formval.changedName = data.data.nodeName;
 		});
 		 Bus.$on('resetall', data => {
-			 var projectid = -1;
             for(let i = 0; i < this.data.length; i++)
             {
-                if(this.data[i].data.level == 1 && this.data[i].data.open)
-                    projectid = this.data[i].data.nodeId;
-            }
-            for(let i = 0; i < this.data.length; i++)
-            {
-                if(this.data[i].data.nodeType === 2 && this.data[i].data.projectId === projectid)
+                if(this.data[i].data.nodeType === 2)
                     this.deleteTask(this.data[i]);
             }
 		});
+		Bus.$on('updatedata_back', data => {
+            this.data = data;
+        });
 	},
     methods:{
 		getnewnodeid(){ //get a new nodeID
