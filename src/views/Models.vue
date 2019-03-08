@@ -155,6 +155,9 @@ export default{
         Bus.$emit('addlayer',this.model_component);
       }
     });
+    Bus.$on('disablegraph', val=>{
+      this.graph.setEnabled(val);
+    });
     // Bus.$on('updatemodel_component2', index =>{ 
     //   if(this.data[index].data.nodeName === this.model_component)
     //   {

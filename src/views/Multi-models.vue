@@ -88,14 +88,20 @@ export default{
         Bus.$on('updatemodel_component3', index =>{
             this.model_component_index = index;
             if(index === -1)
+            {
                 this.model_component = '';
+                Bus.$emit('disablegraph',false);
+            }
             else
                 this.model_component = this.data[index].data.nodeName;
         });
         Bus.$on('updatemodel_component1', index =>{
             this.model_component_index = index;
             if(index === -1)
+            {
                 this.model_component = '';
+                Bus.$emit('disablegraph',false);
+            }
             else
                 this.model_component = this.data[index].data.nodeName;
         });
@@ -109,6 +115,7 @@ export default{
             this.layer_type = data;
         });
         Bus.$on('resetall', data => { //reset the mxgraph component
+            Bus.$emit('disablegraph',false);
             this.mxgraphreset = false;
             Vue.nextTick(()=>{
                 this.mxgraphreset = true;
@@ -118,6 +125,7 @@ export default{
         });
         Bus.$on('importxml', data => { //reset the mxgraph component
             this.layer_type = 2;
+            Bus.$emit('disablegraph',false);
             this.mxgraphreset = false;
             Vue.nextTick(()=>{
                 this.mxgraphreset = true;
@@ -185,6 +193,7 @@ export default{
             },100);
         });
         Bus.$on('deletelayer', data =>{
+            Bus.$emit('disablegraph',false);
             this.data = data;
             this.layer_type = 1;
             this.mxgraphreset = false;
