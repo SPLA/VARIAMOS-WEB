@@ -138,6 +138,7 @@ export default{
     this.currentFunction=this.modelFunctions[this.modelType];
     this.toolbar = new mxToolbar(document.getElementById('tbContainer'));
     this.keyHandler = new mxKeyHandler(this.graph);
+    console.log(this.keyHandler);
     this.undoManager = new mxUndoManager();
     this.mxModel = this.graph.getModel();
 

@@ -328,7 +328,8 @@ export default{
             {
             for(let i = this.model_component_index + 1; i < this.data.length; i++)
 			{
-				if(this.data[i].data.level < this.data[this.model_component_index].data.level || this.data[i].data.level === this.data[this.model_component_index].data.level)
+				if(this.data[i].data.level < this.data[this.model_component_index].data.level || this.data[i].data.level === this.data[this.model_component_index].data.level
+				|| this.data[i].data.nodeType === 1 || i == this.data.length-1)
 				{
 					this.data.splice(this.model_component_index + 1, i - this.model_component_index - 1);
 					break;
