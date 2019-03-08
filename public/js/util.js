@@ -61,9 +61,49 @@ function modalInputTexts(texts,inputs,default_vals){
     return table;
 }
 
+function modalCustomization(texts,inputs,default_vals){
+    var table = document.createElement('table');
+    for(var i=0;i<texts.length;i++){
+        var tr = document.createElement('tr');
+        if(i==3){
+            tr.id="filetouploadtr";
+            tr.style.display="none";
+        }
+        var td = document.createElement('td');
+        td.innerHTML=texts[i];
+        tr.appendChild(td);
+
+        if(i==0){
+            var input = document.createElement('input');
+            input.size=48;
+        }
+        else if(i==3){
+            var input = document.createElement('input');
+            input.type="file";
+        }else{
+            var input = document.createElement('textarea');
+            input.cols=50;
+        }
+
+        input.value=default_vals[i];
+        input.id=inputs[i];
+        input.name=inputs[i];
+        if(i==0 || i==1 || i==4){
+            input.disabled="disabled";
+        }
+
+        var td2 = document.createElement('td');
+        td2.appendChild(input);
+        tr.appendChild(td2);
+        table.appendChild(tr);
+    }
+    return table;
+}
+
 function modalButton(text,function_to_append){
     var button = document.createElement('button');
     button.innerText=text;
+    button.id=text;
     button.addEventListener("click", function_to_append, false);
     return button;
 }

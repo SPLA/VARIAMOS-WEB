@@ -10,6 +10,7 @@ var component_main = function component_main(graph)
 	data[5]=null; //custom labels
 	data[6]=component_clon_cells(); //custom clon cells
 	data[7]=null; //custom constraints in element creation
+	data[8]=null; //custom overlays
 	return data;
 	
 	function component_constraints(graph){
