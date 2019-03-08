@@ -130,19 +130,23 @@ export default{
             for(let i = this.model_component_index + 1; i < this.data.length; i++)
 			{
                 if(this.data[i].data.level < this.data[this.model_component_index].data.level || this.data[i].data.level === this.data[this.model_component_index].data.level
-                || this.data[i].data.nodeType === 1 || i == this.data.length-1)
+                || this.data[i].data.nodeType === 1)
 				{
+					this.data.splice(this.model_component_index + 1, i - this.model_component_index - 2);
+					break;
+                }	
+                if(i == this.data.length-1)
+                {
 					this.data.splice(this.model_component_index + 1, i - this.model_component_index - 1);
 					break;
-				}	
+                }	
             }
             for(let key in layer.t1)
             {
                 let temp = [];
                 if(key === 'binding_feature_component')
                 {
-                    temp[0] = key;
-                    temp[1] = 3;
+                    continue;
                 }
                 else
 				{
