@@ -253,10 +253,10 @@ export default{
 			{
 				for(let i = index + 1; i < this.data.length; i++)
 				{
-					if(this.data[i].data.level < this.data[index].data.level || this.data[i].data.level === this.data[index].data.level)
+					if(this.data[i].data.level < this.data[index].data.level || this.data[i].data.level === this.data[index].data.level || i === this.data.length-1)
 					{
 						this.data.splice(index, i - index);
-						localStorage.removeItem(data.data.nodeName);
+						//localStorage.removeItem(data.data.nodeName);
 						break;
 					}	
 				}
@@ -322,6 +322,53 @@ export default{
 		});
 		Bus.$on('updatedata_back', data => {
             this.data = data;
+		});
+		Bus.$on('importxml2', layer =>{
+			if(layer.t2 === this.model_component_index)
+            {
+            for(let i = this.model_component_index + 1; i < this.data.length; i++)
+			{
+				if(this.data[i].data.level < this.data[this.model_component_index].data.level || this.data[i].data.level === this.data[this.model_component_index].data.level)
+				{
+					this.data.splice(this.model_component_index + 1, i - this.model_component_index - 1);
+					break;
+				}	
+            }
+            for(let key in layer.t1)
+            {
+                let temp = [];
+                if(key === 'binding_feature_component')
+                {
+                    temp[0] = key;
+                    temp[1] = 3;
+                }
+				else
+				{
+					temp = key.split('|');
+					if(temp[1] === 'feature')
+						temp[1] = 1;
+					else if(temp[1] === 'component')
+						temp[1] = 2;
+				}
+                this.data.splice(this.model_component_index + 1, 0 , {
+					children: [],
+					data: {
+						open: false,
+						isSelected: false,
+						level:  this.data[this.model_component_index].data.level + 1,
+						nodeId:  this.getnewnodeid(),
+						nodeName: temp[0],
+						nodeType: 3,
+						parentId: this.data[this.model_component_index].data.nodeId,
+					    projectId: this.data[this.model_component_index].data.projectId,
+						modeltype: temp[1],
+						contextmenuIndex: 2
+					},
+					numberOfChildren: 0
+				});
+				this.data[this.model_component_index].numberOfChildren++;
+			}
+			}
         });
 	},
     methods:{

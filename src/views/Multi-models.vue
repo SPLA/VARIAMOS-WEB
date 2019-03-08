@@ -11,7 +11,7 @@
             <div>
 				<div v-if="activetab !== ''" class="tabcontent">
 					<keep-alive v-if="mxgraphreset">
-						<model :key='model_component' :data="data" :model_component="model_component" :activetab="activetab" :model_component_index="model_component_index" :mxgraphsetEnable="mxgraphisEdited" ></model>
+						<model :key='model_component' :layer_type="layer_type" :data="data" :model_component="model_component" :activetab="activetab" :model_component_index="model_component_index" :mxgraphsetEnable="mxgraphisEdited" ></model>
 					</keep-alive>
 				</div>
             </div>
@@ -35,7 +35,8 @@ export default{
             mxgraphisEdited: false,
             mxgraphreset: true,
             model_component: '',
-            model_component_index: -1
+            model_component_index: -1,
+            layer_type:1
 		}
     },
     methods:{
@@ -65,6 +66,12 @@ export default{
             }
             return false;
         },
+        getnewnodeid(){ //get a new nodeID
+			let temp = 0;
+			for(let i = 0; i < this.data.length; i++)
+				temp = this.data[i].data.nodeId > temp ? this.data[i].data.nodeId : temp;
+			return temp + 1;
+		},
         clickactivetab (index) {
             this.activetab = this.data[index].data.nodeName;
 			if(this.data[index].data.modeltype == 1)
@@ -98,6 +105,9 @@ export default{
         Bus.$on('updatedata', data => {
             this.data = data;
         });
+        Bus.$on('updatelayertype', data => {
+            this.layer_type = data;
+        });
         Bus.$on('resetall', data => { //reset the mxgraph component
             this.mxgraphreset = false;
             Vue.nextTick(()=>{
@@ -107,6 +117,62 @@ export default{
             },100);
         });
         Bus.$on('importxml', data => { //reset the mxgraph component
+            this.layer_type = 2;
+            this.mxgraphreset = false;
+            Vue.nextTick(()=>{
+                this.mxgraphreset = true;
+                this.model_component = data;
+            },100);
+        });
+        Bus.$on('importxml2', layer =>{
+            if(layer.t2 === this.model_component_index)
+            {
+            for(let i = this.model_component_index + 1; i < this.data.length; i++)
+			{
+				if(this.data[i].data.level < this.data[this.model_component_index].data.level || this.data[i].data.level === this.data[this.model_component_index].data.level)
+				{
+					this.data.splice(this.model_component_index + 1, i - this.model_component_index - 1);
+					break;
+				}	
+            }
+            for(let key in layer.t1)
+            {
+                let temp = [];
+                if(key === 'binding_feature_component')
+                {
+                    temp[0] = key;
+                    temp[1] = 3;
+                }
+                else
+				{
+					temp = key.split('|');
+					if(temp[1] === 'feature')
+						temp[1] = 1;
+					else if(temp[1] === 'component')
+						temp[1] = 2;
+				}
+                this.data.splice(this.model_component_index + 1, 0 , {
+					children: [],
+					data: {
+						open: false,
+						isSelected: false,
+						level:  this.data[this.model_component_index].data.level + 1,
+						nodeId:  this.getnewnodeid(),
+						nodeName: temp[0],
+						nodeType: 3,
+						parentId: this.data[this.model_component_index].data.nodeId,
+					    projectId: this.data[this.model_component_index].data.projectId,
+						modeltype: temp[1],
+						contextmenuIndex: 2
+					},
+					numberOfChildren: 0
+				});
+				this.data[this.model_component_index].numberOfChildren++;
+            }
+            }
+        });
+        Bus.$on('addlayer', data => { 
+            this.layer_type = 1;
             this.mxgraphreset = false;
             Vue.nextTick(()=>{
                 this.mxgraphreset = true;
@@ -115,6 +181,7 @@ export default{
         });
         Bus.$on('deletelayer', data =>{
             this.data = data;
+            this.layer_type = 1;
             this.mxgraphreset = false;
             Vue.nextTick(()=>{
                 this.mxgraphreset = true;

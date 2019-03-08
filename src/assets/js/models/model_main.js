@@ -10,7 +10,10 @@ var main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model
 	else
 	{
 		var currentLayer="";
-		currentLayer=layers[activetab]; //current layer to be displayed (feature, component, etc)
+		if(model_type === 'binding_feature_component')
+			currentLayer=layers[activetab];
+		else
+			currentLayer=layers[activetab+'|'+model_type]; //current layer to be displayed (feature, component, etc)
 		graph.setDefaultParent(currentLayer); //any new graphic element will be connected with this parent
 
 		var data=[], c_type="", c_elements=[], c_attributes=[], c_relations=[], c_properties_styles=[] , c_labels=[];

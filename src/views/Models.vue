@@ -86,7 +86,7 @@ import Bus from '../assets/js/common/bus.js'
 
 export default{
   props:[
-    'activetab','model_component','model_component_index','data'
+    'activetab','model_component','model_component_index','data','layer_type'
   ],
   data: function(){
     return {
@@ -124,6 +124,7 @@ export default{
       "setup_properties":setup_properties,
       "setup_elements":setup_elements
     }
+    this.modelType=this.$route.params.type; //based on URL Route
     //preload the saved model if exists
     if (localStorage[this.model_component]) {
         this.modelCode = localStorage[this.model_component];
@@ -131,8 +132,9 @@ export default{
     this.models = this.listoftabs(this.model_component_index);
     this.graph = new mxGraph(document.getElementById('graphContainer'));
     //load saved model into the graph if exists, and return layers
-    this.layers=model_load(this.graph,this.models,this.modelCode);
-    this.modelType=this.$route.params.type; //based on URL Route
+    this.layers=model_load(this.graph,this.models,this.modelCode,this.layer_type,this.data,this.model_component_index);
+    if(this.layer_type === 2)
+      Bus.$emit('importxml2',{t1:this.layers, t2:this.model_component_index});
     this.currentFunction=this.modelFunctions[this.modelType];
     this.toolbar = new mxToolbar(document.getElementById('tbContainer'));
     this.keyHandler = new mxKeyHandler(this.graph);
@@ -149,7 +151,7 @@ export default{
         var m_cell =new mxCell();
         m_cell.setId(data);
         this.layers[data]=root.insert(m_cell);
-        Bus.$emit('importxml',this.model_component);
+        Bus.$emit('addlayer',this.model_component);
       }
     });
     Bus.$on('updatemodel_component2', index =>{ 
@@ -160,7 +162,7 @@ export default{
           {
             this.models = this.listoftabs(this.model_component_index);
             this.modelCode = localStorage[this.data[index].data.nodeName];
-            this.layers=model_load(this.graph,this.models,this.modelCode);
+            this.layers=model_load(this.graph,this.models,this.modelCode,this.layer_type,this.data,this.model_component_index);
           }
       }
       else  

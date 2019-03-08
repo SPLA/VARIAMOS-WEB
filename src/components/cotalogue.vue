@@ -158,8 +158,13 @@ export default {
 						return false;
 				}
 			}
-			if(this.data[index].data.nodeType === 1)
+			if(this.data[index].data.nodeType === 1 && this.data[index].data.level !== 1)
 			{
+				for(let i = 0; i < this.data.length; i++)
+				{
+					if(this.data[i].data.nodeType === 1 && this.data[i].data.level !== 1 && this.data[i].data.open && i !== index)
+						return false;
+				}
 				for(let i = 0; i < this.data.length; i++)
 				{
 					if(this.data[i].data.nodeId === this.data[index].data.projectId && this.data[i].data.open)
@@ -195,7 +200,10 @@ export default {
 					Bus.$emit('updatemodel_component1',index);
 				}
 				else if(_this.data[index].data.nodeType === 1 && _this.data[index].data.open)
+				{
 					Bus.$emit('updatemodel_component1',-1);
+					Bus.$emit('updatelayertype', 1);
+				}
 				_this.data[index].data.open = !_this.data[index].data.open;
 				Bus.$emit('updatedata',this.data);
 				Bus.$emit('updatedata_back',this.data);
