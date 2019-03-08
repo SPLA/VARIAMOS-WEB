@@ -22,14 +22,16 @@
 							aria-hidden="true"
 							:class="[item.data.open?'fa-angle-double-down':'fa-angle-double-right']"
 							@click="expand_menu($index)"
-							:style="{position: 'absolute',left: (20 * item.data.level - 17) + 'px',top: '6px'}">
+							:style="{position: 'absolute',left: (20 * item.data.level - 17) + 'px',top: '6px'}"
+							data-test="projectFolder">
 						</i>
 						<i v-if="item.data.nodeType!==2 && item.data.level !== 1"
 							class="fa"
 							aria-hidden="true"
 							:class="[item.data.open?'fa-angle-down':'fa-angle-right']"
 							@click="expand_menu($index)"
-							:style="{position: 'absolute',left: (20 * item.data.level - 17) + 'px',top: '6px'}">
+							:style="{position: 'absolute',left: (20 * item.data.level - 17) + 'px',top: '6px'}"
+							data-test="modelFolder">
 						</i>
 						<i v-if="item.data.nodeType===2"
 							aria-hidden="true"

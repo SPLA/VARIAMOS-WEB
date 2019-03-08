@@ -31,7 +31,8 @@
 						ok-text="OK"
         				cancel-text="Cancel"
 						@on-ok="createDire"
-						@on-cancel="newDiagram.isshow=false,newDiagram.formval.diagramName='',newDiagram.formval.id=null">
+						@on-cancel="newDiagram.isshow=false,newDiagram.formval.diagramName='',newDiagram.formval.id=null"
+						data-test="newdiagrammodal">
 						<div class="form-horizontal">
 							<div class="form-group">
 								<label class="col-md-2 control-label">Father:</label>
@@ -42,13 +43,13 @@
 							<div class="form-group">
 								<label class="col-md-3 control-label"><em>*</em> Diagram name:</label>
 								<div class="col-md-9">
-									<input type="text" class="form-control" maxlength="70" v-model="newDiagram.formval.diagramName" :placeholder="'Please enter a new diagram name'" />
+									<input type="text" class="form-control" maxlength="70" v-model="newDiagram.formval.diagramName" :placeholder="'Please enter a new diagram name'" data-test="newdiagramname"/>
 								</div>
 							</div>
 							<div class="form-group">
 								<label class="col-md-6 control-label"><em>*</em> Please select the type of model:</label>
 								<div class="col-md-9">
-									<Select placeholder="" v-model="newDiagram.formval.modeltype" style="width:200px">
+									<Select placeholder="" v-model="newDiagram.formval.modeltype" style="width:200px" data-test="newdiagramtype">
         								<Option v-for="item in modellist" :value="item.value" :key="item.value">{{ item.label }}</Option>
     								</Select>
 								</div>
@@ -108,7 +109,7 @@
 					
                     <div v-if="activetab === ''" class="button_tree_element">
                         <div class="button-unique" >
-                            <button class="btn-model-area btn btn-sm btn-outline-secondary" type="primary" @click="newProject.isshow=!newProject.isshow">
+                            <button class="btn-model-area btn btn-sm btn-outline-secondary" type="primary" @click="newProject.isshow=!newProject.isshow" data-test="newprojectbutton">
                                 <div style="padding:1px; font-size:1px;">
                                     <i class="fas fa-plus"></i>
                                     Add a new project
@@ -123,12 +124,13 @@
 								ok-text="OK"
         						cancel-text="Cancel"
 								@on-ok="createproject"
-								@on-cancel="newProject.isshow=false,newProject.formval.projectName='',newProject.formval.id=null">
+								@on-cancel="newProject.isshow=false,newProject.formval.projectName='',newProject.formval.id=null"
+								data-test="newprojectmodal">
 								<div class="form-horizontal">
 									<div class="form-group">
 										<label class="col-md-3 control-label"><em>*</em> New project name:</label>
 										<div class="col-md-9">
-											<input type="text" class="form-control" maxlength="70" v-model="newProject.formval.projectName" :placeholder="'Please enter a new project name'" />
+											<input type="text" class="form-control" maxlength="70" v-model="newProject.formval.projectName" :placeholder="'Please enter a new project name'" data-test="newprojectmodalinput"/>
 										</div>
 									</div>
 								</div>

@@ -35,7 +35,7 @@
               <div class="row main_area">
 
                 <div class="col-sm-9 left-area">
-                  <div id="graphContainer" class="model-area"></div>
+                  <div id="graphContainer" class="model-area" data-test="graphcontainer"></div>
                   <div class="properties-area"><b>{{ $t("models_element_properties") }}</b><br />
                     <div id="properties"></div>
                   </div>
