@@ -32,7 +32,7 @@ export default{
             activetab: '',
             onetab: true,
             data:[],
-            mxgraphisEdited: false,
+            mxgraphisEdited: false, //set graph editable based on folder
             mxgraphreset: true,
             model_component: '',
             model_component_index: -1,

@@ -138,7 +138,6 @@ export default{
     this.currentFunction=this.modelFunctions[this.modelType];
     this.toolbar = new mxToolbar(document.getElementById('tbContainer'));
     this.keyHandler = new mxKeyHandler(this.graph);
-    console.log(this.keyHandler);
     this.undoManager = new mxUndoManager();
     this.mxModel = this.graph.getModel();
 
@@ -152,23 +151,24 @@ export default{
         var m_cell =new mxCell();
         m_cell.setId(data);
         this.layers[data]=root.insert(m_cell);
+        this.graph.setEnabled(false);
         Bus.$emit('addlayer',this.model_component);
       }
     });
-    Bus.$on('updatemodel_component2', index =>{ 
-      if(this.data[index].data.nodeName === this.model_component)
-      {
-        this.mxgraphsetEnable = true;
-          if (localStorage[this.data[index].data.nodeName])
-          {
-            this.models = this.listoftabs(this.model_component_index);
-            this.modelCode = localStorage[this.data[index].data.nodeName];
-            this.layers=model_load(this.graph,this.models,this.modelCode,this.layer_type,this.data,this.model_component_index);
-          }
-      }
-      else  
-        this.mxgraphsetEnable = false;
-    });
+    // Bus.$on('updatemodel_component2', index =>{ 
+    //   if(this.data[index].data.nodeName === this.model_component)
+    //   {
+    //     this.mxgraphsetEnable = true;
+    //       if (localStorage[this.data[index].data.nodeName])
+    //       {
+    //         this.models = this.listoftabs(this.model_component_index);
+    //         this.modelCode = localStorage[this.data[index].data.nodeName];
+    //         this.layers=model_load(this.graph,this.models,this.modelCode,this.layer_type,this.data,this.model_component_index);
+    //       }
+    //   }
+    //   else  
+    //     this.mxgraphsetEnable = false;
+    // });
   },
   methods: {
     persist() {
