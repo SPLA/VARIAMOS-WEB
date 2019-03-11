@@ -158,6 +158,23 @@ export default{
     Bus.$on('disablegraph', val=>{
       this.graph.setEnabled(val);
     });
+    Bus.$on('renamediagram', val=>{
+      for(let key in this.layers)
+      {
+        if(key === val.t1)
+        {
+          this.layers[val.t2] = this.layers[val.t1];
+          delete this.layers[val.t1];
+        }
+      }
+    });
+    Bus.$on('renamefolder', val=>{
+      if(localStorage[val.t1])
+      {
+        localStorage[val.t2] = localStorage[val.t1];
+        localStorage.removeItem(val.t1);
+      }
+    });
     // Bus.$on('updatemodel_component2', index =>{ 
     //   if(this.data[index].data.nodeName === this.model_component)
     //   {

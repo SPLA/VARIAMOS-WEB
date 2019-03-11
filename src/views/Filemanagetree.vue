@@ -851,6 +851,7 @@ export default{
 		},
 		rename(){
 			var _this = this;
+			let temp = {t1: _this.data[_this.newName.index].data.nodeName, t2: _this.newName.formval.changedName};
 			setTimeout(()=>{
 				if(_this.newName.formval.changedName.length){
 					if(typeof(_this.newName.index) === 'undefined'){
@@ -866,7 +867,26 @@ export default{
 						_this.$Message.warning('Empty is not allowed！');
 					});
                 }
-                Bus.$emit('updatedata',this.data);
+				Bus.$emit('updatedata',this.data);
+				Bus.$emit('clickactivetab',temp.t2);
+				if(_this.data[_this.newName.index].data.nodeType === 3)
+				{
+					if(_this.data[_this.newName.index].data.modeltype === 1)
+					{
+						temp.t1 = temp.t1 + '|' + 'feature';
+						temp.t2 = temp.t2 + '|' + 'feature';
+						Bus.$emit('renamediagram', temp);
+					}
+					else if(_this.data[_this.newName.index].data.modeltype === 2)
+					{
+						temp.t1 = temp.t1 + '|' + 'component';
+						temp.t2 = temp.t2 + '|' + 'component';
+						Bus.$emit('renamediagram', temp);
+					}
+					Bus.$emit('renameactivetab', temp.t2.split('|')[0]);
+				}
+				else	
+					Bus.$emit('renamefolder',temp);
             }, 250);
 		}
 	},

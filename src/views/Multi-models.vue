@@ -108,6 +108,9 @@ export default{
         Bus.$on('clickactivetab', data =>{
             this.activetab = data;
         });
+        Bus.$on('renameactivetab',data =>{
+            this.activetab = data;
+        });
         Bus.$on('updatedata', data => {
             this.data = data;
         });
