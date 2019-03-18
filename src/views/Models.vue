@@ -35,7 +35,7 @@
               <div class="row main_area">
 
                 <div class="col-sm-9 left-area">
-                  <div id="graphContainer" class="model-area"></div>
+                  <div id="graphContainer" class="model-area" data-test="graphcontainer"></div>
                   <div class="properties-area"><b>{{ $t("models_element_properties") }}</b><br />
                     <div id="properties"></div>
                   </div>
@@ -82,10 +82,15 @@ import binding_feature_component_main from '@/assets/js/models/custom/binding_fe
 import DomainImplementation from '../components/model_actions/DomainImplementation'
 import Verification from '../components/model_actions/Verification'
 import BackEnd from '../components/model_actions/BackEnd'
+import Bus from '../assets/js/common/bus.js'
 
 export default{
+  props:[
+    'activetab','model_component','model_component_index','data','layer_type'
+  ],
   data: function(){
     return {
+      mxgraphsetEnable: false,
       modelCode: "", //stores the model code when saved
       graph: new Object(), //mxGraph object
       toolbar: new Object(), //mxToolbar
@@ -106,7 +111,7 @@ export default{
     Verification
   },
   mounted: function(){
-    this.models = ["feature","component","binding_feature_component"]; //represent the available models
+    //this.models = ["feature","component","binding_feature_component"]; //represent the available models
     this.modelFunctions = {
       "feature":feature_main,
       "component":component_main,
@@ -119,14 +124,17 @@ export default{
       "setup_properties":setup_properties,
       "setup_elements":setup_elements
     }
+    this.modelType=this.$route.params.type; //based on URL Route
     //preload the saved model if exists
-    if (localStorage["model_code"]) {
-        this.modelCode = localStorage["model_code"];
+    if (localStorage[this.model_component]) {
+        this.modelCode = localStorage[this.model_component];
     }
+    this.models = this.listoftabs(this.model_component_index);
     this.graph = new mxGraph(document.getElementById('graphContainer'));
     //load saved model into the graph if exists, and return layers
-    this.layers=model_load(this.graph,this.models,this.modelCode);
-    this.modelType=this.$route.params.type; //based on URL Route
+    this.layers=model_load(this.graph,this.models,this.modelCode,this.layer_type,this.data,this.model_component_index);
+    if(this.layer_type === 2)
+      Bus.$emit('importxml2',{t1:this.layers, t2:this.model_component_index});
     this.currentFunction=this.modelFunctions[this.modelType];
     this.toolbar = new mxToolbar(document.getElementById('tbContainer'));
     this.keyHandler = new mxKeyHandler(this.graph);
@@ -136,21 +144,98 @@ export default{
     this.initialize_mx(1);
     //clear undo redo history
     this.undoManager.clear();
+
+    var encoder = new mxCodec();
+    var result = encoder.encode(this.graph.getModel());
+    var xml = mxUtils.getPrettyXml(result);
+    Bus.$emit('manageelement', xml);
+
+    Bus.$on('updatelayer', data =>{
+      if(this.graph.isEnabled())
+      {
+        var root = this.graph.getModel().getRoot();
+        var m_cell =new mxCell();
+        m_cell.setId(data);
+        this.layers[data]=root.insert(m_cell);
+        this.graph.setEnabled(false);
+        Bus.$emit('addlayer',this.model_component);
+      }
+    });
+    Bus.$on('disablegraph', val=>{
+      this.graph.setEnabled(val);
+    });
+    Bus.$on('renamediagram', val=>{
+      for(let key in this.layers)
+      {
+        if(key === val.t1)
+        {
+          this.layers[val.t2] = this.layers[val.t1];
+          delete this.layers[val.t1];
+        }
+      }
+      var root = this.graph.getModel().getRoot();
+      for(let i = 0 ; i < root.getChildCount(); i++)
+      {
+        var current_cell = root.getChildAt(i);
+        if(current_cell.getId()===val.t1)
+          current_cell.setId(val.t2);
+      }
+      this.graph.getModel().setRoot(root);
+
+      var encoder = new mxCodec();
+      var result = encoder.encode(this.graph.getModel());
+      var xml = mxUtils.getPrettyXml(result);
+      localStorage[this.model_component] = xml;
+    });
+    Bus.$on('renamefolder', val=>{
+      if(localStorage[val.t1])
+      {
+        localStorage[val.t2] = localStorage[val.t1];
+        localStorage.removeItem(val.t1);
+      }
+    });
+    // Bus.$on('updatemodel_component2', index =>{ 
+    //   if(this.data[index].data.nodeName === this.model_component)
+    //   {
+    //     this.mxgraphsetEnable = true;
+    //       if (localStorage[this.data[index].data.nodeName])
+    //       {
+    //         this.models = this.listoftabs(this.model_component_index);
+    //         this.modelCode = localStorage[this.data[index].data.nodeName];
+    //         this.layers=model_load(this.graph,this.models,this.modelCode,this.layer_type,this.data,this.model_component_index);
+    //       }
+    //   }
+    //   else  
+    //     this.mxgraphsetEnable = false;
+    // });
   },
   methods: {
     persist() {
       //save model in localstorage
-      localStorage["model_code"] = document.getElementById('model_code').value;
-      if(document.getElementById('model_code').value!=""){
-        var c_header = modalH3(this.$t("modal_success"),"success");
-        var c_body = modalSimpleText(this.$t("models_save_model"));
-        setupModal(c_header,c_body);
+      if(this.model_component === document.getElementById('model_code').tab)
+      {
+        localStorage[this.model_component] = document.getElementById('model_code').value;
+        if(document.getElementById('model_code').value!=""){
+          // var c_header = modalH3(this.$t("modal_success"),"success");
+          // var c_body = modalSimpleText(this.$t("models_save_model"));
+          // setupModal(c_header,c_body);
+          this.$Message.success('Success!');
+        }
       }
     },
     initialize_mx(counter){
       //counter equals 1 load the entire mxGraph
       var graphContainer = document.getElementById('graphContainer');
-      main(this.graph,this.layers,this.mxModel,this.toolbar,this.keyHandler,graphContainer,this.modelType,this.currentFunction,counter,this.setupFunctions,this.undoManager);
+      main(this.graph,this.layers,this.mxModel,this.toolbar,this.keyHandler,graphContainer,this.modelType,this.currentFunction,counter,this.setupFunctions,this.undoManager,this.activetab,this.model_component,this.data);
+    },
+    listoftabs(index){
+      let activetabs = [];
+      for(let i = 0; i < this.data.length; i++)
+      {
+        if(this.data[i].data.parentId === this.data[index].data.nodeId && this.data[i].data.nodeType === 3)
+          activetabs.push(this.data[i].data.nodeName);
+      }
+      return activetabs;
     }
   },
   beforeRouteLeave(to, from, next){
@@ -159,15 +244,40 @@ export default{
     next();
   },
   watch:{
-    $route (to, from){
+    // $route (to, from){
       //remove the palette content when there is a change in the component route
-      document.getElementById('tbContainer').innerHTML="";
-      this.modelType=this.$route.params.type;
-      this.currentFunction=this.modelFunctions[this.modelType];
-      this.undoManager = new mxUndoManager();
-      this.initialize_mx(2);
+      // document.getElementById('tbContainer').innerHTML="";
+      // this.modelType=this.$route.params.type;
+      // this.currentFunction=this.modelFunctions[this.modelType];
+      // this.undoManager = new mxUndoManager();
+      // this.initialize_mx(2);
       //clear undo redo history
-      this.undoManager.clear();
+      // this.undoManager.clear();
+    activetab: function(val){
+      if(this.graph.isEnabled())
+      {
+        document.getElementById('tbContainer').innerHTML="";
+        this.modelType=this.$route.params.type;
+        this.currentFunction=this.modelFunctions[this.modelType];
+        this.undoManager = new mxUndoManager();
+        this.initialize_mx(2);
+        this.undoManager.clear();
+        var encoder = new mxCodec();
+        var result = encoder.encode(this.graph.getModel());
+        var xml = mxUtils.getPrettyXml(result);
+      }
+    },
+    mxModel:{
+      handler(val) {
+        var encoder = new mxCodec();
+        var result = encoder.encode(this.graph.getModel());
+        var xml = mxUtils.getPrettyXml(result);
+        Bus.$emit('manageelement', xml);
+      },
+      deep:true
+    },
+    mxgraphsetEnable: function(val){
+      this.graph.setEnabled(val);
     }
   }
 }
