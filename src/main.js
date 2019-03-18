@@ -7,11 +7,13 @@ import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './assets/css/dashboard.css'
 import './assets/css/fontawesome.css'
+import iView from 'iview'
+import 'iview/dist/styles/iview.css';
 
+Vue.use(iView);
 Vue.config.productionTip = false
 Vue.use(VueI18n)
 
-Vue.config.productionTip = false
 
 new Vue({
   router,

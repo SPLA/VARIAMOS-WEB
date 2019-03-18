@@ -20,7 +20,7 @@ export default new Router({
     {
       path: '/models/:type',
       name: 'Models',
-      component: () => import('./views/Models.vue')
+      component: () => import('./views/Multi-models.vue')
     },
     {
       path: '/reports',

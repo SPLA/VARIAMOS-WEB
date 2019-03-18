@@ -1,4 +1,5 @@
-var setup_buttons = function setup_buttons(graph,undoManager,reused_functions){
+import Bus from '../common/bus.js'
+var setup_buttons = function setup_buttons(graph,undoManager,reused_functions,model_component){
     /* begin buttonxml */
     // Adds an option to view the XML of the graph
     var buttonXML = document.getElementById('buttonXML');
@@ -35,21 +36,23 @@ var setup_buttons = function setup_buttons(graph,undoManager,reused_functions){
     
         var model_code = document.getElementById('model_code');
         model_code.value=xml;
+        model_code.tab=model_component;
         var event = new Event('change');
         model_code.dispatchEvent(event);
     },"eraser"));
     /* end buttonreset */
-
     /* begin buttonreset */
     // Adds an option to reset the graph
     var buttonRESETALL = document.getElementById('buttonRESETALL');
     buttonRESETALL.innerHTML="";
     buttonRESETALL.appendChild(mxUtils.button_with_icon(messages["setup_buttons_reset_all"], function()
     {
-        model_code.value="";
-        var event = new Event('change');
-        model_code.dispatchEvent(event);
-        location.reload();
+        // model_code.value="";
+        // model_code.tab=model_component;
+        // var event = new Event('change');
+        // model_code.dispatchEvent(event);
+        Bus.$emit('resetall',model_component);
+        // location.reload();
     },"eraser"));
     /* end buttonreset */
 
@@ -65,6 +68,7 @@ var setup_buttons = function setup_buttons(graph,undoManager,reused_functions){
     
         var model_code = document.getElementById('model_code');
         model_code.value=xml;
+        model_code.tab = model_component;
         var event = new Event('change');
         model_code.dispatchEvent(event);
     },"save"));
@@ -108,9 +112,11 @@ var setup_buttons = function setup_buttons(graph,undoManager,reused_functions){
             var textFromFileLoaded = fileLoadedEvent.target.result;
             var model_code = document.getElementById('model_code');
             model_code.value=textFromFileLoaded;
+            model_code.tab = model_component;
             var event = new Event('change');
             model_code.dispatchEvent(event);
-            location.reload();
+            // location.reload();
+            Bus.$emit('importxml',model_component);
         }
         fileReader.readAsText(fileToLoad, "UTF-8");
         });
