@@ -10,7 +10,7 @@ var feature_main = function feature_main(graph)
 	data[5]=feature_labels(); //custom labels
 	data[6]=feature_clon_cells(); //custom clon cells
 	data[7]=feature_constraints_in_creation(); //custom constraints in element creation
-	data[8]=feature_overlay(); //custom constraints in element creation
+	data[8]=feature_overlay(); //custom overlay
 	return data;
 	
 	function feature_constraints(graph){
@@ -167,7 +167,6 @@ var feature_main = function feature_main(graph)
 			// Creates a new overlay with an image and a tooltip and makes it "transparent" to events
 			var overlay = new mxCellOverlay(new mxImage('images/MX/check.png', 16, 16), 'Overlay tooltip');	
 			if(this.checked){
-				var overlay = new mxCellOverlay(new mxImage('images/MX/check.png', 16, 16), 'Overlay tooltip');	
 				graph.addCellOverlay(graph.getModel().getCell(this.name), overlay);
 			}else{
 				graph.removeCellOverlay(graph.getModel().getCell(this.name));
