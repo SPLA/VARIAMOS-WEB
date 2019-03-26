@@ -1,4 +1,4 @@
-var setup_buttons = function setup_buttons(graph,undoManager,reused_functions){
+var setup_buttons = function setup_buttons(graph,undoManager,reused_functions,route_pare){
     /* begin buttonxml */
     // Adds an option to view the XML of the graph
     var buttonXML = document.getElementById('buttonXML');
@@ -84,7 +84,7 @@ var setup_buttons = function setup_buttons(graph,undoManager,reused_functions){
         var textToSaveAsBlob = new Blob([model_code.value], {type:"text/xml"});
         var textToSaveAsURL = window.URL.createObjectURL(textToSaveAsBlob);
         var downloadLink = document.createElement("a");
-        downloadLink.download = "model.xml";
+        downloadLink.download = route_pare.project + "_" + route_pare.folder + "_" + "model.xml";
         downloadLink.href = textToSaveAsURL;
         downloadLink.onclick = function(event)
         {

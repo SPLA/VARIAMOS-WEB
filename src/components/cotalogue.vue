@@ -2,7 +2,7 @@
 	<div class="naza-tree-warp">
 		<div class="naza-tree-inner show-wrap">
 			<ul class="naza-tree">
-				<div v-for="(item, $index) in data" :key="item.nodeId">
+				<div v-for="(item, $index) in getdata" :key="item.nodeId">
 				<li class="naza-tree-row"
 					:class="item.data.isSelected?'selected':''"
 					@click="clickme($index)" v-if="checkchildnode($index)">
@@ -60,7 +60,7 @@
 						</span>
 					</a>
 				</li>
-				<subcotalogue v-if="item.data.nodeType === 3 && item.data.open" :style="{paddingLeft: (20 * item.data.level) + 'px'}" :layername="item.data.nodeName" :layertype="item.data.modeltype" :xml="xml"></subcotalogue>
+				<subcotalogue v-if="item.data.nodeType === 3 && item.data.open" :style="{paddingLeft: (20 * item.data.level) + 'px'}" :layername="item.data.nodeName" :layertype="item.data.modeltype"></subcotalogue>
 				</div>
 			</ul>
 		</div>
@@ -79,15 +79,8 @@ export default {
 		contextMenu,
 		subcotalogue
 	},
-	props: {
-		data: {
-			type: Array,
-			default: []
-		},
-	},
 	data () {
 		return {
-			xml: '',
 			clickNum: null,
 			className: '',
 			contextMenuData: {
@@ -97,10 +90,6 @@ export default {
 					y: null
 				},
 				menulists:[[],[{
-					fnHandler: 'createdire',
-					icoName: 'fa fa-image',
-					btnName: 'New Diagram'
-				},{
 					fnHandler: 'newname',
 					icoName: 'fa fa-pencil-alt',
 					btnName: 'Rename'
@@ -129,10 +118,6 @@ export default {
 					icoName: 'fa fa-folder',
 					btnName: 'New Adatption'
 				},{
-					fnHandler: 'createdire',
-					icoName: 'fa fa-image',
-					btnName: 'New Diagram'
-				},{
 					fnHandler: 'newname',
 					icoName: 'fa fa-pencil-alt',
 					btnName: 'Rename'
@@ -140,11 +125,7 @@ export default {
 					fnHandler: 'deletedire',
 					icoName: 'fa fa-times',
 					btnName: 'delete'
-				}],[{
-					fnHandler: 'createdire',
-					icoName: 'fa fa-image',
-					btnName: 'New Diagram'
-				}]]
+				}],[]]
 			}
 		}
 	},
@@ -153,36 +134,42 @@ export default {
 			this.xml = xml;
 		});
 	},
+	computed: {
+        getdata (){
+            return this.$store.getters.getdata;
+        }
+    },
 	methods: {
 		checkchildnode(index) {
-			if(this.data[index].data.level === 1)
+			let data = this.getdata;
+			if(data[index].data.level === 1)
 			{
-				for(let i = 0; i < this.data.length; i++)
+				for(let i = 0; i < data.length; i++)
 				{
-					if(this.data[i].data.level === 1 & this.data[i].data.open && i !== index)
+					if(data[i].data.level === 1 & data[i].data.open && i !== index)
 						return false;
 				}
 			}
-			if(this.data[index].data.nodeType === 1 && this.data[index].data.level !== 1)
+			if(data[index].data.nodeType === 1 && data[index].data.level !== 1)
 			{
-				for(let i = 0; i < this.data.length; i++)
+				for(let i = 0; i < data.length; i++)
 				{
-					if(this.data[i].data.nodeType === 1 && this.data[i].data.level !== 1 && this.data[i].data.open && i !== index)
+					if(data[i].data.nodeType === 1 && data[i].data.level !== 1 && data[i].data.open && i !== index)
 						return false;
 				}
-				for(let i = 0; i < this.data.length; i++)
+				for(let i = 0; i < data.length; i++)
 				{
-					if(this.data[i].data.nodeId === this.data[index].data.projectId && this.data[i].data.open)
+					if(data[i].data.nodeId === data[index].data.projectId && data[i].data.open)
 						return true;
 				}
 			}
 			for(let i = 1; i < index+1; i++)
 			{
-				if(this.data[index-i].data.level < this.data[index].data.level)
+				if(data[index-i].data.level < data[index].data.level)
 				{
-					if(this.data[index-i].data.open === false)
+					if(data[index-i].data.open === false)
 					{
-						this.data[index].data.open = false;
+						data[index].data.open = false;
 						return false;
 					}
 					else 
@@ -192,61 +179,65 @@ export default {
 			return true;
 		},
 		expand_menu(index) {
-			var _this = this;
-			clearTimeout(_this.clickNum);
-			_this.clickNum = setTimeout(()=>{
-				if(_this.data[index].data.nodeType === 1 && !_this.data[index].data.open && _this.data[index].data.level !== 1)
+			let data = this.getdata;
+			clearTimeout(this.clickNum);
+			this.clickNum = setTimeout(()=>{
+				if(data[index].data.nodeType === 1 && !data[index].data.open && data[index].data.level !== 1)
 				{
-					for(let i = 0; i < _this.data.length; i++)
+					for(let i = 0; i < data.length; i++)
 					{
-						if(_this.data[i].data.nodeType === 1 && _this.data[i].data.level !== 1 && i !== index)
-							_this.data[i].data.open = false;
+						if(data[i].data.nodeType === 1 && data[i].data.level !== 1 && i !== index)
+							data[i].data.open = false;
 					}
-					Bus.$emit('updatemodel_component1',index);
+					this.$store.dispatch('updatemodelcomponent', index);
 				}
-				else if(_this.data[index].data.nodeType === 1 && _this.data[index].data.open)
+				else if(data[index].data.nodeType === 1 && data[index].data.open)
 				{
-					Bus.$emit('updatemodel_component1',-1);
-					Bus.$emit('updatelayertype', 1);
+					Bus.$emit('setfalsegraph',false);
+					this.$store.dispatch('updatemodelcomponent', -1);
 				}
-				_this.data[index].data.open = !_this.data[index].data.open;
-				Bus.$emit('updatedata',this.data);
-				Bus.$emit('updatedata_back',this.data);
+				this.$store.dispatch('setopen', index);
 			}, 250);
 		},
 		clickme(index){
-			var _this = this;
-			_this.data.forEach((item)=>{
-				item.data.isSelected = false;
-			});
-			_this.data[index].data.isSelected = true;				
-			if(_this.data[index].data.modeltype == 1 && _this.data[index].data.nodeType === 3)
-				_this.$router.push("/models/feature");
-			else if(_this.data[index].data.modeltype == 2 && _this.data[index].data.nodeType === 3) 
-                _this.$router.push("/models/component");
-            else if(_this.data[index].data.modeltype == 3 && _this.data[index].data.nodeType === 3)
-				_this.$router.push("/models/binding_feature_component");
-			if(_this.data[index].data.nodeType === 3)
+			let data = this.getdata;
+			let projectname = '';
+			let foldername = '';
+			this.$store.dispatch('setselect', index);
+			for(let i = 0; i < data.length; i++)
 			{
-				Bus.$emit('clickactivetab',_this.data[index].data.nodeName);
-				for(let i = 0; i < this.data.length; i++)
+				if(data[i].data.nodeId === data[index].data.projectId)
+					projectname = data[i].data.nodeName;
+				if(data[i].data.nodeId === data[index].data.parentId)
+					foldername = data[i].data.nodeName.replace(/\s+/g,"");;
+			}			
+			if(data[index].data.modeltype == 1 && data[index].data.nodeType === 3)
+				this.$router.push("/models/"+projectname+"/"+foldername+"/feature");
+			else if(data[index].data.modeltype == 2 && data[index].data.nodeType === 3) 
+                this.$router.push("/models/"+projectname+"/"+foldername+"/component");
+            else if(data[index].data.modeltype == 3 && data[index].data.nodeType === 3)
+				this.$router.push("/models/"+projectname+"/"+foldername+"/binding_feature_component");
+			if(data[index].data.nodeType === 3)
+			{
+				this.$store.dispatch('updateactivetab', data[index].data.nodeName);
+				for(let i = 0; i < data.length; i++)
 				{
-					if(this.data[i].data.nodeId === _this.data[index].data.parentId)
+					if(data[i].data.nodeId === data[index].data.parentId)
 					{
-						Bus.$emit('updatemodel_component1', i);
+						this.$store.dispatch('updatemodelcomponent', i);
 						break;
 					}
 				}
 			}
-			else if(_this.data[index].data.level === 1 && _this.data[index].data.open)
+			else if(data[index].data.level === 1 && data[index].data.open)
 			{
-					this.contextMenuData.menulists.splice(3,1,[{
+				this.contextMenuData.menulists.splice(3,1,[{
 					fnHandler: 'createapplication',
 					icoName: 'fa fa-folder',
 					btnName: 'New Application'
 				}]);
 			}
-			else if(_this.data[index].data.level === 1 && !_this.data[index].data.open)
+			else if(data[index].data.level === 1 && !data[index].data.open)
 			{
 				this.contextMenuData.menulists.splice(3,1,[{
 					fnHandler: 'deleteproject',
@@ -254,12 +245,39 @@ export default {
 					btnName: 'delete project'
 				}]);
 			}
+			else if(data[index].data.contextmenuIndex === 5 && data[index].data.open)
+			{
+				this.contextMenuData.menulists.splice(5,1,[{
+					fnHandler: 'newname',
+					icoName: 'fa fa-pencil-alt',
+					btnName: 'Rename'
+				},{
+					fnHandler: 'deletedire',
+					icoName: 'fa fa-times',
+					btnName: 'delete'
+				}]);
+			}
+			else if(data[index].data.contextmenuIndex === 5 && !data[index].data.open)
+			{
+				this.contextMenuData.menulists.splice(5,1,[{
+					fnHandler: 'createadaption',
+					icoName: 'fa fa-folder',
+					btnName: 'New Adatption'
+				},{
+					fnHandler: 'newname',
+					icoName: 'fa fa-pencil-alt',
+					btnName: 'Rename'
+				},{
+					fnHandler: 'deletedire',
+					icoName: 'fa fa-times',
+					btnName: 'delete'
+				}]);
+			}
 		},
 		dblClick(index){
-			var _this = this;
-			if(_this.data[index].data.nodeType === 1){
-				_this.expand_menu(index);
-			}
+			let data = this.getdata;
+			if(data[index].data.nodeType === 1)
+				this.expand_menu(index);
 		},
 		showMenu(index,event){
 			var _this = this;

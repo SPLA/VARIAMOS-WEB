@@ -77,6 +77,7 @@ import model_load from '@/assets/js/models/model_load.js'
 import feature_main from '@/assets/js/models/custom/feature.js'
 import component_main from '@/assets/js/models/custom/component.js'
 import binding_feature_component_main from '@/assets/js/models/custom/binding_feature_component.js'
+import Bus from '../assets/js/common/bus.js'
 
 /* import actions */
 import DomainImplementation from '../components/model_actions/DomainImplementation'
@@ -106,6 +107,10 @@ export default{
     Verification
   },
   mounted: function(){
+    Bus.$on('setfalsegraph', data=>{
+      console.log(data);
+      this.graph.setEnabled(false);
+    });
     this.models = ["feature","component","binding_feature_component"]; //represent the available models
     this.modelFunctions = {
       "feature":feature_main,
@@ -120,8 +125,9 @@ export default{
       "setup_elements":setup_elements
     }
     //preload the saved model if exists
-    if (localStorage["model_code"]) {
-        this.modelCode = localStorage["model_code"];
+    let temp = this.getmodel_component;
+    if (localStorage[temp]) {
+        this.modelCode = localStorage[temp];
     }
     this.graph = new mxGraph(document.getElementById('graphContainer'));
     //load saved model into the graph if exists, and return layers
@@ -140,7 +146,8 @@ export default{
   methods: {
     persist() {
       //save model in localstorage
-      localStorage["model_code"] = document.getElementById('model_code').value;
+      let temp = this.getmodel_component;
+      localStorage[temp] = document.getElementById('model_code').value;
       if(document.getElementById('model_code').value!=""){
         var c_header = modalH3(this.$t("modal_success"),"success");
         var c_body = modalSimpleText(this.$t("models_save_model"));
@@ -150,13 +157,18 @@ export default{
     initialize_mx(counter){
       //counter equals 1 load the entire mxGraph
       var graphContainer = document.getElementById('graphContainer');
-      main(this.graph,this.layers,this.mxModel,this.toolbar,this.keyHandler,graphContainer,this.modelType,this.currentFunction,counter,this.setupFunctions,this.undoManager);
+      main(this.graph,this.layers,this.mxModel,this.toolbar,this.keyHandler,graphContainer,this.modelType,this.currentFunction,counter,this.setupFunctions,this.undoManager, this.$route.params);
     }
   },
   beforeRouteLeave(to, from, next){
     //destroy the window key events before leaving
     this.keyHandler.destroy();
     next();
+  },
+  computed: {
+    getmodel_component (){
+        return this.$store.getters.getmodelcomponent;
+    }
   },
   watch:{
     $route (to, from){
@@ -168,6 +180,15 @@ export default{
       this.initialize_mx(2);
       //clear undo redo history
       this.undoManager.clear();
+    },
+    mxModel:{
+      handler(val) {
+        var encoder = new mxCodec();
+        var result = encoder.encode(this.graph.getModel());
+        var xml = mxUtils.getPrettyXml(result);
+        this.$store.dispatch('updatexml', xml);
+      },
+      deep:true
     }
   }
 }

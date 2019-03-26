@@ -69,7 +69,7 @@ export default {
 		Spin,
 		Icon
 	},
-	props: ['layername','layertype', 'xml'],
+	props: ['layername','layertype'],
 	data () {
 		return {
 			clickNum: null,
@@ -82,22 +82,27 @@ export default {
 		this.mainprocess();
 	},
 	watch: {
-		xml: function(val){
+		getxml: function(val){
 			this.mainprocess();			
+		}
+	},
+	computed:{
+		getxml (){
+			return this.$store.getters.getxml;
 		}
 	},
 	methods: {
 		mainprocess() {
 			this.data = [];
-			let modeltype = '';
-			if(this.layertype === 1)
-				modeltype = this.layername + '|feature';
-			else if(this.layertype === 2)
-				modeltype = this.layername + '|component';
-			else if(this.layertype === 3)
-				modeltype = 'binding_feature_component';
+			let modeltype = this.layername;
+			// if(this.layertype === 1)
+			// 	modeltype = this.layername + '|feature';
+			// else if(this.layertype === 2)
+			// 	modeltype = this.layername + '|component';
+			// else if(this.layertype === 3)
+			// 	modeltype = 'binding_feature_component';
 			
-			var xmlDoc = (new DOMParser()).parseFromString(this.xml,"text/xml");
+			var xmlDoc = (new DOMParser()).parseFromString(this.getxml,"text/xml");
 			var xmlobject = JSON.parse(xml2json(xmlDoc,''));
 			if(this.layertype === 1)
 			{
