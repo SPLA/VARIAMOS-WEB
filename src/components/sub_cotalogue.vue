@@ -409,6 +409,7 @@ export default {
 		},
 		itemclick(index){
 			let counter = 0;
+			this.checkconstraints(index);
 			for(let i = index + 1; i < this.data.length; i++) // check children
 			{
 				if(this.data[index].data.level > this.data[i].data.level || this.data[index].data.level === this.data[i].data.level)
@@ -503,6 +504,93 @@ export default {
 					return true;
 			}
 			return false;
+		},
+		checkconstraints(index){
+			let modeltype = this.layername;
+			var xmlDoc = (new DOMParser()).parseFromString(this.getxml,"text/xml");
+			var xmlobject = JSON.parse(xml2json(xmlDoc,''));
+			let rel_lists = ['rel_general_root','rel_general_general','rel_leaf_root','rel_leaf_general'];
+			for(let x = 0; x < rel_lists.length; x++)
+			{
+				if(xmlobject.mxGraphModel.root[rel_lists[x]] !== undefined)
+				{
+					if(Array.isArray(xmlobject.mxGraphModel.root[rel_lists[x]]))
+					{
+						for(let i = 0; i < xmlobject.mxGraphModel.root[rel_lists[x]].length; i++)
+						{
+							for(let j = 0; j < this.data.length; j++)
+							{
+								if(xmlobject.mxGraphModel.root[rel_lists[x]][i].mxCell['@parent'] === modeltype && 
+								xmlobject.mxGraphModel.root[rel_lists[x]][i].mxCell['@source'] === this.data[index].data.nodeId)
+								{
+									if(xmlobject.mxGraphModel.root[rel_lists[x]][i]['@relType'] === 'requires' && this.data[index].data.tick)
+									{
+										for(let k = 0; k < this.data.length; k++)
+										{
+											if(xmlobject.mxGraphModel.root[rel_lists[x]][i].mxCell['@target'] === this.data[k].data.nodeId)
+												this.data[k].data.tick = true;
+										}
+									}	
+									else if(xmlobject.mxGraphModel.root[rel_lists[x]][i]['@relType'] === 'excludes')	
+									{
+										for(let k = 0; k < this.data.length; k++)
+										{
+											if(xmlobject.mxGraphModel.root[rel_lists[x]][i].mxCell['@target'] === this.data[k].data.nodeId)
+												this.data[k].data.tick = !this.data[index].data.tick;
+										}
+									}
+								}
+								else if(xmlobject.mxGraphModel.root[rel_lists[x]][i].mxCell['@parent'] === modeltype && 
+								xmlobject.mxGraphModel.root[rel_lists[x]][i].mxCell['@target'] === this.data[index].data.nodeId &&
+								xmlobject.mxGraphModel.root[rel_lists[x]][i]['@relType'] === 'excludes')
+								{
+									for(let k = 0; k < this.data.length; k++)
+									{
+										if(xmlobject.mxGraphModel.root[rel_lists[x]][i].mxCell['@source'] === this.data[k].data.nodeId)
+											this.data[k].data.tick = !this.data[index].data.tick;
+									}
+								}
+							}
+						}
+					}
+					else
+					{
+						for(let j = 0; j < this.data.length; j++)
+						{
+							if(xmlobject.mxGraphModel.root[rel_lists[x]].mxCell['@parent'] === modeltype && 
+							xmlobject.mxGraphModel.root[rel_lists[x]].mxCell['@source'] === this.data[index].data.nodeId)
+							{
+								if(xmlobject.mxGraphModel.root[rel_lists[x]]['@relType'] === 'requires' && this.data[index].data.tick)
+								{
+									for(let k = 0; k < this.data.length; k++)
+									{
+										if(xmlobject.mxGraphModel.root[rel_lists[x]].mxCell['@target'] === this.data[k].data.nodeId)
+											this.data[k].data.tick = true;
+									}
+								}	
+								else if(xmlobject.mxGraphModel.root[rel_lists[x]]['@relType'] === 'excludes')	
+								{
+									for(let k = 0; k < this.data.length; k++)
+									{
+										if(xmlobject.mxGraphModel.root[rel_lists[x]].mxCell['@target'] === this.data[k].data.nodeId)
+											this.data[k].data.tick = !this.data[index].data.tick;
+									}
+								}
+							}
+							else if(xmlobject.mxGraphModel.root[rel_lists[x]].mxCell['@parent'] === modeltype && 
+							xmlobject.mxGraphModel.root[rel_lists[x]].mxCell['@target'] === this.data[index].data.nodeId &&
+							xmlobject.mxGraphModel.root[rel_lists[x]]['@relType'] === 'excludes')
+							{
+								for(let k = 0; k < this.data.length; k++)
+								{
+									if(xmlobject.mxGraphModel.root[rel_lists[x]].mxCell['@source'] === this.data[k].data.nodeId)
+										this.data[k].data.tick = !this.data[index].data.tick;
+								}
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 }
