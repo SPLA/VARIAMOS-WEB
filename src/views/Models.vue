@@ -108,7 +108,6 @@ export default{
   },
   mounted: function(){
     Bus.$on('setfalsegraph', data=>{
-      console.log(data);
       this.graph.setEnabled(false);
     });
     this.models = ["feature","component","binding_feature_component"]; //represent the available models
@@ -172,14 +171,17 @@ export default{
   },
   watch:{
     $route (to, from){
-      //remove the palette content when there is a change in the component route
-      document.getElementById('tbContainer').innerHTML="";
-      this.modelType=this.$route.params.type;
-      this.currentFunction=this.modelFunctions[this.modelType];
-      this.undoManager = new mxUndoManager();
-      this.initialize_mx(2);
-      //clear undo redo history
-      this.undoManager.clear();
+      if(this.$route.name === 'Models')
+      {
+        //remove the palette content when there is a change in the component route
+        document.getElementById('tbContainer').innerHTML="";
+        this.modelType=this.$route.params.type;
+        this.currentFunction=this.modelFunctions[this.modelType];
+        this.undoManager = new mxUndoManager();
+        this.initialize_mx(2);
+        //clear undo redo history
+        this.undoManager.clear();
+      }
     },
     mxModel:{
       handler(val) {

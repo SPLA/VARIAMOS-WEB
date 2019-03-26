@@ -11,7 +11,7 @@
         <div>
 			<div v-if="getactivetab !== ''" class="tabcontent">
 				<keep-alive>
-					<model :key='getmodel_component' ></model>
+					<model :key='getmodel_component'></model>
 				</keep-alive>
 			</div>
         </div>

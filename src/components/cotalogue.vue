@@ -189,6 +189,16 @@ export default {
 						if(data[i].data.nodeType === 1 && data[i].data.level !== 1 && i !== index)
 							data[i].data.open = false;
 					}
+					let projectname = '';
+			        let foldername = '';
+			        for(let i = 0; i < data.length; i++)
+			        {
+				        if(data[i].data.nodeId === data[index].data.projectId)
+					        projectname = data[i].data.nodeName;
+				        if(data[i].data.nodeId === data[index].data.parentId)
+					        foldername = data[i].data.nodeName.replace(/\s+/g,"");;
+                    }
+				    this.$router.push("/models/"+projectname+"/"+foldername+"/feature");
 					this.$store.dispatch('updatemodelcomponent', index);
 				}
 				else if(data[index].data.nodeType === 1 && data[index].data.open)
