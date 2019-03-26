@@ -15,6 +15,12 @@
 				</keep-alive>
 			</div>
         </div>
+        <div v-if="getactivetab === ''">
+            <div class="border-bottom text-left" style="padding-bottom: 10px"><h1 class="h2">Project: {{ $route.params.project }}</h1></div>
+            <div class="div-text-area" style="padding-up: 10px">Please select one folder
+                <br /><br />
+            </div>
+        </div>
     </div>
 </template>
 

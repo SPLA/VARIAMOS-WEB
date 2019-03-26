@@ -220,7 +220,18 @@ export default {
 					projectname = data[i].data.nodeName;
 				if(data[i].data.nodeId === data[index].data.parentId)
 					foldername = data[i].data.nodeName.replace(/\s+/g,"");;
-			}			
+			}		
+			if(data[index].data.level === 1)
+			{
+				let checkpoint = true;
+				for(let i = 0; i < data.length; i++)
+				{
+					if(data[i].data.level !== 1 && data[i].data.open)
+						checkpoint = false;
+				}
+				if(checkpoint)
+					this.$router.push("/models/"+data[index].data.nodeName+"/default/default");
+			}	
 			if(data[index].data.modeltype == 1 && data[index].data.nodeType === 3)
 				this.$router.push("/models/"+projectname+"/"+foldername+"/feature");
 			else if(data[index].data.modeltype == 2 && data[index].data.nodeType === 3) 
