@@ -15,6 +15,8 @@
             <div class="row">
               <nav class="col-md-2 d-none d-md-block bg-light sidebar">
                 <div class="sidebar-sticky">
+                      <Filetree></Filetree>
+                      <Divider />
                   <ul class="nav flex-column">
                     <li class="nav-item">
                       <router-link class="nav-link" to="/">
@@ -22,7 +24,7 @@
                         {{ $t("app_menu_home") }}
                       </router-link>
                     </li>
-                    <li class="nav-item">
+                    <!-- <li class="nav-item">
                       <a class="nav-link">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-layers"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
                         {{ $t("app_menu_models") }}
@@ -51,7 +53,7 @@
                           </li>
                         </ul>
 
-                    </li>
+                    </li> -->
                     <li class="nav-item">
                       <router-link class="nav-link" to="/applies">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather">
@@ -99,7 +101,9 @@
 
                 <div class="container">
                   <div id="mainview">
+                    <keep-alive>
                     <router-view></router-view>
+                    </keep-alive>
                   </div>
                 </div>
 
@@ -136,9 +140,15 @@
 </template>
 
 <script>
+import Filetree from './views/Filemanagetree.vue'
+
 export default {
+  components:{
+    Filetree
+  },
   data: function(){
     return {
+      split: 0.5
     }
   },
   methods: {
