@@ -157,10 +157,16 @@ mxUndoManager.prototype.undo = function()
 		edit.undo();
 		if(this.cloned[this.indexOfNextAdd]=="clon"){
 			//undo clon y style
+			var style_or_not = this.history[this.indexOfNextAdd-1].changes[0];
 			var edit2 = this.history[--this.indexOfNextAdd];
 			edit2.undo();
-			var edit3 = this.history[--this.indexOfNextAdd];
-			edit3.undo();
+
+			if(style_or_not.constructor.name){
+				if(style_or_not.constructor.name=="mxStyleChange"){
+					var edit3 = this.history[--this.indexOfNextAdd];
+					edit3.undo();
+				}
+			}
 		}
 		
 		if (edit.isSignificant())
@@ -194,12 +200,23 @@ mxUndoManager.prototype.redo = function()
     {
 		var edit =  this.history[this.indexOfNextAdd++];
 		edit.redo();
-		if(this.cloned[this.indexOfNextAdd]=="clon" || this.cloned[this.indexOfNextAdd+1]=="clon"){
-			//redo clon y style
+		if(this.cloned[this.indexOfNextAdd]=="clon"){
+
+			//redo clon
 			var edit2 = this.history[this.indexOfNextAdd++];
 			edit2.redo();
-			var edit3 = this.history[this.indexOfNextAdd++];
-			edit3.redo();
+
+		}else if(this.cloned[this.indexOfNextAdd+1]=="clon"){
+			//redo clon y style
+			var style_or_not = this.history[this.indexOfNextAdd].changes[0];
+			if(style_or_not.constructor.name){
+				if(style_or_not.constructor.name=="mxStyleChange"){
+					var edit2 = this.history[this.indexOfNextAdd++];
+					edit2.redo();
+					var edit3 = this.history[this.indexOfNextAdd++];
+					edit3.redo();
+				}
+			}
 		}
         
         if (edit.isSignificant())
