@@ -114,9 +114,7 @@ export default {
       this.previous_dest="";
       if (localStorage["domain_implementation_main_path"] && localStorage["domain_implementation_pool_path"]) {
         this.errors=[];
-        if(this.customization_data==""){
-          this.customization_data=di_actions(this.current_graph,"customize");
-        }
+        this.customization_data=di_actions(this.current_graph,"customize");
 
         if(this.customization_data.length==0){
           var c_header = modalH3(this.$t("modal_error"),"error");

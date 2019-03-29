@@ -1,5 +1,6 @@
 
 var setup_properties = function setup_properties(graph,properties_styles){
+	graph.selectionModel=new mxGraphSelectionModel(graph);
     graph.getSelectionModel().addListener(mxEvent.CHANGE, function(sender, evt)
     {
         selectionChanged(graph,properties_styles);
@@ -16,7 +17,6 @@ var setup_properties = function setup_properties(graph,properties_styles){
 		div.innerHTML = '';
 		// Gets the selection cell
 		var cell = graph.getSelectionCell();
-
 		
 		if (cell == null)
 		{

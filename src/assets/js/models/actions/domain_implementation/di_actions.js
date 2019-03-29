@@ -89,7 +89,9 @@ var di_actions = function di_actions(graph,selected_method)
                     data["ID"]=file_source.getAttribute("label");
                     data["filename"]=file_source.getAttribute("filename");
                     data["destination"]=file_source.getAttribute("destination");
-                    files.push(data);
+                    if(data["filename"]!="customization.json"){
+                        files.push(data);
+                    }
                 }
             }
         }
