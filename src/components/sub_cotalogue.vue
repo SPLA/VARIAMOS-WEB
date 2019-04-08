@@ -75,7 +75,8 @@ export default {
 			clickNum: null,
 			isloading: false,
 			className: '',
-			data: []
+			data: [],
+			treecache: []
 		}
 	},
 	mounted: function() {
@@ -83,7 +84,8 @@ export default {
 	},
 	watch: {
 		getxml: function(val){
-			this.mainprocess();			
+			this.treecache = [];
+			this.mainprocess();		
 		}
 	},
 	computed:{
@@ -104,12 +106,13 @@ export default {
 			
 			var xmlDoc = (new DOMParser()).parseFromString(this.getxml,"text/xml");
 			var xmlobject = JSON.parse(xml2json(xmlDoc,''));
-			if(this.layertype === 1)
+			if(this.layertype === 1 && this.getxml !== '')
 			{
 				let rootxml = this.checkrootxml(xmlobject.mxGraphModel.root.root, modeltype);
 				if(rootxml.t1 !== '' && rootxml.t2 !== '')
 				{
 					this.insertdata(rootxml.t1, rootxml.t2, 1, 'and', 'true', -1, -1);
+					this.treecache.push(rootxml.t2);
 					
 					let checkall = true;
 					let level = 1;
@@ -135,9 +138,15 @@ export default {
 												if(newtemp.t1 === '' && newtemp.t2 === '')
 													newtemp = this.getfeature(xmlobject.mxGraphModel.root.leaf, xmlobject.mxGraphModel.root[rel_lists[x]][i].mxCell['@source'], modeltype);
 												if(xmlobject.mxGraphModel.root[rel_lists[x]][i]['@relType'] === 'mandatory')	
+												{
 													this.insertdata(newtemp.t1, newtemp.t2, level + 1, this.getbundletype(xmlobject.mxGraphModel.root, newtemp.t2, modeltype), 'true', this.data[j].data.nodeId, j);
+													this.treecache.push(newtemp.t2);
+												}
 												else if(xmlobject.mxGraphModel.root[rel_lists[x]][i]['@relType'] === 'optional')	
+												{
 													this.insertdata(newtemp.t1, newtemp.t2, level + 1, this.getbundletype(xmlobject.mxGraphModel.root, newtemp.t2, modeltype), 'false', this.data[j].data.nodeId, j);
+													this.treecache.push(newtemp.t2);
+												}
 												checkall = true;
 											}
 										}
@@ -155,9 +164,15 @@ export default {
 											if(newtemp.t1 === '' && newtemp.t2 === '')
 												newtemp = this.getfeature(xmlobject.mxGraphModel.root.leaf, xmlobject.mxGraphModel.root[rel_lists[x]].mxCell['@source'], modeltype);
 											if(xmlobject.mxGraphModel.root[rel_lists[x]]['@relType'] === 'mandatory')	
+											{
 												this.insertdata(newtemp.t1, newtemp.t2, level + 1, this.getbundletype(xmlobject.mxGraphModel.root, newtemp.t2, modeltype), 'true', this.data[j].data.nodeId, j);
+												this.treecache.push(newtemp.t2);
+											}
 											else if(xmlobject.mxGraphModel.root[rel_lists[x]]['@relType'] === 'optional')
+											{
 												this.insertdata(newtemp.t1, newtemp.t2, level + 1, this.getbundletype(xmlobject.mxGraphModel.root, newtemp.t2, modeltype), 'false', this.data[j].data.nodeId, j);
+												this.treecache.push(newtemp.t2);
+											}
 											checkall = true;
 										}
 									}
@@ -204,17 +219,37 @@ export default {
 						level += 1;
 					}
 				}
-				else	
-					this.$Notice.info({
-                    	title: 'Xml to Tree',
-                    	desc: 'Please put the root feature first!'
-                	});
+				// else	
+				// 	this.$Notice.info({
+                //     	title: 'Xml to Tree',
+                //     	desc: 'Please put the root feature first!'
+                // 	});
 			}
-			else
-				this.$Notice.info({
-                    title: 'Xml to Tree',
-                    desc: 'The tree is constructed based on feature model!'
-                });
+			// else
+			// 	this.$Notice.info({
+            //         title: 'Xml to Tree',
+            //         desc: 'The tree is constructed based on feature model!'
+			//     });
+			if(this.getxml !== '')
+			{
+				let list = ['root', 'general', 'leaf', 'component', 'file'];
+				for(let i = 0; i < list.length; i++)
+				{
+					if(Array.isArray(xmlobject.mxGraphModel.root[list[i]]) && xmlobject.mxGraphModel.root[list[i]] !== undefined)
+					{
+						for(let j = 0; j < xmlobject.mxGraphModel.root[list[i]].length; j++)
+						{
+							if(xmlobject.mxGraphModel.root[list[i]][j].mxCell['@parent'] === modeltype && !this.treecache.includes(xmlobject.mxGraphModel.root[list[i]][j]['@id']))
+								this.insertdata(xmlobject.mxGraphModel.root[list[i]][j]['@label'], xmlobject.mxGraphModel.root[list[i]][j]['@id'], 1, 'and', 'true', -1, -1);
+						}
+					}
+					else if(xmlobject.mxGraphModel.root[list[i]] !== undefined)
+					{
+						if(xmlobject.mxGraphModel.root[list[i]].mxCell['@parent'] === modeltype && !this.treecache.includes(xmlobject.mxGraphModel.root[list[i]]['@id']))
+							this.insertdata(xmlobject.mxGraphModel.root[list[i]]['@label'], xmlobject.mxGraphModel.root[list[i]]['@id'], 1, 'and', 'true', -1, -1);
+					}
+				}
+			}
 		},
 		insertbundle(root, relbundleid, modeltype, parentid, parentindex, level) {
 			let rel_leaf_lists = ['rel_general_bundle','rel_leaf_bundle'];
@@ -233,6 +268,7 @@ export default {
 								if(newtemp.t1 === '' && newtemp.t2 === '')
 									newtemp = this.getfeature(root.leaf, root[rel_leaf_lists[x]][i].mxCell['@source'], modeltype);
 								this.insertdata(newtemp.t1, newtemp.t2, level + 1, this.getbundletype(root, newtemp.t2, modeltype), 'true', parentid, parentindex);
+								this.treecache.push(newtemp.t2);
 							}		
 						}
 					}
@@ -243,6 +279,7 @@ export default {
 						if(newtemp.t1 === '' && newtemp.t2 === '')
 							newtemp = this.getfeature(root.leaf, root[rel_leaf_lists[x]].mxCell['@source'], modeltype);
 						this.insertdata(newtemp.t1, newtemp.t2, level + 1, this.getbundletype(root, newtemp.t2, modeltype), 'true', parentid, parentindex);
+						this.treecache.push(newtemp.t2);
 					}
 				}
 			}
@@ -362,19 +399,11 @@ export default {
 					parentId: parentid
 				},
 				numberOfChildren: 0
-            });
+			});
             if(parentindex !== -1)
 				this.data[parentindex].numberOfChildren++;
 		},
 		checkchildnode(index) {
-			if(this.data[index].data.level === 1)
-			{
-				for(let i = 0; i < this.data.length; i++)
-				{
-					if(this.data[i].data.level === 1 & this.data[i].data.open && i !== index)
-						return false;
-				}
-			}
 			for(let i = 1; i < index+1; i++)
 			{
 				if(this.data[index-i].data.level < this.data[index].data.level)
