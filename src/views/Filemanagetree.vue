@@ -399,6 +399,13 @@ export default{
 					this.$store.dispatch('changename', this.newName);
 					this.newName.isshow = false;
 					this.newName.loading = false;
+					let projectname = '';
+			        for(let i = 0; i < data.length; i++)
+			        {
+				        if(data[i].data.nodeId === data[nn.index].data.projectId)
+					        projectname = data[i].data.nodeName;
+                    }
+				    this.$router.push("/models/"+projectname+"/"+nn.formval.changedName.replace(/\s+/g,"")+"/"+this.getactivetab);
                 }
             }, 250);
 		}
