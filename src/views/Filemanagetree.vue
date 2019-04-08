@@ -171,6 +171,10 @@ export default{
 			 let data = JSON.parse(localStorage.getItem('Filetree|model_component_index'));
 			 this.$store.dispatch('updatemodelcomponent', data);
 		}
+		this.$Message.config({
+    		top: 100,
+    		duration: 2
+		});
 		Bus.$on('createapplication', data => {
 			this.newApplication.isshow = true;
 			this.newApplication.index = this.getIndexById(data.data.nodeId);
@@ -353,7 +357,10 @@ export default{
 				return
 			setTimeout(()=>{
 				let nn = this.newName;
-				nn.formval.changedName = nn.formval.type + '- ' + nn.formval.changedName;
+				if(nn.formval.type === 'Application ')
+					nn.formval.changedName = data[nn.index].data.nodeName.split('-')[0] + '-' + data[nn.index].data.nodeName.split('-')[1] + '- ' + nn.formval.changedName;
+				else if(nn.formval.type === 'Adaptation ')
+					nn.formval.changedName = data[nn.index].data.nodeName.split('-')[0] + '-' + data[nn.index].data.nodeName.split('-')[1] + '-' + data[nn.index].data.nodeName.split('-')[2] + '- ' + nn.formval.changedName;
 				if(typeof (data.find(function(data_diagram){
 					return data_diagram.data.nodeName === nn.formval.changedName && data_diagram.data.projectId == nn.formval.projectId
 					&& data_diagram.data.nodeType === 3;
@@ -373,6 +380,22 @@ export default{
 					});
 				}
 				else{
+					if(localStorage[data[nn.index].data.nodeName])
+					{
+						localStorage[nn.formval.changedName] = localStorage[data[nn.index].data.nodeName];
+						localStorage.removeItem(data[nn.index].data.nodeName);
+						if(nn.formval.type === 'Application ')
+						{
+							for(let i = nn.index + 1; i < data.length; i++)
+							{
+								if(data[i].data.parentId === data[nn.index].data.nodeId && data[i].data.nodeName.includes('Adaptation') && localStorage[data[i].data.nodeName])
+								{
+									localStorage[nn.formval.changedName + ' -' + state.data[i].data.nodeName.split('-')[3]] = localStorage[data[i].data.nodeName];
+									localStorage.removeItem(data[i].data.nodeName);
+								}
+							}
+						}
+					}
 					this.$store.dispatch('changename', this.newName);
 					this.newName.isshow = false;
 					this.newName.loading = false;

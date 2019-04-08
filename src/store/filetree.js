@@ -489,7 +489,15 @@ const mutations = {
         state.activetab = '';
     },
     changenewname (state, nn) {
-        state.data[nn.index].data.nodeName = nn.formval.changedName;
+		state.data[nn.index].data.nodeName = nn.formval.changedName;
+		if(nn.formval.type === 'Application ')
+		{
+			for(let i = nn.index + 1; i < state.data.length; i++)
+			{
+				if(state.data[i].data.parentId === state.data[nn.index].data.nodeId && state.data[i].data.nodeName.includes('Adaptation'))
+					state.data[i].data.nodeName = nn.formval.changedName + ' -' + state.data[i].data.nodeName.split('-')[3];
+			}
+		}
     },
     defaultmodelcomponent (state) {
         state.activetab = '';

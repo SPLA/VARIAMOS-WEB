@@ -325,7 +325,7 @@ export default {
 		border-right: 0 none;
 	}
 	.naza-tree-warp .naza-tree-inner {
-		max-height: 500px;
+		max-height: 300px;
 		height: 100%;
 		width: 100%;
 		box-shadow: none;
