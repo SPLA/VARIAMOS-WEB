@@ -3,7 +3,7 @@
 					<div class="button_tree_element">
                         <div class="button-unique" >
                             <button class="btn-model-area btn btn-sm btn-outline-secondary" type="primary" @click="newProject.isshow=!newProject.isshow" data-test="newprojectbutton">
-                                <div style="padding:1px; font-size:10px;">
+                                <div style="padding:1px; font-size:12px;">
                                     <i class="fas fa-plus"></i>
                                     Add a new project
                                 </div>
@@ -171,6 +171,10 @@ export default{
 			 let data = JSON.parse(localStorage.getItem('Filetree|model_component_index'));
 			 this.$store.dispatch('updatemodelcomponent', data);
 		}
+		this.$Message.config({
+    		top: 100,
+    		duration: 2
+		});
 		Bus.$on('createapplication', data => {
 			this.newApplication.isshow = true;
 			this.newApplication.index = this.getIndexById(data.data.nodeId);
@@ -188,12 +192,19 @@ export default{
 		});
 		Bus.$on('deletedire', data => {
 			let index = this.getIndexById(data.data.nodeId);
+			if(data.data.open)
+			{
+				Bus.$emit('setfalsegraph',false);
+				this.$store.dispatch('updatemodelcomponent', -1);
+				this.$store.dispatch('setopen', index);
+			}
 			this.$store.dispatch('deletefolder', index);
 			localStorage.removeItem(data.data.nodeName);
 		});
 		Bus.$on('deleteproject', data => {
 			let index = this.getIndexById(data.data.nodeId);
 			this.$store.dispatch('deleteproject', index);
+			this.$router.push("/models/default/default/default");
 		});
 		//rename
 		Bus.$on('newname', data => {
@@ -283,6 +294,13 @@ export default{
 					});
 				}
 				else {
+					let index = 0;
+					for(let i = 0; i < data.length; i++)
+					{
+						if(data[i].data.parentId === app.parentId && data[i].data.nodeName.includes('Application'))
+							index++;
+					}
+					this.newApplication.appindex = index + 1;
 					this.$store.dispatch('createapplication', this.newApplication);
 					this.newApplication.loading = false;
 					this.newApplication.isshow = false;
@@ -319,6 +337,13 @@ export default{
 					});
 				}
 				else {
+					let index = 0;
+					for(let i = 0; i < data.length; i++)
+					{
+						if(data[i].data.parentId === adp.parentId && data[i].data.nodeName.includes('Adaptation'))
+							index++;
+					}
+					this.newApplication.adpindex = index + 1;
 					this.$store.dispatch('createadaptation', this.newAdaptation);
 					this.newAdaptation.loading = false;
 					this.newAdaptation.isshow = false;
@@ -332,7 +357,10 @@ export default{
 				return
 			setTimeout(()=>{
 				let nn = this.newName;
-				nn.formval.changedName = nn.formval.type + '- ' + nn.formval.changedName;
+				if(nn.formval.type === 'Application ')
+					nn.formval.changedName = data[nn.index].data.nodeName.split('-')[0] + '-' + data[nn.index].data.nodeName.split('-')[1] + '- ' + nn.formval.changedName;
+				else if(nn.formval.type === 'Adaptation ')
+					nn.formval.changedName = data[nn.index].data.nodeName.split('-')[0] + '-' + data[nn.index].data.nodeName.split('-')[1] + '-' + data[nn.index].data.nodeName.split('-')[2] + '- ' + nn.formval.changedName;
 				if(typeof (data.find(function(data_diagram){
 					return data_diagram.data.nodeName === nn.formval.changedName && data_diagram.data.projectId == nn.formval.projectId
 					&& data_diagram.data.nodeType === 3;
@@ -352,9 +380,32 @@ export default{
 					});
 				}
 				else{
+					if(localStorage[data[nn.index].data.nodeName])
+					{
+						localStorage[nn.formval.changedName] = localStorage[data[nn.index].data.nodeName];
+						localStorage.removeItem(data[nn.index].data.nodeName);
+						if(nn.formval.type === 'Application ')
+						{
+							for(let i = nn.index + 1; i < data.length; i++)
+							{
+								if(data[i].data.parentId === data[nn.index].data.nodeId && data[i].data.nodeName.includes('Adaptation') && localStorage[data[i].data.nodeName])
+								{
+									localStorage[nn.formval.changedName + ' -' + state.data[i].data.nodeName.split('-')[3]] = localStorage[data[i].data.nodeName];
+									localStorage.removeItem(data[i].data.nodeName);
+								}
+							}
+						}
+					}
 					this.$store.dispatch('changename', this.newName);
 					this.newName.isshow = false;
 					this.newName.loading = false;
+					let projectname = '';
+			        for(let i = 0; i < data.length; i++)
+			        {
+				        if(data[i].data.nodeId === data[nn.index].data.projectId)
+					        projectname = data[i].data.nodeName;
+                    }
+				    this.$router.push("/models/"+projectname+"/"+nn.formval.changedName.replace(/\s+/g,"")+"/"+this.getactivetab);
                 }
             }, 250);
 		}

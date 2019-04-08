@@ -15,11 +15,14 @@
 				</keep-alive>
 			</div>
         </div>
-        <div v-if="getactivetab === ''">
+        <div v-if="getactivetab === '' && $route.params.project !== 'default'">
             <div class="border-bottom text-left" style="padding-bottom: 10px"><h1 class="h2">Project: {{ $route.params.project }}</h1></div>
             <div class="div-text-area" style="padding-up: 10px">Please select one folder
                 <br /><br />
             </div>
+        </div>
+        <div v-if="getactivetab === '' && $route.params.project === 'default'">
+            <div class="border-bottom text-left" style="padding-bottom: 10px"><h1 class="h2">Please select one project</h1></div>
         </div>
     </div>
 </template>
@@ -43,7 +46,7 @@ export default{
             let data = this.getdata;
             if(this.getmodel_component_index !== -1 && item.data.parentId === data[this.getmodel_component_index].data.nodeId && item.data.nodeType === 3) 
             {
-                if(this.onetab)
+                if(this.onetab && this.$route.params.type === item.data.nodeName)
                 {
                     this.onetab =! this.onetab;
                     let projectname = '';

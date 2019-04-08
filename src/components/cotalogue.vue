@@ -180,6 +180,15 @@ export default {
 		},
 		expand_menu(index) {
 			let data = this.getdata;
+			let projectname = '';
+			let foldername = '';
+			for(let i = 0; i < data.length; i++)
+			{
+				if(data[i].data.nodeId === data[index].data.projectId)
+					projectname = data[i].data.nodeName;
+				if(data[i].data.nodeId === data[index].data.parentId)
+					foldername = data[i].data.nodeName.replace(/\s+/g,"");
+            }
 			clearTimeout(this.clickNum);
 			this.clickNum = setTimeout(()=>{
 				if(data[index].data.nodeType === 1 && !data[index].data.open && data[index].data.level !== 1)
@@ -189,15 +198,6 @@ export default {
 						if(data[i].data.nodeType === 1 && data[i].data.level !== 1 && i !== index)
 							data[i].data.open = false;
 					}
-					let projectname = '';
-			        let foldername = '';
-			        for(let i = 0; i < data.length; i++)
-			        {
-				        if(data[i].data.nodeId === data[index].data.projectId)
-					        projectname = data[i].data.nodeName;
-				        if(data[i].data.nodeId === data[index].data.parentId)
-					        foldername = data[i].data.nodeName.replace(/\s+/g,"");;
-                    }
 				    this.$router.push("/models/"+projectname+"/"+foldername+"/feature");
 					this.$store.dispatch('updatemodelcomponent', index);
 				}
@@ -205,6 +205,7 @@ export default {
 				{
 					Bus.$emit('setfalsegraph',false);
 					this.$store.dispatch('updatemodelcomponent', -1);
+					this.$router.push("/models/"+projectname+"/default/default");
 				}
 				this.$store.dispatch('setopen', index);
 			}, 250);
@@ -219,19 +220,19 @@ export default {
 				if(data[i].data.nodeId === data[index].data.projectId)
 					projectname = data[i].data.nodeName;
 				if(data[i].data.nodeId === data[index].data.parentId)
-					foldername = data[i].data.nodeName.replace(/\s+/g,"");;
+					foldername = data[i].data.nodeName.replace(/\s+/g,"");
 			}		
-			if(data[index].data.level === 1)
+			let checkpoint = true;
+			for(let i = 0; i < data.length; i++)
 			{
-				let checkpoint = true;
-				for(let i = 0; i < data.length; i++)
-				{
-					if(data[i].data.level !== 1 && data[i].data.open)
-						checkpoint = false;
-				}
-				if(checkpoint)
-					this.$router.push("/models/"+data[index].data.nodeName+"/default/default");
-			}	
+				if(data[i].data.level !== 1 && data[i].data.open)
+					checkpoint = false;
+			}
+			if(checkpoint && data[index].data.level === 1)
+				this.$router.push("/models/"+data[index].data.nodeName+"/default/default");
+			else if(checkpoint && data[index].data.level !== 1)
+				this.$router.push("/models/"+data[index].data.nodeName.split('-')[1].replace(/\s+/g,"")+"/default/default");
+			
 			if(data[index].data.modeltype == 1 && data[index].data.nodeType === 3)
 				this.$router.push("/models/"+projectname+"/"+foldername+"/feature");
 			else if(data[index].data.modeltype == 2 && data[index].data.nodeType === 3) 
@@ -325,7 +326,7 @@ export default {
 		border-right: 0 none;
 	}
 	.naza-tree-warp .naza-tree-inner {
-		max-height: 500px;
+		max-height: 300px;
 		height: 100%;
 		width: 100%;
 		box-shadow: none;

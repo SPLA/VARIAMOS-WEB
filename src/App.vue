@@ -2,7 +2,7 @@
   <div id="app">
 
     <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
-          <router-link  to="./" class="navbar-brand col-sm-3 col-md-2 mr-0">{{ $t("app_variamos") }}</router-link>
+          <router-link  to="/" class="navbar-brand col-sm-4 col-md-2 mr-0">{{ $t("app_variamos") }}</router-link>
           <input class="form-control form-control-dark w-100 height-100" type="text" v-bind:placeholder="$t('app_search')" v-bind:aria-label="$t('app_search')">
           <ul class="navbar-nav px-3">
             <li class="nav-item text-nowrap">

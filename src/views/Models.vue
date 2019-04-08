@@ -4,7 +4,7 @@
     <div class="card mb-3">
             <div class="card-body">
 
-              <div class="button-header">
+              <div class="button-header" style="font-size:13px">
                  <nav class="navbar navbar-expand-lg navbar-light bg-light nav_domain">
                   <div id="navbarSupportedContent">
                     <ul class="navbar-nav navbar-nav2 mr-auto">
@@ -36,12 +36,12 @@
 
                 <div class="col-sm-9 left-area">
                   <div id="graphContainer" class="model-area"></div>
-                  <div class="properties-area"><b>{{ $t("models_element_properties") }}</b><br />
+                  <div class="properties-area" style="font-size:13px"><b>{{ $t("models_element_properties") }}</b><br />
                     <div id="properties"></div>
                   </div>
                 </div>
 
-                <div class="col-sm-3 right-area">
+                <div class="col-sm-3 right-area" style="font-size:13px">
                   <div class="pallete-area">
                   <b>{{ $t("models_palette") }}</b><br /><br />
                   <div id="tbContainer"></div>
