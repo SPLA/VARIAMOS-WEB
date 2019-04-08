@@ -3,7 +3,7 @@
 					<div class="button_tree_element">
                         <div class="button-unique" >
                             <button class="btn-model-area btn btn-sm btn-outline-secondary" type="primary" @click="newProject.isshow=!newProject.isshow" data-test="newprojectbutton">
-                                <div style="padding:1px; font-size:10px;">
+                                <div style="padding:1px; font-size:12px;">
                                     <i class="fas fa-plus"></i>
                                     Add a new project
                                 </div>
@@ -188,12 +188,19 @@ export default{
 		});
 		Bus.$on('deletedire', data => {
 			let index = this.getIndexById(data.data.nodeId);
+			if(data.data.open)
+			{
+				Bus.$emit('setfalsegraph',false);
+				this.$store.dispatch('updatemodelcomponent', -1);
+				this.$store.dispatch('setopen', index);
+			}
 			this.$store.dispatch('deletefolder', index);
 			localStorage.removeItem(data.data.nodeName);
 		});
 		Bus.$on('deleteproject', data => {
 			let index = this.getIndexById(data.data.nodeId);
 			this.$store.dispatch('deleteproject', index);
+			this.$router.push("/models/default/default/default");
 		});
 		//rename
 		Bus.$on('newname', data => {
@@ -283,6 +290,13 @@ export default{
 					});
 				}
 				else {
+					let index = 0;
+					for(let i = 0; i < data.length; i++)
+					{
+						if(data[i].data.parentId === app.parentId && data[i].data.nodeName.includes('Application'))
+							index++;
+					}
+					this.newApplication.appindex = index + 1;
 					this.$store.dispatch('createapplication', this.newApplication);
 					this.newApplication.loading = false;
 					this.newApplication.isshow = false;
@@ -319,6 +333,13 @@ export default{
 					});
 				}
 				else {
+					let index = 0;
+					for(let i = 0; i < data.length; i++)
+					{
+						if(data[i].data.parentId === adp.parentId && data[i].data.nodeName.includes('Adaptation'))
+							index++;
+					}
+					this.newApplication.adpindex = index + 1;
 					this.$store.dispatch('createadaptation', this.newAdaptation);
 					this.newAdaptation.loading = false;
 					this.newAdaptation.isshow = false;

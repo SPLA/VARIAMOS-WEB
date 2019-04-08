@@ -163,14 +163,14 @@ const mutations = {
 				isSelected: false,
 				level: 2,
 				nodeId: temp+5,
-				nodeName: "Application - " + name,
+				nodeName: "Application - " + name + " - 1",
 				nodeType: 1,
 				parentId: temp,
 				projectId: temp,
 				modeltype: 1,
 				contextmenuIndex: 5
 			},
-			numberOfChildren: 4
+			numberOfChildren: 2
 		},{
 			children: [],
 			data: {
@@ -186,6 +186,36 @@ const mutations = {
 				contextmenuIndex: 0
 			},
 			numberOfChildren: 0
+		// },{
+		// 	children: [],
+		// 	data: {
+		// 		open: false,
+		// 		isSelected: false,
+		// 		level: 3,
+		// 		nodeId: temp+7,
+		// 		nodeName: "component",
+		// 		nodeType: 3,
+		// 		parentId: temp+5,
+		// 		projectId: temp,
+		// 		modeltype: 2,
+		// 		contextmenuIndex: 0
+		// 	},
+		// 	numberOfChildren: 0
+		// },{
+		// 	children: [],
+		// 	data: {
+		// 		open: false,
+		// 		isSelected: false,
+		// 		level: 3,
+		// 		nodeId: temp+8,
+		// 		nodeName: "binding_feature_component",
+		// 		nodeType: 3,
+		// 		parentId: temp+5,
+		// 		projectId: temp,
+		// 		modeltype: 3,
+		// 		contextmenuIndex: 0
+		// 	},
+		// 	numberOfChildren: 0
 		},{
 			children: [],
 			data: {
@@ -193,89 +223,59 @@ const mutations = {
 				isSelected: false,
 				level: 3,
 				nodeId: temp+7,
-				nodeName: "component",
-				nodeType: 3,
-				parentId: temp+5,
-				projectId: temp,
-				modeltype: 2,
-				contextmenuIndex: 0
-			},
-			numberOfChildren: 0
-		},{
-			children: [],
-			data: {
-				open: false,
-				isSelected: false,
-				level: 3,
-				nodeId: temp+8,
-				nodeName: "binding_feature_component",
-				nodeType: 3,
-				parentId: temp+5,
-				projectId: temp,
-				modeltype: 3,
-				contextmenuIndex: 0
-			},
-			numberOfChildren: 0
-		},{
-			children: [],
-			data: {
-				open: false,
-				isSelected: false,
-				level: 3,
-				nodeId: temp+9,
-				nodeName: "Adaptation - " + name,
+				nodeName: "Adaptation - " + name + " - 1" + " - 1",
 				nodeType: 1,
 				parentId: temp+5,
 				projectId: temp,
 				modeltype: 1,
 				contextmenuIndex: 1
 			},
-			numberOfChildren: 3
+			numberOfChildren: 1
 		},{
 			children: [],
 			data: {
 				open: false,
 				isSelected: false,
 				level: 4,
-				nodeId: temp+10,
+				nodeId: temp+8,
 				nodeName: "feature",
 				nodeType: 3,
-				parentId: temp+9,
+				parentId: temp+7,
 				projectId: temp,
 				modeltype: 1,
 				contextmenuIndex: 0
 			},
 			numberOfChildren: 0
-		},{
-			children: [],
-			data: {
-				open: false,
-				isSelected: false,
-				level: 4,
-				nodeId: temp+11,
-				nodeName: "component",
-				nodeType: 3,
-				parentId: temp+9,
-				projectId: temp,
-				modeltype: 2,
-				contextmenuIndex: 0
-			},
-			numberOfChildren: 0
-		},{
-			children: [],
-			data: {
-				open: false,
-				isSelected: false,
-				level: 4,
-				nodeId: temp+12,
-				nodeName: "binding_feature_component",
-				nodeType: 3,
-				parentId: temp+9,
-				projectId: temp,
-				modeltype: 3,
-				contextmenuIndex: 0
-			},
-			numberOfChildren: 0
+		// },{
+		// 	children: [],
+		// 	data: {
+		// 		open: false,
+		// 		isSelected: false,
+		// 		level: 4,
+		// 		nodeId: temp+11,
+		// 		nodeName: "component",
+		// 		nodeType: 3,
+		// 		parentId: temp+9,
+		// 		projectId: temp,
+		// 		modeltype: 2,
+		// 		contextmenuIndex: 0
+		// 	},
+		// 	numberOfChildren: 0
+		// },{
+		// 	children: [],
+		// 	data: {
+		// 		open: false,
+		// 		isSelected: false,
+		// 		level: 4,
+		// 		nodeId: temp+12,
+		// 		nodeName: "binding_feature_component",
+		// 		nodeType: 3,
+		// 		parentId: temp+9,
+		// 		projectId: temp,
+		// 		modeltype: 3,
+		// 		contextmenuIndex: 0
+		// 	},
+		// 	numberOfChildren: 0
 		});
     },
     createnewapplication (state, {app, getters}) {
@@ -293,14 +293,14 @@ const mutations = {
 				isSelected: false,
 				level:  state.data[app.index].data.level + 1,
 				nodeId:  temp,
-				nodeName: "Application - " + app.applicationName,
+				nodeName: "Application - " + app.parentFolder + " - " + app.applicationName,
 				nodeType: 1,
 				parentId: state.data[app.index].data.nodeId,
 				projectId: state.data[app.index].data.nodeId,
 				modeltype: state.data[app.index].data.modeltype,
 				contextmenuIndex: 5
 			},
-			numberOfChildren: 4
+			numberOfChildren: 2
 		},{
 			children: [],
 			data: {
@@ -316,36 +316,36 @@ const mutations = {
 				contextmenuIndex: 0
 			},
 			numberOfChildren: 0
-		},{
-			children: [],
-			data: {
-				open: false,
-				isSelected: false,
-				level: state.data[app.index].data.level + 2,
-				nodeId: temp+2,
-				nodeName: "component",
-				nodeType: 3,
-				parentId: temp,
-				projectId: state.data[app.index].data.nodeId,
-				modeltype: 2,
-				contextmenuIndex: 0
-			},
-			numberOfChildren: 0
-		},{
-			children: [],
-			data: {
-				open: false,
-				isSelected: false,
-				level: state.data[app.index].data.level + 2,
-				nodeId: temp+3,
-				nodeName: "binding_feature_component",
-				nodeType: 3,
-				parentId: temp,
-				projectId: state.data[app.index].data.nodeId,
-				modeltype: 3,
-				contextmenuIndex: 0
-			},
-			numberOfChildren: 0
+		// },{
+		// 	children: [],
+		// 	data: {
+		// 		open: false,
+		// 		isSelected: false,
+		// 		level: state.data[app.index].data.level + 2,
+		// 		nodeId: temp+2,
+		// 		nodeName: "component",
+		// 		nodeType: 3,
+		// 		parentId: temp,
+		// 		projectId: state.data[app.index].data.nodeId,
+		// 		modeltype: 2,
+		// 		contextmenuIndex: 0
+		// 	},
+		// 	numberOfChildren: 0
+		// },{
+		// 	children: [],
+		// 	data: {
+		// 		open: false,
+		// 		isSelected: false,
+		// 		level: state.data[app.index].data.level + 2,
+		// 		nodeId: temp+3,
+		// 		nodeName: "binding_feature_component",
+		// 		nodeType: 3,
+		// 		parentId: temp,
+		// 		projectId: state.data[app.index].data.nodeId,
+		// 		modeltype: 3,
+		// 		contextmenuIndex: 0
+		// 	},
+		// 	numberOfChildren: 0
 		});
 		state.data.splice(app.index + tempindex + 1, 0 , {
 			children: [],
@@ -353,60 +353,60 @@ const mutations = {
 			    open: false,
 				isSelected: false,
 				level:  state.data[app.index].data.level + 2,
-				nodeId:  temp+4,
-				nodeName: "Adaptation - " + app.applicationName,
+				nodeId:  temp+2,
+				nodeName: "Adaptation - " + app.parentFolder + " - " + app.applicationName + " - 1",
 				nodeType: 1,
 				parentId: temp,
 				projectId: state.data[app.index].data.nodeId,
 				modeltype: state.data[app.index].data.modeltype,
 				contextmenuIndex: 1
 			},
-			numberOfChildren: 3
+			numberOfChildren: 1
 		},{
 		    children: [],
 			data: {
 				open: false,
 				isSelected: false,
 				level: state.data[app.index].data.level + 3,
-				nodeId: temp+5,
+				nodeId: temp+3,
 				nodeName: "feature",
 				nodeType: 3,
-				parentId: temp+4,
+				parentId: temp+2,
 				projectId: state.data[app.index].data.nodeId,
 				modeltype: 1,
 				contextmenuIndex: 0
 			},
 			numberOfChildren: 0
-		},{
-		    children: [],
-			data: {
-				open: false,
-				isSelected: false,
-				level: state.data[app.index].data.level + 3,
-				nodeId: temp+6,
-				nodeName: "component",
-				nodeType: 3,
-				parentId: temp+4,
-				projectId: state.data[app.index].data.nodeId,
-				modeltype: 2,
-				contextmenuIndex: 0
-			},
-			numberOfChildren: 0
-		},{
-		    children: [],
-			data: {
-				open: false,
-				isSelected: false,
-				level: state.data[app.index].data.level + 3,
-				nodeId: temp+7,
-				nodeName: "binding_feature_component",
-				nodeType: 3,
-				parentId: temp+4,
-				projectId: state.data[app.index].data.nodeId,
-				modeltype: 3,
-				contextmenuIndex: 0
-			},
-			numberOfChildren: 0
+		// },{
+		//     children: [],
+		// 	data: {
+		// 		open: false,
+		// 		isSelected: false,
+		// 		level: state.data[app.index].data.level + 3,
+		// 		nodeId: temp+6,
+		// 		nodeName: "component",
+		// 		nodeType: 3,
+		// 		parentId: temp+4,
+		// 		projectId: state.data[app.index].data.nodeId,
+		// 		modeltype: 2,
+		// 		contextmenuIndex: 0
+		// 	},
+		// 	numberOfChildren: 0
+		// },{
+		//     children: [],
+		// 	data: {
+		// 		open: false,
+		// 		isSelected: false,
+		// 		level: state.data[app.index].data.level + 3,
+		// 		nodeId: temp+7,
+		// 		nodeName: "binding_feature_component",
+		// 		nodeType: 3,
+		// 		parentId: temp+4,
+		// 		projectId: state.data[app.index].data.nodeId,
+		// 		modeltype: 3,
+		// 		contextmenuIndex: 0
+		// 	},
+		// 	numberOfChildren: 0
 		});
 		state.data[app.index].numberOfChildren++;
     },
@@ -419,14 +419,14 @@ const mutations = {
 				isSelected: false,
 				level: state.data[adp.index].data.level + 1,
 				nodeId: temp,
-				nodeName: "Adaptation - " + adp.adapatationName,
+				nodeName: "Adaptation -" + adp.parentFolder.split('-')[1] + "-"+ adp.parentFolder.split('-')[2] + " - " + adp.adapatationName,
 				nodeType: 1,
 				parentId: state.data[adp.index].data.nodeId,
 				projectId: state.data[adp.index].data.projectId,
 				modeltype: state.data[adp.index].data.modeltype,
 				contextmenuIndex: 1
 			},
-			numberOfChildren: 3
+			numberOfChildren: 1
 		},{
 		    children: [],
 			data: {
@@ -442,36 +442,36 @@ const mutations = {
 				contextmenuIndex: 0
 			},
 			numberOfChildren: 0
-		},{
-		    children: [],
-			data: {
-				open: false,
-				isSelected: false,
-				level: state.data[adp.index].data.level + 2,
-				nodeId: temp+2,
-				nodeName: "component",
-				nodeType: 3,
-				parentId: temp,
-				projectId: state.data[adp.index].data.projectId,
-				modeltype: 2,
-				contextmenuIndex: 0
-			},
-			numberOfChildren: 0
-		},{
-		    children: [],
-			data: {
-				open: false,
-				isSelected: false,
-				level: state.data[adp.index].data.level + 2,
-				nodeId: temp+3,
-				nodeName: "binding_feature_component",
-				nodeType: 3,
-				parentId: temp,
-				projectId: state.data[adp.index].data.projectId,
-				modeltype: 3,
-				contextmenuIndex: 0
-			},
-			numberOfChildren: 0
+		// },{
+		//     children: [],
+		// 	data: {
+		// 		open: false,
+		// 		isSelected: false,
+		// 		level: state.data[adp.index].data.level + 2,
+		// 		nodeId: temp+2,
+		// 		nodeName: "component",
+		// 		nodeType: 3,
+		// 		parentId: temp,
+		// 		projectId: state.data[adp.index].data.projectId,
+		// 		modeltype: 2,
+		// 		contextmenuIndex: 0
+		// 	},
+		// 	numberOfChildren: 0
+		// },{
+		//     children: [],
+		// 	data: {
+		// 		open: false,
+		// 		isSelected: false,
+		// 		level: state.data[adp.index].data.level + 2,
+		// 		nodeId: temp+3,
+		// 		nodeName: "binding_feature_component",
+		// 		nodeType: 3,
+		// 		parentId: temp,
+		// 		projectId: state.data[adp.index].data.projectId,
+		// 		modeltype: 3,
+		// 		contextmenuIndex: 0
+		// 	},
+		// 	numberOfChildren: 0
 		});
 		state.data[adp.index].numberOfChildren++;
     },
