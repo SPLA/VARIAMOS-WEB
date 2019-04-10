@@ -355,6 +355,13 @@ export default{
 			let data = this.getdata;
 			if(typeof(this.newName.index) === 'undefined')
 				return
+			else if(this.newName.formval.changedName.length === 0){
+				this.newName.isshow = false;
+				this.newName.loading = false;
+				this.newName.formval.changedName='';
+				this.newName.formval.id=null;
+				return;
+			}
 			setTimeout(()=>{
 				let nn = this.newName;
 				if(nn.formval.type === 'Application ')
@@ -370,13 +377,6 @@ export default{
 					this.$nextTick(() => {
 						this.newName.loading = true;
 						this.$Message.warning('Duplicated name!');
-					});
-				}
-				else if(this.newName.formval.changedName.length === 0){
-					this.newName.loading = false;
-					this.$nextTick(() => {
-						this.newName.loading = true;
-						this.$Message.warning('Empty is not allowed！');
 					});
 				}
 				else{
