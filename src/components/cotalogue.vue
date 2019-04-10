@@ -181,14 +181,12 @@ export default {
 		expand_menu(index) {
 			let data = this.getdata;
 			let projectname = '';
-			let foldername = '';
+			let foldername = data[index].data.nodeName.replace(/\s+/g,"");
 			for(let i = 0; i < data.length; i++)
 			{
 				if(data[i].data.nodeId === data[index].data.projectId)
 					projectname = data[i].data.nodeName;
-				if(data[i].data.nodeId === data[index].data.parentId)
-					foldername = data[i].data.nodeName.replace(/\s+/g,"");
-            }
+			}
 			clearTimeout(this.clickNum);
 			this.clickNum = setTimeout(()=>{
 				if(data[index].data.nodeType === 1 && !data[index].data.open && data[index].data.level !== 1)
@@ -200,6 +198,7 @@ export default {
 					}
 				    this.$router.push("/models/"+projectname+"/"+foldername+"/feature");
 					this.$store.dispatch('updatemodelcomponent', index);
+					this.$store.dispatch('updateactivetab', 'feature');
 				}
 				else if(data[index].data.nodeType === 1 && data[index].data.open)
 				{

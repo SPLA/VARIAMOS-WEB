@@ -1,9 +1,9 @@
 <template>
     <div id="tabs" class="container">
         <div class="tabs">
-			<div v-for="(item, $index) in getdata" :key="item.data.nodeId" >
-				<a id="atabs" v-if="checktabs(item,$index)" @click="clickactivetab($index)" v-bind:class="[ getactivetab === item.data.nodeName ? 'active' : '' ]">
-					{{item.data.nodeName}}
+			<div v-for="(item, $index) in ['feature','component','binding_feature_component']" :key="item" >
+				<a id="atabs" v-if="checktabs(item,$index)" @click="clickactivetab($index)" v-bind:class="[ getactivetab === item ? 'active' : '' ]">
+					{{item}}
 				</a>
 			</div>
         </div>
@@ -36,64 +36,45 @@ export default{
     components:{
         model
     },
-    data: function() {
-        return{
-            onetab: true
-		}
-    },
     methods:{
         checktabs: function(item,index){ //set the first one diagram to activetab  
             let data = this.getdata;
-            if(this.getmodel_component_index !== -1 && item.data.parentId === data[this.getmodel_component_index].data.nodeId && item.data.nodeType === 3) 
+            if(this.getmodel_component_index !== -1) 
             {
-                if(this.onetab && this.$route.params.type === item.data.nodeName)
-                {
-                    this.onetab =! this.onetab;
-                    let projectname = '';
-			        let foldername = '';
-			        for(let i = 0; i < data.length; i++)
-			        {
-				        if(data[i].data.nodeId === data[index].data.projectId)
-					        projectname = data[i].data.nodeName;
-				        if(data[i].data.nodeId === data[index].data.parentId)
-					        foldername = data[i].data.nodeName.replace(/\s+/g,"");;
-                    }	
-                    this.mxgraphreset = true;
-                    if(item.data.modeltype == 1)
-				        this.$router.push("/models/"+projectname+"/"+foldername+"/feature");
-			        else if(item.data.modeltype == 2) 
-                        this.$router.push("/models/"+projectname+"/"+foldername+"/component");
-                    else if(item.data.modeltype == 3)
-                        this.$router.push("/models/"+projectname+"/"+foldername+"/binding_feature_component");
-                    this.$store.dispatch('updateactivetab', item.data.nodeName);
-                }
+                if(this.getmodel_component.includes('Application') && index !== 0)
+                    return false;
+                if(this.getmodel_component.includes('Adaptation') && index !== 0)
+                    return false;
+                this.mxgraphreset = true;
                 return true;
             }
-            if(this.getmodel_component_index === -1)
-            {
-                this.onetab = true;
-                this.mxgraphreset = false;
-            }
+            this.mxgraphreset = false;
             return false;
         },
         clickactivetab (index) {
             let data = this.getdata;
             let projectname = '';
-			let foldername = '';
+			let foldername = data[this.getmodel_component_index].data.nodeName.replace(/\s+/g,"");
 			for(let i = 0; i < data.length; i++)
 			{
-				if(data[i].data.nodeId === data[index].data.projectId)
+				if(data[i].data.nodeId === data[this.getmodel_component_index].data.projectId)
 					projectname = data[i].data.nodeName;
-				if(data[i].data.nodeId === data[index].data.parentId)
-					foldername = data[i].data.nodeName.replace(/\s+/g,"");;
 			}
-            this.$store.dispatch('updateactivetab', data[index].data.nodeName);
-			if(data[index].data.modeltype == 1)
-				this.$router.push("/models/"+projectname+"/"+foldername+"/feature");
-			else if(data[index].data.modeltype == 2) 
+            if(index == 0)
+            {
+                this.$router.push("/models/"+projectname+"/"+foldername+"/feature");
+                this.$store.dispatch('updateactivetab', 'feature');
+            }
+            else if(index == 1) 
+            {
                 this.$router.push("/models/"+projectname+"/"+foldername+"/component");
-            else if(data[index].data.modeltype == 3)
+                this.$store.dispatch('updateactivetab', 'component');
+            }
+            else if(index == 2)
+            {
                 this.$router.push("/models/"+projectname+"/"+foldername+"/binding_feature_component");
+                this.$store.dispatch('updateactivetab', 'binding_feature_component');
+            }
         }
     },
     computed: {
