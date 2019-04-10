@@ -495,7 +495,7 @@ const mutations = {
 			for(let i = nn.index + 1; i < state.data.length; i++)
 			{
 				if(state.data[i].data.parentId === state.data[nn.index].data.nodeId && state.data[i].data.nodeName.includes('Adaptation'))
-					state.data[i].data.nodeName = nn.formval.changedName + ' -' + state.data[i].data.nodeName.split('-')[3];
+					state.data[i].data.nodeName = 'Adaptation -' + nn.formval.changedName.split('-')[1] + '-' + nn.formval.changedName.split('-')[2] + ' -' + state.data[i].data.nodeName.split('-')[3];
 			}
 		}
     },
