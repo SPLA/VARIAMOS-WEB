@@ -1,3 +1,11 @@
+/**
+ * the state of the tree component using Vuex
+ * @property	{array}  data					- the data of the tree component in the file management system
+ * @property	{string} activetab				- the current active tab or diagram
+ * @property	{string} model_component		- the name of the opened folder in the data array
+ * @property	{number} model_component_index	- the index of the opened folder in the data array
+ * @property	{string} xml					- the xml file from the current model
+ */
 const state = {
     data: [],
     activetab: '',
@@ -6,7 +14,7 @@ const state = {
     xml: ''
 }
 
-const getters = {
+export const getters = {
     getdata: state => {
         return state.data
     },
@@ -30,7 +38,7 @@ const getters = {
     }
 }
 
-const actions = {
+export const actions = {
     loadtreedata ({commit}, data) {
         commit('updatedata', data);
     },
@@ -72,7 +80,7 @@ const actions = {
     }
 }
 
-const mutations = {
+export const mutations = {
     updatexml(state, xml) {
         state.xml = xml;
     },

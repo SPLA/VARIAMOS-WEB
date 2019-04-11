@@ -117,6 +117,11 @@ export default{
     },
     data: function() {
         return{
+			/**
+			 * temporary object to store new name for rename function
+			 * @property	{string} changedName	- the new name which will replace the old name
+			 * @property	{string} type			- check between application and adaptation
+			*/
 			newName: {
 				isshow: false,
 				loading: true,
@@ -128,6 +133,10 @@ export default{
 					type: ''
 				}
 			},
+			/**
+			 * temporary object to store new name for a new project
+			 * @property	{string} projectName	- the name of the new project
+			 */
 			newProject: {
 				isshow: false,
 				loading: true,
@@ -135,6 +144,11 @@ export default{
 					projectName: '',
 				}
 			},
+			/**
+			 * temporary object to store information for a new application folder
+			 * @property	{string} applicationName	- the name of the new application folder
+			 * @property	{string} parentFolder		- the name of the parent folder
+			 */
 			newApplication: {
 				isshow: false,
 				loading: true,
@@ -144,6 +158,11 @@ export default{
 				applicationName: '',
 				parentFolder: ''
 			},
+			/**
+			 * temporary object to store information for a new adaptation folder
+			 * @property	{string} adapatationName	- the name of the new adaptation folder
+			 * @property	{string} parentFolder	- the name of the parent folder
+			 */
 			newAdaptation: {
 				isshow: false,
 				loading: true,
@@ -156,16 +175,28 @@ export default{
         }
     },
 	mounted () {
+		/**
+		 * get the tree data from local storage
+		 * @fires module:store~actions:loadtreedata
+		 */
 		if(localStorage['Filetree|User1'])
 		{
 			 let data = JSON.parse(localStorage.getItem('Filetree|User1'));
 			 this.$store.dispatch('loadtreedata', data);
 		}
+		/**
+		 * get the activetab from local storage
+		 * @fires module:store~actions:updateactivetab
+		 */
 		if(localStorage['Filetree|activetab'])
 		{
 			 let data = JSON.parse(localStorage.getItem('Filetree|activetab'));
 			 this.$store.dispatch('updateactivetab', data);
 		}
+		/**
+		 * get the model_component_index from local storage
+		 * @fires module:store~actions:updatemodelcomponent
+		 */
 		if(localStorage['Filetree|model_component_index'])
 		{
 			 let data = JSON.parse(localStorage.getItem('Filetree|model_component_index'));
@@ -175,6 +206,10 @@ export default{
     		top: 100,
     		duration: 2
 		});
+		/**
+		 * open a modal to create a new application folder
+		 * @listens module:contextMenu~event:createapplication
+		 */
 		Bus.$on('createapplication', data => {
 			this.newApplication.isshow = true;
 			this.newApplication.index = this.getIndexById(data.data.nodeId);
@@ -182,7 +217,10 @@ export default{
 			this.newApplication.parentFolder = data.data.nodeName;
 			this.newApplication.parentId = data.data.nodeId;
 		});
-
+		/**
+		 * open a modal to create a new adaptation folder
+		 * @listens module:contextMenu~event:createadaption
+		 */
 		Bus.$on('createadaption', data => {
 			this.newAdaptation.isshow = true;
 			this.newAdaptation.index = this.getIndexById(data.data.nodeId);
@@ -190,8 +228,17 @@ export default{
 			this.newAdaptation.parentFolder = data.data.nodeName;
 			this.newAdaptation.parentId = data.data.nodeId;
 		});
+		/**
+		 * delete the folder and its children, remove this folder from localstorage
+		 * @listens module:contextMenu~event:deletedire
+		 */
 		Bus.$on('deletedire', data => {
 			let index = this.getIndexById(data.data.nodeId);
+			/**
+			 * if the folder is open, close the model component
+			 * @fires module:Models~event:setfalsegraph
+			 * @fires module:store~actions:updatemodelcomponent
+			 */
 			if(data.data.open)
 			{
 				Bus.$emit('setfalsegraph',false);
@@ -201,12 +248,20 @@ export default{
 			this.$store.dispatch('deletefolder', index);
 			localStorage.removeItem(data.data.nodeName);
 		});
+		/**
+		 * delete the project and its children, set the page to 'please select a project'
+		 * @listens module:contextMenu~event:deleteproject
+		 * @fires	module:store~actions:deleteproject
+		 */
 		Bus.$on('deleteproject', data => {
 			let index = this.getIndexById(data.data.nodeId);
 			this.$store.dispatch('deleteproject', index);
 			this.$router.push("/models/default/default/default");
 		});
-		//rename
+		/**
+		 * open a modal to change the name
+		 * @listens module:contextMenu~event:newname
+		 */
 		Bus.$on('newname', data => {
 			this.newName.isshow = true;
 			this.newName.index = this.getIndexById(data.data.nodeId);
@@ -216,6 +271,11 @@ export default{
 		});
 	},
     methods:{
+		/**
+		 * get the index in the tree data array
+		 * @param	{number} nodeId	- the id of the current node
+		 * @returns	{number} i		- the index of the current node
+		 */
 		getIndexById(nodeId){
 			let data = this.getdata;
 			for(let i = 0; i < data.length; i++){
@@ -224,6 +284,10 @@ export default{
 				}
 			}
 		},
+		/**
+		 * when you add a new project, check if there is another opened project
+		 * @returns	{boolean} 
+		 */
 		checkopenproject(){
 			let data = this.getdata;
 			for(let i = 0; i < data.length; i++)
@@ -233,10 +297,14 @@ export default{
 			}
 			return false;
 		},
+		/**
+		 * create a new project
+		 */
 		createproject(){
 			let data = this.getdata;
 			setTimeout(()=>{
 				let pro = this.newProject;
+				// check the duplicated project name
 				if(typeof (data.find(function(data_diagram){
 					return data_diagram.data.nodeName === pro.formval.projectName && data_diagram.data.parentId == -1;
 				}))!=='undefined')
@@ -246,7 +314,8 @@ export default{
 						this.newProject.loading = true;
 						this.$Message.warning('Duplicated name!');
 					});
-                }
+				}
+				// check the empty project name
                 else if(this.newProject.formval.projectName.length === 0){
 					this.newProject.loading = false;
 					this.$nextTick(() => {
@@ -254,11 +323,16 @@ export default{
 						this.$Message.warning('Empty is not allowed!');
 					});
 				}
+				// check the other opened project
 				else if(this.checkopenproject()){
 					this.newProject.loading = false;
 					this.newProject.isshow = false;
 					this.$Message.warning('Please close the opened project!');
 				}
+				/**
+				 * create the new project in the tree data
+				 * @fires module:store~actions:createproject
+				 */
 				else {
 					this.$store.dispatch('createproject', this.newProject.formval.projectName);
 					this.newProject.loading = false;
@@ -266,11 +340,15 @@ export default{
 				}
             }, 300);
 		},
+		/**
+		 * create a new application folder
+		 */
 		createApplication(){
 			let data = this.getdata;
 			if(typeof(this.newApplication.index) === 'undefined'){
 				return
 			}
+			// keep the folder open
 			if(!data[this.newApplication.index].data.open){
 				this.$refs.cotalogue.expand_menu(this.newApplication.index);
 			}

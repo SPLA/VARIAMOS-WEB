@@ -107,6 +107,10 @@ export default{
     Verification
   },
   mounted: function(){
+    /**
+     * set this mxgraph disabled
+     * @listens module:Filemanagetree~event:setfalsegraph
+     */
     Bus.$on('setfalsegraph', data=>{
       this.graph.setEnabled(false);
     });
