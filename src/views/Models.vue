@@ -169,6 +169,9 @@ export default{
     next();
   },
   computed: {
+    /**
+     * @returns {string} the current folder name in the store
+     */
     getmodel_component (){
         return this.$store.getters.getmodelcomponent;
     }
@@ -187,6 +190,10 @@ export default{
         this.undoManager.clear();
       }
     },
+    /**
+     * if there is any change in the mxgraph, update the xml in the store
+     * @fires module:store~actions:updatexml
+     */ 
     mxModel:{
       handler(val) {
         var encoder = new mxCodec();

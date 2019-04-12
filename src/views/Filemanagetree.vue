@@ -354,6 +354,7 @@ export default{
 			}
 			setTimeout(()=>{
 				let app = this.newApplication;
+				// check the duplicated application name
 				if(typeof (data.find(function(data_diagram){
 					return data_diagram.data.nodeName === app.applicationName && data_diagram.data.parentId === app.parentId;
 				}))!=='undefined')
@@ -364,6 +365,7 @@ export default{
 						this.$Message.warning('Duplicated name!');
 					});
 				}
+				// check the empty application name
 				else if(this.newApplication.applicationName.length === 0){
 					this.newApplication.loading = false;
 					this.$nextTick(() => {
@@ -372,6 +374,9 @@ export default{
 					});
 				}
 				else {
+					/**
+					 * @deprecated the counter of application folder is not used
+					 */
 					let index = 0;
 					for(let i = 0; i < data.length; i++)
 					{
@@ -379,6 +384,10 @@ export default{
 							index++;
 					}
 					this.newApplication.appindex = index + 1;
+					/**
+					 * add new application folder and close modal
+					 * @fires module:store~actions:createapplication
+					 */
 					this.$store.dispatch('createapplication', this.newApplication);
 					this.newApplication.loading = false;
 					this.newApplication.isshow = false;
@@ -386,6 +395,9 @@ export default{
             }, 300);
             
 		},
+		/**
+		 * create a new adaptation folder
+		 */
 		createAdaptation(){
 			let data = this.getdata;
 			if(typeof(this.newAdaptation.index) === 'undefined'){
@@ -396,6 +408,7 @@ export default{
 			// }
 			setTimeout(()=>{
 				let adp = this.newAdaptation;
+				// check the duplicated adaptation folder
 				if(typeof (data.find(function(data_diagram){
 					return data_diagram.data.nodeName === adp.adapatationName && data_diagram.data.parentId == adp.parentId;
 				}))!=='undefined')
@@ -406,6 +419,7 @@ export default{
 						this.$Message.warning('Duplicated name!');
 					});
 				}
+				// check the empty adaptation folder
 				else if(this.newAdaptation.adapatationName.length === 0)
 				{
 					this.newAdaptation.loading = false;
@@ -415,6 +429,9 @@ export default{
 					});
 				}
 				else {
+					/**
+					 * @deprecated the counter of adaptation folder is not used
+					 */
 					let index = 0;
 					for(let i = 0; i < data.length; i++)
 					{
@@ -422,6 +439,10 @@ export default{
 							index++;
 					}
 					this.newApplication.adpindex = index + 1;
+					/**
+					 * add a new adaptation folder and close modal
+					 * @fires module:store~actions:createadaptation
+					 */
 					this.$store.dispatch('createadaptation', this.newAdaptation);
 					this.newAdaptation.loading = false;
 					this.newAdaptation.isshow = false;
@@ -429,10 +450,12 @@ export default{
             }, 300);
             
 		},
+		// change name
 		rename(){
 			let data = this.getdata;
 			if(typeof(this.newName.index) === 'undefined')
 				return
+			// modal accepts empty input
 			else if(this.newName.formval.changedName.length === 0){
 				this.newName.isshow = false;
 				this.newName.loading = false;
@@ -442,10 +465,12 @@ export default{
 			}
 			setTimeout(()=>{
 				let nn = this.newName;
+				// put the new name in the format "type" - "project name" - "application name" - "adaptation name"
 				if(nn.formval.type === 'Application ')
 					nn.formval.changedName = data[nn.index].data.nodeName.split('-')[0] + '-' + data[nn.index].data.nodeName.split('-')[1] + '- ' + nn.formval.changedName;
 				else if(nn.formval.type === 'Adaptation ')
 					nn.formval.changedName = data[nn.index].data.nodeName.split('-')[0] + '-' + data[nn.index].data.nodeName.split('-')[1] + '-' + data[nn.index].data.nodeName.split('-')[2] + '- ' + nn.formval.changedName;
+				// check the duplicated name
 				if(typeof (data.find(function(data_diagram){
 					return data_diagram.data.nodeName === nn.formval.changedName && data_diagram.data.projectId == nn.formval.projectId
 					&& data_diagram.data.nodeType === 3;
@@ -458,10 +483,12 @@ export default{
 					});
 				}
 				else{
+					// check localstorage, if exists, replace it
 					if(localStorage[data[nn.index].data.nodeName])
 					{
 						localStorage[nn.formval.changedName] = localStorage[data[nn.index].data.nodeName];
 						localStorage.removeItem(data[nn.index].data.nodeName);
+						// if type is application, check the localstorage of adapatation and replace them
 						if(nn.formval.type === 'Application ')
 						{
 							for(let i = nn.index + 1; i < data.length; i++)
@@ -474,9 +501,14 @@ export default{
 							}
 						}
 					}
+					/**
+					 * change name in the tree data and close modal
+					 * @fires module:store~actions:changename
+					 */
 					this.$store.dispatch('changename', this.newName);
 					this.newName.isshow = false;
 					this.newName.loading = false;
+					// change the router path to the new one
 					let projectname = '';
 			        for(let i = 0; i < data.length; i++)
 			        {
@@ -489,32 +521,41 @@ export default{
 		}
 	},
 	computed: {
+		/**
+		 * @returns	{string} activetab in the store
+		 */
         getactivetab (){
             return this.$store.getters.getactivetab;
-        },
+		},
+		/**
+		 * @returns {array} tree data in the store
+		 */
         getdata (){
             return this.$store.getters.getdata;
-        },
+		},
+		/**
+		 * @returns {number} the index of current folder in the store
+		 */
         getmodel_component_index (){
             return this.$store.getters.getmodelcomponentindex;
         }
     },
 	watch:{
-		$route (to, from){
-
-		},
+		// when activetab changes, update localstorage
 		getactivetab:{
 			handler(val) {
 				localStorage.setItem('Filetree|activetab', JSON.stringify(val));
      	 	},
       		deep:true
 		},
+		// when tree data changes, update localstorage
 		getdata:{
 			handler(val) {
 				localStorage.setItem('Filetree|User1', JSON.stringify(val));
      	 	},
       		deep:true
 		},
+		// when model_component_index changes, update localstorage
 		getmodel_component_index:{
 			handler(val) {
 				localStorage.setItem('Filetree|model_component_index', JSON.stringify(val));

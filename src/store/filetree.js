@@ -26,8 +26,9 @@ export const getters = {
     },
     getmodelcomponentindex: state => {
         return state.model_component_index
-    },
-    getnewnodeid: state => { //get a new nodeID
+	},
+	//get a new nodeID
+    getnewnodeid: state => { 
         let temp = 0;
         for(let i = 0; i < state.data.length; i++)
             temp = state.data[i].data.nodeId > temp ? state.data[i].data.nodeId : temp;
@@ -490,7 +491,8 @@ export const mutations = {
 			{
 				state.data.splice(index, i - index);
 				break;
-            }
+			}
+			// if the children is the last one in the tree data, delete one more
             if(i === state.data.length-1)
                 state.data.splice(index, i - index + 1);	
         }
@@ -498,6 +500,7 @@ export const mutations = {
     },
     changenewname (state, nn) {
 		state.data[nn.index].data.nodeName = nn.formval.changedName;
+		// if we change the name of application folder, we need to change its children adaptation folders
 		if(nn.formval.type === 'Application ')
 		{
 			for(let i = nn.index + 1; i < state.data.length; i++)
@@ -523,6 +526,7 @@ export const mutations = {
         state.data[index].data.open = !state.data[index].data.open;
     },
     setitemselect(state,index) {
+		// set all the elements not selected and then set the current one selected
         state.data.forEach((item)=>{
             item.data.isSelected = false;
         });

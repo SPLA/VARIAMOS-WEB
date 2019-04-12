@@ -37,20 +37,35 @@ export default{
         model
     },
     methods:{
-        checktabs: function(item,index){ //set the first one diagram to activetab  
+        /**
+         * when the folder is opened, show up the tabs and model component
+         * @param {string} item     - the element of the array for tabs
+         * @param {number} index    - the index of the array for tabs
+         * @returns {boolean}
+         */
+        checktabs: function(item,index){
             let data = this.getdata;
             if(this.getmodel_component_index !== -1) 
             {
+                // if the folder is application, there is only one feature tab
                 if(this.getmodel_component.includes('Application') && index !== 0)
                     return false;
+                // if the folder is adaptation, there is only one feature tab
                 if(this.getmodel_component.includes('Adaptation') && index !== 0)
                     return false;
+                // open model component
                 this.mxgraphreset = true;
                 return true;
             }
+            // close model component
             this.mxgraphreset = false;
             return false;
         },
+        /**
+         * click the tab and navigate to the corresponding path and model
+         * @param {number} index    - the index of the array for tabs
+         * @fires module:store~actions:updateactivetab
+         */
         clickactivetab (index) {
             let data = this.getdata;
             let projectname = '';
@@ -78,21 +93,37 @@ export default{
         }
     },
     computed: {
+        /**
+		 * @returns	{string} activetab in the store
+		 */
         getactivetab (){
             return this.$store.getters.getactivetab;
         },
+        /**
+		 * @returns {array} tree data in the store
+		 */
         getdata (){
             return this.$store.getters.getdata;
         },
+        /**
+		 * @returns	{string} model_component in the store
+		 */
         getmodel_component (){
             return this.$store.getters.getmodelcomponent;
         },
+        /**
+		 * @returns {number} the index of current folder in the store
+		 */
         getmodel_component_index (){
             return this.$store.getters.getmodelcomponentindex;
         }
     },
     mounted () {
-        Bus.$on('resetall', data => { //reset the mxgraph component
+        /**
+         * reset the model component
+         * @deprecated
+         */
+        Bus.$on('resetall', data => {
             Bus.$emit('disablegraph',false);
             this.mxgraphreset = false;
             Vue.nextTick(()=>{

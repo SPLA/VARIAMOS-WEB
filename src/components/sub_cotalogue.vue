@@ -69,31 +69,42 @@ export default {
 		Spin,
 		Icon
 	},
+	// the element name and type in the tree data
 	props: ['layername','layertype'],
 	data () {
 		return {
-			clickNum: null,
 			isloading: false,
-			className: '',
+			// the element tree data
 			data: [],
+			// the cache to store the hierarchical tree
 			treecache: []
 		}
 	},
 	mounted: function() {
+		// load the element tree
 		this.mainprocess();
 	},
 	watch: {
+		// if the xml changes, clear cache and update the element tree
 		getxml: function(val){
 			this.treecache = [];
 			this.mainprocess();		
 		}
 	},
 	computed:{
+		/**
+		 * get the xml from the store
+		 * @returns {string}
+		 */
 		getxml (){
 			return this.$store.getters.getxml;
 		}
 	},
 	methods: {
+		/**
+		 * construct the element tree
+		 * @todo improve the rule of showing up elements
+		 */
 		mainprocess() {
 			this.data = [];
 			let modeltype = this.layername;
@@ -104,10 +115,17 @@ export default {
 			// else if(this.layertype === 3)
 			// 	modeltype = 'binding_feature_component';
 			
+			// transform xml to JSON and then to object
 			var xmlDoc = (new DOMParser()).parseFromString(this.getxml,"text/xml");
 			var xmlobject = JSON.parse(xml2json(xmlDoc,''));
+			// if it is feature model
 			if(this.layertype === 1 && this.getxml !== '')
 			{
+				/**
+				 * get root element and insert to element tree data
+				 * @function checkrootxml
+				 * @function insertdata
+				 */
 				let rootxml = this.checkrootxml(xmlobject.mxGraphModel.root.root, modeltype);
 				if(rootxml.t1 !== '' && rootxml.t2 !== '')
 				{
@@ -116,9 +134,11 @@ export default {
 					
 					let checkall = true;
 					let level = 1;
+					// construct the element tree from lower level to higher level
 					while(checkall)
 					{
 						checkall = false;
+						// check all the relations
 						let rel_lists = ['rel_general_root','rel_general_general','rel_leaf_root','rel_leaf_general'];
 						for(let x = 0; x < rel_lists.length; x++)
 						{
@@ -130,13 +150,19 @@ export default {
 									{
 										for(let j = 0; j < this.data.length; j++)
 										{
+											// if the target of the relation is in the element tree
 											if(xmlobject.mxGraphModel.root[rel_lists[x]][i].mxCell['@parent'] === modeltype && 
 											xmlobject.mxGraphModel.root[rel_lists[x]][i].mxCell['@target'] === this.data[j].data.nodeId && 
 											this.data[j].data.level === level)
 											{
+												/**
+												 * get the feature based on the source of the relation
+												 * @function getfeature
+												 */
 												let newtemp = this.getfeature(xmlobject.mxGraphModel.root.general, xmlobject.mxGraphModel.root[rel_lists[x]][i].mxCell['@source'], modeltype);
 												if(newtemp.t1 === '' && newtemp.t2 === '')
 													newtemp = this.getfeature(xmlobject.mxGraphModel.root.leaf, xmlobject.mxGraphModel.root[rel_lists[x]][i].mxCell['@source'], modeltype);
+												// insert this feature to the element tree and set its mandatory
 												if(xmlobject.mxGraphModel.root[rel_lists[x]][i]['@relType'] === 'mandatory')	
 												{
 													this.insertdata(newtemp.t1, newtemp.t2, level + 1, this.getbundletype(xmlobject.mxGraphModel.root, newtemp.t2, modeltype), 'true', this.data[j].data.nodeId, j);
@@ -156,13 +182,19 @@ export default {
 								{
 									for(let j = 0; j < this.data.length; j++)
 									{
+										// if the target of the relation is in the element tree
 										if(xmlobject.mxGraphModel.root[rel_lists[x]].mxCell['@parent'] === modeltype && 
 										xmlobject.mxGraphModel.root[rel_lists[x]].mxCell['@target'] === this.data[j].data.nodeId && 
 										this.data[j].data.level === level)
 										{
+											/**
+											 * get the feature based on the source of the relation
+											 * @function getfeature
+											 */
 											let newtemp = this.getfeature(xmlobject.mxGraphModel.root.general, xmlobject.mxGraphModel.root[rel_lists[x]].mxCell['@source'], modeltype);
 											if(newtemp.t1 === '' && newtemp.t2 === '')
 												newtemp = this.getfeature(xmlobject.mxGraphModel.root.leaf, xmlobject.mxGraphModel.root[rel_lists[x]].mxCell['@source'], modeltype);
+											// insert this feature to the element tree and set its mandatory
 											if(xmlobject.mxGraphModel.root[rel_lists[x]]['@relType'] === 'mandatory')	
 											{
 												this.insertdata(newtemp.t1, newtemp.t2, level + 1, this.getbundletype(xmlobject.mxGraphModel.root, newtemp.t2, modeltype), 'true', this.data[j].data.nodeId, j);
@@ -179,7 +211,7 @@ export default {
 								}
 							}
 						}
-
+						// check all the bundles
 						let rel_bundle_lists = ['rel_bundle_general','rel_bundle_root'];
 						for(let x = 0; x < rel_bundle_lists.length; x++)
 						{
@@ -191,10 +223,14 @@ export default {
 									{
 										for(let j = 0; j < this.data.length; j++)
 										{
+											// if the target of the bundle is in the element tree
 											if(xmlobject.mxGraphModel.root[rel_bundle_lists[x]][i].mxCell['@parent'] === modeltype && 
 											xmlobject.mxGraphModel.root[rel_bundle_lists[x]][i].mxCell['@target'] === this.data[j].data.nodeId && 
 											this.data[j].data.level === level)
 											{
+												/**
+												 * @function insertbundle
+												 */
 												this.insertbundle(xmlobject.mxGraphModel.root, xmlobject.mxGraphModel.root[rel_bundle_lists[x]][i].mxCell['@source'], modeltype, this.data[j].data.nodeId, j, level);
 												checkall = true;
 											}
@@ -205,10 +241,14 @@ export default {
 								{
 									for(let j = 0; j < this.data.length; j++)
 									{
+										// if the target of the bundle is in the element tree
 										if(xmlobject.mxGraphModel.root[rel_bundle_lists[x]].mxCell['@parent'] === modeltype && 
 										xmlobject.mxGraphModel.root[rel_bundle_lists[x]].mxCell['@target'] === this.data[j].data.nodeId && 
 										this.data[j].data.level === level)
 										{
+											/**
+											 * @function insertbundle
+											 */
 											this.insertbundle(xmlobject.mxGraphModel.root, xmlobject.mxGraphModel.root[rel_bundle_lists[x]].mxCell['@source'], modeltype, this.data[j].data.nodeId, j, level);
 											checkall = true;
 										}
@@ -232,6 +272,10 @@ export default {
 			//     });
 			if(this.getxml !== '')
 			{
+				/**
+				 * check all the elements which are not in the cache and insert them in the level 1 in the element tree data
+				 * @function insertdata
+				 */
 				let list = ['root', 'general', 'leaf', 'component', 'file'];
 				for(let i = 0; i < list.length; i++)
 				{
@@ -251,7 +295,17 @@ export default {
 				}
 			}
 		},
+		/**
+		 * insert the output of bundle in the element tree
+		 * @param {object} root 		- xml object
+		 * @param {number} relbundleid	- the id of bundle
+		 * @param {number} modeltype	- the type of the diagram
+		 * @param {number} parentid		- the parent id in the element tree
+		 * @param {number} parentindex	- the index of parent in the element tree
+		 * @param {number} level		- the current level
+		 */
 		insertbundle(root, relbundleid, modeltype, parentid, parentindex, level) {
+			// check all the relations
 			let rel_leaf_lists = ['rel_general_bundle','rel_leaf_bundle'];
 			for(let x = 0; x < rel_leaf_lists.length; x++)
 			{
@@ -261,31 +315,51 @@ export default {
 					{
 						for(let i = 0; i < root[rel_leaf_lists[x]].length; i++)
 						{
+							// if the target of relation is the id of bundle
 							if(root[rel_leaf_lists[x]][i].mxCell['@parent'] === modeltype && 
 							root[rel_leaf_lists[x]][i].mxCell['@target'] === relbundleid)
 							{
+								/**
+								 * get the feature based on the source of the relation
+								 * @function getfeature
+								 */
 								let newtemp = this.getfeature(root.general, root[rel_leaf_lists[x]][i].mxCell['@source'], modeltype);
 								if(newtemp.t1 === '' && newtemp.t2 === '')
 									newtemp = this.getfeature(root.leaf, root[rel_leaf_lists[x]][i].mxCell['@source'], modeltype);
+								// insert this feature to the element tree
 								this.insertdata(newtemp.t1, newtemp.t2, level + 1, this.getbundletype(root, newtemp.t2, modeltype), 'true', parentid, parentindex);
 								this.treecache.push(newtemp.t2);
 							}		
 						}
 					}
+					// if the target of relation is the id of bundle
 					else if(root[rel_leaf_lists[x]].mxCell['@parent'] === modeltype && 
 					root[rel_leaf_lists[x]].mxCell['@target'] === relbundleid)
 					{
+						/**
+						 * get the feature based on the source of the relation
+						 * @function getfeature
+						 */
 						let newtemp = this.getfeature(root.general, root[rel_leaf_lists[x]].mxCell['@source'], modeltype);
 						if(newtemp.t1 === '' && newtemp.t2 === '')
 							newtemp = this.getfeature(root.leaf, root[rel_leaf_lists[x]].mxCell['@source'], modeltype);
+						// insert this feature to the element tree
 						this.insertdata(newtemp.t1, newtemp.t2, level + 1, this.getbundletype(root, newtemp.t2, modeltype), 'true', parentid, parentindex);
 						this.treecache.push(newtemp.t2);
 					}
 				}
 			}
 		},
+		/**
+		 * set the type of the current element to 'feature' or 'or' or 'alt' or 'and' in the element tree
+		 * @param {object} root 		- the xml object
+		 * @param {number} id 			- the id of the current element
+		 * @param {number} modeltype	- the type of the diagram
+		 */
 		getbundletype(root, id, modeltype) {
+			// set default type to feature'
 			let temp = 'feature';
+			// get the source of the relation between bundle and general feature
 			let bundleid = -1;
 			if(root.rel_bundle_general !== undefined)
 			{
@@ -300,6 +374,7 @@ export default {
 				else if(root.rel_bundle_general.mxCell['@parent'] === modeltype && root.rel_bundle_general.mxCell['@target'] === id)
 					bundleid = root.rel_bundle_general.mxCell['@source'];
 			}
+			// check the type of the bundle either 'or' or 'alt'
 			if(root.bundle !== undefined)
 			{
 				if(Array.isArray(root.bundle))
@@ -323,6 +398,7 @@ export default {
 						temp = 'alt';
 				}
 			}
+			// if there is no bundle, set the type to 'and'
 			if(root.rel_general_general !== undefined)
 			{
 				if(Array.isArray(root.rel_general_general))
@@ -338,7 +414,12 @@ export default {
 			}
 			return temp;
 		},
-		
+		/**
+		 * get the feature anme based on id
+		 * @param {string} feature		- the xml object
+		 * @param {number} id 			- the id of the current element
+		 * @param {number} modeltype	- the type of the diagram
+		 */
 		getfeature(feature, id, modeltype) {
 			let temp = {t1:'',t2:''};
 			if(feature !== undefined)
@@ -362,6 +443,11 @@ export default {
 			}
 			return temp;
 		},
+		/**
+		 * get the name and the id of root
+		 * @param {string} root 		- the xml object
+		 * @param {number} modeltype	- the type of the diagram
+		 */
 		checkrootxml(root, modeltype) {
 			let temp = {t1:'',t2:''};
 			if(root !== undefined)
@@ -385,6 +471,16 @@ export default {
 			}
 			return temp;
 		},
+		/**
+		 * insert the element into the element tree data
+		 * @param {string} name the name of the element
+		 * @param {number} newid the id of the element
+		 * @param {number} level the level of the element
+		 * @param {string} type the type of the element
+		 * @param {string} mandatory the mandatory of the element
+		 * @param {number} parentid the parent id in the element tree
+		 * @param {number} parentindex the index of parent in the element tree
+ 		 */
 		insertdata(name, newid, level, type, mandatory, parentid, parentindex) {
             this.data.splice(parentindex + 1, 0 ,{
 				data: {
@@ -403,9 +499,14 @@ export default {
             if(parentindex !== -1)
 				this.data[parentindex].numberOfChildren++;
 		},
+		/**
+		 * the rule to show up the element of the element tree
+		 * @param {number} index the index of the current element
+		 */
 		checkchildnode(index) {
 			for(let i = 1; i < index+1; i++)
 			{
+				// if the element is closed, his children is not displayed
 				if(this.data[index-i].data.level < this.data[index].data.level)
 				{
 					if(this.data[index-i].data.open === false)
@@ -419,10 +520,18 @@ export default {
 			}
 			return true;
 		},
+		/**
+		 * set open and close to the element
+		 * @param {number} index the index of the current element
+		 */
 		expand_menu(index) {
 			var _this = this;
 			_this.data[index].data.open = !_this.data[index].data.open;	
 		},
+		/**
+		 * click function
+		 * @param {number} index the index of the current element
+		 */
 		clickme(index){
 			var _this = this;
 			_this.data.forEach((item)=>{
@@ -430,24 +539,35 @@ export default {
 			});
 			//_this.data[index].data.isSelected = true;
 		},
+		/**
+		 * double click function
+		 * @param {number} index the index of the current element
+		 */
 		dblClick(index){
 			var _this = this;
 			if(_this.data[index].data.nodeType === 1){
 				_this.expand_menu(index);
 			}
 		},
+		/**
+		 * the rule of selecting for the checkbox
+		 * @param {number} index the index of the current element
+		 */
 		itemclick(index){
 			let counter = 0;
 			this.checkconstraints(index);
-			for(let i = index + 1; i < this.data.length; i++) // check children
+			// check children
+			for(let i = index + 1; i < this.data.length; i++) 
 			{
 				if(this.data[index].data.level > this.data[i].data.level || this.data[index].data.level === this.data[i].data.level)
 					break;
+				// if it is not selected, the children should be not selected
 				if(this.data[index].data.tick === false)
 				{
 					this.data[i].data.tick = false;
 					continue;
 				}
+				
 				if(this.data[index].data.type === 'alt' && this.data[index].data.tick === true)
 					counter = 1 + this.data[index].numberOfChildren;
 				for(let j = 0; j < this. data.length; j++)
@@ -455,6 +575,7 @@ export default {
 					if(this.data[j].data.nodeId === this.data[i].data.parentId && this.data[j].data.type === 'alt')
 						counter = 1;
 				}
+				// if mandaotry is true, the element is same like the current one
 				if(this.data[i].data.mandatory === 'true' && counter === 0)
 				{
 					this.data[i].data.tick = this.data[index].data.tick;
@@ -462,6 +583,7 @@ export default {
 				if(counter !== 0)
 					counter--;
 			}
+			// if type is 'alt', only one children is selected
 			for(let i = 0; i < this.data.length; i++)
 			{
 				if(this.data[i].data.nodeId === this.data[index].data.parentId)
@@ -484,8 +606,10 @@ export default {
 					// }
 				}
 			}
+			// check parents
 			if(this.data[index].data.tick === true)
 			{
+				// if the element is selected, all his parents need to be selected
 				let temp_parentid = this.data[index].data.parentId;
 				while(temp_parentid !== -1)
 				{
@@ -501,9 +625,11 @@ export default {
 			}
 			else
 			{
+				// if the element is not selected
 				let temp_parentid = this.data[index].data.parentId;
 				while(temp_parentid !== -1)
 				{
+					// if the other element in the same level is selected, disregrad
 					let temp_selected = false;
 					for(let i = 0; i < this.data.length; i++)
 					{
@@ -512,6 +638,7 @@ export default {
 					}
 					if(temp_selected)
 						break;
+					// if the current one is the last one selected in this level, disselect the parent 
 					else
 					{
 						for(let i = 0; i < this.data.length; i++)
@@ -526,6 +653,10 @@ export default {
 				}
 			}
 		},
+		/**
+		 * if the type is 'and' and mandatory is true, show the black circle
+		 * @param {number} index the index of the current element
+		 */
 		checkmandatorycircle(index) {
 			for(let i = 0; i < this.data.length; i++)
 			{
@@ -534,10 +665,15 @@ export default {
 			}
 			return false;
 		},
+		/**
+		 * the rule of constraints for checkbox
+		 * @param {number} index the index of the current element
+		 */
 		checkconstraints(index){
 			let modeltype = this.layername;
 			var xmlDoc = (new DOMParser()).parseFromString(this.getxml,"text/xml");
 			var xmlobject = JSON.parse(xml2json(xmlDoc,''));
+			// check all the relations
 			let rel_lists = ['rel_general_root','rel_general_general','rel_leaf_root','rel_leaf_general'];
 			for(let x = 0; x < rel_lists.length; x++)
 			{
@@ -549,9 +685,11 @@ export default {
 						{
 							for(let j = 0; j < this.data.length; j++)
 							{
+								// if the source is in constraint relation
 								if(xmlobject.mxGraphModel.root[rel_lists[x]][i].mxCell['@parent'] === modeltype && 
 								xmlobject.mxGraphModel.root[rel_lists[x]][i].mxCell['@source'] === this.data[index].data.nodeId)
 								{
+									// if the constraints is 'requires', set the target true
 									if(xmlobject.mxGraphModel.root[rel_lists[x]][i]['@relType'] === 'requires' && this.data[index].data.tick)
 									{
 										for(let k = 0; k < this.data.length; k++)
@@ -560,6 +698,7 @@ export default {
 												this.data[k].data.tick = true;
 										}
 									}	
+									// if the constraints is 'excludes', set the opposite of the source to the target
 									else if(xmlobject.mxGraphModel.root[rel_lists[x]][i]['@relType'] === 'excludes')	
 									{
 										for(let k = 0; k < this.data.length; k++)
@@ -569,6 +708,8 @@ export default {
 										}
 									}
 								}
+								// if the target is in constraint relation and the constraints is 'excludes', 
+								// set the opposite of the target to the source
 								else if(xmlobject.mxGraphModel.root[rel_lists[x]][i].mxCell['@parent'] === modeltype && 
 								xmlobject.mxGraphModel.root[rel_lists[x]][i].mxCell['@target'] === this.data[index].data.nodeId &&
 								xmlobject.mxGraphModel.root[rel_lists[x]][i]['@relType'] === 'excludes')
@@ -586,9 +727,11 @@ export default {
 					{
 						for(let j = 0; j < this.data.length; j++)
 						{
+							// if the source is in constraint relation
 							if(xmlobject.mxGraphModel.root[rel_lists[x]].mxCell['@parent'] === modeltype && 
 							xmlobject.mxGraphModel.root[rel_lists[x]].mxCell['@source'] === this.data[index].data.nodeId)
 							{
+								// if the constraints is 'requires', set the target true
 								if(xmlobject.mxGraphModel.root[rel_lists[x]]['@relType'] === 'requires' && this.data[index].data.tick)
 								{
 									for(let k = 0; k < this.data.length; k++)
@@ -597,6 +740,7 @@ export default {
 											this.data[k].data.tick = true;
 									}
 								}	
+								// if the constraints is 'excludes', set the opposite of the source to the target
 								else if(xmlobject.mxGraphModel.root[rel_lists[x]]['@relType'] === 'excludes')	
 								{
 									for(let k = 0; k < this.data.length; k++)
@@ -606,6 +750,8 @@ export default {
 									}
 								}
 							}
+							// if the target is in constraint relation and the constraints is 'excludes', 
+							// set the opposite of the target to the source
 							else if(xmlobject.mxGraphModel.root[rel_lists[x]].mxCell['@parent'] === modeltype && 
 							xmlobject.mxGraphModel.root[rel_lists[x]].mxCell['@target'] === this.data[index].data.nodeId &&
 							xmlobject.mxGraphModel.root[rel_lists[x]]['@relType'] === 'excludes')
