@@ -39,9 +39,16 @@
 								:title="item.data.nodeName"
 								:style="{display:item.data.nodeType===2?'initial':'inline-block',
 										userSelect: 'none'}">
-								<Checkbox v-model="item.data.tick" @on-change="itemclick($index)">
-								{{item.data.nodeName}}
-								</Checkbox>
+								<div v-if="checkmandatorycircle($index)">
+									<Checkbox v-model="item.data.tick" @on-change="itemclick($index)" disabled>
+										{{item.data.nodeName}}
+									</Checkbox>
+								</div>
+								<div v-if="!checkmandatorycircle($index)">
+									<Checkbox v-model="item.data.tick" @on-change="itemclick($index)">
+										{{item.data.nodeName}}
+									</Checkbox>
+								</div>
 							</span>
 							<i v-if="item.data.mandatory !== 'true'"
 								class="far fa-circle" aria-hidden="true"
@@ -299,7 +306,7 @@ export default {
 		 * insert the output of bundle in the element tree
 		 * @param {object} root 		- xml object
 		 * @param {number} relbundleid	- the id of bundle
-		 * @param {number} modeltype	- the type of the diagram
+		 * @param {string} modeltype	- the type of the diagram
 		 * @param {number} parentid		- the parent id in the element tree
 		 * @param {number} parentindex	- the index of parent in the element tree
 		 * @param {number} level		- the current level
@@ -354,7 +361,7 @@ export default {
 		 * set the type of the current element to 'feature' or 'or' or 'alt' or 'and' in the element tree
 		 * @param {object} root 		- the xml object
 		 * @param {number} id 			- the id of the current element
-		 * @param {number} modeltype	- the type of the diagram
+		 * @param {string} modeltype	- the type of the diagram
 		 */
 		getbundletype(root, id, modeltype) {
 			// set default type to feature'
@@ -399,18 +406,24 @@ export default {
 				}
 			}
 			// if there is no bundle, set the type to 'and'
-			if(root.rel_general_general !== undefined)
+			let rel_lists = ['rel_general_root','rel_general_general','rel_leaf_root','rel_leaf_general'];
+			for(let x = 0; x < rel_lists.length; x++)
 			{
-				if(Array.isArray(root.rel_general_general))
+				if(root[rel_lists[x]] !== undefined)
+			{
+				if(Array.isArray(root[rel_lists[x]]))
 				{
-					for(let i = 0; i < root.rel_general_general.length; i++)
+					for(let i = 0; i < root[rel_lists[x]].length; i++)
 					{
-						if(root.rel_general_general[i].mxCell['@parent'] === modeltype && root.rel_general_general[i].mxCell['@target'] === id)
+						if(root[rel_lists[x]][i].mxCell['@parent'] === modeltype && root[rel_lists[x]][i].mxCell['@target'] === id 
+						&& root[rel_lists[x]][i]['@relType'] !== 'requires' && root[rel_lists[x]][i]['@relType'] !== 'excludes')
 							temp = 'and';
 					}
 				}
-				else if(root.rel_general_general.mxCell['@parent'] === modeltype && root.rel_general_general.mxCell['@target'] === id)
+				else if(root[rel_lists[x]].mxCell['@parent'] === modeltype && root[rel_lists[x]].mxCell['@target'] === id
+				&& root[rel_lists[x]]['@relType'] !== 'requires' && root[rel_lists[x]]['@relType'] !== 'excludes')
 					temp = 'and';
+			}
 			}
 			return temp;
 		},
@@ -418,7 +431,7 @@ export default {
 		 * get the feature anme based on id
 		 * @param {string} feature		- the xml object
 		 * @param {number} id 			- the id of the current element
-		 * @param {number} modeltype	- the type of the diagram
+		 * @param {string} modeltype	- the type of the diagram
 		 */
 		getfeature(feature, id, modeltype) {
 			let temp = {t1:'',t2:''};
@@ -446,7 +459,7 @@ export default {
 		/**
 		 * get the name and the id of root
 		 * @param {string} root 		- the xml object
-		 * @param {number} modeltype	- the type of the diagram
+		 * @param {string} modeltype	- the type of the diagram
 		 */
 		checkrootxml(root, modeltype) {
 			let temp = {t1:'',t2:''};
@@ -544,45 +557,24 @@ export default {
 		 * @param {number} index the index of the current element
 		 */
 		dblClick(index){
-			var _this = this;
-			if(_this.data[index].data.nodeType === 1){
-				_this.expand_menu(index);
-			}
+			this.expand_menu(index);
 		},
 		/**
-		 * the rule of selecting for the checkbox
+		 * function of checkbox
 		 * @param {number} index the index of the current element
 		 */
 		itemclick(index){
 			let counter = 0;
+			this.checkclick(index);
 			this.checkconstraints(index);
+		},
+		/**
+		 * the rule of selections for checkbox
+		 * @param {number} index the index of the current element
+		 */
+		checkclick(index){
 			// check children
-			for(let i = index + 1; i < this.data.length; i++) 
-			{
-				if(this.data[index].data.level > this.data[i].data.level || this.data[index].data.level === this.data[i].data.level)
-					break;
-				// if it is not selected, the children should be not selected
-				if(this.data[index].data.tick === false)
-				{
-					this.data[i].data.tick = false;
-					continue;
-				}
-				
-				if(this.data[index].data.type === 'alt' && this.data[index].data.tick === true)
-					counter = 1 + this.data[index].numberOfChildren;
-				for(let j = 0; j < this. data.length; j++)
-				{
-					if(this.data[j].data.nodeId === this.data[i].data.parentId && this.data[j].data.type === 'alt')
-						counter = 1;
-				}
-				// if mandaotry is true, the element is same like the current one
-				if(this.data[i].data.mandatory === 'true' && counter === 0)
-				{
-					this.data[i].data.tick = this.data[index].data.tick;
-				}
-				if(counter !== 0)
-					counter--;
-			}
+			this.checkchildren(index);
 			// if type is 'alt', only one children is selected
 			for(let i = 0; i < this.data.length; i++)
 			{
@@ -618,6 +610,7 @@ export default {
 						if(this.data[i].data.nodeId === temp_parentid)
 						{
 							this.data[i].data.tick = true;
+							this.checkchildren(i);
 							temp_parentid = this.data[i].data.parentId;
 						}
 					}
@@ -649,6 +642,32 @@ export default {
 								temp_parentid = this.data[i].data.parentId;
 							}
 						}
+					}
+				}
+			}
+		},
+		/**
+		 * the rule of selecting children for checkbox
+		 * @param {number} index the index of the current element
+		 */
+		checkchildren(index){
+			for(let i = index + 1; i < this.data.length; i++) 
+			{
+				if(this.data[index].data.level > this.data[i].data.level || this.data[index].data.level === this.data[i].data.level)
+					break;
+				// if it is not selected, the children should be not selected
+				if(this.data[index].data.tick === false)
+				{
+					this.data[i].data.tick = false;
+					continue;
+				}
+				// if it is selected, select all the following mandatory children
+				else
+				{
+					for(let j = 0; j < this.data.length; j++)
+					{
+						if(this.data[j].data.nodeId === this.data[i].data.parentId && this.data[j].data.tick && this.checkmandatorycircle(i))
+							this.data[i].data.tick = true;
 					}
 				}
 			}
@@ -695,7 +714,10 @@ export default {
 										for(let k = 0; k < this.data.length; k++)
 										{
 											if(xmlobject.mxGraphModel.root[rel_lists[x]][i].mxCell['@target'] === this.data[k].data.nodeId)
+											{
 												this.data[k].data.tick = true;
+												this.checkclick(k);
+											}
 										}
 									}	
 									// if the constraints is 'excludes', set the opposite of the source to the target
@@ -704,7 +726,10 @@ export default {
 										for(let k = 0; k < this.data.length; k++)
 										{
 											if(xmlobject.mxGraphModel.root[rel_lists[x]][i].mxCell['@target'] === this.data[k].data.nodeId)
+											{	
 												this.data[k].data.tick = !this.data[index].data.tick;
+												this.checkclick(k);
+											}
 										}
 									}
 								}
@@ -717,7 +742,10 @@ export default {
 									for(let k = 0; k < this.data.length; k++)
 									{
 										if(xmlobject.mxGraphModel.root[rel_lists[x]][i].mxCell['@source'] === this.data[k].data.nodeId)
+										{
 											this.data[k].data.tick = !this.data[index].data.tick;
+											this.checkclick(k);
+										}
 									}
 								}
 							}
@@ -737,7 +765,10 @@ export default {
 									for(let k = 0; k < this.data.length; k++)
 									{
 										if(xmlobject.mxGraphModel.root[rel_lists[x]].mxCell['@target'] === this.data[k].data.nodeId)
+										{
 											this.data[k].data.tick = true;
+											this.checkclick(k);
+										}	
 									}
 								}	
 								// if the constraints is 'excludes', set the opposite of the source to the target
@@ -746,7 +777,10 @@ export default {
 									for(let k = 0; k < this.data.length; k++)
 									{
 										if(xmlobject.mxGraphModel.root[rel_lists[x]].mxCell['@target'] === this.data[k].data.nodeId)
+										{
 											this.data[k].data.tick = !this.data[index].data.tick;
+											this.checkclick(k);
+										}	
 									}
 								}
 							}
@@ -759,7 +793,10 @@ export default {
 								for(let k = 0; k < this.data.length; k++)
 								{
 									if(xmlobject.mxGraphModel.root[rel_lists[x]].mxCell['@source'] === this.data[k].data.nodeId)
+									{
 										this.data[k].data.tick = !this.data[index].data.tick;
+										this.checkclick(k);
+									}	
 								}
 							}
 						}
