@@ -161,6 +161,8 @@ export default{
       //counter equals 1 load the entire mxGraph
       var graphContainer = document.getElementById('graphContainer');
       main(this.graph,this.layers,this.mxModel,this.toolbar,this.keyHandler,graphContainer,this.modelType,this.currentFunction,counter,this.setupFunctions,this.undoManager, this.$route.params);
+      var outline = new mxOutline(this.graph, document.getElementById('navigator'));
+		  outline.refresh();
     }
   },
   beforeRouteLeave(to, from, next){
@@ -180,8 +182,9 @@ export default{
     $route (to, from){
       if(this.$route.name === 'Models')
       {
-        //remove the palette content when there is a change in the component route
+        //remove the palette content and navigator content when there is a change in the component route
         document.getElementById('tbContainer').innerHTML="";
+        document.getElementById('navigator').innerHTML="";
         this.modelType=this.$route.params.type;
         this.currentFunction=this.modelFunctions[this.modelType];
         this.undoManager = new mxUndoManager();

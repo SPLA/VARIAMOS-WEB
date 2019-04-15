@@ -145,7 +145,7 @@ export default{
 }
 
 .container {  
-    min-width: 1100px;
+    /* min-width: 1100px; */
     margin: 10px auto;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 0.9em;
