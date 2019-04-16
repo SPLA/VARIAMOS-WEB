@@ -300,7 +300,172 @@ export default {
 							this.insertdata(xmlobject.mxGraphModel.root[list[i]]['@label'], xmlobject.mxGraphModel.root[list[i]]['@id'], 1, 'and', 'true', -1, -1);
 					}
 				}
+				// set loop times for the review of the hierarchical tree
+				let checkpoint = 0;
+				if(Array.isArray(xmlobject.mxGraphModel.root.rel_general_general))
+					checkpoint += xmlobject.mxGraphModel.root.rel_general_general.length;
+				else
+					checkpoint += 1;
+				if(Array.isArray(xmlobject.mxGraphModel.root.rel_leaf_general))
+					checkpoint += xmlobject.mxGraphModel.root.rel_leaf_general.length;
+				else
+					checkpoint += 1;
+				while(checkpoint)
+				{
+				// if there is mandatory or optional relation, construct the hierachical structure
+				let rel_lists = ['rel_general_general','rel_leaf_general'];
+				for(let x = 0; x < rel_lists.length; x++)
+				{
+					if(xmlobject.mxGraphModel.root[rel_lists[x]] !== undefined)
+					{
+						if(Array.isArray(xmlobject.mxGraphModel.root[rel_lists[x]]))
+						{
+							for(let i = 0; i < xmlobject.mxGraphModel.root[rel_lists[x]].length; i++)
+							{
+								// if the target and source of the relation are not in the tree cache
+								if(xmlobject.mxGraphModel.root[rel_lists[x]][i].mxCell['@parent'] === modeltype && 
+								!this.treecache.includes(xmlobject.mxGraphModel.root[rel_lists[x]][i].mxCell['@target']) && 
+								!this.treecache.includes(xmlobject.mxGraphModel.root[rel_lists[x]][i].mxCell['@source'])
+								&& xmlobject.mxGraphModel.root[rel_lists[x]][i]['@relType'] !== 'requires' && xmlobject.mxGraphModel.root[rel_lists[x]][i]['@relType'] !== 'excludes')
+								{
+									this.movearray(xmlobject.mxGraphModel.root[rel_lists[x]][i].mxCell['@target'], xmlobject.mxGraphModel.root[rel_lists[x]][i].mxCell['@source']);
+								}
+							}
+						}
+						else
+						{
+							// if the target and source of the relation are not in the tree cache
+							if(xmlobject.mxGraphModel.root[rel_lists[x]].mxCell['@parent'] === modeltype && 
+							!this.treecache.includes(xmlobject.mxGraphModel.root[rel_lists[x]].mxCell['@target']) && 
+							!this.treecache.includes(xmlobject.mxGraphModel.root[rel_lists[x]].mxCell['@source'])
+							&& xmlobject.mxGraphModel.root[rel_lists[x]]['@relType'] !== 'requires' && xmlobject.mxGraphModel.root[rel_lists[x]]['@relType'] !== 'excludes')
+							{
+								this.movearray(xmlobject.mxGraphModel.root[rel_lists[x]].mxCell['@target'], xmlobject.mxGraphModel.root[rel_lists[x]].mxCell['@source']);
+							}
+						}
+					}
+				}
+				// if there is bundle relation, construct the hierachical structure
+				let rel_bundle_lists = ['rel_leaf_bundle', 'rel_general_bundle'];
+				for(let x = 0; x < rel_bundle_lists.length; x++)
+				{
+					if(xmlobject.mxGraphModel.root[rel_bundle_lists[x]] !== undefined && xmlobject.mxGraphModel.root.rel_bundle_general !== undefined)
+					{
+						if(Array.isArray(xmlobject.mxGraphModel.root[rel_bundle_lists[x]]))
+						{
+							if(Array.isArray(xmlobject.mxGraphModel.root.rel_bundle_general))
+							{
+								for(let i = 0; i < xmlobject.mxGraphModel.root[rel_bundle_lists[x]].length; i++)
+								{
+									for(let j = 0; j < xmlobject.mxGraphModel.root.rel_bundle_general.length; j++)
+									{
+										// if the target and source of the bundle relation are not in the tree cache
+										if(xmlobject.mxGraphModel.root[rel_bundle_lists[x]][i].mxCell['@parent'] === modeltype &&
+										xmlobject.mxGraphModel.root.rel_bundle_general[j].mxCell['@parent'] === modeltype &&
+										!this.treecache.includes(xmlobject.mxGraphModel.root[rel_bundle_lists[x]][i].mxCell['@source']) && 
+										!this.treecache.includes(xmlobject.mxGraphModel.root.rel_bundle_general[j].mxCell['@target']) &&
+										xmlobject.mxGraphModel.root.rel_bundle_general[j].mxCell['@source'] === xmlobject.mxGraphModel.root[rel_bundle_lists[x]][i].mxCell['@target'])
+										{
+											this.movearray(xmlobject.mxGraphModel.root.rel_bundle_general[j].mxCell['@target'], xmlobject.mxGraphModel.root[rel_bundle_lists[x]][i].mxCell['@source']);
+										}
+									}
+								}
+							}
+							else
+							{
+								for(let i = 0; i < xmlobject.mxGraphModel.root[rel_bundle_lists[x]].length; i++)
+								{
+									// if the target and source of the bundle relation are not in the tree cache
+									if(xmlobject.mxGraphModel.root[rel_bundle_lists[x]][i].mxCell['@parent'] === modeltype &&
+									xmlobject.mxGraphModel.root.rel_bundle_general.mxCell['@parent'] === modeltype &&
+									!this.treecache.includes(xmlobject.mxGraphModel.root[rel_bundle_lists[x]][i].mxCell['@source']) && 
+									!this.treecache.includes(xmlobject.mxGraphModel.root.rel_bundle_general.mxCell['@target']) &&
+									xmlobject.mxGraphModel.root.rel_bundle_general.mxCell['@source'] === xmlobject.mxGraphModel.root[rel_bundle_lists[x]][i].mxCell['@target'])
+									{
+										this.movearray(xmlobject.mxGraphModel.root.rel_bundle_general.mxCell['@target'], xmlobject.mxGraphModel.root[rel_bundle_lists[x]][i].mxCell['@source']);
+									}
+								}
+							}
+						}
+						else
+						{
+							if(Array.isArray(xmlobject.mxGraphModel.root.rel_bundle_general))
+							{
+								for(let j = 0; j < xmlobject.mxGraphModel.root.rel_bundle_general.length; j++)
+								{
+									// if the target and source of the bundle relation are not in the tree cache
+									if(xmlobject.mxGraphModel.root[rel_bundle_lists[x]].mxCell['@parent'] === modeltype &&
+									xmlobject.mxGraphModel.root.rel_bundle_general[j].mxCell['@parent'] === modeltype &&
+									!this.treecache.includes(xmlobject.mxGraphModel.root[rel_bundle_lists[x]].mxCell['@source']) && 
+									!this.treecache.includes(xmlobject.mxGraphModel.root.rel_bundle_general[j].mxCell['@target']) &&
+									xmlobject.mxGraphModel.root.rel_bundle_general[j].mxCell['@source'] === xmlobject.mxGraphModel.root[rel_bundle_lists[x]].mxCell['@target'])
+									{
+										this.movearray(xmlobject.mxGraphModel.root.rel_bundle_general[j].mxCell['@target'], xmlobject.mxGraphModel.root[rel_bundle_lists[x]].mxCell['@source']);
+									}
+								}
+							}
+							else
+							{
+								// if the target and source of the bundle relation are not in the tree cache
+								if(xmlobject.mxGraphModel.root[rel_bundle_lists[x]].mxCell['@parent'] === modeltype &&
+								xmlobject.mxGraphModel.root.rel_bundle_general.mxCell['@parent'] === modeltype &&
+								!this.treecache.includes(xmlobject.mxGraphModel.root[rel_bundle_lists[x]].mxCell['@source']) && 
+								!this.treecache.includes(xmlobject.mxGraphModel.root.rel_bundle_general.mxCell['@target']) &&
+								xmlobject.mxGraphModel.root.rel_bundle_general.mxCell['@source'] === xmlobject.mxGraphModel.root[rel_bundle_lists[x]].mxCell['@target'])
+								{
+									this.movearray(xmlobject.mxGraphModel.root.rel_bundle_general.mxCell['@target'], xmlobject.mxGraphModel.root[rel_bundle_lists[x]].mxCell['@source']);
+								}
+							}
+						}
+					}
+				}
+				checkpoint--;
+				}
 			}
+		},
+		/**
+		 * move the element from old index to new index in the array
+		 * @param {number} i1 the id of the new index of the element
+		 * @param {number} i2 the id of the old index of the element
+		 */
+		movearray(i1,i2){
+			let new_index = -1;
+			let old_index = -1;
+			for(let j = 0; j < this.data.length; j++)
+			{
+				if(this.data[j].data.nodeId === i1)
+					new_index = j;
+				if(this.data[j].data.nodeId === i2)
+					old_index = j;
+			}
+			// find the old elements and push them to temp
+			let counter = 1;
+			let temp = [];
+			let level_difference = this.data[new_index].data.level - this.data[old_index].data.level;
+			this.data[old_index].data.level += level_difference + 1;
+			this.data[old_index].data.parentId === i1;
+			temp.unshift(this.data[old_index]);
+			for(let j = old_index + 1; j < this.data.length; j++)
+			{
+				if(this.data[j].data.level === this.data[old_index].data.level || this.data[j].data.level < this.data[old_index].data.level)
+					break;
+				this.data[j].data.level += level_difference + 1;
+				temp.unshift(this.data[j]);
+				counter++;
+			}
+			// delete the old elements
+			this.data.splice(old_index,counter);
+			for(let j = 0; j < this.data.length; j++)
+			{
+				if(this.data[j].data.nodeId === i1)
+					new_index = j;
+			}
+			// add the new elements
+			for(let j = 0; j < counter; j++)
+			{
+				this.data.splice(new_index + 1, 0, temp[j]);
+			}
+			this.data[new_index].numberOfChildren++;
 		},
 		/**
 		 * insert the output of bundle in the element tree
@@ -709,13 +874,13 @@ export default {
 								xmlobject.mxGraphModel.root[rel_lists[x]][i].mxCell['@source'] === this.data[index].data.nodeId)
 								{
 									// if the constraints is 'requires', set the target true
-									if(xmlobject.mxGraphModel.root[rel_lists[x]][i]['@relType'] === 'requires' && this.data[index].data.tick)
+									if(xmlobject.mxGraphModel.root[rel_lists[x]][i]['@relType'] === 'requires')
 									{
 										for(let k = 0; k < this.data.length; k++)
 										{
 											if(xmlobject.mxGraphModel.root[rel_lists[x]][i].mxCell['@target'] === this.data[k].data.nodeId)
 											{
-												this.data[k].data.tick = true;
+												this.data[k].data.tick = this.data[index].data.tick;
 												this.checkclick(k);
 											}
 										}
@@ -760,13 +925,13 @@ export default {
 							xmlobject.mxGraphModel.root[rel_lists[x]].mxCell['@source'] === this.data[index].data.nodeId)
 							{
 								// if the constraints is 'requires', set the target true
-								if(xmlobject.mxGraphModel.root[rel_lists[x]]['@relType'] === 'requires' && this.data[index].data.tick)
+								if(xmlobject.mxGraphModel.root[rel_lists[x]]['@relType'] === 'requires')
 								{
 									for(let k = 0; k < this.data.length; k++)
 									{
 										if(xmlobject.mxGraphModel.root[rel_lists[x]].mxCell['@target'] === this.data[k].data.nodeId)
 										{
-											this.data[k].data.tick = true;
+											this.data[k].data.tick = this.data[index].data.tick;
 											this.checkclick(k);
 										}	
 									}
