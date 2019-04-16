@@ -291,13 +291,13 @@ export default {
 						for(let j = 0; j < xmlobject.mxGraphModel.root[list[i]].length; j++)
 						{
 							if(xmlobject.mxGraphModel.root[list[i]][j].mxCell['@parent'] === modeltype && !this.treecache.includes(xmlobject.mxGraphModel.root[list[i]][j]['@id']))
-								this.insertdata(xmlobject.mxGraphModel.root[list[i]][j]['@label'], xmlobject.mxGraphModel.root[list[i]][j]['@id'], 1, 'and', 'true', -1, -1);
+								this.insertdata(xmlobject.mxGraphModel.root[list[i]][j]['@label'], xmlobject.mxGraphModel.root[list[i]][j]['@id'], 1, 'feature', 'true', -1, -1);
 						}
 					}
 					else if(xmlobject.mxGraphModel.root[list[i]] !== undefined)
 					{
 						if(xmlobject.mxGraphModel.root[list[i]].mxCell['@parent'] === modeltype && !this.treecache.includes(xmlobject.mxGraphModel.root[list[i]]['@id']))
-							this.insertdata(xmlobject.mxGraphModel.root[list[i]]['@label'], xmlobject.mxGraphModel.root[list[i]]['@id'], 1, 'and', 'true', -1, -1);
+							this.insertdata(xmlobject.mxGraphModel.root[list[i]]['@label'], xmlobject.mxGraphModel.root[list[i]]['@id'], 1, 'feature', 'true', -1, -1);
 					}
 				}
 				// set loop times for the review of the hierarchical tree
