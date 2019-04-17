@@ -12,7 +12,8 @@
                       {{ $t("models_area") }} - {{ $route.params.type }} {{ $t("models_model") }}</a></li>
                       <!-- model actions -->
                       <BackEnd /> 
-                      <DomainImplementation :current_graph="graph" /> 
+                      <DomainMenu :current_graph="graph" />
+                      <ApplicationMenu :current_graph="graph" /> 
                       <Verification :current_graph="graph" /> 
                     </ul>
                   </div>
@@ -80,7 +81,8 @@ import binding_feature_component_main from '@/assets/js/models/custom/binding_fe
 import Bus from '../assets/js/common/bus.js'
 
 /* import actions */
-import DomainImplementation from '../components/model_actions/DomainImplementation'
+import DomainMenu from '../components/model_actions/DomainMenu'
+import ApplicationMenu from '../components/model_actions/ApplicationMenu'
 import Verification from '../components/model_actions/Verification'
 import BackEnd from '../components/model_actions/BackEnd'
 
@@ -103,7 +105,8 @@ export default{
   },
   components: {
     BackEnd,
-    DomainImplementation,
+    DomainMenu,
+    ApplicationMenu,
     Verification
   },
   mounted: function(){
