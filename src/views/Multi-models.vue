@@ -30,7 +30,6 @@
 <script>
 import model from './Models.vue'
 import Bus from '../assets/js/common/bus.js'
-import Vue from 'vue'
 
 export default{
     components:{

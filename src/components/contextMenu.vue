@@ -15,7 +15,6 @@ export default {
     props: {
         contextMenuData: {
             type: Object,
-            requred: false,
             default () {
               return {
                 menuName: null,

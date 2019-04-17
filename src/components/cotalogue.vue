@@ -67,15 +67,12 @@
 	</div>
 </template>
 <script>
-import { Spin,Icon } from 'iview'
 import contextMenu from './contextMenu.vue'
 import subcotalogue from './sub_cotalogue.vue'
 import Bus from '../assets/js/common/bus.js'
 export default {
 	name: 'cotalogue',
 	components: {
-		Spin,
-		Icon,
 		contextMenu,
 		subcotalogue
 	},

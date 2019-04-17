@@ -68,14 +68,8 @@
 </template>
 <script>
 /* eslint-disable */
-import { Spin,Icon } from 'iview'
-import Bus from '../assets/js/common/bus.js'
 import xml2json from '../assets/js/common/xml2json.js'
 export default {
-	components: {
-		Spin,
-		Icon
-	},
 	// the element name and type in the tree data
 	props: ['layername','layertype'],
 	data () {
@@ -854,6 +848,7 @@ export default {
 		 * @param {number} index the index of the current element
 		 */
 		checkconstraints(index){
+			let checkindex = -1;
 			let modeltype = this.layername;
 			var xmlDoc = (new DOMParser()).parseFromString(this.getxml,"text/xml");
 			var xmlobject = JSON.parse(xml2json(xmlDoc,''));
@@ -878,10 +873,12 @@ export default {
 									{
 										for(let k = 0; k < this.data.length; k++)
 										{
+											// requires conforms to both select and disselect
 											if(xmlobject.mxGraphModel.root[rel_lists[x]][i].mxCell['@target'] === this.data[k].data.nodeId)
 											{
 												this.data[k].data.tick = this.data[index].data.tick;
 												this.checkclick(k);
+												checkindex = k;
 											}
 										}
 									}	
@@ -890,10 +887,12 @@ export default {
 									{
 										for(let k = 0; k < this.data.length; k++)
 										{
-											if(xmlobject.mxGraphModel.root[rel_lists[x]][i].mxCell['@target'] === this.data[k].data.nodeId)
+											//excludes conforms to only select
+											if(xmlobject.mxGraphModel.root[rel_lists[x]][i].mxCell['@target'] === this.data[k].data.nodeId && this.data[index].data.tick)
 											{	
 												this.data[k].data.tick = !this.data[index].data.tick;
 												this.checkclick(k);
+												checkindex = k;
 											}
 										}
 									}
@@ -901,15 +900,32 @@ export default {
 								// if the target is in constraint relation and the constraints is 'excludes', 
 								// set the opposite of the target to the source
 								else if(xmlobject.mxGraphModel.root[rel_lists[x]][i].mxCell['@parent'] === modeltype && 
-								xmlobject.mxGraphModel.root[rel_lists[x]][i].mxCell['@target'] === this.data[index].data.nodeId &&
-								xmlobject.mxGraphModel.root[rel_lists[x]][i]['@relType'] === 'excludes')
+								xmlobject.mxGraphModel.root[rel_lists[x]][i].mxCell['@target'] === this.data[index].data.nodeId)
 								{
-									for(let k = 0; k < this.data.length; k++)
+									if(xmlobject.mxGraphModel.root[rel_lists[x]][i]['@relType'] === 'excludes')
 									{
-										if(xmlobject.mxGraphModel.root[rel_lists[x]][i].mxCell['@source'] === this.data[k].data.nodeId)
+										for(let k = 0; k < this.data.length; k++)
 										{
-											this.data[k].data.tick = !this.data[index].data.tick;
-											this.checkclick(k);
+											//excludes conforms to only select
+											if(xmlobject.mxGraphModel.root[rel_lists[x]][i].mxCell['@source'] === this.data[k].data.nodeId && this.data[index].data.tick)
+											{
+												this.data[k].data.tick = !this.data[index].data.tick;
+												this.checkclick(k);
+												checkindex = k;
+											}	
+										}
+									}
+									else if(xmlobject.mxGraphModel.root[rel_lists[x]][i]['@relType'] === 'requires')
+									{
+										for(let k = 0; k < this.data.length; k++)
+										{
+											//requires conforms to only disselect
+											if(xmlobject.mxGraphModel.root[rel_lists[x]][i].mxCell['@source'] === this.data[k].data.nodeId && !this.data[index].data.tick)
+											{
+												this.data[k].data.tick = this.data[index].data.tick;
+												this.checkclick(k);
+												checkindex = k;
+											}	
 										}
 									}
 								}
@@ -929,10 +945,12 @@ export default {
 								{
 									for(let k = 0; k < this.data.length; k++)
 									{
+										// requires conforms to both select and disselect
 										if(xmlobject.mxGraphModel.root[rel_lists[x]].mxCell['@target'] === this.data[k].data.nodeId)
 										{
 											this.data[k].data.tick = this.data[index].data.tick;
 											this.checkclick(k);
+											checkindex = k;
 										}	
 									}
 								}	
@@ -941,10 +959,12 @@ export default {
 								{
 									for(let k = 0; k < this.data.length; k++)
 									{
-										if(xmlobject.mxGraphModel.root[rel_lists[x]].mxCell['@target'] === this.data[k].data.nodeId)
+										//excludes conforms to only select
+										if(xmlobject.mxGraphModel.root[rel_lists[x]].mxCell['@target'] === this.data[k].data.nodeId && this.data[index].data.tick)
 										{
 											this.data[k].data.tick = !this.data[index].data.tick;
 											this.checkclick(k);
+											checkindex = k;
 										}	
 									}
 								}
@@ -952,22 +972,175 @@ export default {
 							// if the target is in constraint relation and the constraints is 'excludes', 
 							// set the opposite of the target to the source
 							else if(xmlobject.mxGraphModel.root[rel_lists[x]].mxCell['@parent'] === modeltype && 
-							xmlobject.mxGraphModel.root[rel_lists[x]].mxCell['@target'] === this.data[index].data.nodeId &&
-							xmlobject.mxGraphModel.root[rel_lists[x]]['@relType'] === 'excludes')
+							xmlobject.mxGraphModel.root[rel_lists[x]].mxCell['@target'] === this.data[index].data.nodeId)
 							{
-								for(let k = 0; k < this.data.length; k++)
+								if(xmlobject.mxGraphModel.root[rel_lists[x]]['@relType'] === 'excludes')
 								{
-									if(xmlobject.mxGraphModel.root[rel_lists[x]].mxCell['@source'] === this.data[k].data.nodeId)
+									for(let k = 0; k < this.data.length; k++)
 									{
-										this.data[k].data.tick = !this.data[index].data.tick;
-										this.checkclick(k);
-									}	
+										//excludes conforms to only select
+										if(xmlobject.mxGraphModel.root[rel_lists[x]].mxCell['@source'] === this.data[k].data.nodeId && this.data[index].data.tick)
+										{
+											this.data[k].data.tick = !this.data[index].data.tick;
+											this.checkclick(k);
+											checkindex = k;
+										}	
+									}
+								}
+								else if(xmlobject.mxGraphModel.root[rel_lists[x]]['@relType'] === 'requires')
+								{
+									for(let k = 0; k < this.data.length; k++)
+									{
+										//requires conforms to only disselect
+										if(xmlobject.mxGraphModel.root[rel_lists[x]].mxCell['@source'] === this.data[k].data.nodeId && !this.data[index].data.tick)
+										{
+											this.data[k].data.tick = this.data[index].data.tick;
+											this.checkclick(k);
+											checkindex = k;
+										}	
+									}
 								}
 							}
 						}
 					}
 				}
 			}
+			if(checkindex !== -1)
+			{
+				if(this.checkadditionalconstraint(xmlobject.mxGraphModel.root,index,checkindex,modeltype))
+					this.checkconstraints(checkindex);
+			}
+		},
+		/**
+		 * check the checked constraint element if it has additional constraints
+		 * @param {object} root 		- the xml object
+		 * @param {number} index		- the original index of the constraint element
+		 * @param {number} c_index		- the index of the checked constraint element
+		 * @param {string} modeltype	- the type of the diagram
+		 */
+		checkadditionalconstraint(root, index, c_index, modeltype)
+		{
+			let rel_lists = ['rel_general_root','rel_general_general','rel_leaf_root','rel_leaf_general'];
+			for(let x = 0; x < rel_lists.length; x++)
+			{
+				if(root[rel_lists[x]] !== undefined)
+				{
+					if(Array.isArray(root[rel_lists[x]]))
+					{
+						for(let i = 0; i < root[rel_lists[x]].length; i++)
+						{
+							for(let j = 0; j < this.data.length; j++)
+							{
+								// if the source is in constraint relation
+								if(root[rel_lists[x]][i].mxCell['@parent'] === modeltype && 
+								root[rel_lists[x]][i].mxCell['@source'] === this.data[c_index].data.nodeId)
+								{
+									// if the constraints is 'requires', set the target true
+									if(root[rel_lists[x]][i]['@relType'] === 'requires')
+									{
+										for(let k = 0; k < this.data.length; k++)
+										{
+											// requires conforms to both select and disselect
+											if(root[rel_lists[x]][i].mxCell['@target'] === this.data[k].data.nodeId && k !== index)
+												return true;
+										}
+									}	
+									// if the constraints is 'excludes', set the opposite of the source to the target
+									else if(root[rel_lists[x]][i]['@relType'] === 'excludes')	
+									{
+										for(let k = 0; k < this.data.length; k++)
+										{
+											//excludes conforms to only select
+											if(root[rel_lists[x]][i].mxCell['@target'] === this.data[k].data.nodeId && this.data[c_index].data.tick && k !== index)
+												return true;
+										}
+									}
+								}
+								// if the target is in constraint relation and the constraints is 'excludes', 
+								// set the opposite of the target to the source
+								else if(root[rel_lists[x]][i].mxCell['@parent'] === modeltype && 
+								root[rel_lists[x]][i].mxCell['@target'] === this.data[c_index].data.nodeId)
+								{
+									if(root[rel_lists[x]][i]['@relType'] === 'excludes')
+									{
+										for(let k = 0; k < this.data.length; k++)
+										{
+											//excludes conforms to only select
+											if(root[rel_lists[x]][i].mxCell['@source'] === this.data[k].data.nodeId && this.data[c_index].data.tick && k !== index)
+												return true;
+										}
+									}
+									else if(root[rel_lists[x]][i]['@relType'] === 'requires')
+									{
+										for(let k = 0; k < this.data.length; k++)
+										{
+											//requires conforms to only disselect
+											if(root[rel_lists[x]][i].mxCell['@source'] === this.data[k].data.nodeId && !this.data[c_index].data.tick && k !== index)
+												return true;
+										}
+									}
+								}
+							}
+						}
+					}
+					else
+					{
+						for(let j = 0; j < this.data.length; j++)
+						{
+							// if the source is in constraint relation
+							if(root[rel_lists[x]].mxCell['@parent'] === modeltype && 
+							root[rel_lists[x]].mxCell['@source'] === this.data[c_index].data.nodeId)
+							{
+								// if the constraints is 'requires', set the target true
+								if(root[rel_lists[x]]['@relType'] === 'requires')
+								{
+									for(let k = 0; k < this.data.length; k++)
+									{
+										// requires conforms to both select and disselect
+										if(root[rel_lists[x]].mxCell['@target'] === this.data[k].data.nodeId && k !== index)
+											return true;
+									}
+								}	
+								// if the constraints is 'excludes', set the opposite of the source to the target
+								else if(root[rel_lists[x]]['@relType'] === 'excludes')	
+								{
+									for(let k = 0; k < this.data.length; k++)
+									{
+										//excludes conforms to only select
+										if(root[rel_lists[x]].mxCell['@target'] === this.data[k].data.nodeId && this.data[c_index].data.tick && k !== index)
+											return true;
+									}
+								}
+							}
+							// if the target is in constraint relation and the constraints is 'excludes', 
+							// set the opposite of the target to the source
+							else if(root[rel_lists[x]].mxCell['@parent'] === modeltype && 
+							root[rel_lists[x]].mxCell['@target'] === this.data[c_index].data.nodeId)
+							{
+								if(root[rel_lists[x]]['@relType'] === 'excludes')
+								{
+									for(let k = 0; k < this.data.length; k++)
+									{
+										//excludes conforms to only select
+										if(root[rel_lists[x]].mxCell['@source'] === this.data[k].data.nodeId && this.data[c_index].data.tick && k !== index)
+											return true;
+									}
+								}
+								else if(root[rel_lists[x]]['@relType'] === 'requires')
+								{
+									for(let k = 0; k < this.data.length; k++)
+									{
+										//requires conforms to only disselect
+										if(root[rel_lists[x]].mxCell['@source'] === this.data[k].data.nodeId && !this.data[c_index].data.tick && k !== index)
+											return true;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+			return false;
 		}
 	}
 }
