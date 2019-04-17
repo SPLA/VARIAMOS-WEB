@@ -1,3 +1,11 @@
+/**
+ * the state of the tree component using Vuex
+ * @property	{array}  data					- the data of the tree component in the file management system
+ * @property	{string} activetab				- the current active tab or diagram
+ * @property	{string} model_component		- the name of the opened folder in the data array
+ * @property	{number} model_component_index	- the index of the opened folder in the data array
+ * @property	{string} xml					- the xml file from the current model
+ */
 const state = {
     data: [],
     activetab: '',
@@ -6,7 +14,7 @@ const state = {
     xml: ''
 }
 
-const getters = {
+export const getters = {
     getdata: state => {
         return state.data
     },
@@ -18,8 +26,9 @@ const getters = {
     },
     getmodelcomponentindex: state => {
         return state.model_component_index
-    },
-    getnewnodeid: state => { //get a new nodeID
+	},
+	//get a new nodeID
+    getnewnodeid: state => { 
         let temp = 0;
         for(let i = 0; i < state.data.length; i++)
             temp = state.data[i].data.nodeId > temp ? state.data[i].data.nodeId : temp;
@@ -30,7 +39,7 @@ const getters = {
     }
 }
 
-const actions = {
+export const actions = {
     loadtreedata ({commit}, data) {
         commit('updatedata', data);
     },
@@ -72,7 +81,7 @@ const actions = {
     }
 }
 
-const mutations = {
+export const mutations = {
     updatexml(state, xml) {
         state.xml = xml;
     },
@@ -482,7 +491,8 @@ const mutations = {
 			{
 				state.data.splice(index, i - index);
 				break;
-            }
+			}
+			// if the children is the last one in the tree data, delete one more
             if(i === state.data.length-1)
                 state.data.splice(index, i - index + 1);	
         }
@@ -490,12 +500,13 @@ const mutations = {
     },
     changenewname (state, nn) {
 		state.data[nn.index].data.nodeName = nn.formval.changedName;
+		// if we change the name of application folder, we need to change its children adaptation folders
 		if(nn.formval.type === 'Application ')
 		{
 			for(let i = nn.index + 1; i < state.data.length; i++)
 			{
 				if(state.data[i].data.parentId === state.data[nn.index].data.nodeId && state.data[i].data.nodeName.includes('Adaptation'))
-					state.data[i].data.nodeName = nn.formval.changedName + ' -' + state.data[i].data.nodeName.split('-')[3];
+					state.data[i].data.nodeName = 'Adaptation -' + nn.formval.changedName.split('-')[1] + '-' + nn.formval.changedName.split('-')[2] + ' -' + state.data[i].data.nodeName.split('-')[3];
 			}
 		}
     },
@@ -515,6 +526,7 @@ const mutations = {
         state.data[index].data.open = !state.data[index].data.open;
     },
     setitemselect(state,index) {
+		// set all the elements not selected and then set the current one selected
         state.data.forEach((item)=>{
             item.data.isSelected = false;
         });

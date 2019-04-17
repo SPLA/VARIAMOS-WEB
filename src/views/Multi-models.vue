@@ -1,9 +1,9 @@
 <template>
     <div id="tabs" class="container">
         <div class="tabs">
-			<div v-for="(item, $index) in getdata" :key="item.data.nodeId" >
-				<a id="atabs" v-if="checktabs(item,$index)" @click="clickactivetab($index)" v-bind:class="[ getactivetab === item.data.nodeName ? 'active' : '' ]">
-					{{item.data.nodeName}}
+			<div v-for="(item, $index) in ['feature','component','binding_feature_component']" :key="item" >
+				<a id="atabs" v-if="checktabs(item,$index)" @click="clickactivetab($index)" v-bind:class="[ getactivetab === item ? 'active' : '' ]">
+					{{item}}
 				</a>
 			</div>
         </div>
@@ -36,82 +36,94 @@ export default{
     components:{
         model
     },
-    data: function() {
-        return{
-            onetab: true
-		}
-    },
     methods:{
-        checktabs: function(item,index){ //set the first one diagram to activetab  
+        /**
+         * when the folder is opened, show up the tabs and model component
+         * @param {string} item     - the element of the array for tabs
+         * @param {number} index    - the index of the array for tabs
+         * @returns {boolean}
+         */
+        checktabs: function(item,index){
             let data = this.getdata;
-            if(this.getmodel_component_index !== -1 && item.data.parentId === data[this.getmodel_component_index].data.nodeId && item.data.nodeType === 3) 
+            if(this.getmodel_component_index !== -1) 
             {
-                if(this.onetab && this.$route.params.type === item.data.nodeName)
-                {
-                    this.onetab =! this.onetab;
-                    let projectname = '';
-			        let foldername = '';
-			        for(let i = 0; i < data.length; i++)
-			        {
-				        if(data[i].data.nodeId === data[index].data.projectId)
-					        projectname = data[i].data.nodeName;
-				        if(data[i].data.nodeId === data[index].data.parentId)
-					        foldername = data[i].data.nodeName.replace(/\s+/g,"");;
-                    }	
-                    this.mxgraphreset = true;
-                    if(item.data.modeltype == 1)
-				        this.$router.push("/models/"+projectname+"/"+foldername+"/feature");
-			        else if(item.data.modeltype == 2) 
-                        this.$router.push("/models/"+projectname+"/"+foldername+"/component");
-                    else if(item.data.modeltype == 3)
-                        this.$router.push("/models/"+projectname+"/"+foldername+"/binding_feature_component");
-                    this.$store.dispatch('updateactivetab', item.data.nodeName);
-                }
+                // if the folder is application, there is only one feature tab
+                if(this.getmodel_component.includes('Application') && index !== 0)
+                    return false;
+                // if the folder is adaptation, there is only one feature tab
+                if(this.getmodel_component.includes('Adaptation') && index !== 0)
+                    return false;
+                // open model component
+                this.mxgraphreset = true;
                 return true;
             }
-            if(this.getmodel_component_index === -1)
-            {
-                this.onetab = true;
-                this.mxgraphreset = false;
-            }
+            // close model component
+            this.mxgraphreset = false;
             return false;
         },
+        /**
+         * click the tab and navigate to the corresponding path and model
+         * @param {number} index    - the index of the array for tabs
+         * @fires module:store~actions:updateactivetab
+         */
         clickactivetab (index) {
             let data = this.getdata;
             let projectname = '';
-			let foldername = '';
+			let foldername = data[this.getmodel_component_index].data.nodeName.replace(/\s+/g,"");
 			for(let i = 0; i < data.length; i++)
 			{
-				if(data[i].data.nodeId === data[index].data.projectId)
+				if(data[i].data.nodeId === data[this.getmodel_component_index].data.projectId)
 					projectname = data[i].data.nodeName;
-				if(data[i].data.nodeId === data[index].data.parentId)
-					foldername = data[i].data.nodeName.replace(/\s+/g,"");;
 			}
-            this.$store.dispatch('updateactivetab', data[index].data.nodeName);
-			if(data[index].data.modeltype == 1)
-				this.$router.push("/models/"+projectname+"/"+foldername+"/feature");
-			else if(data[index].data.modeltype == 2) 
+            if(index == 0)
+            {
+                this.$router.push("/models/"+projectname+"/"+foldername+"/feature");
+                this.$store.dispatch('updateactivetab', 'feature');
+            }
+            else if(index == 1) 
+            {
                 this.$router.push("/models/"+projectname+"/"+foldername+"/component");
-            else if(data[index].data.modeltype == 3)
+                this.$store.dispatch('updateactivetab', 'component');
+            }
+            else if(index == 2)
+            {
                 this.$router.push("/models/"+projectname+"/"+foldername+"/binding_feature_component");
+                this.$store.dispatch('updateactivetab', 'binding_feature_component');
+            }
         }
     },
     computed: {
+        /**
+		 * @returns	{string} activetab in the store
+		 */
         getactivetab (){
             return this.$store.getters.getactivetab;
         },
+        /**
+		 * @returns {array} tree data in the store
+		 */
         getdata (){
             return this.$store.getters.getdata;
         },
+        /**
+		 * @returns	{string} model_component in the store
+		 */
         getmodel_component (){
             return this.$store.getters.getmodelcomponent;
         },
+        /**
+		 * @returns {number} the index of current folder in the store
+		 */
         getmodel_component_index (){
             return this.$store.getters.getmodelcomponentindex;
         }
     },
     mounted () {
-        Bus.$on('resetall', data => { //reset the mxgraph component
+        /**
+         * reset the model component
+         * @deprecated
+         */
+        Bus.$on('resetall', data => {
             Bus.$emit('disablegraph',false);
             this.mxgraphreset = false;
             Vue.nextTick(()=>{
@@ -133,7 +145,7 @@ export default{
 }
 
 .container {  
-    min-width: 1100px;
+    /* min-width: 1100px; */
     margin: 10px auto;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 0.9em;

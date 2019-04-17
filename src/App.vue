@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-
     <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
           <router-link  to="/" class="navbar-brand col-sm-4 col-md-2 mr-0">{{ $t("app_variamos") }}</router-link>
           <input class="form-control form-control-dark w-100 height-100" type="text" v-bind:placeholder="$t('app_search')" v-bind:aria-label="$t('app_search')">
@@ -10,10 +9,9 @@
             </li>
           </ul>
         </nav>
-
         <div class="container-fluid">
             <div class="row">
-              <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+              <Menu class="col-md-2 d-none d-md-block bg-light sidebar">
                 <div class="sidebar-sticky">
                       <Filetree></Filetree>
                       <Divider />
@@ -95,14 +93,14 @@
                     </li>
                   </ul>
                 </div>
-              </nav>
+              </Menu>
 
               <main role="main" class="top-main col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
 
                 <div class="container">
                   <div id="mainview">
                     <keep-alive>
-                    <router-view></router-view>
+                      <router-view></router-view>
                     </keep-alive>
                   </div>
                 </div>

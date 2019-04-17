@@ -128,7 +128,7 @@ var main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model
 		graph.setCellsEditable(false); // Avoid double click cells
 		new mxRubberband(graph); // Enables rectangular selection
 		graph.maximumGraphBounds = new mxRectangle(0, 0, 2000, 2000);
-		new mxOutline(graph, document.getElementById('navigator'));
+		// new mxOutline(graph, document.getElementById('navigator'));
 	}
 
 	function setup_label_changed(graph,c_labels){		

@@ -82,7 +82,15 @@ export default {
 	data () {
 		return {
 			clickNum: null,
+			/**
+			 * unique name for each context menu
+			 */
 			className: '',
+			/**
+			 * the data for right click context menu
+			 * @property {object} axios		- the current location
+			 * @property {array} menulists	- the label, icon and event of right click context menu
+			 */
 			contextMenuData: {
 				menuName: 'menu',
 				axios: {
@@ -129,19 +137,23 @@ export default {
 			}
 		}
 	},
-	mounted: function(){
-		Bus.$on('manageelement', xml=>{
-			this.xml = xml;
-		});
-	},
 	computed: {
+		/**
+		 * @returns {array} tree data in the store
+		 */
         getdata (){
             return this.$store.getters.getdata;
         }
     },
 	methods: {
+		/**
+		 * define a complete rule to show the tree elements
+		 * @param {number} index	- the index of the tree data array
+		 * @returns {boolean}
+		 */
 		checkchildnode(index) {
 			let data = this.getdata;
+			// if one project is open, the other projects are not displayed
 			if(data[index].data.level === 1)
 			{
 				for(let i = 0; i < data.length; i++)
@@ -152,17 +164,20 @@ export default {
 			}
 			if(data[index].data.nodeType === 1 && data[index].data.level !== 1)
 			{
+				// if one folder is opened, the other folder is not displayed
 				for(let i = 0; i < data.length; i++)
 				{
 					if(data[i].data.nodeType === 1 && data[i].data.level !== 1 && data[i].data.open && i !== index)
 						return false;
 				}
+				// if the project is opened, all the folders are displayed
 				for(let i = 0; i < data.length; i++)
 				{
 					if(data[i].data.nodeId === data[index].data.projectId && data[i].data.open)
 						return true;
 				}
 			}
+			// if the folder or the project is closed, set all its children closed
 			for(let i = 1; i < index+1; i++)
 			{
 				if(data[index-i].data.level < data[index].data.level)
@@ -178,42 +193,72 @@ export default {
 			}
 			return true;
 		},
+		/**
+		 * open or close the tree elements
+		 * @param {number} index	- the index of the tree data array
+		 */
 		expand_menu(index) {
 			let data = this.getdata;
+			// get the opend project name and opened folder name
 			let projectname = '';
-			let foldername = '';
+			let foldername = data[index].data.nodeName.replace(/\s+/g,"");
 			for(let i = 0; i < data.length; i++)
 			{
 				if(data[i].data.nodeId === data[index].data.projectId)
 					projectname = data[i].data.nodeName;
-				if(data[i].data.nodeId === data[index].data.parentId)
-					foldername = data[i].data.nodeName.replace(/\s+/g,"");
-            }
+			}
 			clearTimeout(this.clickNum);
 			this.clickNum = setTimeout(()=>{
+				// if we are opening one folder
 				if(data[index].data.nodeType === 1 && !data[index].data.open && data[index].data.level !== 1)
 				{
+					// all the other folders in the project are not displayed
 					for(let i = 0; i < data.length; i++)
 					{
 						if(data[i].data.nodeType === 1 && data[i].data.level !== 1 && i !== index)
 							data[i].data.open = false;
 					}
+					/**
+					 * set the router path and update index of current folder and active tab
+					 * @fires module:store~actions:updatemodelcomponent
+					 * @fires module:store~actions:updateactivetab
+					 */
 				    this.$router.push("/models/"+projectname+"/"+foldername+"/feature");
 					this.$store.dispatch('updatemodelcomponent', index);
+					this.$store.dispatch('updateactivetab', 'feature');
 				}
+				// if we are closing one folder
 				else if(data[index].data.nodeType === 1 && data[index].data.open)
 				{
+					/**
+					 * set mxgraph disabled and update index of current folder to -1, set router path to default
+					 * @fires module:Model~event:setfalsegraph
+					 * @fires module:store~actions:updatemodelcomponent
+					 */
 					Bus.$emit('setfalsegraph',false);
 					this.$store.dispatch('updatemodelcomponent', -1);
 					this.$router.push("/models/"+projectname+"/default/default");
 				}
+				/**
+				 * change open to close or close to open
+				 * @fires module:store~actions:setopen
+				 */
 				this.$store.dispatch('setopen', index);
 			}, 250);
 		},
+		/**
+		 * click function
+		 * @param {number} index	- the index of the tree data array
+		 */
 		clickme(index){
 			let data = this.getdata;
+			// get the opend project name and opened folder name
 			let projectname = '';
 			let foldername = '';
+			/**
+			 * change the select property in the tree data array
+			 * @fires module:store~actions:setselect
+			 */
 			this.$store.dispatch('setselect', index);
 			for(let i = 0; i < data.length; i++)
 			{
@@ -222,25 +267,33 @@ export default {
 				if(data[i].data.nodeId === data[index].data.parentId)
 					foldername = data[i].data.nodeName.replace(/\s+/g,"");
 			}		
+			// check if project is open but all the folders are closed
 			let checkpoint = true;
 			for(let i = 0; i < data.length; i++)
 			{
 				if(data[i].data.level !== 1 && data[i].data.open)
 					checkpoint = false;
 			}
+			// set default router path for the situation of all closed folders
 			if(checkpoint && data[index].data.level === 1)
 				this.$router.push("/models/"+data[index].data.nodeName+"/default/default");
 			else if(checkpoint && data[index].data.level !== 1)
 				this.$router.push("/models/"+data[index].data.nodeName.split('-')[1].replace(/\s+/g,"")+"/default/default");
-			
+			// when clicking the diagram, navigate to the correponding router path
 			if(data[index].data.modeltype == 1 && data[index].data.nodeType === 3)
 				this.$router.push("/models/"+projectname+"/"+foldername+"/feature");
 			else if(data[index].data.modeltype == 2 && data[index].data.nodeType === 3) 
                 this.$router.push("/models/"+projectname+"/"+foldername+"/component");
             else if(data[index].data.modeltype == 3 && data[index].data.nodeType === 3)
 				this.$router.push("/models/"+projectname+"/"+foldername+"/binding_feature_component");
+			// if we click the diagram
 			if(data[index].data.nodeType === 3)
 			{
+				/**
+				 * update activetab and current folder
+				 * @fires module:store~actions:updateactivetab
+				 * @fires module:store~actions:updatemodelcomponent
+				 */
 				this.$store.dispatch('updateactivetab', data[index].data.nodeName);
 				for(let i = 0; i < data.length; i++)
 				{
@@ -251,6 +304,7 @@ export default {
 					}
 				}
 			}
+			// if project is open, change its context menu
 			else if(data[index].data.level === 1 && data[index].data.open)
 			{
 				this.contextMenuData.menulists.splice(3,1,[{
@@ -259,6 +313,7 @@ export default {
 					btnName: 'New Application'
 				}]);
 			}
+			// if project is not open, change its context menu
 			else if(data[index].data.level === 1 && !data[index].data.open)
 			{
 				this.contextMenuData.menulists.splice(3,1,[{
@@ -267,6 +322,7 @@ export default {
 					btnName: 'delete project'
 				}]);
 			}
+			// if application folder is open, change its context menu
 			else if(data[index].data.contextmenuIndex === 5 && data[index].data.open)
 			{
 				this.contextMenuData.menulists.splice(5,1,[{
@@ -279,6 +335,7 @@ export default {
 					btnName: 'delete'
 				}]);
 			}
+			// if application folder is not open, change its context menu
 			else if(data[index].data.contextmenuIndex === 5 && !data[index].data.open)
 			{
 				this.contextMenuData.menulists.splice(5,1,[{
@@ -296,19 +353,22 @@ export default {
 				}]);
 			}
 		},
+		// double click folder and project will trigger expand menu
 		dblClick(index){
 			let data = this.getdata;
 			if(data[index].data.nodeType === 1)
 				this.expand_menu(index);
 		},
+		// get the right click event and the current location
 		showMenu(index,event){
 			var _this = this;
+			// trigger clickme function
 			_this.clickme(index);
 			event.preventDefault();
 			_this.className = event.target.closest('.name-container').classList[1];
 			var x = event.clientX;
 			var y = event.clientY;
-			// Get the current location
+			// Get the current location and change the property axios
 			_this.contextMenuData.axios = {
 				x, y
 			};
