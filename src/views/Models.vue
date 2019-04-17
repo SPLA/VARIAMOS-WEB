@@ -75,9 +75,6 @@ import setup_keys from '@/assets/js/models/setup_keys.js'
 import setup_properties from '@/assets/js/models/setup_properties.js'
 import main from '@/assets/js/models/model_main.js'
 import model_load from '@/assets/js/models/model_load.js'
-import feature_main from '@/assets/js/models/custom/feature.js'
-import component_main from '@/assets/js/models/custom/component.js'
-import binding_feature_component_main from '@/assets/js/models/custom/binding_feature_component.js'
 import Bus from '../assets/js/common/bus.js'
 
 /* import actions */
@@ -95,10 +92,9 @@ export default{
       keyHandler: new Object(), //mxKeyHandler
       undoManager: new Object(), //mxUndoManager
       layers:{}, //model layers
-      modelFunctions:{},
       setupFunctions:{},
       models:[], //available models
-      currentFunction:"",
+      currentModel:"",
       mxModel: new Object(), //mxGraphModel
       modelType:"" 
     }
@@ -117,12 +113,7 @@ export default{
     Bus.$on('setfalsegraph', data=>{
       this.graph.setEnabled(false);
     });
-    this.models = ["feature","component","binding_feature_component"]; //represent the available models
-    this.modelFunctions = {
-      "feature":feature_main,
-      "component":component_main,
-      "binding_feature_component":binding_feature_component_main
-    }
+    this.models = getAvailableModels(); //represent the available models - defined in Public/js/util.js
     this.setupFunctions = {
       "setup_relations":setup_relations,
       "setup_buttons":setup_buttons,
@@ -139,7 +130,10 @@ export default{
     //load saved model into the graph if exists, and return layers
     this.layers=model_load(this.graph,this.models,this.modelCode);
     this.modelType=this.$route.params.type; //based on URL Route
-    this.currentFunction=this.modelFunctions[this.modelType];
+
+    //Import only the current need model file
+    var modelToImport = require('@/assets/js/models/custom/'+this.modelType+'.js');
+    this.currentModel = modelToImport.default;
     this.toolbar = new mxToolbar(document.getElementById('tbContainer'));
     this.keyHandler = new mxKeyHandler(this.graph);
     this.undoManager = new mxUndoManager();
@@ -163,7 +157,7 @@ export default{
     initialize_mx(counter){
       //counter equals 1 load the entire mxGraph
       var graphContainer = document.getElementById('graphContainer');
-      main(this.graph,this.layers,this.mxModel,this.toolbar,this.keyHandler,graphContainer,this.modelType,this.currentFunction,counter,this.setupFunctions,this.undoManager, this.$route.params);
+      main(this.graph,this.layers,this.mxModel,this.toolbar,this.keyHandler,graphContainer,this.modelType,this.currentModel,counter,this.setupFunctions,this.undoManager, this.$route.params);
       var outline = new mxOutline(this.graph, document.getElementById('navigator'));
 		  outline.refresh();
     }
@@ -189,7 +183,10 @@ export default{
         document.getElementById('tbContainer').innerHTML="";
         document.getElementById('navigator').innerHTML="";
         this.modelType=this.$route.params.type;
-        this.currentFunction=this.modelFunctions[this.modelType];
+
+        //Import only the current need model file
+        var modelToImport = require('@/assets/js/models/custom/'+this.modelType+'.js');
+        this.currentModel = modelToImport.default;
         this.undoManager = new mxUndoManager();
         this.initialize_mx(2);
         //clear undo redo history
