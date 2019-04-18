@@ -514,8 +514,9 @@ export default{
 			        {
 				        if(data[i].data.nodeId === data[nn.index].data.projectId)
 					        projectname = data[i].data.nodeName;
-                    }
-				    this.$router.push("/models/"+projectname+"/"+nn.formval.changedName.replace(/\s+/g,"")+"/"+this.getactivetab);
+					}
+					if(data[this.newName.index].data.open)
+				    	this.$router.push("/models/"+projectname+"/"+nn.formval.changedName.replace(/\s+/g,"")+"/"+this.getactivetab);
                 }
             }, 250);
 		}
