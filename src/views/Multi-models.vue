@@ -63,7 +63,7 @@ export default{
         },
         // return the available models
         getModels(){
-            return getAvailableModels();
+            return getModelInfo()["gmodels"];
         },
         /**
          * click the tab and navigate to the corresponding path and model
@@ -79,11 +79,9 @@ export default{
 				if(data[i].data.nodeId === data[this.getmodel_component_index].data.projectId)
 					projectname = data[i].data.nodeName;
             }
-            
-            if(index == 0 || index == 1 || index == 2){
-                this.$router.push("/models/"+projectname+"/"+foldername+"/"+getAvailableModels()[index]);
-                this.$store.dispatch('updateactivetab', getAvailableModels()[index]);
-            }
+
+            this.$router.push("/models/"+projectname+"/"+foldername+"/"+getModelInfo()["gmodels"][index]);
+            this.$store.dispatch('updateactivetab', getModelInfo()["gmodels"][index]);
         }
     },
     computed: {

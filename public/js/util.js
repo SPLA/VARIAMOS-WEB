@@ -108,10 +108,5 @@ function modalButton(text,function_to_append){
     return button;
 }
 
-//return the VariaMos available models
-function getAvailableModels(){
-    return ["feature","component","binding_feature_component"];
-}
-
 /* end util */
 

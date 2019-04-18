@@ -113,7 +113,7 @@ export default{
     Bus.$on('setfalsegraph', data=>{
       this.graph.setEnabled(false);
     });
-    this.models = getAvailableModels(); //represent the available models - defined in Public/js/util.js
+    this.models = getModelInfo()["gmodels"]; //represent the available models
     this.setupFunctions = {
       "setup_relations":setup_relations,
       "setup_buttons":setup_buttons,
