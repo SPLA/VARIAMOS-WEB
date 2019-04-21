@@ -20,21 +20,21 @@ var feature_main = function feature_main(graph)
 			"Invalid connection",
 			"Only shape targets allowed"));
 		graph.multiplicities.push(new mxMultiplicity(
-			true, "bundle", null, null, 0, 1, ["root","general"],
+			true, "bundle", null, null, 0, 1, ["root","abstract"],
 			"Only 1 target allowed",
 			"Only shape targets allowed"));
 	}
 
 	function feature_elements(){
-		var root = {src:projectPath+"images/models/feature/rectangle.png", wd:100, hg:35, type:"root", style:"", pname:"Root Feature"};
-		var general = {src:projectPath+"images/models/feature/rectangle.png", wd:100, hg:35, type:"general", style:"", pname:"General Feature"};
-		var leaf = {src:projectPath+"images/models/feature/rectangle.png", wd:100, hg:35, type:"leaf", style:"", pname:"Leaf Feature"};
+		var root = {src:projectPath+"images/models/feature/rectangle3.png", wd:100, hg:35, type:"root", style:"strokeWidth=3", pname:"Root Feature"};
+		var abstract = {src:projectPath+"images/models/feature/rectangle2.png", wd:100, hg:35, type:"abstract", style:"strokeWidth=2", pname:"Abstract Feature"};
+		var concrete = {src:projectPath+"images/models/feature/rectangle.png", wd:100, hg:35, type:"concrete", style:"", pname:"Concrete Feature"};
 		var bundle = {src:projectPath+"images/models/feature/bundle.png", wd:35, hg:35, type:"bundle", style:"shape=ellipse", pname:"Bundle"};
 		
 		var elements=[];
 		elements[0]=root;
-		elements[1]=general;
-		elements[2]=leaf;
+		elements[1]=abstract;
+		elements[2]=concrete;
 		elements[3]=bundle;
 		
 		return elements;
@@ -58,7 +58,7 @@ var feature_main = function feature_main(graph)
 			}]
 		};
 		attributes[1]={
-			"types":["leaf"],
+			"types":["concrete"],
 			"custom_attributes":[{
 				"name":"selected",
 				"def_value":"false"
@@ -71,9 +71,9 @@ var feature_main = function feature_main(graph)
 	function feature_relations(){
 		var relations=[];
 		relations[0]={
-			"source":["general","leaf"],
+			"source":["abstract","concrete"],
 			"rel_source_target":"and",
-			"target":["general","leaf","root"],
+			"target":["abstract","concrete","root"],
 			"attributes":[{
 				"name":"relType",
 				"def_value":"mandatory"
@@ -86,7 +86,7 @@ var feature_main = function feature_main(graph)
 	function feature_properties_styles(){
 		var styles={};
 		styles={
-			"leaf":[{
+			"concrete":[{
 					"attribute":"selected",
 					"input_type":"checkbox",
 					"onchange": feature_custom_methods(3)
@@ -197,7 +197,7 @@ var feature_main = function feature_main(graph)
 	function feature_clon_cells(){
 		var clons={};
 		clons={
-			"leaf":"binding_feature_component"
+			"concrete":"binding_feature_component"
 		};
 
 		return clons;
@@ -210,7 +210,7 @@ var feature_main = function feature_main(graph)
 			for (var i = 0; i < feature_elements.length; i++) {
 				var source = feature_elements[i].source;
 				var type = source.getAttribute("type");
-				if(type=="leaf"){
+				if(type=="concrete"){
 					var sel = source.getAttribute("selected");
 					if(sel=="true"){
 						var overlay = new mxCellOverlay(new mxImage('images/MX/check.png', 16, 16), 'Overlay tooltip');
