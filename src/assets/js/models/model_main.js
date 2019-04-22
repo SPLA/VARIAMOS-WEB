@@ -122,7 +122,7 @@ var main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model
 		graph.setConnectable(true); // Enables new connections in the graph
 		graph.setMultigraph(false);
 		graph.setAllowDanglingEdges(false);
-		graph.setCellsDisconnectable(false) // Avoid disconect egdes
+		graph.setCellsDisconnectable(false) // Avoid disconnect egdes
 		graph.setDisconnectOnMove(false);
 		graph.setPanning(true);
 		graph.setCellsEditable(false); // Avoid double click cells
