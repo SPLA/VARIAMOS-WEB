@@ -16,48 +16,16 @@
 						<i
 							aria-hidden="true"
 							:class="[item.data.open?'fas fa-angle-down':'fas fa-angle-right']"
-							@click="expand_menu($index)"
+							@click="expand_menu($index)" @dblclick="dblClick($index)"
 							:style="{position: 'absolute',left: (20 * item.data.level - 17) + 'px',top: '6px'}">
 						</i>
-						<span class="name-container"
-							:class="'vue-contextmenuName-menu' + item.data.nodeType + item.data.nodeId"
-							@dblclick="dblClick($index)"
-							@contextmenu="showMenu($index,$event)">
-							<img v-if="item.data.type === 'or'"
-							src="../assets/images/OR.png" style="color:gray;size:1px;padding-right:4px"/>
-							<img v-if="item.data.type === 'alt'"
-							src="../assets/images/XOR.png" style="color:gray;size:1px;padding-right:4px"/>
-							<i v-if="item.data.type === 'and'"
-								class="fa fa-plus" aria-hidden="true"
-								style="color:gray;font-size: 16px;padding-right:4px">
-							</i>
-							<i v-if="item.data.type === 'feature'"
-								class="far fa-square" aria-hidden="true"
-								style="color:gray;font-size: 16px;padding-right:4px">
-							</i>
-							<span class="name"
-								:title="item.data.nodeName"
-								:style="{display:item.data.nodeType===2?'initial':'inline-block',
-										userSelect: 'none'}">
-								<div v-if="checkmandatorycircle($index)">
-									<Checkbox v-model="item.data.tick" @on-change="itemclick($index)" disabled>
-										{{item.data.nodeName}}
-									</Checkbox>
-								</div>
-								<div v-if="!checkmandatorycircle($index)">
-									<Checkbox v-model="item.data.tick" @on-change="itemclick($index)">
-										{{item.data.nodeName}}
-									</Checkbox>
-								</div>
-							</span>
-							<i v-if="item.data.mandatory !== 'true'"
-								class="far fa-circle" aria-hidden="true"
-								style="color:gray;font-size: 16px;padding-left:4px">
-							</i>
-							<i v-if="checkmandatorycircle($index)"
-								class="fas fa-circle" aria-hidden="true"
-								style="color:gray;font-size: 16px;padding-left:4px">
-							</i>
+						<span class="name"
+							:title="item.data.nodeName"
+							:style="{display:item.data.nodeType===2?'initial':'inline-block',
+									userSelect: 'none'}">
+								<Checkbox v-model="item.data.tick" @on-change="itemclick($index)">
+									{{item.data.nodeName}}
+								</Checkbox>
 						</span>
 					</a>
 				</li>
