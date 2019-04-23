@@ -1,13 +1,13 @@
 <template>
   <li class="nav-item dropdown">
     <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-      {{ $t("domain_implementation") }}
+      {{ $t("application_menu") }}
     </a>
     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-      <a @click="set_parameters()" class="dropdown-item">{{ $t("domain_implementation_set_params") }}</a>
-      <a @click="execute_derivation()" class="dropdown-item">{{ $t("domain_implementation_execute") }}</a>
-      <a @click="verify_derivation()" class="dropdown-item">{{ $t("domain_implementation_verify") }}</a>
+      <a @click="set_parameters()" class="dropdown-item">{{ $t("application_menu_set_app") }}</a>
+      <a @click="execute_derivation()" class="dropdown-item">{{ $t("domain_implementation_execute") }}</a>      
       <a @click="customize_derivation()" class="dropdown-item">{{ $t("domain_implementation_customize") }}</a>
+      <a @click="verify_derivation()" class="dropdown-item">{{ $t("domain_implementation_verify") }}</a>
     </div>
 
   </li>
@@ -44,14 +44,14 @@ export default {
   methods: {
     //Start set parameters
     set_parameters(){
-      var c_header = modalH3(this.$t("domain_implementation_set_params"));
+      var c_header = modalH3(this.$t("application_menu_set_app"));
       var default_vals = "";
-      var texts = [this.$t("domain_implementation_pool_path"),this.$t("domain_implementation_derived_path")];
-      var inputs = ["server_component_path","server_derived_path"];
+      var texts = [this.$t("domain_implementation_derived_path")];
+      var inputs = ["server_derived_path"];
       if (localStorage["domain_implementation_pool_path"]) {
-        default_vals = [localStorage["domain_implementation_pool_path"],localStorage["domain_implementation_derived_path"]];
+        default_vals = [localStorage["domain_implementation_derived_path"]];
       }else{
-        default_vals = ["uploads/component_pool/","uploads/component_derived/"];
+        default_vals = ["uploads/component_derived/"];
       }
       var c_body = modalInputTexts(texts,inputs,default_vals);
       var c_footer = modalButton(this.$t("modal_save"),this.save_parameters);
@@ -59,11 +59,13 @@ export default {
     },
     //Start execute derivation
     execute_derivation() {
-      if (localStorage["domain_implementation_main_path"] && localStorage["domain_implementation_pool_path"]) {
+      if (localStorage["domain_implementation_main_path"] && localStorage["domain_implementation_pool_path"] && localStorage["domain_implementation_derived_path"]) {
         this.errors=[];
         this.model_data=JSON.stringify(di_actions(this.current_graph,"execute"));
-        axios.post(localStorage["domain_implementation_main_path"]+'DomainImplementation/execute', {
-          data: this.model_data
+        axios.post(localStorage["domain_implementation_main_path"]+'ComponentImplementation/execute', {
+          data: this.model_data,
+          p_pool: localStorage["domain_implementation_pool_path"],
+          p_derived: localStorage["domain_implementation_derived_path"]
         })
         .then(response => {
           var c_header = modalH3(this.$t("models_actions_derivation_response"));
@@ -85,11 +87,12 @@ export default {
     },
     //Start verify derivation
     verify_derivation() {
-      if (localStorage["domain_implementation_main_path"] && localStorage["domain_implementation_pool_path"]) {
+      if (localStorage["domain_implementation_main_path"] && localStorage["domain_implementation_derived_path"]) {
         this.errors=[];
         this.model_data=JSON.stringify(di_actions(this.current_graph,"verify"));
-        axios.post(localStorage["domain_implementation_main_path"]+'DomainImplementation/verify', {
-          data: this.model_data
+        axios.post(localStorage["domain_implementation_main_path"]+'ComponentImplementation/verify', {
+          data: this.model_data,
+          p_derived: localStorage["domain_implementation_derived_path"]
         })
         .then(response => {
           var c_header = modalH3(this.$t("models_actions_derivation_response"));
@@ -112,11 +115,9 @@ export default {
     //Start customize derivation
     customize_derivation() {
       this.previous_dest="";
-      if (localStorage["domain_implementation_main_path"] && localStorage["domain_implementation_pool_path"]) {
+      if (localStorage["domain_implementation_main_path"] && localStorage["domain_implementation_pool_path"] && localStorage["domain_implementation_derived_path"]) {
         this.errors=[];
-        if(this.customization_data==""){
-          this.customization_data=di_actions(this.current_graph,"customize");
-        }
+        this.customization_data=di_actions(this.current_graph,"customize");
 
         if(this.customization_data.length==0){
           var c_header = modalH3(this.$t("modal_error"),"error");
@@ -125,8 +126,10 @@ export default {
         }else{
           if(this.customization_data[0]){
             this.model_data=JSON.stringify(this.customization_data);
-            axios.post(localStorage["domain_implementation_main_path"]+'DomainImplementation/customize/start', {
-              data: this.model_data
+            axios.post(localStorage["domain_implementation_main_path"]+'ComponentImplementation/customize/start', {
+              data: this.model_data,
+              p_pool: localStorage["domain_implementation_pool_path"],
+              p_derived: localStorage["domain_implementation_derived_path"]
             })
             .then(response => {
               this.customization_response=response.data;
@@ -164,7 +167,6 @@ export default {
     },
     //Start save parameters
     save_parameters(){
-      localStorage["domain_implementation_pool_path"] =  document.getElementById('server_component_path').value;
       localStorage["domain_implementation_derived_path"] =  document.getElementById('server_derived_path').value;
       document.getElementById('main_modal').style.display="none";
     },
@@ -204,8 +206,10 @@ export default {
             this.model_data=JSON.stringify(model_datax);
             document.getElementById('Start/Next').disabled = true;
             
-            axios.post(localStorage["domain_implementation_main_path"]+'DomainImplementation/customize/next', {
-              data: this.model_data
+            axios.post(localStorage["domain_implementation_main_path"]+'ComponentImplementation/customize/next', {
+              data: this.model_data,
+              p_pool: localStorage["domain_implementation_pool_path"],
+              p_derived: localStorage["domain_implementation_derived_path"]
             })
             .then(response => {
               document.getElementById('Start/Next').disabled = false;
@@ -240,8 +244,10 @@ export default {
             model_datax[2]=this.previous_plan;
             model_datax[3]=customized_content;
             this.model_data=JSON.stringify(model_datax);
-            axios.post(localStorage["domain_implementation_main_path"]+'DomainImplementation/customize/onlysave', {
-              data: this.model_data
+            axios.post(localStorage["domain_implementation_main_path"]+'ComponentImplementation/customize/onlysave', {
+              data: this.model_data,
+              p_pool: localStorage["domain_implementation_pool_path"],
+              p_derived: localStorage["domain_implementation_derived_path"]
             })
             .then(response => {
               //
@@ -267,7 +273,7 @@ export default {
     send_file(event){
       let formData = new FormData();
       formData.append('file', event.target.files[0]);
-      axios.post(localStorage["domain_implementation_main_path"]+'DomainImplementation/uploadfile?dest='+this.file_dest,
+      axios.post(localStorage["domain_implementation_main_path"]+'ComponentImplementation/uploadfile?dest='+this.file_dest+"&p_derived="+localStorage["domain_implementation_derived_path"],
         formData,
         {
           headers: {

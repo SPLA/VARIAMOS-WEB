@@ -1,9 +1,15 @@
 
 var setup_properties = function setup_properties(graph,properties_styles){
+	//remove previous listeners
+	if(graph.getSelectionModel().eventListeners.length>3){
+		graph.getSelectionModel().eventListeners.pop();
+		graph.getSelectionModel().eventListeners.pop();
+	}
+
     graph.getSelectionModel().addListener(mxEvent.CHANGE, function(sender, evt)
     {
         selectionChanged(graph,properties_styles);
-    });
+	});
 
     selectionChanged(graph,properties_styles);
 
@@ -16,7 +22,6 @@ var setup_properties = function setup_properties(graph,properties_styles){
 		div.innerHTML = '';
 		// Gets the selection cell
 		var cell = graph.getSelectionCell();
-
 		
 		if (cell == null)
 		{

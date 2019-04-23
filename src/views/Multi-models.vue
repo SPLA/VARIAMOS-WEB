@@ -1,7 +1,7 @@
 <template>
     <div id="tabs" class="container">
         <div class="tabs">
-			<div v-for="(item, $index) in ['feature','component','binding_feature_component']" :key="item" >
+			<div v-for="(item, $index) in getModels()" :key="item" >
 				<a id="atabs" v-if="checktabs(item,$index)" @click="clickactivetab($index)" v-bind:class="[ getactivetab === item ? 'active' : '' ]">
 					{{item}}
 				</a>
@@ -60,6 +60,10 @@ export default{
             this.mxgraphreset = false;
             return false;
         },
+        // return the available models
+        getModels(){
+            return getModelInfo()["gmodels"];
+        },
         /**
          * click the tab and navigate to the corresponding path and model
          * @param {number} index    - the index of the array for tabs
@@ -73,22 +77,10 @@ export default{
 			{
 				if(data[i].data.nodeId === data[this.getmodel_component_index].data.projectId)
 					projectname = data[i].data.nodeName;
-			}
-            if(index == 0)
-            {
-                this.$router.push("/models/"+projectname+"/"+foldername+"/feature");
-                this.$store.dispatch('updateactivetab', 'feature');
             }
-            else if(index == 1) 
-            {
-                this.$router.push("/models/"+projectname+"/"+foldername+"/component");
-                this.$store.dispatch('updateactivetab', 'component');
-            }
-            else if(index == 2)
-            {
-                this.$router.push("/models/"+projectname+"/"+foldername+"/binding_feature_component");
-                this.$store.dispatch('updateactivetab', 'binding_feature_component');
-            }
+
+            this.$router.push("/models/"+projectname+"/"+foldername+"/"+getModelInfo()["gmodels"][index]);
+            this.$store.dispatch('updateactivetab', getModelInfo()["gmodels"][index]);
         }
     },
     computed: {

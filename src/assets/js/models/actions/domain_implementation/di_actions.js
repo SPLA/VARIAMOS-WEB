@@ -18,7 +18,7 @@ var di_actions = function di_actions(graph,selected_method)
         for (var i = 0; i < binding_relations.length; i++) {
             var source = binding_relations[i].source;
             var target = binding_relations[i].target;
-            if(source.getAttribute("selected")=="true"){ //only selected leaf features are analyzed
+            if(source.getAttribute("selected")=="true"){ //only selected concrete features are analyzed
                 var label = target.getAttribute("label");
                 var clon_id = target.getId();
                 var id = clon_id.replace("clon", "");
@@ -48,7 +48,7 @@ var di_actions = function di_actions(graph,selected_method)
         for (var i = 0; i < binding_relations.length; i++) {
             var source = binding_relations[i].source;
             var target = binding_relations[i].target;
-            if(source.getAttribute("selected")=="true"){ //only selected leaf features are analyzed
+            if(source.getAttribute("selected")=="true"){ //only selected concrete features are analyzed
                 var label = target.getAttribute("label");
                 var clon_id = target.getId();
                 var id = clon_id.replace("clon", "");
@@ -77,7 +77,7 @@ var di_actions = function di_actions(graph,selected_method)
         for (var i = 0; i < binding_relations.length; i++) {
             var source = binding_relations[i].source;
             var target = binding_relations[i].target;
-            if(source.getAttribute("selected")=="true"){ //only selected leaf features are analyzed
+            if(source.getAttribute("selected")=="true"){ //only selected concrete features are analyzed
                 var label = target.getAttribute("label");
                 var clon_id = target.getId();
                 var id = clon_id.replace("clon", "");
@@ -89,7 +89,9 @@ var di_actions = function di_actions(graph,selected_method)
                     data["ID"]=file_source.getAttribute("label");
                     data["filename"]=file_source.getAttribute("filename");
                     data["destination"]=file_source.getAttribute("destination");
-                    files.push(data);
+                    if(data["filename"]!="customization.json"){
+                        files.push(data);
+                    }
                 }
             }
         }

@@ -6,6 +6,7 @@
   "models_model": "model",
 
   "about_variamos": "About VariaMos",
+  "about_variamos_desc": "VariaMos is a modeling tool that incorporates a language to represent and simulate families of systems.",
   "about_team": "VariaMos 2.0.1 Current Team",
   "about_past_versions": "VariaMos Past Version Team",
   "about_team_daniel": "Daniel Correa",
@@ -40,14 +41,18 @@
   "app_share": "Share",
   "app_export": "Export",
   "app_week": "This week",
+  "app_sign_out": "Sign out",
 
   "modal_save":"Save",
   "modal_success":"Success",
   "modal_error":"Error",
+  "modal_close":"Close",
   "models_save_model":"Model Saved!",
   "models_actions_derivation_response": "Derivation response",
 
-  "domain_implementation":"Domain Implementation",
+  "domain_menu":"Domain Menu",
+  "domain_menu_set_comp":"Set Component Folder",
+
   "domain_implementation_set_params":"Set Derivation Parameters",
   "domain_implementation_execute":"Execute Derivation",
   "domain_implementation_verify":"Verify Derivation",
@@ -55,6 +60,9 @@
   "domain_implementation_pool_path":"Server Component Pool Path",
   "domain_implementation_derived_path":"Server Derived Project Path",
   "domain_implementation_path_problem":"Please setup BackEnd and Derivation parameters first",
+
+  "application_menu":"Application Menu",
+  "application_menu_set_app":"Set Application Folder",
 
   "model_actions_backend_problem":" || Back-End problem",
 
