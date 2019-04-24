@@ -5,13 +5,15 @@
  * @property	{string} model_component		- the name of the opened folder in the data array
  * @property	{number} model_component_index	- the index of the opened folder in the data array
  * @property	{string} xml					- the xml file from the current model
+ * @property	{array}  cache_selected			- the cache of selected elements from the feature and component models
  */
 const state = {
     data: [],
     activetab: '',
     model_component: '',
     model_component_index: -1,
-    xml: ''
+	xml: '',
+	cache_selected: []
 }
 
 export const getters = {
@@ -36,7 +38,10 @@ export const getters = {
     },
     getxml: state => {
         return state.xml;
-    }
+	},
+	getcacheselected: state => {
+		return state.cache_selected;
+	}
 }
 
 export const actions = {
@@ -78,13 +83,36 @@ export const actions = {
     },
     updatexml({commit}, xml) {
         commit('updatexml', xml);
-    }
+	},
+	updatecacheselected({commit}, cache) {
+		commit('updatecacheselected', cache);
+	},
+	addcacheselected({commit}, temp) {
+		commit('addcacheselected', temp);
+	},
+	removecacheselected({commit}, temp) {
+		commit('removecacheselected', temp);
+	}
 }
 
 export const mutations = {
     updatexml(state, xml) {
         state.xml = xml;
-    },
+	},
+	updatecacheselected(state, cache) {
+        state.cache_selected = cache;
+	},
+	addcacheselected(state, data) {
+		if(!state.cache_selected.includes(data))
+			state.cache_selected.push(data);
+	},
+	removecacheselected(state, data) {
+		for( var i = 0; i < state.cache_selected.length; i++){ 
+			if ( state.cache_selected[i] === data) {
+				state.cache_selected.splice(i, 1); 
+			}
+		 }
+	},
     updatedata (state, data) {
         state.data = data;
     },
@@ -513,7 +541,9 @@ export const mutations = {
     defaultmodelcomponent (state) {
         state.activetab = '';
         state.model_component = '';
-        state.model_component_index = -1;
+		state.model_component_index = -1;
+		state.xml = '';
+		state.cache_selected = [];
     },
     setmodelcomponent(state, index) {
         state.model_component = state.data[index].data.nodeName;

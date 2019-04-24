@@ -142,6 +142,9 @@ export default{
     this.initialize_mx(1);
     //clear undo redo history
     this.undoManager.clear();
+
+    if(localStorage['cache_selected'+temp])
+      this.$store.dispatch('updatecacheselected', JSON.parse(localStorage['cache_selected'+temp]));
   },
   methods: {
     persist() {
@@ -173,6 +176,12 @@ export default{
      */
     getmodel_component (){
         return this.$store.getters.getmodelcomponent;
+    },
+    /**
+     * @returns {array} the selected elements from feature and component models
+     */
+    getcache_selected (){
+      return this.$store.getters.getcacheselected;
     }
   },
   watch:{
@@ -205,7 +214,14 @@ export default{
         this.$store.dispatch('updatexml', xml);
       },
       deep:true
-    }
+    },
+    // when the selected elements cache is changed, update localstorage
+    getcache_selected: {
+			handler(val) {
+				localStorage.setItem('cache_selected'+this.getmodel_component, JSON.stringify(val));
+     	},
+      deep:true
+		}
   }
 }
 </script>

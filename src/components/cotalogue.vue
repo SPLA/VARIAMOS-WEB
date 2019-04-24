@@ -377,7 +377,7 @@ export default {
 	.naza-tree-warp {
 		width: 100%;
 		height: 100%;
-		min-width: 175px;
+		/* min-width: 175px; */
 		border-bottom: 0 none;
 		border-top: 0 none;
 		border-right: 0 none;
@@ -396,14 +396,14 @@ export default {
 		margin: 0;
 		cursor: pointer;
 		display: inline-block;
-		min-width: 100%;
+		/* min-width: 100%; */
 	}
 	.naza-tree-warp .naza-tree-inner .naza-tree .selected {
 		background-color: #5bc0de;
 	}
 	.naza-tree-warp .naza-tree-inner .naza-tree .naza-tree-row {
 		list-style: none;
-		min-width: 250px;
+		/* min-width: 250px; */
 		line-height: 30px;
 		height: 30px;
 		float: none;
