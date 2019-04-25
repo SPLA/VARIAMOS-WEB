@@ -103,7 +103,7 @@ export const mutations = {
         state.cache_selected = cache;
 	},
 	addcacheselected(state, data) {
-		if(!state.cache_selected.includes(data))
+		if(!state.cache_selected.includes(data) || state.cache_selected === [])
 			state.cache_selected.push(data);
 	},
 	removecacheselected(state, data) {

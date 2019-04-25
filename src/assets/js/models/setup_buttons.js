@@ -1,4 +1,4 @@
-var setup_buttons = function setup_buttons(graph,undoManager,reused_functions,route_pare){
+var setup_buttons = function setup_buttons(graph,undoManager,reused_functions,route_pare,store){
     /* begin buttonxml */
     // Adds an option to view the XML of the graph
     var buttonXML = document.getElementById('buttonXML');
@@ -49,6 +49,7 @@ var setup_buttons = function setup_buttons(graph,undoManager,reused_functions,ro
         model_code.value="";
         var event = new Event('change');
         model_code.dispatchEvent(event);
+        store.dispatch('updatecacheselected', []);
         location.reload();
     },"eraser"));
     /* end buttonreset */
@@ -119,6 +120,7 @@ var setup_buttons = function setup_buttons(graph,undoManager,reused_functions,ro
     buttonIMPORT.innerHTML="";
     buttonIMPORT.appendChild(mxUtils.button_with_icon(messages["setup_buttons_import"], function()
     {   
+        store.dispatch('updatecacheselected', []);
         file.click();
     },"download"));
     /* end buttonImport */
