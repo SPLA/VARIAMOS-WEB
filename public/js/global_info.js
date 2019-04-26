@@ -12,6 +12,35 @@ function getModelInfo(){
     return info;
 }
 
+// insert models according to main model info
+function insertmodel(data, index, temp) {
+    for(let i = 0; i < getModelInfo()['gmodels'].length; i++)
+	{
+		if(getModelInfo()[getModelInfo()['gmodels'][getModelInfo()['gmodels'].length-i-1]].projFolders.includes(data[index].data.nodeName.split(' -')[0]))
+		{
+			data.splice(index + 1, 0 , {
+				children: [],
+				data: {
+					open: false,
+					isSelected: false,
+					level: data[index].data.level + 1,
+					nodeId: temp,
+					nodeName: getModelInfo()['gmodels'][getModelInfo()['gmodels'].length-i-1],
+					nodeType: 3,
+					parentId: data[index].data.nodeId,
+					projectId: data[index].data.projectId,
+					modeltype: 1,
+	        		contextmenuIndex: 'empty'
+				},
+				numberOfChildren: 0
+			});
+            data[index].numberOfChildren++;
+            temp++;
+		}
+    }
+    return data;
+}
+
 // define the list of right click functions, icons and names
 function getcontextmenulist(){
     var info =[];
