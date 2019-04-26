@@ -67,15 +67,12 @@
 	</div>
 </template>
 <script>
-import { Spin,Icon } from 'iview'
 import contextMenu from './contextMenu.vue'
 import subcotalogue from './sub_cotalogue.vue'
 import Bus from '../assets/js/common/bus.js'
 export default {
 	name: 'cotalogue',
 	components: {
-		Spin,
-		Icon,
 		contextMenu,
 		subcotalogue
 	},
@@ -97,43 +94,13 @@ export default {
 					x: null,
 					y: null
 				},
-				menulists:[[],[{
-					fnHandler: 'newname',
-					icoName: 'fa fa-pencil-alt',
-					btnName: 'Rename'
-				},{
-					fnHandler: 'deletedire',
-					icoName: 'fa fa-times',
-					btnName: 'delete'
-				}],[{
-					fnHandler: 'newname',
-					icoName: 'fa fa-pencil-alt',
-					btnName: 'Rename'
-				},{
-					fnHandler: 'deletedire',
-					icoName: 'fa fa-times',
-					btnName: 'delete'
-				}],[{
-					fnHandler: 'deleteproject',
-					icoName: 'fa fa-times',
-					btnName: 'delete project'
-				}],[{
-					fnHandler: 'deletedire',
-					icoName: 'fa fa-times',
-					btnName: 'delete'
-				}],[{
-					fnHandler: 'createadaption',
-					icoName: 'fa fa-folder',
-					btnName: 'New Adatption'
-				},{
-					fnHandler: 'newname',
-					icoName: 'fa fa-pencil-alt',
-					btnName: 'Rename'
-				},{
-					fnHandler: 'deletedire',
-					icoName: 'fa fa-times',
-					btnName: 'delete'
-				}],[]]
+				menulists:{
+					'project':[getcontextmenulist()['delete_project']],
+					// accepts old version of delete project
+					3:[getcontextmenulist()['delete_project']],
+					'empty':[],
+					'application_folder':[getcontextmenulist()['create_adp'],getcontextmenulist()['rename'],getcontextmenulist()['delete_folder']],
+					'adaptation_folder':[getcontextmenulist()['rename'],getcontextmenulist()['delete_folder']]}
 			}
 		}
 	},
@@ -307,50 +274,22 @@ export default {
 			// if project is open, change its context menu
 			else if(data[index].data.level === 1 && data[index].data.open)
 			{
-				this.contextMenuData.menulists.splice(3,1,[{
-					fnHandler: 'createapplication',
-					icoName: 'fa fa-folder',
-					btnName: 'New Application'
-				}]);
+				this.contextMenuData.menulists['project']=[getcontextmenulist()['create_app']];
 			}
 			// if project is not open, change its context menu
 			else if(data[index].data.level === 1 && !data[index].data.open)
 			{
-				this.contextMenuData.menulists.splice(3,1,[{
-					fnHandler: 'deleteproject',
-					icoName: 'fa fa-times',
-					btnName: 'delete project'
-				}]);
+				this.contextMenuData.menulists['project']=[getcontextmenulist()['delete_project']];
 			}
 			// if application folder is open, change its context menu
-			else if(data[index].data.contextmenuIndex === 5 && data[index].data.open)
+			else if(data[index].data.contextmenuIndex === 'application_folder' && data[index].data.open)
 			{
-				this.contextMenuData.menulists.splice(5,1,[{
-					fnHandler: 'newname',
-					icoName: 'fa fa-pencil-alt',
-					btnName: 'Rename'
-				},{
-					fnHandler: 'deletedire',
-					icoName: 'fa fa-times',
-					btnName: 'delete'
-				}]);
+				this.contextMenuData.menulists['application_folder'] = [getcontextmenulist()['rename'], getcontextmenulist()['delete_folder']];
 			}
 			// if application folder is not open, change its context menu
-			else if(data[index].data.contextmenuIndex === 5 && !data[index].data.open)
+			else if(data[index].data.contextmenuIndex === 'application_folder' && !data[index].data.open)
 			{
-				this.contextMenuData.menulists.splice(5,1,[{
-					fnHandler: 'createadaption',
-					icoName: 'fa fa-folder',
-					btnName: 'New Adatption'
-				},{
-					fnHandler: 'newname',
-					icoName: 'fa fa-pencil-alt',
-					btnName: 'Rename'
-				},{
-					fnHandler: 'deletedire',
-					icoName: 'fa fa-times',
-					btnName: 'delete'
-				}]);
+				this.contextMenuData.menulists['application_folder'] = [getcontextmenulist()['create_adp'], getcontextmenulist()['rename'], getcontextmenulist()['delete_folder']];
 			}
 		},
 		// double click folder and project will trigger expand menu
@@ -380,7 +319,7 @@ export default {
 	.naza-tree-warp {
 		width: 100%;
 		height: 100%;
-		min-width: 175px;
+		/* min-width: 175px; */
 		border-bottom: 0 none;
 		border-top: 0 none;
 		border-right: 0 none;
@@ -399,14 +338,14 @@ export default {
 		margin: 0;
 		cursor: pointer;
 		display: inline-block;
-		min-width: 100%;
+		/* min-width: 100%; */
 	}
 	.naza-tree-warp .naza-tree-inner .naza-tree .selected {
 		background-color: #5bc0de;
 	}
 	.naza-tree-warp .naza-tree-inner .naza-tree .naza-tree-row {
 		list-style: none;
-		min-width: 250px;
+		/* min-width: 250px; */
 		line-height: 30px;
 		height: 30px;
 		float: none;

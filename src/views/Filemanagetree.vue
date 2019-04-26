@@ -5,13 +5,13 @@
                             <button class="btn-model-area btn btn-sm btn-outline-secondary" type="primary" @click="newProject.isshow=!newProject.isshow" data-test="newprojectbutton">
                                 <div style="padding:1px; font-size:12px;">
                                     <i class="fas fa-plus"></i>
-                                    Add a new project
+                                    {{$t("filemanagement_addproject_button")}}
                                 </div>
                             </button>
 							<Modal
 								v-model="newProject.isshow"
 								:loading="newProject.loading"
-								title="New project"
+								:title="$t('filemanagement_addproject_title')"
 								class-name="vertical-center-modal"
 								width="600"
 								ok-text="OK"
@@ -21,9 +21,9 @@
 								data-test="newprojectmodal">
 								<div class="form-horizontal">
 									<div class="form-group">
-										<label class="col-md-3 control-label"><em>*</em> New project name:</label>
+										<label class="col-md-3 control-label"><em>*</em> {{$t("filemanagement_addproject_label")}}</label>
 										<div class="col-md-9">
-											<input type="text" class="form-control" maxlength="70" v-model="newProject.formval.projectName" :placeholder="'Please enter a new project name'" data-test="newprojectmodalinput"/>
+											<input type="text" class="form-control" maxlength="70" v-model="newProject.formval.projectName" :placeholder="$t('filemanagement_addproject_context')" data-test="newprojectmodalinput"/>
 										</div>
 									</div>
 								</div>
@@ -36,7 +36,7 @@
 					<Modal
 						v-model="newName.isshow"
 						:loading="newName.loading"
-						title="Rename"
+						:title="$t('filemanagement_changename_title')"
 						class-name="vertical-center-modal"
 						width="600"
 						ok-text="OK"
@@ -45,9 +45,9 @@
 						@on-cancel="newName.isshow=false,newName.formval.changedName='',newName.formval.id=null">
 						<div class="form-horizontal">
 							<div class="form-group">
-								<label class="col-md-3 control-label"><em>*</em> New name:</label>
+								<label class="col-md-3 control-label"><em>*</em>{{$t("filemanagement_changename_label")}}</label>
 								<div class="col-md-9">
-									<input type="text" class="form-control" maxlength="70" v-model="newName.formval.changedName" :placeholder="'Please enter a new name'" />
+									<input type="text" class="form-control" maxlength="70" v-model="newName.formval.changedName" :placeholder="$t('filemanagement_changename_context')" />
 								</div>
 							</div>
 						</div>
@@ -55,7 +55,7 @@
 					<Modal
 						v-model="newApplication.isshow"
 						:loading="newApplication.loading"
-						title="New Application"
+						:title="$t('filemanagement_newapplication_title')"
 						class-name="vertical-center-modal"
 						width="600"
 						ok-text="OK"
@@ -64,15 +64,15 @@
 						@on-cancel="newApplication.isshow=false,newApplication.applicationName='',newApplication.id=null">
 						<div class="form-horizontal">
 							<div class="form-group">
-								<label class="col-md-2 control-label">Father:</label>
+								<label class="col-md-2 control-label">{{$t("filemanagement_newapplication_father")}}</label>
 								<div class="col-md-9">
 									<input type="text" class="form-control" disabled v-model="newApplication.parentFolder" />
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-md-3 control-label"><em>*</em> Application name:</label>
+								<label class="col-md-3 control-label"><em>*</em>{{$t("filemanagement_newapplication_label")}}</label>
 								<div class="col-md-9">
-									<input type="text" class="form-control" maxlength="70" v-model="newApplication.applicationName" :placeholder="'Please enter a new application name'" />
+									<input type="text" class="form-control" maxlength="70" v-model="newApplication.applicationName" :placeholder="$t('filemanagement_newapplication_context')" />
 								</div>
 							</div>
 						</div>
@@ -80,7 +80,7 @@
 					<Modal
 						v-model="newAdaptation.isshow"
 						:loading="newAdaptation.loading"
-						title="New Adaptation"
+						:title="$t('filemanagement_newadaptation_title')"
 						class-name="vertical-center-modal"
 						width="600"
 						ok-text="OK"
@@ -89,15 +89,15 @@
 						@on-cancel="newAdaptation.isshow=false,newAdaptation.adapatationName='',newAdaptation.id=null">
 						<div class="form-horizontal">
 							<div class="form-group">
-								<label class="col-md-2 control-label">Father:</label>
+								<label class="col-md-2 control-label">{{$t('filemanagement_newadaptation_father')}}</label>
 								<div class="col-md-9">
 									<input type="text" class="form-control" disabled v-model="newAdaptation.parentFolder" />
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-md-3 control-label"><em>*</em> Adaptation name:</label>
+								<label class="col-md-3 control-label"><em>*</em>{{$t('filemanagement_newadaptation_label')}}</label>
 								<div class="col-md-9">
-									<input type="text" class="form-control" maxlength="70" v-model="newAdaptation.adapatationName" :placeholder="'Please enter a new adaptation name'" />
+									<input type="text" class="form-control" maxlength="70" v-model="newAdaptation.adapatationName" :placeholder="$t('filemanagement_newadaptation_context')" />
 								</div>
 							</div>
 						</div>
@@ -356,7 +356,7 @@ export default{
 				let app = this.newApplication;
 				// check the duplicated application name
 				if(typeof (data.find(function(data_diagram){
-					return data_diagram.data.nodeName === app.applicationName && data_diagram.data.parentId === app.parentId;
+					return data_diagram.data.nodeName.split('- ')[2] === app.applicationName && data_diagram.data.parentId === app.parentId;
 				}))!=='undefined')
 				{
 					this.newApplication.loading = false;
@@ -410,7 +410,7 @@ export default{
 				let adp = this.newAdaptation;
 				// check the duplicated adaptation folder
 				if(typeof (data.find(function(data_diagram){
-					return data_diagram.data.nodeName === adp.adapatationName && data_diagram.data.parentId == adp.parentId;
+					return data_diagram.data.nodeName.split('- ')[3] === adp.adapatationName && data_diagram.data.parentId == adp.parentId;
 				}))!=='undefined')
 				{
 					this.newAdaptation.loading = false;
@@ -488,16 +488,16 @@ export default{
 					{
 						localStorage[nn.formval.changedName] = localStorage[data[nn.index].data.nodeName];
 						localStorage.removeItem(data[nn.index].data.nodeName);
-						// if type is application, check the localstorage of adapatation and replace them
-						if(nn.formval.type === 'Application ')
+					}
+					// if type is application, check the localstorage of adapatation and replace them
+					if(nn.formval.type === 'Application ')
+					{
+						for(let i = nn.index + 1; i < data.length; i++)
 						{
-							for(let i = nn.index + 1; i < data.length; i++)
+							if(data[i].data.parentId === data[nn.index].data.nodeId && data[i].data.nodeName.includes('Adaptation') && localStorage[data[i].data.nodeName])
 							{
-								if(data[i].data.parentId === data[nn.index].data.nodeId && data[i].data.nodeName.includes('Adaptation') && localStorage[data[i].data.nodeName])
-								{
-									localStorage[nn.formval.changedName + ' -' + state.data[i].data.nodeName.split('-')[3]] = localStorage[data[i].data.nodeName];
-									localStorage.removeItem(data[i].data.nodeName);
-								}
+								localStorage['Adaptation -'+ nn.formval.changedName.split('-')[1] + '-' + nn.formval.changedName.split('-')[2] + ' -' + data[i].data.nodeName.split('-')[3]] = localStorage[data[i].data.nodeName];
+								localStorage.removeItem(data[i].data.nodeName);
 							}
 						}
 					}
@@ -514,8 +514,9 @@ export default{
 			        {
 				        if(data[i].data.nodeId === data[nn.index].data.projectId)
 					        projectname = data[i].data.nodeName;
-                    }
-				    this.$router.push("/models/"+projectname+"/"+nn.formval.changedName.replace(/\s+/g,"")+"/"+this.getactivetab);
+					}
+					if(data[this.newName.index].data.open)
+				    	this.$router.push("/models/"+projectname+"/"+nn.formval.changedName.replace(/\s+/g,"")+"/"+this.getactivetab);
                 }
             }, 250);
 		}

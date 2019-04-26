@@ -1,5 +1,5 @@
 //main function
-var main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model_type,model_specific_main,counter,setupFunctions,undoManager, route_pare)
+var main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model_type,model_specific_main,counter,setupFunctions,undoManager, route_pare, store)
 {
 	// Checks if the browser is supported
 	if (!mxClient.isBrowserSupported())
@@ -53,7 +53,7 @@ var main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model
 		}
 		
 		//setup buttons
-		setupFunctions["setup_buttons"](graph,undoManager,reused_functions,route_pare);
+		setupFunctions["setup_buttons"](graph,undoManager,reused_functions,route_pare,store);
 		//setup properties
 		setupFunctions["setup_properties"](graph,c_properties_styles);
 		//setup keys

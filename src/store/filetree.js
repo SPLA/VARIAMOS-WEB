@@ -5,13 +5,15 @@
  * @property	{string} model_component		- the name of the opened folder in the data array
  * @property	{number} model_component_index	- the index of the opened folder in the data array
  * @property	{string} xml					- the xml file from the current model
+ * @property	{array}  cache_selected			- the cache of selected elements from the feature and component models
  */
 const state = {
     data: [],
     activetab: '',
     model_component: '',
     model_component_index: -1,
-    xml: ''
+	xml: '',
+	cache_selected: []
 }
 
 export const getters = {
@@ -36,7 +38,10 @@ export const getters = {
     },
     getxml: state => {
         return state.xml;
-    }
+	},
+	getcacheselected: state => {
+		return state.cache_selected;
+	}
 }
 
 export const actions = {
@@ -78,13 +83,36 @@ export const actions = {
     },
     updatexml({commit}, xml) {
         commit('updatexml', xml);
-    }
+	},
+	updatecacheselected({commit}, cache) {
+		commit('updatecacheselected', cache);
+	},
+	addcacheselected({commit}, temp) {
+		commit('addcacheselected', temp);
+	},
+	removecacheselected({commit}, temp) {
+		commit('removecacheselected', temp);
+	}
 }
 
 export const mutations = {
     updatexml(state, xml) {
         state.xml = xml;
-    },
+	},
+	updatecacheselected(state, cache) {
+        state.cache_selected = cache;
+	},
+	addcacheselected(state, data) {
+		if(!state.cache_selected.includes(data) || state.cache_selected === [])
+			state.cache_selected.push(data);
+	},
+	removecacheselected(state, data) {
+		for( var i = 0; i < state.cache_selected.length; i++){ 
+			if ( state.cache_selected[i] === data) {
+				state.cache_selected.splice(i, 1); 
+			}
+		 }
+	},
     updatedata (state, data) {
         state.data = data;
     },
@@ -102,7 +130,7 @@ export const mutations = {
 				parentId: -1,
 				projectId: temp,
 				modeltype: 1,
-				contextmenuIndex: 3
+				contextmenuIndex: 'project'
 			},
 			numberOfChildren: 2
 	    },{
@@ -117,52 +145,7 @@ export const mutations = {
 				parentId: temp,
 				projectId: temp,
 				modeltype: 1,
-				contextmenuIndex: 0
-			},
-			numberOfChildren: 3
-		},{
-			children: [],
-			data: {
-				open: false,
-				isSelected: false,
-				level: 3,
-				nodeId: temp+2,
-				nodeName: "feature",
-				nodeType: 3,
-				parentId: temp+1,
-				projectId: temp,
-				modeltype: 1,
-				contextmenuIndex: 0
-			},
-			numberOfChildren: 0
-		},{
-			children: [],
-			data: {
-				open: false,
-				isSelected: false,
-				level: 3,
-				nodeId: temp+3,
-				nodeName: "component",
-				nodeType: 3,
-				parentId: temp+1,
-				projectId: temp,
-				modeltype: 2,
-				contextmenuIndex: 0
-			},
-			numberOfChildren: 0
-		},{
-			children: [],
-			data: {
-				open: false,
-				isSelected: false,
-				level: 3,
-				nodeId: temp+4,
-				nodeName: "binding_feature_component",
-				nodeType: 3,
-				parentId: temp+1,
-				projectId: temp,
-				modeltype: 3,
-				contextmenuIndex: 0
+				contextmenuIndex: 'empty'
 			},
 			numberOfChildren: 0
 		},{
@@ -171,73 +154,13 @@ export const mutations = {
 				open: false,
 				isSelected: false,
 				level: 2,
-				nodeId: temp+5,
+				nodeId: temp+2,
 				nodeName: "Application - " + name + " - 1",
 				nodeType: 1,
 				parentId: temp,
 				projectId: temp,
 				modeltype: 1,
-				contextmenuIndex: 5
-			},
-			numberOfChildren: 2
-		},{
-			children: [],
-			data: {
-				open: false,
-				isSelected: false,
-				level: 3,
-				nodeId: temp+6,
-				nodeName: "feature",
-				nodeType: 3,
-				parentId: temp+5,
-				projectId: temp,
-				modeltype: 1,
-				contextmenuIndex: 0
-			},
-			numberOfChildren: 0
-		// },{
-		// 	children: [],
-		// 	data: {
-		// 		open: false,
-		// 		isSelected: false,
-		// 		level: 3,
-		// 		nodeId: temp+7,
-		// 		nodeName: "component",
-		// 		nodeType: 3,
-		// 		parentId: temp+5,
-		// 		projectId: temp,
-		// 		modeltype: 2,
-		// 		contextmenuIndex: 0
-		// 	},
-		// 	numberOfChildren: 0
-		// },{
-		// 	children: [],
-		// 	data: {
-		// 		open: false,
-		// 		isSelected: false,
-		// 		level: 3,
-		// 		nodeId: temp+8,
-		// 		nodeName: "binding_feature_component",
-		// 		nodeType: 3,
-		// 		parentId: temp+5,
-		// 		projectId: temp,
-		// 		modeltype: 3,
-		// 		contextmenuIndex: 0
-		// 	},
-		// 	numberOfChildren: 0
-		},{
-			children: [],
-			data: {
-				open: false,
-				isSelected: false,
-				level: 3,
-				nodeId: temp+7,
-				nodeName: "Adaptation - " + name + " - 1" + " - 1",
-				nodeType: 1,
-				parentId: temp+5,
-				projectId: temp,
-				modeltype: 1,
-				contextmenuIndex: 1
+				contextmenuIndex: 'application_folder'
 			},
 			numberOfChildren: 1
 		},{
@@ -245,47 +168,20 @@ export const mutations = {
 			data: {
 				open: false,
 				isSelected: false,
-				level: 4,
-				nodeId: temp+8,
-				nodeName: "feature",
-				nodeType: 3,
-				parentId: temp+7,
+				level: 3,
+				nodeId: temp+3,
+				nodeName: "Adaptation - " + name + " - 1" + " - 1",
+				nodeType: 1,
+				parentId: temp+2,
 				projectId: temp,
 				modeltype: 1,
-				contextmenuIndex: 0
+				contextmenuIndex: 'adaptation_folder'
 			},
 			numberOfChildren: 0
-		// },{
-		// 	children: [],
-		// 	data: {
-		// 		open: false,
-		// 		isSelected: false,
-		// 		level: 4,
-		// 		nodeId: temp+11,
-		// 		nodeName: "component",
-		// 		nodeType: 3,
-		// 		parentId: temp+9,
-		// 		projectId: temp,
-		// 		modeltype: 2,
-		// 		contextmenuIndex: 0
-		// 	},
-		// 	numberOfChildren: 0
-		// },{
-		// 	children: [],
-		// 	data: {
-		// 		open: false,
-		// 		isSelected: false,
-		// 		level: 4,
-		// 		nodeId: temp+12,
-		// 		nodeName: "binding_feature_component",
-		// 		nodeType: 3,
-		// 		parentId: temp+9,
-		// 		projectId: temp,
-		// 		modeltype: 3,
-		// 		contextmenuIndex: 0
-		// 	},
-		// 	numberOfChildren: 0
 		});
+		state.data = insertmodel(state.data, 3, getters.getnewnodeid);
+		state.data = insertmodel(state.data, 2, getters.getnewnodeid);
+		state.data = insertmodel(state.data, 1, getters.getnewnodeid);
     },
     createnewapplication (state, {app, getters}) {
         let temp = getters.getnewnodeid;
@@ -307,117 +203,28 @@ export const mutations = {
 				parentId: state.data[app.index].data.nodeId,
 				projectId: state.data[app.index].data.nodeId,
 				modeltype: state.data[app.index].data.modeltype,
-				contextmenuIndex: 5
+				contextmenuIndex: 'application_folder'
 			},
-			numberOfChildren: 2
+			numberOfChildren: 1
 		},{
-			children: [],
-			data: {
-				open: false,
-				isSelected: false,
-				level: state.data[app.index].data.level + 2,
-				nodeId: temp+1,
-				nodeName: "feature",
-				nodeType: 3,
-				parentId: temp,
-				projectId: state.data[app.index].data.nodeId,
-				modeltype: 1,
-				contextmenuIndex: 0
-			},
-			numberOfChildren: 0
-		// },{
-		// 	children: [],
-		// 	data: {
-		// 		open: false,
-		// 		isSelected: false,
-		// 		level: state.data[app.index].data.level + 2,
-		// 		nodeId: temp+2,
-		// 		nodeName: "component",
-		// 		nodeType: 3,
-		// 		parentId: temp,
-		// 		projectId: state.data[app.index].data.nodeId,
-		// 		modeltype: 2,
-		// 		contextmenuIndex: 0
-		// 	},
-		// 	numberOfChildren: 0
-		// },{
-		// 	children: [],
-		// 	data: {
-		// 		open: false,
-		// 		isSelected: false,
-		// 		level: state.data[app.index].data.level + 2,
-		// 		nodeId: temp+3,
-		// 		nodeName: "binding_feature_component",
-		// 		nodeType: 3,
-		// 		parentId: temp,
-		// 		projectId: state.data[app.index].data.nodeId,
-		// 		modeltype: 3,
-		// 		contextmenuIndex: 0
-		// 	},
-		// 	numberOfChildren: 0
-		});
-		state.data.splice(app.index + tempindex + 1, 0 , {
 			children: [],
 			data: {
 			    open: false,
 				isSelected: false,
 				level:  state.data[app.index].data.level + 2,
-				nodeId:  temp+2,
+				nodeId:  temp+1,
 				nodeName: "Adaptation - " + app.parentFolder + " - " + app.applicationName + " - 1",
 				nodeType: 1,
 				parentId: temp,
 				projectId: state.data[app.index].data.nodeId,
 				modeltype: state.data[app.index].data.modeltype,
-				contextmenuIndex: 1
-			},
-			numberOfChildren: 1
-		},{
-		    children: [],
-			data: {
-				open: false,
-				isSelected: false,
-				level: state.data[app.index].data.level + 3,
-				nodeId: temp+3,
-				nodeName: "feature",
-				nodeType: 3,
-				parentId: temp+2,
-				projectId: state.data[app.index].data.nodeId,
-				modeltype: 1,
-				contextmenuIndex: 0
+				contextmenuIndex: 'adaptation_folder'
 			},
 			numberOfChildren: 0
-		// },{
-		//     children: [],
-		// 	data: {
-		// 		open: false,
-		// 		isSelected: false,
-		// 		level: state.data[app.index].data.level + 3,
-		// 		nodeId: temp+6,
-		// 		nodeName: "component",
-		// 		nodeType: 3,
-		// 		parentId: temp+4,
-		// 		projectId: state.data[app.index].data.nodeId,
-		// 		modeltype: 2,
-		// 		contextmenuIndex: 0
-		// 	},
-		// 	numberOfChildren: 0
-		// },{
-		//     children: [],
-		// 	data: {
-		// 		open: false,
-		// 		isSelected: false,
-		// 		level: state.data[app.index].data.level + 3,
-		// 		nodeId: temp+7,
-		// 		nodeName: "binding_feature_component",
-		// 		nodeType: 3,
-		// 		parentId: temp+4,
-		// 		projectId: state.data[app.index].data.nodeId,
-		// 		modeltype: 3,
-		// 		contextmenuIndex: 0
-		// 	},
-		// 	numberOfChildren: 0
 		});
 		state.data[app.index].numberOfChildren++;
+		state.data = insertmodel(state.data, app.index + tempindex + 1, getters.getnewnodeid);
+		state.data = insertmodel(state.data, app.index + tempindex, getters.getnewnodeid);
     },
     createnewadaptation (state, {adp, getters}) {
         let temp = getters.getnewnodeid;
@@ -433,56 +240,12 @@ export const mutations = {
 				parentId: state.data[adp.index].data.nodeId,
 				projectId: state.data[adp.index].data.projectId,
 				modeltype: state.data[adp.index].data.modeltype,
-				contextmenuIndex: 1
-			},
-			numberOfChildren: 1
-		},{
-		    children: [],
-			data: {
-				open: false,
-				isSelected: false,
-				level: state.data[adp.index].data.level + 2,
-				nodeId: temp+1,
-				nodeName: "feature",
-				nodeType: 3,
-				parentId: temp,
-				projectId: state.data[adp.index].data.projectId,
-				modeltype: 1,
-				contextmenuIndex: 0
+				contextmenuIndex: 'adaptation_folder'
 			},
 			numberOfChildren: 0
-		// },{
-		//     children: [],
-		// 	data: {
-		// 		open: false,
-		// 		isSelected: false,
-		// 		level: state.data[adp.index].data.level + 2,
-		// 		nodeId: temp+2,
-		// 		nodeName: "component",
-		// 		nodeType: 3,
-		// 		parentId: temp,
-		// 		projectId: state.data[adp.index].data.projectId,
-		// 		modeltype: 2,
-		// 		contextmenuIndex: 0
-		// 	},
-		// 	numberOfChildren: 0
-		// },{
-		//     children: [],
-		// 	data: {
-		// 		open: false,
-		// 		isSelected: false,
-		// 		level: state.data[adp.index].data.level + 2,
-		// 		nodeId: temp+3,
-		// 		nodeName: "binding_feature_component",
-		// 		nodeType: 3,
-		// 		parentId: temp,
-		// 		projectId: state.data[adp.index].data.projectId,
-		// 		modeltype: 3,
-		// 		contextmenuIndex: 0
-		// 	},
-		// 	numberOfChildren: 0
 		});
 		state.data[adp.index].numberOfChildren++;
+		state.data = insertmodel(state.data, adp.index + 1, getters.getnewnodeid);
     },
     deletetree (state, index) {
         for(let i = index + 1; i < state.data.length; i++)
@@ -513,7 +276,9 @@ export const mutations = {
     defaultmodelcomponent (state) {
         state.activetab = '';
         state.model_component = '';
-        state.model_component_index = -1;
+		state.model_component_index = -1;
+		state.xml = '';
+		state.cache_selected = [];
     },
     setmodelcomponent(state, index) {
         state.model_component = state.data[index].data.nodeName;
