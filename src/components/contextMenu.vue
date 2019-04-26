@@ -72,7 +72,6 @@ export default {
          * @fires medule:contextMenu~event:mouseup
          */
         fnHandler (item) {
-            console.log(item);
             Bus.$emit(item.fnHandler,this.data);
         }
     }

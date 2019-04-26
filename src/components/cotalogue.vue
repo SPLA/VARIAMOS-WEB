@@ -193,9 +193,7 @@ export default {
 		 * @param {number} index	- the index of the tree data array
 		 */
 		expand_menu(index) {
-			localStorage.clear();
 			let data = this.getdata;
-			console.log(data[0].data.contextmenuIndex);
 			// get the opend project name and opened folder name
 			let projectname = '';
 			let foldername = data[index].data.nodeName.replace(/\s+/g,"");

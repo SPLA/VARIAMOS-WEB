@@ -96,6 +96,7 @@ export default {
 			if(this.layertype === 1 && this.getxml !== '')
 			{
 				xmlobject = xmlobject.mxGraphModel.root;
+				// put top elements in level one
 				let element_list = ['root', 'abstract', 'concrete'];
 				for(let x = 0; x < element_list.length; x++)
 				{
@@ -210,8 +211,8 @@ export default {
 			else if(this.layertype === 2 && this.getxml !== '')
 			{
 				xmlobject = xmlobject.mxGraphModel.root;
-				// put all the component in the level one
-				let element_list = ['component'];
+				// put top elements in level one
+				let element_list = getModelInfo()[modeltype].topElements;
 				for(let x = 0; x < element_list.length; x++)
 				{
 					if(xmlobject[element_list[x]] !== undefined)
@@ -323,7 +324,8 @@ export default {
 		 * @param {string} modeltype the type of the model
 		 */
 		constructbindingmodel(xmlobject, modeltype) {
-			let element_list = ['concrete', 'component'];
+			// put top elements in level one
+			let element_list = getModelInfo()[modeltype].topElements;
 			for(let x = 0; x < element_list.length; x++)
 			{
 				if(xmlobject[element_list[x]] !== undefined)
@@ -370,6 +372,38 @@ export default {
 			for(let i = 0; i < cache.length; i++)
 			{
 				id_list.push(cache[i].id);
+			}
+			if(xmlobject.rel_concrete_component !== undefined)
+			{
+				if(Array.isArray(xmlobject.rel_concrete_component))
+				{
+					for(let i = 0; i < xmlobject.rel_concrete_component.length; i++)
+					{
+						if(xmlobject.rel_concrete_component[i].mxCell['@parent'] === modeltype)
+						{
+							for(let x = 0; x < cache.length; x++)
+							{
+								if(cache[x].id === xmlobject.rel_concrete_component[i].mxCell['@target'])
+									this.insertdata(cache[x].name, cache[x].id, 1, -1, -1, cache[x].tick);
+								if(cache[x].id === xmlobject.rel_concrete_component[i].mxCell['@source'])
+									this.insertdata(cache[x].name, cache[x].id, 2, 0, xmlobject.rel_concrete_component[i].mxCell['@target'], cache[x].tick);
+							}
+						}
+					}
+				}
+				else
+				{
+					if(xmlobject.rel_concrete_component.mxCell['@parent'] === modeltype)
+					{
+						for(let x = 0; x < cache.length; x++)
+						{
+							if(cache[x].id === xmlobject.rel_concrete_component.mxCell['@target'])
+								this.insertdata(cache[x].name, cache[x].id, 1, -1, -1, cache[x].tick);
+							if(cache[x].id === xmlobject.rel_concrete_component.mxCell['@source'])
+								this.insertdata(cache[x].name, cache[x].id, 2, 0, xmlobject.rel_concrete_component.mxCell['@target'], cache[x].tick);
+						}
+					}
+				}
 			}
 			if(xmlobject.rel_bundle_component !== undefined && xmlobject.rel_concrete_bundle !== undefined)
 			{
