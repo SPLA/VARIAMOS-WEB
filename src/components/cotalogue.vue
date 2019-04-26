@@ -95,40 +95,12 @@ export default {
 					y: null
 				},
 				menulists:{
-					'project':[{
-						fnHandler: 'deleteproject',
-						icoName: 'fa fa-times',
-						btnName: 'delete project'
-					}],
+					'project':[getcontextmenulist()['delete_project']],
 					// accepts old version of delete project
-					3:[{
-						fnHandler: 'deleteproject',
-						icoName: 'fa fa-times',
-						btnName: 'delete project'
-					}],
+					3:[getcontextmenulist()['delete_project']],
 					'empty':[],
-					'application_folder':[{
-						fnHandler: 'createadaption',
-						icoName: 'fa fa-folder',
-						btnName: 'New Adatption'
-					},{
-						fnHandler: 'newname',
-						icoName: 'fa fa-pencil-alt',
-						btnName: 'Rename'
-					},{
-						fnHandler: 'deletedire',
-						icoName: 'fa fa-times',
-						btnName: 'delete'
-					}],
-					'adaptation_folder':[{
-						fnHandler: 'newname',
-						icoName: 'fa fa-pencil-alt',
-						btnName: 'Rename'
-					},{
-						fnHandler: 'deletedire',
-						icoName: 'fa fa-times',
-						btnName: 'delete'
-					}]}
+					'application_folder':[getcontextmenulist()['create_adp'],getcontextmenulist()['rename'],getcontextmenulist()['delete_folder']],
+					'adaptation_folder':[getcontextmenulist()['rename'],getcontextmenulist()['delete_folder']]}
 			}
 		}
 	},
@@ -302,50 +274,22 @@ export default {
 			// if project is open, change its context menu
 			else if(data[index].data.level === 1 && data[index].data.open)
 			{
-				this.contextMenuData.menulists['project']=[{
-					fnHandler: 'createapplication',
-					icoName: 'fa fa-folder',
-					btnName: 'New Application'
-				}];
+				this.contextMenuData.menulists['project']=[getcontextmenulist()['create_app']];
 			}
 			// if project is not open, change its context menu
 			else if(data[index].data.level === 1 && !data[index].data.open)
 			{
-				this.contextMenuData.menulists['project']=[{
-					fnHandler: 'deleteproject',
-					icoName: 'fa fa-times',
-					btnName: 'delete project'
-				}];
+				this.contextMenuData.menulists['project']=[getcontextmenulist()['delete_project']];
 			}
 			// if application folder is open, change its context menu
 			else if(data[index].data.contextmenuIndex === 'application_folder' && data[index].data.open)
 			{
-				this.contextMenuData.menulists['application_folder'] = [{
-					fnHandler: 'newname',
-					icoName: 'fa fa-pencil-alt',
-					btnName: 'Rename'
-				},{
-					fnHandler: 'deletedire',
-					icoName: 'fa fa-times',
-					btnName: 'delete'
-				}];
+				this.contextMenuData.menulists['application_folder'] = [getcontextmenulist()['rename'], getcontextmenulist()['delete_folder']];
 			}
 			// if application folder is not open, change its context menu
 			else if(data[index].data.contextmenuIndex === 'application_folder' && !data[index].data.open)
 			{
-				this.contextMenuData.menulists['application_folder'] = [{
-					fnHandler: 'createadaption',
-					icoName: 'fa fa-folder',
-					btnName: 'New Adatption'
-				},{
-					fnHandler: 'newname',
-					icoName: 'fa fa-pencil-alt',
-					btnName: 'Rename'
-				},{
-					fnHandler: 'deletedire',
-					icoName: 'fa fa-times',
-					btnName: 'delete'
-				}];
+				this.contextMenuData.menulists['application_folder'] = [getcontextmenulist()['create_adp'], getcontextmenulist()['rename'], getcontextmenulist()['delete_folder']];
 			}
 		},
 		// double click folder and project will trigger expand menu
