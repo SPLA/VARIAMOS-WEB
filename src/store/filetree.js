@@ -223,36 +223,6 @@ export const mutations = {
 				contextmenuIndex: 'empty'
 			},
 			numberOfChildren: 0
-		// },{
-		// 	children: [],
-		// 	data: {
-		// 		open: false,
-		// 		isSelected: false,
-		// 		level: 3,
-		// 		nodeId: temp+7,
-		// 		nodeName: "component",
-		// 		nodeType: 3,
-		// 		parentId: temp+5,
-		// 		projectId: temp,
-		// 		modeltype: 2,
-		// 		contextmenuIndex: 0
-		// 	},
-		// 	numberOfChildren: 0
-		// },{
-		// 	children: [],
-		// 	data: {
-		// 		open: false,
-		// 		isSelected: false,
-		// 		level: 3,
-		// 		nodeId: temp+8,
-		// 		nodeName: "binding_feature_component",
-		// 		nodeType: 3,
-		// 		parentId: temp+5,
-		// 		projectId: temp,
-		// 		modeltype: 3,
-		// 		contextmenuIndex: 0
-		// 	},
-		// 	numberOfChildren: 0
 		},{
 			children: [],
 			data: {
@@ -283,36 +253,6 @@ export const mutations = {
 				contextmenuIndex: 'empty'
 			},
 			numberOfChildren: 0
-		// },{
-		// 	children: [],
-		// 	data: {
-		// 		open: false,
-		// 		isSelected: false,
-		// 		level: 4,
-		// 		nodeId: temp+11,
-		// 		nodeName: "component",
-		// 		nodeType: 3,
-		// 		parentId: temp+9,
-		// 		projectId: temp,
-		// 		modeltype: 2,
-		// 		contextmenuIndex: 0
-		// 	},
-		// 	numberOfChildren: 0
-		// },{
-		// 	children: [],
-		// 	data: {
-		// 		open: false,
-		// 		isSelected: false,
-		// 		level: 4,
-		// 		nodeId: temp+12,
-		// 		nodeName: "binding_feature_component",
-		// 		nodeType: 3,
-		// 		parentId: temp+9,
-		// 		projectId: temp,
-		// 		modeltype: 3,
-		// 		contextmenuIndex: 0
-		// 	},
-		// 	numberOfChildren: 0
 		});
     },
     createnewapplication (state, {app, getters}) {
@@ -353,36 +293,6 @@ export const mutations = {
 				contextmenuIndex: 'empty'
 			},
 			numberOfChildren: 0
-		// },{
-		// 	children: [],
-		// 	data: {
-		// 		open: false,
-		// 		isSelected: false,
-		// 		level: state.data[app.index].data.level + 2,
-		// 		nodeId: temp+2,
-		// 		nodeName: "component",
-		// 		nodeType: 3,
-		// 		parentId: temp,
-		// 		projectId: state.data[app.index].data.nodeId,
-		// 		modeltype: 2,
-		// 		contextmenuIndex: 0
-		// 	},
-		// 	numberOfChildren: 0
-		// },{
-		// 	children: [],
-		// 	data: {
-		// 		open: false,
-		// 		isSelected: false,
-		// 		level: state.data[app.index].data.level + 2,
-		// 		nodeId: temp+3,
-		// 		nodeName: "binding_feature_component",
-		// 		nodeType: 3,
-		// 		parentId: temp,
-		// 		projectId: state.data[app.index].data.nodeId,
-		// 		modeltype: 3,
-		// 		contextmenuIndex: 0
-		// 	},
-		// 	numberOfChildren: 0
 		});
 		state.data.splice(app.index + tempindex + 1, 0 , {
 			children: [],
@@ -414,36 +324,6 @@ export const mutations = {
 				contextmenuIndex: 'empty'
 			},
 			numberOfChildren: 0
-		// },{
-		//     children: [],
-		// 	data: {
-		// 		open: false,
-		// 		isSelected: false,
-		// 		level: state.data[app.index].data.level + 3,
-		// 		nodeId: temp+6,
-		// 		nodeName: "component",
-		// 		nodeType: 3,
-		// 		parentId: temp+4,
-		// 		projectId: state.data[app.index].data.nodeId,
-		// 		modeltype: 2,
-		// 		contextmenuIndex: 0
-		// 	},
-		// 	numberOfChildren: 0
-		// },{
-		//     children: [],
-		// 	data: {
-		// 		open: false,
-		// 		isSelected: false,
-		// 		level: state.data[app.index].data.level + 3,
-		// 		nodeId: temp+7,
-		// 		nodeName: "binding_feature_component",
-		// 		nodeType: 3,
-		// 		parentId: temp+4,
-		// 		projectId: state.data[app.index].data.nodeId,
-		// 		modeltype: 3,
-		// 		contextmenuIndex: 0
-		// 	},
-		// 	numberOfChildren: 0
 		});
 		state.data[app.index].numberOfChildren++;
     },
@@ -479,36 +359,6 @@ export const mutations = {
 				contextmenuIndex: 'empty'
 			},
 			numberOfChildren: 0
-		// },{
-		//     children: [],
-		// 	data: {
-		// 		open: false,
-		// 		isSelected: false,
-		// 		level: state.data[adp.index].data.level + 2,
-		// 		nodeId: temp+2,
-		// 		nodeName: "component",
-		// 		nodeType: 3,
-		// 		parentId: temp,
-		// 		projectId: state.data[adp.index].data.projectId,
-		// 		modeltype: 2,
-		// 		contextmenuIndex: 0
-		// 	},
-		// 	numberOfChildren: 0
-		// },{
-		//     children: [],
-		// 	data: {
-		// 		open: false,
-		// 		isSelected: false,
-		// 		level: state.data[adp.index].data.level + 2,
-		// 		nodeId: temp+3,
-		// 		nodeName: "binding_feature_component",
-		// 		nodeType: 3,
-		// 		parentId: temp,
-		// 		projectId: state.data[adp.index].data.projectId,
-		// 		modeltype: 3,
-		// 		contextmenuIndex: 0
-		// 	},
-		// 	numberOfChildren: 0
 		});
 		state.data[adp.index].numberOfChildren++;
     },

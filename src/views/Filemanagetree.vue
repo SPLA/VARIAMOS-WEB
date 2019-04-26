@@ -356,7 +356,7 @@ export default{
 				let app = this.newApplication;
 				// check the duplicated application name
 				if(typeof (data.find(function(data_diagram){
-					return data_diagram.data.nodeName === app.applicationName && data_diagram.data.parentId === app.parentId;
+					return data_diagram.data.nodeName.split('- ')[2] === app.applicationName && data_diagram.data.parentId === app.parentId;
 				}))!=='undefined')
 				{
 					this.newApplication.loading = false;
@@ -410,7 +410,7 @@ export default{
 				let adp = this.newAdaptation;
 				// check the duplicated adaptation folder
 				if(typeof (data.find(function(data_diagram){
-					return data_diagram.data.nodeName === adp.adapatationName && data_diagram.data.parentId == adp.parentId;
+					return data_diagram.data.nodeName.split('- ')[3] === adp.adapatationName && data_diagram.data.parentId == adp.parentId;
 				}))!=='undefined')
 				{
 					this.newAdaptation.loading = false;
@@ -488,16 +488,16 @@ export default{
 					{
 						localStorage[nn.formval.changedName] = localStorage[data[nn.index].data.nodeName];
 						localStorage.removeItem(data[nn.index].data.nodeName);
-						// if type is application, check the localstorage of adapatation and replace them
-						if(nn.formval.type === 'Application ')
+					}
+					// if type is application, check the localstorage of adapatation and replace them
+					if(nn.formval.type === 'Application ')
+					{
+						for(let i = nn.index + 1; i < data.length; i++)
 						{
-							for(let i = nn.index + 1; i < data.length; i++)
+							if(data[i].data.parentId === data[nn.index].data.nodeId && data[i].data.nodeName.includes('Adaptation') && localStorage[data[i].data.nodeName])
 							{
-								if(data[i].data.parentId === data[nn.index].data.nodeId && data[i].data.nodeName.includes('Adaptation') && localStorage[data[i].data.nodeName])
-								{
-									localStorage[nn.formval.changedName + ' -' + state.data[i].data.nodeName.split('-')[3]] = localStorage[data[i].data.nodeName];
-									localStorage.removeItem(data[i].data.nodeName);
-								}
+								localStorage['Adaptation -'+ nn.formval.changedName.split('-')[1] + '-' + nn.formval.changedName.split('-')[2] + ' -' + data[i].data.nodeName.split('-')[3]] = localStorage[data[i].data.nodeName];
+								localStorage.removeItem(data[i].data.nodeName);
 							}
 						}
 					}
