@@ -130,7 +130,7 @@ export const mutations = {
 				parentId: -1,
 				projectId: temp,
 				modeltype: 1,
-				contextmenuIndex: 3
+				contextmenuIndex: 'project'
 			},
 			numberOfChildren: 2
 	    },{
@@ -145,7 +145,7 @@ export const mutations = {
 				parentId: temp,
 				projectId: temp,
 				modeltype: 1,
-				contextmenuIndex: 0
+				contextmenuIndex: 'empty'
 			},
 			numberOfChildren: 3
 		},{
@@ -160,7 +160,7 @@ export const mutations = {
 				parentId: temp+1,
 				projectId: temp,
 				modeltype: 1,
-				contextmenuIndex: 0
+				contextmenuIndex: 'empty'
 			},
 			numberOfChildren: 0
 		},{
@@ -175,7 +175,7 @@ export const mutations = {
 				parentId: temp+1,
 				projectId: temp,
 				modeltype: 2,
-				contextmenuIndex: 0
+				contextmenuIndex: 'empty'
 			},
 			numberOfChildren: 0
 		},{
@@ -190,7 +190,7 @@ export const mutations = {
 				parentId: temp+1,
 				projectId: temp,
 				modeltype: 3,
-				contextmenuIndex: 0
+				contextmenuIndex: 'empty'
 			},
 			numberOfChildren: 0
 		},{
@@ -205,7 +205,7 @@ export const mutations = {
 				parentId: temp,
 				projectId: temp,
 				modeltype: 1,
-				contextmenuIndex: 5
+				contextmenuIndex: 'application_folder'
 			},
 			numberOfChildren: 2
 		},{
@@ -220,7 +220,7 @@ export const mutations = {
 				parentId: temp+5,
 				projectId: temp,
 				modeltype: 1,
-				contextmenuIndex: 0
+				contextmenuIndex: 'empty'
 			},
 			numberOfChildren: 0
 		// },{
@@ -265,7 +265,7 @@ export const mutations = {
 				parentId: temp+5,
 				projectId: temp,
 				modeltype: 1,
-				contextmenuIndex: 1
+				contextmenuIndex: 'adaptation_folder'
 			},
 			numberOfChildren: 1
 		},{
@@ -280,7 +280,7 @@ export const mutations = {
 				parentId: temp+7,
 				projectId: temp,
 				modeltype: 1,
-				contextmenuIndex: 0
+				contextmenuIndex: 'empty'
 			},
 			numberOfChildren: 0
 		// },{
@@ -335,7 +335,7 @@ export const mutations = {
 				parentId: state.data[app.index].data.nodeId,
 				projectId: state.data[app.index].data.nodeId,
 				modeltype: state.data[app.index].data.modeltype,
-				contextmenuIndex: 5
+				contextmenuIndex: 'application_folder'
 			},
 			numberOfChildren: 2
 		},{
@@ -350,7 +350,7 @@ export const mutations = {
 				parentId: temp,
 				projectId: state.data[app.index].data.nodeId,
 				modeltype: 1,
-				contextmenuIndex: 0
+				contextmenuIndex: 'empty'
 			},
 			numberOfChildren: 0
 		// },{
@@ -396,7 +396,7 @@ export const mutations = {
 				parentId: temp,
 				projectId: state.data[app.index].data.nodeId,
 				modeltype: state.data[app.index].data.modeltype,
-				contextmenuIndex: 1
+				contextmenuIndex: 'adaptation_folder'
 			},
 			numberOfChildren: 1
 		},{
@@ -411,7 +411,7 @@ export const mutations = {
 				parentId: temp+2,
 				projectId: state.data[app.index].data.nodeId,
 				modeltype: 1,
-				contextmenuIndex: 0
+				contextmenuIndex: 'empty'
 			},
 			numberOfChildren: 0
 		// },{
@@ -461,7 +461,7 @@ export const mutations = {
 				parentId: state.data[adp.index].data.nodeId,
 				projectId: state.data[adp.index].data.projectId,
 				modeltype: state.data[adp.index].data.modeltype,
-				contextmenuIndex: 1
+				contextmenuIndex: 'adaptation_folder'
 			},
 			numberOfChildren: 1
 		},{
@@ -476,7 +476,7 @@ export const mutations = {
 				parentId: temp,
 				projectId: state.data[adp.index].data.projectId,
 				modeltype: 1,
-				contextmenuIndex: 0
+				contextmenuIndex: 'empty'
 			},
 			numberOfChildren: 0
 		// },{

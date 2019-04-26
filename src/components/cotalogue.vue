@@ -94,43 +94,41 @@ export default {
 					x: null,
 					y: null
 				},
-				menulists:[[],[{
-					fnHandler: 'newname',
-					icoName: 'fa fa-pencil-alt',
-					btnName: 'Rename'
-				},{
-					fnHandler: 'deletedire',
-					icoName: 'fa fa-times',
-					btnName: 'delete'
-				}],[{
-					fnHandler: 'newname',
-					icoName: 'fa fa-pencil-alt',
-					btnName: 'Rename'
-				},{
-					fnHandler: 'deletedire',
-					icoName: 'fa fa-times',
-					btnName: 'delete'
-				}],[{
-					fnHandler: 'deleteproject',
-					icoName: 'fa fa-times',
-					btnName: 'delete project'
-				}],[{
-					fnHandler: 'deletedire',
-					icoName: 'fa fa-times',
-					btnName: 'delete'
-				}],[{
-					fnHandler: 'createadaption',
-					icoName: 'fa fa-folder',
-					btnName: 'New Adatption'
-				},{
-					fnHandler: 'newname',
-					icoName: 'fa fa-pencil-alt',
-					btnName: 'Rename'
-				},{
-					fnHandler: 'deletedire',
-					icoName: 'fa fa-times',
-					btnName: 'delete'
-				}],[]]
+				menulists:{
+					'project':[{
+						fnHandler: 'deleteproject',
+						icoName: 'fa fa-times',
+						btnName: 'delete project'
+					}],
+					// accepts old version of delete project
+					3:[{
+						fnHandler: 'deleteproject',
+						icoName: 'fa fa-times',
+						btnName: 'delete project'
+					}],
+					'empty':[],
+					'application_folder':[{
+						fnHandler: 'createadaption',
+						icoName: 'fa fa-folder',
+						btnName: 'New Adatption'
+					},{
+						fnHandler: 'newname',
+						icoName: 'fa fa-pencil-alt',
+						btnName: 'Rename'
+					},{
+						fnHandler: 'deletedire',
+						icoName: 'fa fa-times',
+						btnName: 'delete'
+					}],
+					'adaptation_folder':[{
+						fnHandler: 'newname',
+						icoName: 'fa fa-pencil-alt',
+						btnName: 'Rename'
+					},{
+						fnHandler: 'deletedire',
+						icoName: 'fa fa-times',
+						btnName: 'delete'
+					}]}
 			}
 		}
 	},
@@ -195,7 +193,9 @@ export default {
 		 * @param {number} index	- the index of the tree data array
 		 */
 		expand_menu(index) {
+			localStorage.clear();
 			let data = this.getdata;
+			console.log(data[0].data.contextmenuIndex);
 			// get the opend project name and opened folder name
 			let projectname = '';
 			let foldername = data[index].data.nodeName.replace(/\s+/g,"");
@@ -304,25 +304,25 @@ export default {
 			// if project is open, change its context menu
 			else if(data[index].data.level === 1 && data[index].data.open)
 			{
-				this.contextMenuData.menulists.splice(3,1,[{
+				this.contextMenuData.menulists['project']=[{
 					fnHandler: 'createapplication',
 					icoName: 'fa fa-folder',
 					btnName: 'New Application'
-				}]);
+				}];
 			}
 			// if project is not open, change its context menu
 			else if(data[index].data.level === 1 && !data[index].data.open)
 			{
-				this.contextMenuData.menulists.splice(3,1,[{
+				this.contextMenuData.menulists['project']=[{
 					fnHandler: 'deleteproject',
 					icoName: 'fa fa-times',
 					btnName: 'delete project'
-				}]);
+				}];
 			}
 			// if application folder is open, change its context menu
-			else if(data[index].data.contextmenuIndex === 5 && data[index].data.open)
+			else if(data[index].data.contextmenuIndex === 'application_folder' && data[index].data.open)
 			{
-				this.contextMenuData.menulists.splice(5,1,[{
+				this.contextMenuData.menulists['application_folder'] = [{
 					fnHandler: 'newname',
 					icoName: 'fa fa-pencil-alt',
 					btnName: 'Rename'
@@ -330,12 +330,12 @@ export default {
 					fnHandler: 'deletedire',
 					icoName: 'fa fa-times',
 					btnName: 'delete'
-				}]);
+				}];
 			}
 			// if application folder is not open, change its context menu
-			else if(data[index].data.contextmenuIndex === 5 && !data[index].data.open)
+			else if(data[index].data.contextmenuIndex === 'application_folder' && !data[index].data.open)
 			{
-				this.contextMenuData.menulists.splice(5,1,[{
+				this.contextMenuData.menulists['application_folder'] = [{
 					fnHandler: 'createadaption',
 					icoName: 'fa fa-folder',
 					btnName: 'New Adatption'
@@ -347,7 +347,7 @@ export default {
 					fnHandler: 'deletedire',
 					icoName: 'fa fa-times',
 					btnName: 'delete'
-				}]);
+				}];
 			}
 		},
 		// double click folder and project will trigger expand menu

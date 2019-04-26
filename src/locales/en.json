@@ -74,6 +74,21 @@
   "verification_root":"More than one root element",
   "verification_dead":"Dead elements",
   "verification_false":"False optional elements",
-  "verification_path_problem":"Please setup BackEnd parameters first"
+  "verification_path_problem":"Please setup BackEnd parameters first",
 
+  "filemanagement_addproject_button": "Add a new project",
+  "filemanagement_addproject_title": "New project",
+  "filemanagement_addproject_label": "New project name:",
+  "filemanagement_addproject_context": "Please enter a new project name",
+  "filemanagement_changename_title": "Rename",
+  "filemanagement_changename_label": "New name:",
+  "filemanagement_changename_context": "Please enter a new name",
+  "filemanagement_newapplication_title": "New application",
+  "filemanagement_newapplication_father": "Father:",
+  "filemanagement_newapplication_label": "Application name:",
+  "filemanagement_newapplication_context": "Please enter a new application name",
+  "filemanagement_newadaptation_title": "New adaptation",
+  "filemanagement_newadaptation_father": "Father:",
+  "filemanagement_newadaptation_label": "Adaptation name:",
+  "filemanagement_newadaptation_context": "Please enter a new adaptation name"
 }
