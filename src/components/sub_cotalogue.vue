@@ -643,9 +643,11 @@ export default {
 </script>
 <style scoped>
 	.naza-tree-warp {
-		width: 100%;
 		height: 100%;
-		min-width: 175px;
+		width:400px;
+		width:auto;
+		min-width:400px;
+		/* max-width: 175px; */
 		border-bottom: 0 none;
 		border-top: 0 none;
 		border-right: 0 none;
@@ -671,7 +673,7 @@ export default {
 	}
 	.naza-tree-warp .naza-tree-inner .naza-tree .naza-tree-row {
 		list-style: none;
-		min-width: 250px;
+		/* min-width: 1000px; */
 		line-height: 30px;
 		height: 30px;
 		float: none;
