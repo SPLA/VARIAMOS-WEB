@@ -44,17 +44,14 @@ export default{
          */
         checktabs: function(item,index){
             let data = this.getdata;
-            if(this.getmodel_component_index !== -1) 
+            for(let i = 0; i < getModelInfo()[item].projFolders.length; i++)
             {
-                // if the folder is application, there is only one feature tab
-                if(this.getmodel_component.includes('Application') && index !== 0)
-                    return false;
-                // if the folder is adaptation, there is only one feature tab
-                if(this.getmodel_component.includes('Adaptation') && index !== 0)
-                    return false;
-                // open model component
-                this.mxgraphreset = true;
-                return true;
+                // check the tabs for each folder
+                if(this.getmodel_component.includes(getModelInfo()[item].projFolders[i]))
+                {
+                    this.mxgraphreset = true;
+                    return true;
+                }
             }
             // close model component
             this.mxgraphreset = false;
