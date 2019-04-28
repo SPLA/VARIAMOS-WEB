@@ -4,11 +4,11 @@ function getModelInfo(){
     //list of graphical models
     info["gmodels"]=["feature","component","binding_feature_component"];
     //define feature model main info
-    info["feature"]={projFolders:["Domain","Application","Adaptation"], shown_Elements:["root", "abstract", "concrete"]};
+    info["feature"]={projFolders:["Domain","Application","Adaptation"], shown_Elements:["root", "abstract", "concrete"], checkbox_enable:true};
     //define component model main info
-    info["component"]={projFolders:["Domain"], shown_Elements:["component", "file"]};
+    info["component"]={projFolders:["Domain"], shown_Elements:["component", "file"], checkbox_enable:true};
     //define binding model main info
-    info["binding_feature_component"]={projFolders:["Domain"], shown_Elements:['concrete', 'component']};
+    info["binding_feature_component"]={projFolders:["Domain"], shown_Elements:['concrete', 'component'], checkbox_enable:true};
     return info;
 }
 

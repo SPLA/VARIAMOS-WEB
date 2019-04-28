@@ -15,9 +15,14 @@
 						<span class="name"
 							:title="item.name"
 							:style="{display:'inline-block', userSelect: 'none'}">
+							<div v-if="!item.checkboxenable">
+								{{item.name}}
+							</div>
+							<div v-if="item.checkboxenable">
 								<Checkbox v-model="item.tick" @on-change="itemclick($index)">
 									{{item.name}}
 								</Checkbox>
+							</div>
 						</span>
 					</a>
 				</li>
@@ -107,23 +112,13 @@ export default {
 							for(let i = 0; i < xmlobject[element_list[x]].length; i++)
 							{
 								if(xmlobject[element_list[x]][i].mxCell['@parent'] === modeltype)
-								{
-									if(this.getcache_selected.includes(xmlobject[element_list[x]][i]['@id']))
-										this.insertdata(xmlobject[element_list[x]][i]['@label'],xmlobject[element_list[x]][i]['@id'], 1, -1, -1, true);
-									else
-										this.insertdata(xmlobject[element_list[x]][i]['@label'],xmlobject[element_list[x]][i]['@id'], 1, -1, -1, false);
-								}
+									this.insertdata(xmlobject[element_list[x]][i]['@label'],xmlobject[element_list[x]][i]['@id'], 1, -1, -1, this.getcache_selected.includes(xmlobject[element_list[x]][i]['@id']), getModelInfo()[modeltype].checkbox_enable);	
 							}
 						}
 						else
 						{
 							if(xmlobject[element_list[x]].mxCell['@parent'] === modeltype)
-							{
-								if(this.getcache_selected.includes(xmlobject[element_list[x]]['@id']))
-									this.insertdata(xmlobject[element_list[x]]['@label'],xmlobject[element_list[x]]['@id'], 1, -1, -1, true);
-								else
-									this.insertdata(xmlobject[element_list[x]]['@label'],xmlobject[element_list[x]]['@id'], 1, -1, -1, false);
-							}
+								this.insertdata(xmlobject[element_list[x]]['@label'],xmlobject[element_list[x]]['@id'], 1, -1, -1, this.getcache_selected.includes(xmlobject[element_list[x]]['@id']), getModelInfo()[modeltype].checkbox_enable);	
 						}
 					}
 				}
@@ -222,13 +217,13 @@ export default {
 							for(let i = 0; i < xmlobject[element_list[x]].length; i++)
 							{
 								if(xmlobject[element_list[x]][i].mxCell['@parent'] === modeltype)
-									this.insertdata(xmlobject[element_list[x]][i]['@label'],xmlobject[element_list[x]][i]['@id'], 1, -1, -1, this.getcache_selected.includes(xmlobject[element_list[x]][i]['@id']));
+									this.insertdata(xmlobject[element_list[x]][i]['@label'],xmlobject[element_list[x]][i]['@id'], 1, -1, -1, this.getcache_selected.includes(xmlobject[element_list[x]][i]['@id']), getModelInfo()[modeltype].checkbox_enable);
 							}
 						}
 						else
 						{
 							if(xmlobject[element_list[x]].mxCell['@parent'] === modeltype)
-								this.insertdata(xmlobject[element_list[x]]['@label'],xmlobject[element_list[x]]['@id'], 1, -1, -1, this.getcache_selected.includes(xmlobject[element_list[x]]['@id']));	
+								this.insertdata(xmlobject[element_list[x]]['@label'],xmlobject[element_list[x]]['@id'], 1, -1, -1, this.getcache_selected.includes(xmlobject[element_list[x]]['@id']), getModelInfo()[modeltype].checkbox_enable);	
 						}
 					}
 				}
@@ -251,7 +246,7 @@ export default {
 											{
 												if(this.data[x].id === xmlobject.rel_file_component[i].mxCell['@target'])
 												{
-													this.insertdata(xmlobject.file[j]['@label'], xmlobject.file[j]['@id'], 2, x, this.data[x].id, this.getcache_selected.includes(xmlobject.file[j]['@id']));
+													this.insertdata(xmlobject.file[j]['@label'], xmlobject.file[j]['@id'], 2, x, this.data[x].id, this.getcache_selected.includes(xmlobject.file[j]['@id']), getModelInfo()[modeltype].checkbox_enable);
 													for(let z = 0; z < this.data.length; z++)
 													{
 														if(this.data[z].id === xmlobject.file[j]['@id'] && this.data[z].level === 1)
@@ -270,7 +265,7 @@ export default {
 										{
 											if(this.data[x].id === xmlobject.rel_file_component[i].mxCell['@target'])
 											{
-												this.insertdata(xmlobject.file['@label'], xmlobject.file['@id'], 2, x, this.data[x].id, this.getcache_selected.includes(xmlobject.file['@id']));
+												this.insertdata(xmlobject.file['@label'], xmlobject.file['@id'], 2, x, this.data[x].id, this.getcache_selected.includes(xmlobject.file['@id']), getModelInfo()[modeltype].checkbox_enable);
 												for(let z = 0; z < this.data.length; z++)
 												{
 													if(this.data[z].id === xmlobject.file['@id'] && this.data[z].level === 1)
@@ -297,7 +292,7 @@ export default {
 										{
 											if(this.data[x].id === xmlobject.rel_file_component.mxCell['@target'])
 											{
-												this.insertdata(xmlobject.file[j]['@label'], xmlobject.file[j]['@id'], 2, x, this.data[x].id, this.getcache_selected.includes(xmlobject.file[j]['@id']));
+												this.insertdata(xmlobject.file[j]['@label'], xmlobject.file[j]['@id'], 2, x, this.data[x].id, this.getcache_selected.includes(xmlobject.file[j]['@id']), getModelInfo()[modeltype].checkbox_enable);
 												for(let z = 0; z < this.data.length; z++)
 												{
 													if(this.data[z].id === xmlobject.file[j]['@id'] && this.data[z].level === 1)
@@ -316,7 +311,7 @@ export default {
 									{
 										if(this.data[x].id === xmlobject.rel_file_component.mxCell['@target'])
 										{
-											this.insertdata(xmlobject.file['@label'], xmlobject.file['@id'], 2, x, this.data[x].id, this.getcache_selected.includes(xmlobject.file['@id']));
+											this.insertdata(xmlobject.file['@label'], xmlobject.file['@id'], 2, x, this.data[x].id, this.getcache_selected.includes(xmlobject.file['@id']), getModelInfo()[modeltype].checkbox_enable);
 											for(let z = 0; z < this.data.length; z++)
 											{
 												if(this.data[z].id === xmlobject.file['@id'] && this.data[z].level === 1)
@@ -356,7 +351,7 @@ export default {
 							{
 								// if concrete is selected in feature model or if component is selected in component model
 								if(this.getcache_selected.includes(xmlobject[element_list[x]][i]['@id'].substring(4)))
-									this.insertdata(xmlobject[element_list[x]][i]['@label'],xmlobject[element_list[x]][i]['@id'], 1, -1, -1, this.getcache_selected.includes(xmlobject[element_list[x]][i]['@id']));
+									this.insertdata(xmlobject[element_list[x]][i]['@label'],xmlobject[element_list[x]][i]['@id'], 1, -1, -1, this.getcache_selected.includes(xmlobject[element_list[x]][i]['@id']), getModelInfo()[modeltype].checkbox_enable);
 							}
 						}
 					}	
@@ -366,7 +361,7 @@ export default {
 						{
 							// if concrete is selected in feature model or if component is selected in component model
 							if(this.getcache_selected.includes(xmlobject[element_list[x]]['@id'].substring(4)))
-								this.insertdata(xmlobject[element_list[x]]['@label'],xmlobject[element_list[x]]['@id'], 1, -1, -1, this.getcache_selected.includes(xmlobject[element_list[x]]['@id']));
+								this.insertdata(xmlobject[element_list[x]]['@label'],xmlobject[element_list[x]]['@id'], 1, -1, -1, this.getcache_selected.includes(xmlobject[element_list[x]]['@id']), getModelInfo()[modeltype].checkbox_enable);
 						}
 					}
 				}
@@ -392,9 +387,9 @@ export default {
 							for(let x = 0; x < cache.length; x++)
 							{
 								if(cache[x].id === xmlobject.rel_concrete_component[i].mxCell['@target'])
-									this.insertdata(cache[x].name, cache[x].id, 1, -1, -1, cache[x].tick);
+									this.insertdata(cache[x].name, cache[x].id, 1, -1, -1, cache[x].tick, getModelInfo()[modeltype].checkbox_enable);
 								if(cache[x].id === xmlobject.rel_concrete_component[i].mxCell['@source'])
-									this.insertdata(cache[x].name, cache[x].id, 2, 0, xmlobject.rel_concrete_component[i].mxCell['@target'], cache[x].tick);
+									this.insertdata(cache[x].name, cache[x].id, 2, 0, xmlobject.rel_concrete_component[i].mxCell['@target'], cache[x].tick), getModelInfo()[modeltype].checkbox_enable;
 							}
 						}
 					}
@@ -406,9 +401,9 @@ export default {
 						for(let x = 0; x < cache.length; x++)
 						{
 							if(cache[x].id === xmlobject.rel_concrete_component.mxCell['@target'])
-								this.insertdata(cache[x].name, cache[x].id, 1, -1, -1, cache[x].tick);
+								this.insertdata(cache[x].name, cache[x].id, 1, -1, -1, cache[x].tick, getModelInfo()[modeltype].checkbox_enable);
 							if(cache[x].id === xmlobject.rel_concrete_component.mxCell['@source'])
-								this.insertdata(cache[x].name, cache[x].id, 2, 0, xmlobject.rel_concrete_component.mxCell['@target'], cache[x].tick);
+								this.insertdata(cache[x].name, cache[x].id, 2, 0, xmlobject.rel_concrete_component.mxCell['@target'], cache[x].tick, getModelInfo()[modeltype].checkbox_enable);
 						}
 					}
 				}
@@ -436,11 +431,11 @@ export default {
 									{
 										if(cache[x].id === xmlobject.rel_bundle_component[i].mxCell['@target'] && onetime)
 										{
-											this.insertdata(cache[x].name, cache[x].id, 1, -1, -1, cache[x].tick);
+											this.insertdata(cache[x].name, cache[x].id, 1, -1, -1, cache[x].tick, getModelInfo()[modeltype].checkbox_enable);
 											onetime = false;
 										}
 										if(cache[x].id === xmlobject.rel_concrete_bundle[j].mxCell['@source'])
-											this.insertdata(cache[x].name, cache[x].id, 2, 0, xmlobject.rel_bundle_component[i].mxCell['@target'], cache[x].tick);
+											this.insertdata(cache[x].name, cache[x].id, 2, 0, xmlobject.rel_bundle_component[i].mxCell['@target'], cache[x].tick, getModelInfo()[modeltype].checkbox_enable);
 									}
 								}
 							}
@@ -457,11 +452,11 @@ export default {
 									{
 										if(cache[x].id === xmlobject.rel_bundle_component[i].mxCell['@target'] && onetime)
 										{
-											this.insertdata(cache[x].name, cache[x].id, 1, -1, -1, cache[x].tick);
+											this.insertdata(cache[x].name, cache[x].id, 1, -1, -1, cache[x].tick, getModelInfo()[modeltype].checkbox_enable);
 											onetime = false;
 										}
 										if(cache[x].id === xmlobject.rel_concrete_bundle.mxCell['@source'])
-											this.insertdata(cache[x].name, cache[x].id, 2, 0, xmlobject.rel_bundle_component[i].mxCell['@target'], cache[x].tick);
+											this.insertdata(cache[x].name, cache[x].id, 2, 0, xmlobject.rel_bundle_component[i].mxCell['@target'], cache[x].tick, getModelInfo()[modeltype].checkbox_enable);
 									}
 								}
 						}
@@ -485,11 +480,11 @@ export default {
 								{
 									if(cache[x].id === xmlobject.rel_bundle_component.mxCell['@target'] && onetime)
 									{
-										this.insertdata(cache[x].name, cache[x].id, 1, -1, -1, cache[x].tick);
+										this.insertdata(cache[x].name, cache[x].id, 1, -1, -1, cache[x].tick, getModelInfo()[modeltype].checkbox_enable);
 										onetime = false;
 									}
 									if(cache[x].id === xmlobject.rel_concrete_bundle[j].mxCell['@source'])
-										this.insertdata(cache[x].name, cache[x].id, 2, 0, xmlobject.rel_bundle_component.mxCell['@target'], cache[x].tick);
+										this.insertdata(cache[x].name, cache[x].id, 2, 0, xmlobject.rel_bundle_component.mxCell['@target'], cache[x].tick, getModelInfo()[modeltype].checkbox_enable);
 								}
 							}
 						}
@@ -506,11 +501,11 @@ export default {
 								{
 								if(cache[x].id === xmlobject.rel_bundle_component.mxCell['@target'] && onetime)
 									{
-										this.insertdata(cache[x].name, cache[x].id, 1, -1, -1, cache[x].tick);
+										this.insertdata(cache[x].name, cache[x].id, 1, -1, -1, cache[x].tick, getModelInfo()[modeltype].checkbox_enable);
 										onetime = false;
 									}
 									if(cache[x].id === xmlobject.rel_concrete_bundle.mxCell['@source'])
-										this.insertdata(cache[x].name, cache[x].id, 2, 0, xmlobject.rel_bundle_component.mxCell['@target'], cache[x].tick);
+										this.insertdata(cache[x].name, cache[x].id, 2, 0, xmlobject.rel_bundle_component.mxCell['@target'], cache[x].tick, getModelInfo()[modeltype].checkbox_enable);
 								}
 							}
 					}
@@ -532,7 +527,7 @@ export default {
 			{
 				for(let i = 0; i < cache.length; i++)
 				{
-					this.insertdata(cache[i].name, cache[i].id, 1, -1, -1, cache[i].tick);
+					this.insertdata(cache[i].name, cache[i].id, 1, -1, -1, cache[i].tick, getModelInfo()[modeltype].checkbox_enable);
 				}
 			}
 		},
@@ -587,15 +582,17 @@ export default {
 		 * @param {number} parentindex the index of parent in the element tree
 		 * @param {number} parentid the parent id in the element tree
 		 * @param {boolean} tick the selection of the element
+		 * @param {boolean} checkboxenable the display of the checkbox
  		 */
-		insertdata(name, newid, level, parentindex, parentid, tick) {
+		insertdata(name, newid, level, parentindex, parentid, tick, checkboxenable) {
             this.data.splice(parentindex + 1, 0 ,{
 				open: true,
 				level: level,
 				id: newid,
 				name: name,
 				tick: tick,
-				parentId: parentid  
+				parentId: parentid,
+				checkboxenable: checkboxenable 
 			});
 		},
 		/**
