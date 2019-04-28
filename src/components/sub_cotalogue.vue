@@ -97,7 +97,7 @@ export default {
 			{
 				xmlobject = xmlobject.mxGraphModel.root;
 				// put top elements in level one
-				let element_list = ['root', 'abstract', 'concrete'];
+				let element_list = getModelInfo()[modeltype].shown_Elements;
 				for(let x = 0; x < element_list.length; x++)
 				{
 					if(xmlobject[element_list[x]] !== undefined)
@@ -212,7 +212,7 @@ export default {
 			{
 				xmlobject = xmlobject.mxGraphModel.root;
 				// put top elements in level one
-				let element_list = getModelInfo()[modeltype].topElements;
+				let element_list = getModelInfo()[modeltype].shown_Elements;
 				for(let x = 0; x < element_list.length; x++)
 				{
 					if(xmlobject[element_list[x]] !== undefined)
@@ -222,23 +222,13 @@ export default {
 							for(let i = 0; i < xmlobject[element_list[x]].length; i++)
 							{
 								if(xmlobject[element_list[x]][i].mxCell['@parent'] === modeltype)
-								{
-									if(this.getcache_selected.includes(xmlobject[element_list[x]][i]['@id']))
-										this.insertdata(xmlobject[element_list[x]][i]['@label'],xmlobject[element_list[x]][i]['@id'], 1, -1, -1, true);
-									else
-										this.insertdata(xmlobject[element_list[x]][i]['@label'],xmlobject[element_list[x]][i]['@id'], 1, -1, -1, false);
-								}
+									this.insertdata(xmlobject[element_list[x]][i]['@label'],xmlobject[element_list[x]][i]['@id'], 1, -1, -1, this.getcache_selected.includes(xmlobject[element_list[x]][i]['@id']));
 							}
 						}
 						else
 						{
 							if(xmlobject[element_list[x]].mxCell['@parent'] === modeltype)
-							{
-								if(this.getcache_selected.includes(xmlobject[element_list[x]]['@id']))
-									this.insertdata(xmlobject[element_list[x]]['@label'],xmlobject[element_list[x]]['@id'], 1, -1, -1, true);
-								else
-									this.insertdata(xmlobject[element_list[x]]['@label'],xmlobject[element_list[x]]['@id'], 1, -1, -1, false);
-							}	
+								this.insertdata(xmlobject[element_list[x]]['@label'],xmlobject[element_list[x]]['@id'], 1, -1, -1, this.getcache_selected.includes(xmlobject[element_list[x]]['@id']));	
 						}
 					}
 				}
@@ -260,7 +250,14 @@ export default {
 											for(let x = 0; x < this.data.length; x++)
 											{
 												if(this.data[x].id === xmlobject.rel_file_component[i].mxCell['@target'])
-													this.insertdata(xmlobject.file[j]['@label'], xmlobject.file[j]['@id'], 2, x, this.data[x].id, false);
+												{
+													this.insertdata(xmlobject.file[j]['@label'], xmlobject.file[j]['@id'], 2, x, this.data[x].id, this.getcache_selected.includes(xmlobject.file[j]['@id']));
+													for(let z = 0; z < this.data.length; z++)
+													{
+														if(this.data[z].id === xmlobject.file[j]['@id'] && this.data[z].level === 1)
+															this.data.splice(z,1);
+													}
+												}
 											}
 										}
 									}
@@ -272,7 +269,14 @@ export default {
 										for(let x = 0; x < this.data.length; x++)
 										{
 											if(this.data[x].id === xmlobject.rel_file_component[i].mxCell['@target'])
-												this.insertdata(xmlobject.file['@label'], xmlobject.file['@id'], 2, x, this.data[x].id, false);
+											{
+												this.insertdata(xmlobject.file['@label'], xmlobject.file['@id'], 2, x, this.data[x].id, this.getcache_selected.includes(xmlobject.file['@id']));
+												for(let z = 0; z < this.data.length; z++)
+												{
+													if(this.data[z].id === xmlobject.file['@id'] && this.data[z].level === 1)
+														this.data.splice(z,1);
+												}
+											}
 										}
 									}
 								}
@@ -292,7 +296,14 @@ export default {
 										for(let x = 0; x < this.data.length; x++)
 										{
 											if(this.data[x].id === xmlobject.rel_file_component.mxCell['@target'])
-												this.insertdata(xmlobject.file[j]['@label'], xmlobject.file[j]['@id'], 2, x, this.data[x].id, false);
+											{
+												this.insertdata(xmlobject.file[j]['@label'], xmlobject.file[j]['@id'], 2, x, this.data[x].id, this.getcache_selected.includes(xmlobject.file[j]['@id']));
+												for(let z = 0; z < this.data.length; z++)
+												{
+													if(this.data[z].id === xmlobject.file[j]['@id'] && this.data[z].level === 1)
+														this.data.splice(z,1);
+												}
+											}
 										}
 									}
 								}
@@ -304,7 +315,14 @@ export default {
 									for(let x = 0; x < this.data.length; x++)
 									{
 										if(this.data[x].id === xmlobject.rel_file_component.mxCell['@target'])
-											this.insertdata(xmlobject.file['@label'], xmlobject.file['@id'], 2, x, this.data[x].id, false);
+										{
+											this.insertdata(xmlobject.file['@label'], xmlobject.file['@id'], 2, x, this.data[x].id, this.getcache_selected.includes(xmlobject.file['@id']));
+											for(let z = 0; z < this.data.length; z++)
+											{
+												if(this.data[z].id === xmlobject.file['@id'] && this.data[z].level === 1)
+													this.data.splice(z,1);
+											}
+										}
 									}
 								}
 							}
@@ -325,7 +343,7 @@ export default {
 		 */
 		constructbindingmodel(xmlobject, modeltype) {
 			// put top elements in level one
-			let element_list = getModelInfo()[modeltype].topElements;
+			let element_list = getModelInfo()[modeltype].shown_Elements;
 			for(let x = 0; x < element_list.length; x++)
 			{
 				if(xmlobject[element_list[x]] !== undefined)
@@ -338,12 +356,7 @@ export default {
 							{
 								// if concrete is selected in feature model or if component is selected in component model
 								if(this.getcache_selected.includes(xmlobject[element_list[x]][i]['@id'].substring(4)))
-								{
-									if(this.getcache_selected.includes(xmlobject[element_list[x]][i]['@id']))
-										this.insertdata(xmlobject[element_list[x]][i]['@label'],xmlobject[element_list[x]][i]['@id'], 1, -1, -1, true);
-									else
-										this.insertdata(xmlobject[element_list[x]][i]['@label'],xmlobject[element_list[x]][i]['@id'], 1, -1, -1, false);
-								}
+									this.insertdata(xmlobject[element_list[x]][i]['@label'],xmlobject[element_list[x]][i]['@id'], 1, -1, -1, this.getcache_selected.includes(xmlobject[element_list[x]][i]['@id']));
 							}
 						}
 					}	
@@ -353,12 +366,7 @@ export default {
 						{
 							// if concrete is selected in feature model or if component is selected in component model
 							if(this.getcache_selected.includes(xmlobject[element_list[x]]['@id'].substring(4)))
-							{
-								if(this.getcache_selected.includes(xmlobject[element_list[x]]['@id']))
-									this.insertdata(xmlobject[element_list[x]]['@label'],xmlobject[element_list[x]]['@id'], 1, -1, -1, true);
-								else
-									this.insertdata(xmlobject[element_list[x]]['@label'],xmlobject[element_list[x]]['@id'], 1, -1, -1, false);
-							}
+								this.insertdata(xmlobject[element_list[x]]['@label'],xmlobject[element_list[x]]['@id'], 1, -1, -1, this.getcache_selected.includes(xmlobject[element_list[x]]['@id']));
 						}
 					}
 				}
