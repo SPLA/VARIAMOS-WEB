@@ -350,7 +350,12 @@ export default {
 							if(xmlobject[element_list[x]][i].mxCell['@parent'] === modeltype)
 							{
 								// if concrete is selected in feature model or if component is selected in component model
-								if(this.getcache_selected.includes(xmlobject[element_list[x]][i]['@id'].substring(4)))
+								if(getModelInfo()[modeltype].select_constraint)
+								{
+									if(this.getcache_selected.includes(xmlobject[element_list[x]][i]['@id'].substring(4)))
+										this.insertdata(xmlobject[element_list[x]][i]['@label'],xmlobject[element_list[x]][i]['@id'], 1, -1, -1, this.getcache_selected.includes(xmlobject[element_list[x]][i]['@id']), getModelInfo()[modeltype].checkbox_enable);
+								}
+								else
 									this.insertdata(xmlobject[element_list[x]][i]['@label'],xmlobject[element_list[x]][i]['@id'], 1, -1, -1, this.getcache_selected.includes(xmlobject[element_list[x]][i]['@id']), getModelInfo()[modeltype].checkbox_enable);
 							}
 						}
@@ -360,7 +365,12 @@ export default {
 						if(xmlobject[element_list[x]].mxCell['@parent'] === modeltype)
 						{
 							// if concrete is selected in feature model or if component is selected in component model
-							if(this.getcache_selected.includes(xmlobject[element_list[x]]['@id'].substring(4)))
+							if(getModelInfo()[modeltype].select_constraint)
+							{
+								if(this.getcache_selected.includes(xmlobject[element_list[x]]['@id'].substring(4)))
+									this.insertdata(xmlobject[element_list[x]]['@label'],xmlobject[element_list[x]]['@id'], 1, -1, -1, this.getcache_selected.includes(xmlobject[element_list[x]]['@id']), getModelInfo()[modeltype].checkbox_enable);
+							}
+							else
 								this.insertdata(xmlobject[element_list[x]]['@label'],xmlobject[element_list[x]]['@id'], 1, -1, -1, this.getcache_selected.includes(xmlobject[element_list[x]]['@id']), getModelInfo()[modeltype].checkbox_enable);
 						}
 					}
