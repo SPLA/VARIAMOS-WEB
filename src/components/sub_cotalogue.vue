@@ -228,7 +228,7 @@ export default {
 					}
 				}
 				// construct hierarchical tree based on relations
-				if(xmlobject.rel_file_component !== undefined)
+				if(xmlobject.rel_file_component !== undefined && getModelInfo()[modeltype].shown_Elements.includes('file'))
 				{
 					if(Array.isArray(xmlobject.rel_file_component))
 					{
