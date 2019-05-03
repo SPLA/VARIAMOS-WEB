@@ -246,13 +246,13 @@ export default {
 				this.$router.push("/models/"+data[index].data.nodeName+"/default/default");
 			else if(checkpoint && data[index].data.level !== 1)
 				this.$router.push("/models/"+data[index].data.nodeName.split('-')[1].replace(/\s+/g,"")+"/default/default");
+
 			// when clicking the diagram, navigate to the correponding router path
-			if(data[index].data.modeltype == 1 && data[index].data.nodeType === 3)
-				this.$router.push("/models/"+projectname+"/"+foldername+"/feature");
-			else if(data[index].data.modeltype == 2 && data[index].data.nodeType === 3) 
-                this.$router.push("/models/"+projectname+"/"+foldername+"/component");
-            else if(data[index].data.modeltype == 3 && data[index].data.nodeType === 3)
-				this.$router.push("/models/"+projectname+"/"+foldername+"/binding_feature_component");
+			if(data[index].data.nodeType === 3){
+				this.$router.push("/models/"+projectname+"/"+foldername+"/"+getModelInfo()["gmodels"][data[index].data.modeltype]);
+            	this.$store.dispatch('updateactivetab', getModelInfo()["gmodels"][data[index].data.modeltype]);
+			}
+
 			// if we click the diagram
 			if(data[index].data.nodeType === 3)
 			{

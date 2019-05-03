@@ -75,7 +75,6 @@ export default{
 				if(data[i].data.nodeId === data[this.getmodel_component_index].data.projectId)
 					projectname = data[i].data.nodeName;
             }
-
             this.$router.push("/models/"+projectname+"/"+foldername+"/"+getModelInfo()["gmodels"][index]);
             this.$store.dispatch('updateactivetab', getModelInfo()["gmodels"][index]);
         }
