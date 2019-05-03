@@ -14,7 +14,7 @@ function getModelInfo(){
     //define component model main info
     info["component"]={projFolders:["Domain"], shown_Elements:["component", "file"], checkbox_enable:false};
     //define binding model main info
-    info["binding_feature_component"]={projFolders:["Domain"], shown_Elements:['concrete', 'component'], checkbox_enable:false, select_constraint:true};
+    info["binding_feature_component"]={projFolders:["Domain"], shown_Elements:['concrete', 'component'], checkbox_enable:false};
     return info;
 }
 

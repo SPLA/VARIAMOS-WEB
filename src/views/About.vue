@@ -11,7 +11,7 @@
         <span><b> {{ $t("about_team_raul_role") }}</b></span>
         <span class="team-name">{{ $t("about_team_raul") }} </span>
         <span class="team-post">{{ $t("about_team_raul_desc") }}</span>
-        <span class="team-post"><a href="https://sites.google.com/site/raulmazo/">https://sites.google.com/site/raulmazo/</a></span>
+        <span class="team-post"><a href="https://sites.google.com/site/raulmazo/" target="_blank">https://sites.google.com/site/raulmazo/</a></span>
       </div>
     </div>
     <div class="team-info">
@@ -34,7 +34,7 @@
       <div class="pull-left">
         <span class="team-name">{{ $t("about_team_daniel") }}</span>
         <span class="team-post">{{ $t("about_team_daniel_desc") }}</span>
-        <span class="team-post"><a href="www.danielgara.com">www.danielgara.com</a></span>
+        <span class="team-post"><a href="http://www.danielgara.com" target="_blank">www.danielgara.com</a></span>
       </div>
     </div>
     <div class="team-info">
@@ -42,7 +42,7 @@
       <div class="pull-left">
         <span class="team-name">{{ $t("about_team_esteban") }}</span>
         <span class="team-post">{{ $t("about_team_esteban_desc") }}</span>
-        <span class="team-post"><a href="https://www.linkedin.com/in/esteban-echavarr%C3%ADa-collazos-023406167/">https://www.linkedin.com/in/esteban-echavarr%C3%ADa-collazos-023406167/</a></span>
+        <span class="team-post"><a href="https://www.linkedin.com/in/esteban-echavarr%C3%ADa-collazos-023406167/" target="_blank">https://www.linkedin.com/in/esteban-echavarr%C3%ADa-collazos-023406167/</a></span>
       </div>
     </div>
 
@@ -51,7 +51,7 @@
       <div class="pull-left">
         <span class="team-name">{{ $t("about_team_jacques") }}</span>
         <span class="team-post">{{ $t("about_team_jacques_desc") }}</span>
-        <span class="team-post"><a href="https://www.pantheonsorbonne.fr/recherche/page-perso/page/?tx_oxcspagepersonnel_pi1%5Buid%5D=jarobin">https://www.pantheonsorbonne.fr/recherche/page-perso/page/?tx_oxcspagepersonnel_pi1%5Buid%5D=jarobin</a></span>
+        <span class="team-post"><a href="https://www.pantheonsorbonne.fr/recherche/page-perso/page/?tx_oxcspagepersonnel_pi1%5Buid%5D=jarobin" target="_blank">https://www.pantheonsorbonne.fr/recherche/page-perso/page/?tx_oxcspagepersonnel_pi1%5Buid%5D=jarobin</a></span>
       </div>
     </div>
     <div class="team-info">
@@ -59,7 +59,7 @@
       <div class="pull-left">
         <span class="team-name">{{ $t("about_team_yan") }}</span>
         <span class="team-post">{{ $t("about_team_yan_desc") }}</span>
-        <span class="team-post"><a href="https://sites.google.com/view/yanwang/introduction">https://sites.google.com/view/yanwang/introduction</a></span>
+        <span class="team-post"><a href="https://sites.google.com/view/yanwang/introduction" target="_blank">https://sites.google.com/view/yanwang/introduction</a></span>
       </div>
     </div>
 <!--
