@@ -249,8 +249,8 @@ export default {
 
 			// when clicking the diagram, navigate to the correponding router path
 			if(data[index].data.nodeType === 3){
-				this.$router.push("/models/"+projectname+"/"+foldername+"/"+getModelInfo()["gmodels"][data[index].data.modeltype]);
-            	this.$store.dispatch('updateactivetab', getModelInfo()["gmodels"][data[index].data.modeltype]);
+				this.$router.push("/models/"+projectname+"/"+foldername+"/"+data[index].data.nodeName);
+            	this.$store.dispatch('updateactivetab', data[index].data.nodeName);
 			}
 
 			// if we click the diagram
