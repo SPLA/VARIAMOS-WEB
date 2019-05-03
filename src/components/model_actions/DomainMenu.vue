@@ -11,6 +11,8 @@
 </template>
 
 <script>
+import { setupModal, modalH3, modalInputTexts, modalButton } from '../../assets/js/common/util'
+
 export default {
   data: function(){
     return {

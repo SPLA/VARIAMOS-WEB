@@ -1,3 +1,5 @@
+import {insertmodel} from '../assets/js/common/global_info'
+
 /**
  * the state of the tree component using Vuex
  * @property	{array}  data					- the data of the tree component in the file management system

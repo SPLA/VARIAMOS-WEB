@@ -70,6 +70,8 @@
 import contextMenu from './contextMenu.vue'
 import subcotalogue from './sub_cotalogue.vue'
 import Bus from '../assets/js/common/bus.js'
+import { getcontextmenulist } from '../assets/js/common/global_info'
+
 export default {
 	name: 'cotalogue',
 	components: {

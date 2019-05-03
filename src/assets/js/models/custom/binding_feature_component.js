@@ -1,3 +1,5 @@
+import messages from '../../common/messages'
+
 var binding_feature_component_main = function binding_feature_component_main(graph)
 {
     binding_f_c_constraints(graph);

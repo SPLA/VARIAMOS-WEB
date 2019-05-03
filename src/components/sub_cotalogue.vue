@@ -34,6 +34,9 @@
 <script>
 /* eslint-disable */
 import xml2json from '../assets/js/common/xml2json.js'
+import {getModelInfo} from '../assets/js/common/global_info'
+
+
 export default {
 	// the element name and type in the tree data
 	props: ['layername','layertype'],

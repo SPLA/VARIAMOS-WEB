@@ -15,13 +15,13 @@
 				</keep-alive>
 			</div>
         </div>
-        <div v-if="getactivetab === '' && $route.params.project !== 'default'">
+        <div v-if="getactivetab === '' && $route.params.project !== 'default'" data-test="nofolder">
             <div class="border-bottom text-left" style="padding-bottom: 10px"><h1 class="h2">Project: {{ $route.params.project }}</h1></div>
             <div class="div-text-area" style="padding-up: 10px">Please select one folder
                 <br /><br />
             </div>
         </div>
-        <div v-if="getactivetab === '' && $route.params.project === 'default'">
+        <div v-if="getactivetab === '' && $route.params.project === 'default'" data-test="noproject">
             <div class="border-bottom text-left" style="padding-bottom: 10px"><h1 class="h2">Please select one project</h1></div>
         </div>
     </div>
@@ -30,6 +30,7 @@
 <script>
 import model from './Models.vue'
 import Bus from '../assets/js/common/bus.js'
+import { getModelInfo } from '../assets/js/common/global_info'
 
 export default{
     components:{

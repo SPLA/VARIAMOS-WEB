@@ -16,6 +16,7 @@
 <script>
 import axios from "axios";
 import di_actions from '@/assets/js/models/actions/domain_implementation/di_actions.js'
+import { setupModal, modalH3, modalSimpleText, modalInputTexts, modalCustomization, modalButton } from '../../assets/js/common/util'
 
 export default {
   data: function(){
