@@ -1,12 +1,12 @@
 /* begin util */
 // converts the first letter in uppercase
-function jsUcfirst(string) 
+export function jsUcfirst(string) 
 {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
 // setup main modal view
-function setupModal(header_content,body_content="",footer_content="") 
+export function setupModal(header_content,body_content="",footer_content="") 
 {
     var main_modal=document.getElementById('main_modal');
     var main_modal_header=document.getElementById('main_modal_header');
@@ -22,7 +22,7 @@ function setupModal(header_content,body_content="",footer_content="")
     if(footer_content!=""){main_modal_footer.appendChild(footer_content);}
 }
 
-function modalH3(text,type="normal"){
+export function modalH3(text,type="normal"){
     var c_h3 = document.createElement('h3');
     c_h3.innerText=text;
     if(type=="error"){
@@ -33,13 +33,13 @@ function modalH3(text,type="normal"){
     return c_h3;
 }
 
-function modalSimpleText(text){
+export function modalSimpleText(text){
     var c_span = document.createElement('span');
     c_span.innerText=text;
     return c_span;
 }
 
-function modalInputTexts(texts,inputs,default_vals){
+export function modalInputTexts(texts,inputs,default_vals){
     var table = document.createElement('table');
     for(var i=0;i<texts.length;i++){
         var tr = document.createElement('tr');
@@ -61,7 +61,7 @@ function modalInputTexts(texts,inputs,default_vals){
     return table;
 }
 
-function modalCustomization(texts,inputs,default_vals){
+export function modalCustomization(texts,inputs,default_vals){
     var table = document.createElement('table');
     for(var i=0;i<texts.length;i++){
         var tr = document.createElement('tr');
@@ -100,7 +100,7 @@ function modalCustomization(texts,inputs,default_vals){
     return table;
 }
 
-function modalButton(text,function_to_append){
+export function modalButton(text,function_to_append){
     var button = document.createElement('button');
     button.innerText=text;
     button.id=text;

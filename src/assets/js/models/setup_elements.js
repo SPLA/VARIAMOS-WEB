@@ -1,3 +1,5 @@
+import messages from '../common/messages'
+
 var setup_elements = function setup_elements(graph, elements, custom_attributes, c_clon_cells, c_constraints_ic, toolbar, c_type){    
     if(elements==null){
         //disable palette for "binding" models

@@ -1,3 +1,4 @@
+import messages from '../common/messages'
 
 var setup_properties = function setup_properties(graph,properties_styles){
 	//remove previous listeners

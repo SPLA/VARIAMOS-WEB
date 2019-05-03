@@ -5,7 +5,7 @@
  * @property    {boolean} checkbox_enable       - each model should enable or disable checkbox in the element tree
  * @property    {boolean} select_constraint     - the selection constratins of the element tree for the binding model
  */
-function getModelInfo(){
+export function getModelInfo(){
     var info =[];
     //list of graphical models
     info["gmodels"]=["feature","component","binding_feature_component"];
@@ -19,7 +19,7 @@ function getModelInfo(){
 }
 
 // insert models according to main model info
-function insertmodel(data, index, temp) {
+export function insertmodel(data, index, temp) {
     let modeltype = 3;
     for(let i = 0; i < getModelInfo()['gmodels'].length; i++)
 	{
@@ -50,7 +50,7 @@ function insertmodel(data, index, temp) {
 }
 
 // define the list of right click functions, icons and names
-function getcontextmenulist(){
+export function getcontextmenulist(){
     var info =[];
     info['delete_project'] = {
         fnHandler: 'deleteproject',

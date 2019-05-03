@@ -195,6 +195,7 @@ describe('Filetree Store Unit tests', () => {
       }
       const name = 'Test1'
       mutations.createnewproject(state, {name, getters})
+      //console.log(JSON.stringify(state.data,null,2))
       expect(state.data.length).to.deep.equal(9)
     })
 

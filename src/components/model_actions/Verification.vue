@@ -15,6 +15,7 @@
 
 <script>
 import axios from "axios";
+import { setupModal, modalH3, modalSimpleText } from '../../assets/js/common/util'
 
 export default {
   data: function(){
