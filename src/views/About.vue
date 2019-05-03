@@ -4,22 +4,117 @@
     <div class="div-text-area">{{ $t("about_variamos_desc") }}</div>
 
     <div class="border-bottom text-left"><h1 class="h2">{{ $t("about_team") }}</h1></div>
+    <div class="team-info"> 
+      <img alt="" src="../assets/images/team/raul.jpg" class="pull-left">
+      
+      <div class="pull-left">
+        <span><b> {{ $t("about_team_raul_role") }}</b></span>
+        <span class="team-name">{{ $t("about_team_raul") }} </span>
+        <span class="team-post">{{ $t("about_team_raul_desc") }}</span>
+        <span class="team-post"><a href="https://sites.google.com/site/raulmazo/">https://sites.google.com/site/raulmazo/</a></span>
+      </div>
+    </div>
+    <div class="team-info">
+      <img alt="" src="../assets/images/team/andres.png" class="pull-left">
+      <div class="pull-left">
+        <span class="team-name">{{ $t("about_team_andres") }}</span>
+        <span class="team-post">{{ $t("about_team_andres_desc") }}</span>
+        <span class="team-post"><a href=""></a></span>
+      </div>
+    </div>
+    <div class="team-info">
+      <img alt="" src="../assets/images/team/carlos.jpg" class="pull-left">
+      <div class="pull-left">
+        <span class="team-name">{{ $t("about_team_carlos") }}</span>
+        <span class="team-post">{{ $t("about_team_carlos_desc") }}</span>
+      </div>
+    </div>
     <div class="team-info">
       <img alt="" src="../assets/images/team/daniel.jpg" class="pull-left">
       <div class="pull-left">
         <span class="team-name">{{ $t("about_team_daniel") }}</span>
         <span class="team-post">{{ $t("about_team_daniel_desc") }}</span>
+        <span class="team-post"><a href="www.danielgara.com">www.danielgara.com</a></span>
       </div>
     </div>
-    <div class="team-info pad-40">
-      <img alt="" src="../assets/images/team/raul.jpg" class="pull-left">
+    <div class="team-info">
+      <img alt="" src="../assets/images/team/esteban.jpg" class="pull-left">
       <div class="pull-left">
-        <span class="team-name">{{ $t("about_team_raul") }}</span>
-        <span class="team-post">{{ $t("about_team_raul_desc") }}</span>
+        <span class="team-name">{{ $t("about_team_esteban") }}</span>
+        <span class="team-post">{{ $t("about_team_esteban_desc") }}</span>
+        <span class="team-post"><a href="https://www.linkedin.com/in/esteban-echavarr%C3%ADa-collazos-023406167/">https://www.linkedin.com/in/esteban-echavarr%C3%ADa-collazos-023406167/</a></span>
       </div>
     </div>
 
-    <div class="border-bottom text-left"><h1 class="h2">{{ $t("about_past_versions") }}</h1></div>
+    <div class="team-info">
+      <img alt="" src="../assets/images/team/jacques.jpg" class="pull-left">
+      <div class="pull-left">
+        <span class="team-name">{{ $t("about_team_jacques") }}</span>
+        <span class="team-post">{{ $t("about_team_jacques_desc") }}</span>
+        <span class="team-post"><a href="https://www.pantheonsorbonne.fr/recherche/page-perso/page/?tx_oxcspagepersonnel_pi1%5Buid%5D=jarobin">https://www.pantheonsorbonne.fr/recherche/page-perso/page/?tx_oxcspagepersonnel_pi1%5Buid%5D=jarobin</a></span>
+      </div>
+    </div>
+    <div class="team-info">
+      <img alt="" src="../assets/images/team/yan.jpg" class="pull-left">
+      <div class="pull-left">
+        <span class="team-name">{{ $t("about_team_yan") }}</span>
+        <span class="team-post">{{ $t("about_team_yan_desc") }}</span>
+        <span class="team-post"><a href="https://sites.google.com/view/yanwang/introduction">https://sites.google.com/view/yanwang/introduction</a></span>
+      </div>
+    </div>
+<!--
+
+    <div class="team-info">
+      <img alt="" src="../assets/images/team/anon.png" class="pull-left">
+      <div class="pull-left">
+        <span class="team-name">{{ $t("about_team_angela") }}</span>
+        <span class="team-post">{{ $t("about_team_angela_desc") }}</span>
+        <span class="team-post"><a href=""></a></span>
+      </div>
+    </div>
+    <div class="team-info">
+      <img alt="" src="../assets/images/team/anon.png" class="pull-left">
+      <div class="pull-left">
+        <span class="team-name">{{ $t("about_team_luis") }}</span>
+        <span class="team-post">{{ $t("about_team_luis_desc") }}</span>
+        <span class="team-post"><a href=""></a></span>
+      </div>
+    </div>
+    <div class="team-info">
+      <img alt="" src="../assets/images/team/anon.png" class="pull-left">
+      <div class="pull-left">
+        <span class="team-name">{{ $t("about_team_jean") }}</span>
+        <span class="team-post">{{ $t("about_team_jean_desc") }}</span>
+        <span class="team-post"><a href=""></a></span>
+      </div>
+    </div>
+    <div class="team-info">
+      <img alt="" src="../assets/images/team/anon.png" class="pull-left">
+      <div class="pull-left">
+        <span class="team-name">{{ $t("about_team_camilo") }}</span>
+        <span class="team-post">{{ $t("about_team_camilo_desc") }}</span>
+        <span class="team-post"><a href=""></a></span>
+      </div>
+    </div>
+    <div class="team-info">
+      <img alt="" src="../assets/images/team/anon.png" class="pull-left">
+      <div class="pull-left">
+        <span class="team-name">{{ $t("about_team_john") }}</span>
+        <span class="team-post">{{ $t("about_team_john_desc") }}</span>
+        <span class="team-post"><a href=""></a></span>
+      </div>
+    </div>
+    <div class="team-info">
+      <img alt="" src="../assets/images/team/anon.png" class="pull-left">
+      <div class="pull-left">
+        <span class="team-name">{{ $t("about_team_luisa") }}</span>
+        <span class="team-post">{{ $t("about_team_luisa_desc") }}</span>
+        <span class="team-post"><a href=""></a></span>
+      </div>
+    </div>
+-->
+
+    <div class="border-bottom text-left space-before"><h1 class="h2">{{ $t("about_past_versions") }}</h1></div>
     <div class="div-text-area">
       <b>{{ $t("about_team_past_copy1") }}</b> {{ $t("about_team_past_authors1") }}
       <br /><br />
@@ -39,6 +134,9 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.space-before{
+  margin-top:20px;
+}
 .team-info{
     overflow: hidden;
     padding-top: 10px;
