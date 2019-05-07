@@ -189,6 +189,14 @@ mxForm.prototype.addOption = function(combo, label, value, isSelected)
  */
 mxForm.prototype.addField = function(name, input, def_display="")
 {
+	//TODO:REMOVE
+	//------------------------
+	function jsUcfirst(string) 
+	{
+		return string.charAt(0).toUpperCase() + string.slice(1);
+	}
+	//------------------------
+	//TODO:REMOVE
 	var tr = document.createElement('div');
 	tr.id="tr-"+name;
 	tr.className="tr-unique";

@@ -1,3 +1,5 @@
+import messages from '../common/messages'
+
 var setup_relations = function setup_relations(graph,relations){
     graph.connectionHandler.insertEdge = function(parent, id, value, source, target, style)
     {

@@ -2,14 +2,22 @@ import {
     shallowMount,
     createLocalVue
 } from '@vue/test-utils';
-import { getters } from "../../../src/store/filetree";
+import {
+    getters,
+} from "../../../src/store/filetree";
 import Vuex from 'vuex';
 //import VueRouter from 'vue-router'
-//import VueI18n from 'vue-i18n'
-//import i18n from '../../../src/i18n'
+import VueI18n from 'vue-i18n'
+import i18n from '../../../src/i18n'
 //import flushPromises from 'flush-promises';
-import MultiModels from '../../../src/views/Multi-models'
-import model from '../../../src/views/Models'
+import Filemanagetree from '../../../src/views/Filemanagetree.vue'
+// eslint-disable-next-line no-unused-vars
+import cotalogue from '../../../src/components/cotalogue.vue'
+import iView from 'iview';
+import 'iview/dist/styles/iview.css';
+// eslint-disable-next-line no-unused-vars
+import flushPromises from 'flush-promises'
+import Bus from '../../../src/assets/js/common/bus.js'
 const chai = require("chai");
 const expect = chai.expect;
 const sinon = require("sinon");
@@ -19,17 +27,17 @@ chai.use(sinonChai)
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
-//localVue.use(VueRouter)
-//localVue.use(VueI18n)
-/* const routes = [
-    {
-      path: '/models/:project/:folder/:type',
-      name: 'Models',
-    },
-]
-const router = new VueRouter({ routes }) */
+localVue.use(iView)
+localVue.use(VueI18n)
 
-describe('Multi-Models PENDING: Setting functions in the public folder breaks the tests', () => {
+describe('Filemanagetree', () => {
+
+    /**
+     * This function stubs the $router.push call within the
+     * component.
+     */
+    let routPushStub
+
     /**
      * The localgetters object permits us to spy
      * on the behaviour of the getters within the
@@ -41,10 +49,11 @@ describe('Multi-Models PENDING: Setting functions in the public folder breaks th
     let localgetters
 
     /**
-     * This function stubs the $router.push call within the
-     * component.
+     * mockDispatch allows one to observe
+     * the behaviour of the store.dispatch
+     * function.
      */
-    let routPushStub
+    let mockDispatch;
 
     /**
      * The stateFactory manufactures a state 
@@ -221,25 +230,22 @@ describe('Multi-Models PENDING: Setting functions in the public folder breaks th
      * @returns A wrapper for the component.
      */
     const wrapperFactory = (empty, projectName = '', folderName = '', typeName = '') => {
-        const actions = {
-
-        }
         const filetree = {
             state: stateFactory(empty),
-            actions,
             getters: localgetters
         }
         const store = new Vuex.Store({
             modules: {
                 filetree
-            }
+            },
         })
+        mockDispatch = sinon.stub(store, 'dispatch')
         /**
          * We use shallowMount to avoid mounting the underlying
          * component structure so as to not overload the required
          * dependecies.
          */
-        return shallowMount(MultiModels, {
+        return shallowMount(Filemanagetree, {
             localVue,
             store,
             //router,
@@ -253,61 +259,143 @@ describe('Multi-Models PENDING: Setting functions in the public folder breaks th
                 },
                 $router: {
                     push: routPushStub
-                },
+                }
             },
-            //i18n
+            i18n
         })
     }
 
-    before(function() {
+    before(function () {
         localgetters = {
             getactivetab: sinon.spy(getters, 'getactivetab'),
             getdata: sinon.spy(getters, 'getdata'),
             getmodelcomponent: sinon.spy(getters, 'getmodelcomponent'),
             getmodelcomponentindex: sinon.spy(getters, 'getmodelcomponentindex')
         }
+
         routPushStub = sinon.stub();
+    });
+
+    beforeEach(() => {
+        class LocalStorageMock {
+            constructor() {
+                this.store = {};
+            }
+            clear() {
+                this.store = {};
+            }
+            getItem(key) {
+                return this.store[key] || null;
+            }
+            setItem(key, value) {
+                this.store[key] = value.toString();
+            }
+            removeItem(key) {
+                delete this.store[key];
+            }
+        }
+
+        global.localStorage = new LocalStorageMock;
     })
 
-    after(function() {
+    after(function () {
         sinon.restore();
     })
 
-    it('model is shown with complete state', async () => {
-        //const spy = sinon.spy(router, 'push')
-        //const spy2 = sinon.spy(MultiModels.methods, 'checktabs')
-        const emptyState = false
+    it('localStorage correctly accessed for filetree data', () => {
+        const emptyState = false;
+        localStorage['Filetree|User1'] = 'TESTDATA'
+        // eslint-disable-next-line no-unused-vars
         const wrapper = wrapperFactory(emptyState)
-        const componentModel = wrapper.find(model)
-        expect(componentModel.exists()).to.be.ok
+        expect(mockDispatch).to.have.been.calledWith('loadtreedata')
+    })
+
+    it('localStorage correctly accessed for activetab data', () => {
+        const emptyState = false;
+        localStorage['Filetree|activetab'] = 'TESTDATA'
+        // eslint-disable-next-line no-unused-vars
+        const wrapper = wrapperFactory(emptyState)
+        expect(mockDispatch).to.have.been.calledWith('updateactivetab')
+    })
+
+    it('localStorage correctly accessed for model component index data', () => {
+        const emptyState = false;
+        localStorage['Filetree|model_component_index'] = 'TESTDATA'
+        // eslint-disable-next-line no-unused-vars
+        const wrapper = wrapperFactory(emptyState)
+        expect(mockDispatch).to.have.been.calledWith('updatemodelcomponent')
+    })
+
+    it('Opens the newproject modal', () => {
+        const emptyState = true;
+        const wrapper = wrapperFactory(emptyState);
+        const modal = wrapper.find('[data-test="newprojectmodal"]')
+        wrapper.find('[data-test="newprojectbutton"]').trigger('click')
+        expect(modal.attributes().value).to.be.ok
+    })
+
+    //Asynchronous behaviour breaks the test
+    it.skip('Creates project correctly with empty project', async () => {
+        const emptyState = true;
+        const wrapper = wrapperFactory(emptyState)
+        wrapper.setData({
+            newProject:{
+                ...wrapper.vm.newProject,
+                formval: {
+                    projectName: 'TEST',
+                }
+            }
+        })
+        //console.log(JSON.stringify(wrapper.vm.newProject))
+        wrapper.vm.createproject()
+        await flushPromises()
         await wrapper.vm.$nextTick()
-        /*console.log(spy.callCount)
-        console.log(spy2.callCount)
-        console.log(wrapper.vm.$route.params)
-        console.log(routPushStub.called)
-        console.log(wrapper.vm.$store.state.filetree.model_component)
-        console.log(wrapper.vm.$store.state.filetree.model_component_index)
-        */
+        expect(mockDispatch).to.have.been.called
     })
 
-    it('model is not shown with empty state', () => {
-        const emptyState = true
+    it('Bus.$on("createapplication") shows modal correctly', () => {
+        const emptyState = false
+        const data = {
+            "children": [],
+            "data": {
+                "open": true,
+                "isSelected": true,
+                "level": 1,
+                "nodeId": 1,
+                "nodeName": "TEST",
+                "nodeType": 1,
+                "parentId": -1,
+                "projectId": 1,
+                "modeltype": 1,
+                "contextmenuIndex": 3
+            },
+            "numberOfChildren": 2
+        }
         const wrapper = wrapperFactory(emptyState)
-        const componentModel = wrapper.find(model)
-        expect(componentModel.exists()).to.not.be.ok
+        Bus.$emit('createapplication', data)
+        expect(wrapper.vm.newApplication.isshow)
     })
 
-    it('Message is shown when only selecting project', () => {
-        const emptyState = true
-        const wrapper = wrapperFactory(emptyState, 'Model1', 'default', 'default')
-        const message = wrapper.find('[data-test="nofolder"]')
-        expect(message.exists()).to.be.ok
-    })
-
-    it('Message is shown when there is no project', () => {
-        const emptyState = true
-        const wrapper = wrapperFactory(emptyState, 'default', 'default', 'default')
-        const message = wrapper.find('[data-test="noproject"]')
-        expect(message.exists()).to.be.ok
+    it('Bus.$on("createapplication") shows modal correctly', () => {
+        const emptyState = false
+        const data = {
+            "children": [],
+            "data": {
+                "open": true,
+                "isSelected": true,
+                "level": 1,
+                "nodeId": 1,
+                "nodeName": "TEST",
+                "nodeType": 1,
+                "parentId": -1,
+                "projectId": 1,
+                "modeltype": 1,
+                "contextmenuIndex": 3
+            },
+            "numberOfChildren": 2
+        }
+        const wrapper = wrapperFactory(emptyState)
+        Bus.$emit('createapplication', data)
+        expect(wrapper.vm.newApplication.isshow)
     })
 })

@@ -1,3 +1,5 @@
+import messages from '../common/messages'
+
 var setup_buttons = function setup_buttons(graph,undoManager,reused_functions,route_pare,store){
     /* begin buttonxml */
     // Adds an option to view the XML of the graph

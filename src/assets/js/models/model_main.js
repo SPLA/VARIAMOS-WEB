@@ -1,3 +1,5 @@
+import messages from '../common/messages'
+
 //main function
 var main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model_type,model_specific_main,counter,setupFunctions,undoManager, route_pare, store)
 {

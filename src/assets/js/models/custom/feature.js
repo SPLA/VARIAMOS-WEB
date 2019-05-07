@@ -1,3 +1,5 @@
+import messages from '../../common/messages'
+
 var feature_main = function feature_main(graph)
 {
 	feature_constraints(graph);

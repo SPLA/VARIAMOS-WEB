@@ -76,6 +76,8 @@ import setup_properties from '@/assets/js/models/setup_properties.js'
 import main from '@/assets/js/models/model_main.js'
 import model_load from '@/assets/js/models/model_load.js'
 import Bus from '../assets/js/common/bus.js'
+import { getModelInfo } from '../assets/js/common/global_info'
+import { setupModal, modalH3, modalSimpleText } from '../assets/js/common/util'
 
 /* import actions */
 import DomainMenu from '../components/model_actions/DomainMenu'

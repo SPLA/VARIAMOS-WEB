@@ -5,21 +5,21 @@
  * @property    {boolean} checkbox_enable       - each model should enable or disable checkbox in the element tree
  * @property    {boolean} select_constraint     - the selection constratins of the element tree for the binding model
  */
-function getModelInfo(){
+export function getModelInfo(){
     var info =[];
     //list of graphical models
     info["gmodels"]=["feature","component","binding_feature_component"];
     //define feature model main info
     info["feature"]={projFolders:["Domain","Application","Adaptation"], shown_Elements:["root", "abstract", "concrete"], checkbox_enable:true};
     //define component model main info
-    info["component"]={projFolders:["Domain"], shown_Elements:["component", "file"], checkbox_enable:true};
+    info["component"]={projFolders:["Domain"], shown_Elements:["component", "file"], checkbox_enable:false};
     //define binding model main info
-    info["binding_feature_component"]={projFolders:["Domain"], shown_Elements:['concrete', 'component'], checkbox_enable:true, select_constraint:true};
+    info["binding_feature_component"]={projFolders:["Domain"], shown_Elements:['concrete', 'component'], checkbox_enable:false};
     return info;
 }
 
 // insert models according to main model info
-function insertmodel(data, index, temp) {
+export function insertmodel(data, index, temp) {
     let modeltype = 3;
     for(let i = 0; i < getModelInfo()['gmodels'].length; i++)
 	{
@@ -50,7 +50,7 @@ function insertmodel(data, index, temp) {
 }
 
 // define the list of right click functions, icons and names
-function getcontextmenulist(){
+export function getcontextmenulist(){
     var info =[];
     info['delete_project'] = {
         fnHandler: 'deleteproject',

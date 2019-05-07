@@ -1,3 +1,5 @@
+import messages from '../common/messages'
+
 /*
 
 To check available models go to Public/js/global_info.js

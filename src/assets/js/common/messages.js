@@ -25,3 +25,4 @@ const messages={
     "feature_custom_range_check":"High range must be greater or equal than low range",
     "feature_custom_root_check":"Only one root allowed"
 }
+export default messages
