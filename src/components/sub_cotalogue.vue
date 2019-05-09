@@ -101,7 +101,7 @@ export default {
 			var xmlDoc = (new DOMParser()).parseFromString(this.getxml,"text/xml");
 			var xmlobject = JSON.parse(xml2json(xmlDoc,''));
 			// construct element tree for feature type
-			if(this.layertype === 1 && this.getxml !== '')
+			if(this.layertype !== 3 && this.getxml !== '')
 			{
 				xmlobject = xmlobject.mxGraphModel.root;
 				// put top elements in level one
@@ -127,7 +127,7 @@ export default {
 				}
 
 				// construct hierarchical structure based on relations
-				let rel_list = ['rel_abstract_abstract', 'rel_abstract_root', 'rel_concrete_abstract', 'rel_concrete_concrete', 'rel_concrete_root'];
+				let rel_list = getModelInfo()[modeltype].rel_list;
 				for(let x = 0; x < rel_list.length; x++)
 				{
 					if(xmlobject[rel_list[x]] !== undefined)
@@ -150,8 +150,8 @@ export default {
 					}
 				}
 				// construct hierarchical structure based on bundles
-				let rel_bundle_list1 = ['rel_bundle_root', 'rel_bundle_abstract'];
-				let rel_bundle_list2 = ['rel_abstract_bundle', 'rel_concrete_bundle'];
+				let rel_bundle_list1 = getModelInfo()[modeltype].rel_bundle_list1;
+				let rel_bundle_list2 = getModelInfo()[modeltype].rel_bundle_list2;
 				for(let x = 0; x < rel_bundle_list1.length; x++)
 				{
 					for(let y = 0; y < rel_bundle_list2.length; y++)
@@ -205,129 +205,129 @@ export default {
 					}
 				}
 			}
-			// construct element tree for component type
-			else if(this.layertype === 2 && this.getxml !== '')
-			{
-				xmlobject = xmlobject.mxGraphModel.root;
-				// put top elements in level one
-				let element_list = getModelInfo()[modeltype].shown_Elements;
-				for(let x = 0; x < element_list.length; x++)
-				{
-					if(xmlobject[element_list[x]] !== undefined)
-					{
-						if(Array.isArray(xmlobject[element_list[x]]))
-						{
-							for(let i = 0; i < xmlobject[element_list[x]].length; i++)
-							{
-								if(xmlobject[element_list[x]][i].mxCell['@parent'] === modeltype)
-									this.insertdata(xmlobject[element_list[x]][i]['@label'],xmlobject[element_list[x]][i]['@id'], 1, -1, -1, this.getcache_selected.includes(xmlobject[element_list[x]][i]['@id']), getModelInfo()[modeltype].checkbox_enable);
-							}
-						}
-						else
-						{
-							if(xmlobject[element_list[x]].mxCell['@parent'] === modeltype)
-								this.insertdata(xmlobject[element_list[x]]['@label'],xmlobject[element_list[x]]['@id'], 1, -1, -1, this.getcache_selected.includes(xmlobject[element_list[x]]['@id']), getModelInfo()[modeltype].checkbox_enable);	
-						}
-					}
-				}
-				// construct hierarchical tree based on relations
-				if(xmlobject.rel_file_component !== undefined && getModelInfo()[modeltype].shown_Elements.includes('file'))
-				{
-					if(Array.isArray(xmlobject.rel_file_component))
-					{
-						for(let i = 0; i < xmlobject.rel_file_component.length; i++)
-						{
-							if(xmlobject.rel_file_component[i].mxCell['@parent'] === modeltype)
-							{
-								if(Array.isArray(xmlobject.file))
-								{
-									for(let j = 0; j < xmlobject.file.length; j++)
-									{
-										if(xmlobject.rel_file_component[i].mxCell['@source'] === xmlobject.file[j]['@id'])
-										{
-											for(let x = 0; x < this.data.length; x++)
-											{
-												if(this.data[x].id === xmlobject.rel_file_component[i].mxCell['@target'])
-												{
-													this.insertdata(xmlobject.file[j]['@label'], xmlobject.file[j]['@id'], 2, x, this.data[x].id, this.getcache_selected.includes(xmlobject.file[j]['@id']), getModelInfo()[modeltype].checkbox_enable);
-													for(let z = 0; z < this.data.length; z++)
-													{
-														if(this.data[z].id === xmlobject.file[j]['@id'] && this.data[z].level === 1)
-															this.data.splice(z,1);
-													}
-												}
-											}
-										}
-									}
-								}
-								else
-								{
-									if(xmlobject.rel_file_component[i].mxCell['@source'] === xmlobject.file['@id'])
-									{
-										for(let x = 0; x < this.data.length; x++)
-										{
-											if(this.data[x].id === xmlobject.rel_file_component[i].mxCell['@target'])
-											{
-												this.insertdata(xmlobject.file['@label'], xmlobject.file['@id'], 2, x, this.data[x].id, this.getcache_selected.includes(xmlobject.file['@id']), getModelInfo()[modeltype].checkbox_enable);
-												for(let z = 0; z < this.data.length; z++)
-												{
-													if(this.data[z].id === xmlobject.file['@id'] && this.data[z].level === 1)
-														this.data.splice(z,1);
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-					else
-					{
-						if(xmlobject.rel_file_component.mxCell['@parent'] === modeltype)
-						{
-							if(Array.isArray(xmlobject.file))
-							{
-								for(let j = 0; j < xmlobject.file.length; j++)
-								{
-									if(xmlobject.rel_file_component.mxCell['@source'] === xmlobject.file[j]['@id'])
-									{
-										for(let x = 0; x < this.data.length; x++)
-										{
-											if(this.data[x].id === xmlobject.rel_file_component.mxCell['@target'])
-											{
-												this.insertdata(xmlobject.file[j]['@label'], xmlobject.file[j]['@id'], 2, x, this.data[x].id, this.getcache_selected.includes(xmlobject.file[j]['@id']), getModelInfo()[modeltype].checkbox_enable);
-												for(let z = 0; z < this.data.length; z++)
-												{
-													if(this.data[z].id === xmlobject.file[j]['@id'] && this.data[z].level === 1)
-														this.data.splice(z,1);
-												}
-											}
-										}
-									}
-								}
-							}
-							else
-							{
-								if(xmlobject.rel_file_component.mxCell['@source'] === xmlobject.file['@id'])
-								{
-									for(let x = 0; x < this.data.length; x++)
-									{
-										if(this.data[x].id === xmlobject.rel_file_component.mxCell['@target'])
-										{
-											this.insertdata(xmlobject.file['@label'], xmlobject.file['@id'], 2, x, this.data[x].id, this.getcache_selected.includes(xmlobject.file['@id']), getModelInfo()[modeltype].checkbox_enable);
-											for(let z = 0; z < this.data.length; z++)
-											{
-												if(this.data[z].id === xmlobject.file['@id'] && this.data[z].level === 1)
-													this.data.splice(z,1);
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
+			// // construct element tree for component type
+			// else if(this.layertype === 2 && this.getxml !== '')
+			// {
+			// 	xmlobject = xmlobject.mxGraphModel.root;
+			// 	// put top elements in level one
+			// 	let element_list = getModelInfo()[modeltype].shown_Elements;
+			// 	for(let x = 0; x < element_list.length; x++)
+			// 	{
+			// 		if(xmlobject[element_list[x]] !== undefined)
+			// 		{
+			// 			if(Array.isArray(xmlobject[element_list[x]]))
+			// 			{
+			// 				for(let i = 0; i < xmlobject[element_list[x]].length; i++)
+			// 				{
+			// 					if(xmlobject[element_list[x]][i].mxCell['@parent'] === modeltype)
+			// 						this.insertdata(xmlobject[element_list[x]][i]['@label'],xmlobject[element_list[x]][i]['@id'], 1, -1, -1, this.getcache_selected.includes(xmlobject[element_list[x]][i]['@id']), getModelInfo()[modeltype].checkbox_enable);
+			// 				}
+			// 			}
+			// 			else
+			// 			{
+			// 				if(xmlobject[element_list[x]].mxCell['@parent'] === modeltype)
+			// 					this.insertdata(xmlobject[element_list[x]]['@label'],xmlobject[element_list[x]]['@id'], 1, -1, -1, this.getcache_selected.includes(xmlobject[element_list[x]]['@id']), getModelInfo()[modeltype].checkbox_enable);	
+			// 			}
+			// 		}
+			// 	}
+			// 	// construct hierarchical tree based on relations
+			// 	if(xmlobject.rel_file_component !== undefined && getModelInfo()[modeltype].shown_Elements.includes('file'))
+			// 	{
+			// 		if(Array.isArray(xmlobject.rel_file_component))
+			// 		{
+			// 			for(let i = 0; i < xmlobject.rel_file_component.length; i++)
+			// 			{
+			// 				if(xmlobject.rel_file_component[i].mxCell['@parent'] === modeltype)
+			// 				{
+			// 					if(Array.isArray(xmlobject.file))
+			// 					{
+			// 						for(let j = 0; j < xmlobject.file.length; j++)
+			// 						{
+			// 							if(xmlobject.rel_file_component[i].mxCell['@source'] === xmlobject.file[j]['@id'])
+			// 							{
+			// 								for(let x = 0; x < this.data.length; x++)
+			// 								{
+			// 									if(this.data[x].id === xmlobject.rel_file_component[i].mxCell['@target'])
+			// 									{
+			// 										this.insertdata(xmlobject.file[j]['@label'], xmlobject.file[j]['@id'], 2, x, this.data[x].id, this.getcache_selected.includes(xmlobject.file[j]['@id']), getModelInfo()[modeltype].checkbox_enable);
+			// 										for(let z = 0; z < this.data.length; z++)
+			// 										{
+			// 											if(this.data[z].id === xmlobject.file[j]['@id'] && this.data[z].level === 1)
+			// 												this.data.splice(z,1);
+			// 										}
+			// 									}
+			// 								}
+			// 							}
+			// 						}
+			// 					}
+			// 					else
+			// 					{
+			// 						if(xmlobject.rel_file_component[i].mxCell['@source'] === xmlobject.file['@id'])
+			// 						{
+			// 							for(let x = 0; x < this.data.length; x++)
+			// 							{
+			// 								if(this.data[x].id === xmlobject.rel_file_component[i].mxCell['@target'])
+			// 								{
+			// 									this.insertdata(xmlobject.file['@label'], xmlobject.file['@id'], 2, x, this.data[x].id, this.getcache_selected.includes(xmlobject.file['@id']), getModelInfo()[modeltype].checkbox_enable);
+			// 									for(let z = 0; z < this.data.length; z++)
+			// 									{
+			// 										if(this.data[z].id === xmlobject.file['@id'] && this.data[z].level === 1)
+			// 											this.data.splice(z,1);
+			// 									}
+			// 								}
+			// 							}
+			// 						}
+			// 					}
+			// 				}
+			// 			}
+			// 		}
+			// 		else
+			// 		{
+			// 			if(xmlobject.rel_file_component.mxCell['@parent'] === modeltype)
+			// 			{
+			// 				if(Array.isArray(xmlobject.file))
+			// 				{
+			// 					for(let j = 0; j < xmlobject.file.length; j++)
+			// 					{
+			// 						if(xmlobject.rel_file_component.mxCell['@source'] === xmlobject.file[j]['@id'])
+			// 						{
+			// 							for(let x = 0; x < this.data.length; x++)
+			// 							{
+			// 								if(this.data[x].id === xmlobject.rel_file_component.mxCell['@target'])
+			// 								{
+			// 									this.insertdata(xmlobject.file[j]['@label'], xmlobject.file[j]['@id'], 2, x, this.data[x].id, this.getcache_selected.includes(xmlobject.file[j]['@id']), getModelInfo()[modeltype].checkbox_enable);
+			// 									for(let z = 0; z < this.data.length; z++)
+			// 									{
+			// 										if(this.data[z].id === xmlobject.file[j]['@id'] && this.data[z].level === 1)
+			// 											this.data.splice(z,1);
+			// 									}
+			// 								}
+			// 							}
+			// 						}
+			// 					}
+			// 				}
+			// 				else
+			// 				{
+			// 					if(xmlobject.rel_file_component.mxCell['@source'] === xmlobject.file['@id'])
+			// 					{
+			// 						for(let x = 0; x < this.data.length; x++)
+			// 						{
+			// 							if(this.data[x].id === xmlobject.rel_file_component.mxCell['@target'])
+			// 							{
+			// 								this.insertdata(xmlobject.file['@label'], xmlobject.file['@id'], 2, x, this.data[x].id, this.getcache_selected.includes(xmlobject.file['@id']), getModelInfo()[modeltype].checkbox_enable);
+			// 								for(let z = 0; z < this.data.length; z++)
+			// 								{
+			// 									if(this.data[z].id === xmlobject.file['@id'] && this.data[z].level === 1)
+			// 										this.data.splice(z,1);
+			// 								}
+			// 							}
+			// 						}
+			// 					}
+			// 				}
+			// 			}
+			// 		}
+			// 	}
+			// }
 			// construct element tree for binding type
 			else if(this.layertype === 3 && this.getxml !== '')
 			{
