@@ -1,5 +1,3 @@
-import messages from '../../common/messages'
-
 var binding_feature_component_main = function binding_feature_component_main(graph)
 {
     binding_f_c_constraints(graph);
@@ -110,7 +108,7 @@ var binding_feature_component_main = function binding_feature_component_main(gra
 			var lowRange = document.getElementById("input-lowRange").value;
 			var highRange = document.getElementById("input-highRange").value;
 			if(lowRange>highRange){
-				alert(messages["feature_custom_range_check"]);
+				alert(global.messages["feature_custom_range_check"]);
 				return false;
 			}
 			return true;

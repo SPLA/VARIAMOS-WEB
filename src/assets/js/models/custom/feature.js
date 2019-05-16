@@ -1,5 +1,3 @@
-import messages from '../../common/messages'
-
 var feature_main = function feature_main(graph)
 {
 	feature_constraints(graph);
@@ -148,7 +146,7 @@ var feature_main = function feature_main(graph)
 			var lowRange = document.getElementById("input-lowRange").value;
 			var highRange = document.getElementById("input-highRange").value;
 			if(lowRange>highRange){
-				alert(messages["feature_custom_range_check"]);
+				alert(global.messages["feature_custom_range_check"]);
 				return false;
 			}
 			return true;
@@ -159,7 +157,7 @@ var feature_main = function feature_main(graph)
 
 			for (var i = 0; i < feature_vertices.length; i++) {
 				if(feature_vertices[i].getAttribute("type")=="root"){
-					alert(messages["feature_custom_root_check"]);
+					alert(global.messages["feature_custom_root_check"]);
 					return false;
 				}
 			}

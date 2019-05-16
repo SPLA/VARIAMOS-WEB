@@ -10,12 +10,16 @@ import './assets/css/fontawesome.css'
 import store from './store'
 import iView from 'iview'
 import 'iview/dist/styles/iview.css'
+import messages from './assets/js/common/messages'
 
 Vue.use(iView)
 Vue.config.productionTip = false
 Vue.use(VueI18n)
 
 Vue.config.productionTip = false
+
+//Set variable on the global object.
+global.messages = messages
 
 new Vue({
   store,

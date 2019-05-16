@@ -1,5 +1,3 @@
-import messages from '../common/messages'
-
 //main function
 var main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model_type,model_specific_main,counter,setupFunctions,undoManager, route_pare, store)
 {
@@ -7,7 +5,7 @@ var main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model
 	if (!mxClient.isBrowserSupported())
 	{
 		// Displays an error message if the browser is not supported.
-		mxUtils.error(messages["model_main_browser"], 200, false);
+		mxUtils.error(global.messages["model_main_browser"], 200, false);
 	}
 	else
 	{
@@ -168,7 +166,7 @@ var main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model
 						if(cells[i].isVertex()){
 							if(cells[i].getId().includes("clon")){ //cloned elements are not allowed to remove directly
 								contain_clons = true;
-								alert(messages["setup_keys_remove_cloned"]);
+								alert(global.messages["setup_keys_remove_cloned"]);
 								break;
 							}
 						}
