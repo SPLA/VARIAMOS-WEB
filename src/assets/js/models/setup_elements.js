@@ -1,11 +1,9 @@
-import messages from '../common/messages'
-
 var setup_elements = function setup_elements(graph, elements, custom_attributes, c_clon_cells, c_constraints_ic, toolbar, c_type){    
     if(elements==null){
         //disable palette for "binding" models
         var tbContainer = document.getElementById('tbContainer');
         var span = document.createElement('span');
-        span.innerHTML = messages["setup_elements_palette_no_elements"];
+        span.innerHTML = global.messages["setup_elements_palette_no_elements"];
         tbContainer.appendChild(span);
     }else{
         //add elements to the palette
