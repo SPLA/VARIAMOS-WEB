@@ -1,9 +1,8 @@
 language: node_js
-os: osx
 node_js:
   - 10
 cache:
-  npm: true # this cashes ~/.npm folder on Travis
+  npm: true # this caches ~/.npm folder on Travis
   directories:
     # we also need to cache folder with Cypress binary
     - ~/.cache
