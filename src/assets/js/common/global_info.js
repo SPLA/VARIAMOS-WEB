@@ -3,7 +3,7 @@
  * @property    {array} projFolders             - each folder should have how many models when the folder or project is generated
  * @property    {array} shown_Elements          - each model should display how many elements in the element tree
  * @property    {boolean} checkbox_enable       - each model should enable or disable checkbox in the element tree
- * @property    {boolean} select_constraint     - the selection constratins of the element tree for the binding model
+ * @property    {boolean} select_constraint     - the selection constratins of the element tree for the binding model, if true, it will only show selected ones in the other models
  * @property    {array} rel_list                - the list of accepted relations between models
  * @property    {array} rel_bundle_list1        - the list of accepted relations from bundle to models
  * @property    {array} rel_bundle_list2        - the list of accepted relations from models to bundle
