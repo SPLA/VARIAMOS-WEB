@@ -3,64 +3,64 @@
 		<div class="naza-tree-inner show-wrap">
 			<ul class="naza-tree">
 				<div v-for="(item, $index) in getdata" :key="item.nodeId">
-				<li class="naza-tree-row"
-					:class="item.data.isSelected?'selected':''"
-					@click="clickme($index)" v-if="checkchildnode($index)">
-					<context-menu
-						:context-menu-data="contextMenuData"
-						:target-class="className"
-						:data="item">
-					</context-menu>
-					<a :style="{paddingLeft: (20 * item.data.level) + 'px'}">
-						<i v-if="item.data.nodeType!==2 && item.data.level === 1"
-							class="fa"
-							aria-hidden="true"
-							:class="[item.data.open?'fa-angle-double-down':'fa-angle-double-right']"
-							@click="expand_menu($index)"
-							:style="{position: 'absolute',left: (20 * item.data.level - 17) + 'px',top: '6px'}"
-							data-test="projectFolder">
-						</i>
-						<i v-if="item.data.nodeType!==2 && item.data.level !== 1"
-							class="fa"
-							aria-hidden="true"
-							:class="[item.data.open?'fa-angle-down':'fa-angle-right']"
-							@click="expand_menu($index)"
-							:style="{position: 'absolute',left: (20 * item.data.level - 17) + 'px',top: '6px'}"
-							data-test="modelFolder">
-						</i>
-						<i v-if="item.data.nodeType===2"
-							aria-hidden="true"
-							class="fa fa-circle"
-							:title="['Feature','Relation','Bundle'][item.data.status]"
-							:style="{position: 'absolute',
-									left: (20 * item.data.level - 14) + 'px',
-									top: '9px',
-									color: ['#0f0','#ddd','#f00'][item.data.status],
-									fontSize: '10px'}">
-						</i>
-						<span class="name-container"
-							:class="'vue-contextmenuName-menu' + item.data.nodeType + item.data.nodeId"
-							@dblclick="dblClick($index)"
-							@contextmenu="showMenu($index,$event)">
-							<i v-if="item.data.nodeType===1"
+					<li class="naza-tree-row"
+						:class="item.data.isSelected?'selected':''"
+						@click="clickme($index)" v-if="checkchildnode($index)">
+						<context-menu
+							:context-menu-data="contextMenuData"
+							:target-class="className"
+							:data="item">
+						</context-menu>
+						<a :style="{paddingLeft: (20 * item.data.level) + 'px'}">
+							<i v-if="item.data.nodeType!==2 && item.data.level === 1"
+								class="fa"
 								aria-hidden="true"
-								:class="[item.data.open?'far fa-folder-open':'fas fa-folder']"
-								style="color:gray;font-size: 16px;padding-right:4px">
+								:class="[item.data.open?'fa-angle-double-down':'fa-angle-double-right']"
+								@click="expand_menu($index)"
+								:style="{position: 'absolute',left: (20 * item.data.level - 17) + 'px',top: '6px'}"
+								data-test="projectFolder">
 							</i>
-							<i v-if="item.data.nodeType === 3"
-								:class="item.data.open?'far fa-image':'fas fa-image'" aria-hidden="true"
-								style="color:gray;font-size: 16px;padding-right:4px">
+							<i v-if="item.data.nodeType!==2 && item.data.level !== 1"
+								class="fa"
+								aria-hidden="true"
+								:class="[item.data.open?'fa-angle-down':'fa-angle-right']"
+								@click="expand_menu($index)"
+								:style="{position: 'absolute',left: (20 * item.data.level - 17) + 'px',top: '6px'}"
+								data-test="modelFolder">
 							</i>
-							<span class="name"
-								:title="item.data.nodeName"
-								:style="{display:item.data.nodeType===2?'initial':'inline-block',
-										userSelect: 'none'}">
-								{{item.data.nodeName}}
+							<i v-if="item.data.nodeType===2"
+								aria-hidden="true"
+								class="fa fa-circle"
+								:title="['Feature','Relation','Bundle'][item.data.status]"
+								:style="{position: 'absolute',
+										left: (20 * item.data.level - 14) + 'px',
+										top: '9px',
+										color: ['#0f0','#ddd','#f00'][item.data.status],
+										fontSize: '10px'}">
+							</i>
+							<span class="name-container"
+								:class="'vue-contextmenuName-menu' + item.data.nodeType + item.data.nodeId"
+								@dblclick="dblClick($index)"
+								@contextmenu="showMenu($index,$event)">
+								<i v-if="item.data.nodeType===1"
+									aria-hidden="true"
+									:class="[item.data.open?'far fa-folder-open':'fas fa-folder']"
+									style="color:gray;font-size: 16px;padding-right:4px">
+								</i>
+								<i v-if="item.data.nodeType === 3"
+									:class="item.data.open?'far fa-image':'fas fa-image'" aria-hidden="true"
+									style="color:gray;font-size: 16px;padding-right:4px">
+								</i>
+								<span class="name"
+									:title="item.data.nodeName"
+									:style="{display:item.data.nodeType===2?'initial':'inline-block',
+											userSelect: 'none'}">
+									{{item.data.nodeName}}
+								</span>
 							</span>
-						</span>
-					</a>
-				</li>
-				<subcotalogue v-if="item.data.nodeType === 3 && item.data.open" :style="{paddingLeft: (20 * item.data.level) + 'px'}" :layername="item.data.nodeName" :layertype="item.data.modeltype"></subcotalogue>
+						</a>
+					</li>
+					<subcotalogue v-if="item.data.nodeType === 3 && item.data.open" :style="{paddingLeft: (20 * item.data.level) + 'px'}" :layername="item.data.nodeName" :layertype="item.data.modeltype"></subcotalogue>
 				</div>
 			</ul>
 		</div>
