@@ -35,7 +35,7 @@
 /* eslint-disable */
 import xml2json from '../assets/js/common/xml2json.js'
 import {getModelInfo} from '../assets/js/common/global_info'
-
+import Bus from '../assets/js/common/bus.js'
 
 export default {
 	// the element name and type in the tree data
@@ -654,6 +654,11 @@ export default {
 					if(this.data[i].id === this.data[index].id)
 						this.data[i].tick = this.data[index].tick;
 				}
+			}
+			// set overlay for feature model
+			if(this.layertype === 1)
+			{
+				Bus.$emit('setoverlay_tree',this.data[index]);
 			}
 		}
 	}
