@@ -114,14 +114,41 @@ export default {
 						{
 							for(let i = 0; i < xmlobject[element_list[x]].length; i++)
 							{
-								if(xmlobject[element_list[x]][i].mxCell['@parent'] === modeltype)
-									this.insertdata(xmlobject[element_list[x]][i]['@label'],xmlobject[element_list[x]][i]['@id'], 1, -1, -1, this.getcache_selected.includes(xmlobject[element_list[x]][i]['@id']), getModelInfo()[modeltype].checkbox_enable);	
+								console.log(xmlobject[element_list[x]][i]);
+								if(xmlobject[element_list[x]][i].mxCell['@parent'] === modeltype && xmlobject[element_list[x]][i]['@type'] !== 'concrete')
+									this.insertdata(xmlobject[element_list[x]][i]['@label'],xmlobject[element_list[x]][i]['@id'], 1, -1, -1, this.getcache_selected.includes(xmlobject[element_list[x]][i]['@id']), getModelInfo()[modeltype].checkbox_enable);
+								else if(xmlobject[element_list[x]][i].mxCell['@parent'] === modeltype && xmlobject[element_list[x]][i]['@type'] === 'concrete')	
+								{
+									if(xmlobject[element_list[x]][i]['@selected'] === 'true')
+									{
+										this.insertdata(xmlobject[element_list[x]][i]['@label'],xmlobject[element_list[x]][i]['@id'], 1, -1, -1, true, getModelInfo()[modeltype].checkbox_enable);
+										this.$store.dispatch('addcacheselected', this.data[0].id);
+									}
+									else
+									{
+										this.insertdata(xmlobject[element_list[x]][i]['@label'],xmlobject[element_list[x]][i]['@id'], 1, -1, -1, false, getModelInfo()[modeltype].checkbox_enable);
+										this.$store.dispatch('removecacheselected', this.data[0].id);
+									}
+								}
 							}
 						}
 						else
 						{
-							if(xmlobject[element_list[x]].mxCell['@parent'] === modeltype)
-								this.insertdata(xmlobject[element_list[x]]['@label'],xmlobject[element_list[x]]['@id'], 1, -1, -1, this.getcache_selected.includes(xmlobject[element_list[x]]['@id']), getModelInfo()[modeltype].checkbox_enable);	
+							if(xmlobject[element_list[x]].mxCell['@parent'] === modeltype && xmlobject[element_list[x]]['@type'] !== 'concrete')
+								this.insertdata(xmlobject[element_list[x]]['@label'],xmlobject[element_list[x]]['@id'], 1, -1, -1, this.getcache_selected.includes(xmlobject[element_list[x]]['@id']), getModelInfo()[modeltype].checkbox_enable);
+							else if(xmlobject[element_list[x]].mxCell['@parent'] === modeltype && xmlobject[element_list[x]]['@type'] === 'concrete')	
+							{
+								if(xmlobject[element_list[x]]['@selected'] === 'true')
+								{
+									this.insertdata(xmlobject[element_list[x]]['@label'],xmlobject[element_list[x]]['@id'], 1, -1, -1, true, getModelInfo()[modeltype].checkbox_enable);
+									this.$store.dispatch('addcacheselected', this.data[0].id);
+								}
+								else
+								{
+									this.insertdata(xmlobject[element_list[x]]['@label'],xmlobject[element_list[x]]['@id'], 1, -1, -1, false, getModelInfo()[modeltype].checkbox_enable);
+									this.$store.dispatch('removecacheselected', this.data[0].id);
+								}
+							}
 						}
 					}
 				}

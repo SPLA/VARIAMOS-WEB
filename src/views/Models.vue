@@ -179,9 +179,6 @@ export default{
           }
 				}
       }
-      // save model
-      var encoder = new mxCodec();
-      localStorage[this.getmodel_component] = mxUtils.getPrettyXml(encoder.encode(this.graph.getModel()));
     });
   },
   methods: {
