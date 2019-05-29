@@ -114,7 +114,6 @@ export default {
 						{
 							for(let i = 0; i < xmlobject[element_list[x]].length; i++)
 							{
-								console.log(xmlobject[element_list[x]][i]);
 								if(xmlobject[element_list[x]][i].mxCell['@parent'] === modeltype && xmlobject[element_list[x]][i]['@type'] !== 'concrete')
 									this.insertdata(xmlobject[element_list[x]][i]['@label'],xmlobject[element_list[x]][i]['@id'], 1, -1, -1, this.getcache_selected.includes(xmlobject[element_list[x]][i]['@id']), getModelInfo()[modeltype].checkbox_enable);
 								else if(xmlobject[element_list[x]][i].mxCell['@parent'] === modeltype && xmlobject[element_list[x]][i]['@type'] === 'concrete')	
