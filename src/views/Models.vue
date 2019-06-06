@@ -147,6 +147,39 @@ export default{
 
     if(localStorage['cache_selected'+temp])
       this.$store.dispatch('updatecacheselected', JSON.parse(localStorage['cache_selected'+temp]));
+
+    /**
+     * listen to the item click to set overlay
+     * @listens module:sub_cotalogue.vue~event:setoverlay_tree
+     */
+    Bus.$on('setoverlay_tree',data=>{
+      var feature_root = this.graph.getModel().getCell("feature");
+      var feature_elements = this.graph.getModel().getChildEdges(feature_root);
+      
+			for (var i = 0; i < feature_elements.length; i++) {
+				var source = feature_elements[i].source;
+        var type = source.getAttribute("type");
+        //if it is concrete feature and same id
+				if(type=="concrete" && source.id == data.id){
+          for(let j = 0; j < source.value.attributes.length; j++)
+          {
+            // add cell overlay
+            if(source.value.attributes[j].nodeName === "selected" && data.tick)
+            {
+              source.value.attributes[j].nodeValue = "true";
+              var overlay = new mxCellOverlay(new mxImage('images/MX/check.png', 16, 16), 'Overlay tooltip');
+					    this.graph.addCellOverlay(source,overlay);
+            }
+            // remove cell overlay
+            else if(source.value.attributes[j].nodeName === "selected" && !data.tick)
+            {
+              source.value.attributes[j].nodeValue = "false";
+					    this.graph.removeCellOverlay(source,overlay);
+            }
+          }
+				}
+      }
+    });
   },
   methods: {
     persist() {
@@ -184,6 +217,12 @@ export default{
      */
     getcache_selected (){
       return this.$store.getters.getcacheselected;
+    },
+    /**
+     * @returns {array} the selected elements from feature and component models
+  	 */
+    getcache_selected (){
+    	return this.$store.getters.getcacheselected;
     }
   },
   watch:{

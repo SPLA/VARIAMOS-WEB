@@ -71,6 +71,7 @@ import contextMenu from './contextMenu.vue'
 import subcotalogue from './sub_cotalogue.vue'
 import Bus from '../assets/js/common/bus.js'
 import { getcontextmenulist } from '../assets/js/common/global_info'
+import {getModelInfo} from '../assets/js/common/global_info'
 
 export default {
 	name: 'cotalogue',
@@ -192,9 +193,22 @@ export default {
 					 * @fires module:store~actions:updatemodelcomponent
 					 * @fires module:store~actions:updateactivetab
 					 */
-				    this.$router.push("/models/"+projectname+"/"+foldername+"/feature");
-					this.$store.dispatch('updatemodelcomponent', index);
-					this.$store.dispatch('updateactivetab', 'feature');
+					let checkmodels = true;
+					for(let i = 0; i < getModelInfo()["gmodels"].length; i++)
+					{
+						if(getModelInfo()[getModelInfo()["gmodels"][i]].projFolders.includes(foldername.split('-')[0]))
+						{
+							checkmodels = false;
+							this.$router.push("/models/"+projectname+"/"+foldername+"/"+getModelInfo()["gmodels"][i]);
+							this.$store.dispatch('updatemodelcomponent', index);
+							this.$store.dispatch('updateactivetab', getModelInfo()["gmodels"][i]);
+							break;
+						}
+					}
+					if(checkmodels)
+					{
+						this.$router.push("/models/"+projectname+"/null/null");
+					}
 				}
 				// if we are closing one folder
 				else if(data[index].data.nodeType === 1 && data[index].data.open)
@@ -236,6 +250,27 @@ export default {
 				if(data[i].data.nodeId === data[index].data.parentId)
 					foldername = data[i].data.nodeName.replace(/\s+/g,"");
 			}		
+			//check if there is no model in the folder
+			if(data[index].data.nodeType === 1 && data[index].data.open && data[index].data.level !== 1)
+			{
+				let checkmodels = true;
+				for(let i = 0; i < getModelInfo()["gmodels"].length; i++)
+				{
+					if(getModelInfo()[getModelInfo()["gmodels"][i]].projFolders.includes(foldername.split('-')[0]))
+					{
+						checkmodels = false;
+						this.$router.push("/models/"+projectname+"/"+foldername+"/"+getModelInfo()["gmodels"][i]);
+						this.$store.dispatch('updatemodelcomponent', index);
+						this.$store.dispatch('updateactivetab', getModelInfo()["gmodels"][i]);
+						break;
+					}
+				}
+				if(checkmodels)
+				{
+					this.$router.push("/models/"+projectname+"/null/null");
+					return;
+				}
+			}
 			// check if project is open but all the folders are closed
 			let checkpoint = true;
 			for(let i = 0; i < data.length; i++)
@@ -250,12 +285,6 @@ export default {
 				this.$router.push("/models/"+data[index].data.nodeName.split('-')[1].replace(/\s+/g,"")+"/default/default");
 
 			// when clicking the diagram, navigate to the correponding router path
-			if(data[index].data.nodeType === 3){
-				this.$router.push("/models/"+projectname+"/"+foldername+"/"+data[index].data.nodeName);
-            	this.$store.dispatch('updateactivetab', data[index].data.nodeName);
-			}
-
-			// if we click the diagram
 			if(data[index].data.nodeType === 3)
 			{
 				/**
@@ -263,6 +292,7 @@ export default {
 				 * @fires module:store~actions:updateactivetab
 				 * @fires module:store~actions:updatemodelcomponent
 				 */
+				this.$router.push("/models/"+projectname+"/"+foldername+"/"+data[index].data.nodeName);
 				this.$store.dispatch('updateactivetab', data[index].data.nodeName);
 				for(let i = 0; i < data.length; i++)
 				{
