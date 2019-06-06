@@ -2,7 +2,7 @@
   <div id="app">
     <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
           <router-link  to="/" class="navbar-brand col-sm-4 col-md-2 mr-0">{{ $t("app_variamos") }}</router-link>
-          <input class="form-control form-control-dark w-100 height-100" type="text" v-bind:placeholder="$t('app_search')" v-bind:aria-label="$t('app_search')" v-model="keyWords" @input="handleQuery">
+          <input class="form-control form-control-dark w-100 height-100" type="text" v-bind:placeholder="$t('app_search')" v-bind:aria-label="$t('app_search')">
           <ul class="navbar-nav px-3">
             <li class="nav-item text-nowrap">
               <a class="nav-link">{{ $t("app_sign_out") }}</a>
@@ -116,38 +116,12 @@ export default {
   },
   data: function(){
     return {
-      split: 0.5,
-      keyWords: '',
-      cache_keywords: ''
+      split: 0.5
     }
   },
   methods: {
     hide_modal(){
       document.getElementById('main_modal').style.display="none";
-    },
-    clearTimer () {
-      if (this.timer) {
-        clearTimeout(this.timer);
-      }
-    },
-    handleQuery (event) {
-      this.clearTimer();
-      this.timer = setTimeout(() => {
-        document.designMode = "on";
-        var sel = window.getSelection();
-        sel.collapse(document.body, 0);
-        while (window.find(this.cache_keywords)) {
-          document.execCommand("removeFormat", false, null);
-          sel.collapseToEnd();
-        }
-        this.cache_keywords = this.keyWords;
-        sel.collapse(document.body, 0);
-        while (window.find(this.keyWords)) {
-            document.execCommand("HiliteColor", false, 'yellow');
-            sel.collapseToEnd();
-        }
-        document.designMode = "off";
-      }, 1000);
     }
   }
 }
