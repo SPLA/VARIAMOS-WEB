@@ -26,16 +26,16 @@ export function insertmodel(data, index, temp) {
     let modeltype = 3;
     for(let i = 0; i < getModelInfo()['gmodels'].length; i++)
 	{
-		if(getModelInfo()[getModelInfo()['gmodels'][getModelInfo()['gmodels'].length-i-1]].projFolders.includes(data[index].data.nodeName.split(' -')[0]))
+		if(getModelInfo()[getModelInfo()['gmodels'][i]].projFolders.includes(data[index].data.nodeName.split(' -')[0]))
 		{
-			data.splice(index + 1, 0 , {
+			data.splice(index + 1 + i, 0 , {
 				children: [],
 				data: {
 					open: false,
 					isSelected: false,
 					level: data[index].data.level + 1,
 					nodeId: temp,
-					nodeName: getModelInfo()['gmodels'][getModelInfo()['gmodels'].length-i-1],
+					nodeName: getModelInfo()['gmodels'][i],
 					nodeType: 3,
 					parentId: data[index].data.nodeId,
 					projectId: data[index].data.projectId,
