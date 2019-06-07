@@ -168,7 +168,7 @@ describe('Catalogue', () => {
   })
 
   //TODO: REMOVE TIMEOUT
-  it.skip('expand_menu() works correctly - HAS A BREAKING TIMEOUT', () => {
+  it.skip('expand_menu() - BROKEN - HAS A BREAKING TIMEOUT', () => {
   })
 
   it('Click anywhere calls the clickme() function', () => {
