@@ -16,7 +16,6 @@ import {
   import axios from 'axios'
   // eslint-disable-next-line no-unused-vars
   import flushPromises from 'flush-promises'
-  //import * as util from '../../../../src/assets/js/common/util'
   const chai = require("chai");
   const expect = chai.expect;
   const sinon = require("sinon");
@@ -135,12 +134,10 @@ import {
       expect(mockGraph.removeCellOverlay.callCount).to.deep.equal(5)
     })
 
-    it.skip('test() - BROKEN - Unexpected behaviour from mocking the external dependencies', async () => {
-      Verification.__Rewire__('../../../../src/assets/js/common/util', {
-        setupModal: setupModalStub,
-        modalH3: modalH3Stub,
-        modalSimpleText: modalSimpleTextStub
-      })
+    it('test()', async () => {
+      Verification.__Rewire__('setupModal', setupModalStub)
+      Verification.__Rewire__('modalH3', modalH3Stub)
+      Verification.__Rewire__('modalSimpleText', modalSimpleTextStub)
       sinon.stub(axios, 'post').resolves({ data: "Success" });
       global.mxCodec = function() {
         this.encode = sinon.stub()
@@ -154,6 +151,8 @@ import {
       wrapper.vm.test()
       await flushPromises()
       expect(setupModalStub).to.have.been.called
-      Verification.__ResetDependency__('../../../../src/assets/js/common/util')
+      expect(modalH3Stub).to.have.been.called
+      expect(modalSimpleTextStub).to.have.been.called
+      __rewire_reset_all__();
     })
   })
