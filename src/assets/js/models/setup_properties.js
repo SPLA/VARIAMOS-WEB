@@ -1,5 +1,3 @@
-import messages from '../common/messages'
-
 var setup_properties = function setup_properties(graph,properties_styles){
 	//remove previous listeners
 	if(graph.getSelectionModel().eventListeners.length>3){
@@ -26,12 +24,12 @@ var setup_properties = function setup_properties(graph,properties_styles){
 		
 		if (cell == null)
 		{
-			mxUtils.writeln(div, messages["setup_properties_nothing"]);
+			mxUtils.writeln(div, global.messages["setup_properties_nothing"]);
 		}
 		else
 		{
 			if(cell.getId().includes("clon")){
-				mxUtils.writeln(div, messages["setup_properties_clon"]);
+				mxUtils.writeln(div, global.messages["setup_properties_clon"]);
 			}else{
 				if(cell.value.attributes){
 					var form = new mxForm("properties-table");

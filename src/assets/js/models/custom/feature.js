@@ -1,18 +1,16 @@
-import messages from '../../common/messages'
-
 var feature_main = function feature_main(graph)
 {
 	feature_constraints(graph);
-	var data=[];
-	data[0]="normal" //custom type
-	data[1]=feature_elements(); //custom elements
-	data[2]=feature_attributes(); //custom attributes
-	data[3]=feature_relations(); //custom relations
-	data[4]=feature_properties_styles(); //custom properties styles
-	data[5]=feature_labels(); //custom labels
-	data[6]=feature_clon_cells(); //custom clon cells
-	data[7]=feature_constraints_in_creation(); //custom constraints in element creation
-	data[8]=feature_overlay(); //custom overlay
+	var data={};
+	data["m_type"]="normal"; //custom type
+	data["m_elements"]=feature_elements(); //custom elements
+	data["m_attributes"]=feature_attributes(); //custom attributes
+	data["m_relations"]=feature_relations(); //custom relations
+	data["m_properties_styles"]=feature_properties_styles(); //custom properties styles
+	data["m_labels"]=feature_labels(); //custom labels
+	data["m_clon_cells"]=feature_clon_cells(); //custom clon cells
+	data["m_constraints_ic"]=feature_constraints_in_creation(); //custom constraints in element creation
+	data["m_overlay"]=feature_overlay(); //custom overlay
 	return data;
 	
 	function feature_constraints(graph){
@@ -148,7 +146,7 @@ var feature_main = function feature_main(graph)
 			var lowRange = document.getElementById("input-lowRange").value;
 			var highRange = document.getElementById("input-highRange").value;
 			if(lowRange>highRange){
-				alert(messages["feature_custom_range_check"]);
+				alert(global.messages["feature_custom_range_check"]);
 				return false;
 			}
 			return true;
@@ -159,7 +157,7 @@ var feature_main = function feature_main(graph)
 
 			for (var i = 0; i < feature_vertices.length; i++) {
 				if(feature_vertices[i].getAttribute("type")=="root"){
-					alert(messages["feature_custom_root_check"]);
+					alert(global.messages["feature_custom_root_check"]);
 					return false;
 				}
 			}

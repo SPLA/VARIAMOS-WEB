@@ -1,5 +1,3 @@
-import messages from '../common/messages'
-
 /*
 
 To check available models go to Public/js/global_info.js
@@ -32,7 +30,7 @@ var model_load = function model_load(graph,models,m_code){
                     }
                     
                     if(!valid_cell){
-                        console.log(messages["model_load_invalid_cell"]);
+                        console.log(global.messages["model_load_invalid_cell"]);
                     }
                 }
             }else{

@@ -1,9 +1,6 @@
 /**
  * return the VariaMos main model info
  * @property    {array} projFolders             - each folder should have how many models when the folder or project is generated
- * @property    {array} shown_Elements          - each model should display how many elements in the element tree
- * @property    {boolean} checkbox_enable       - each model should enable or disable checkbox in the element tree
- * @property    {boolean} select_constraint     - the selection constratins of the element tree for the binding model
  */
 export function getModelInfo(){
     var info =[];
@@ -11,13 +8,14 @@ export function getModelInfo(){
     
     info["gmodels"]=["feature","component","feedback","binding_feature_component"];
     //define feature model main info
-    info["feature"]={projFolders:["Domain","Application","Adaptation"], shown_Elements:["root", "abstract", "concrete"], checkbox_enable:true};
+    info["feature"]={projFolders:["Domain","Application","Adaptation"]};
     //define component model main info
-    info["component"]={projFolders:["Domain"], shown_Elements:["component", "file"], checkbox_enable:false};
+    info["component"]={projFolders:["Domain"]};
     //define binding model main info
-    info["binding_feature_component"]={projFolders:["Domain"], shown_Elements:['concrete', 'component'], checkbox_enable:false};
+    info["binding_feature_component"]={projFolders:["Domain"]};
     //define feedback model main info
-    info["feedback"]={projFolders:["Application"], shown_Elements:["component", "file", "summing_point"], checkbox_enable:false};
+    info["feedback"]={projFolders:["Domain"]};
+    info["binding_feature_component"]={projFolders:["Domain"]};
     return info;
 }
 

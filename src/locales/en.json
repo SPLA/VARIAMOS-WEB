@@ -85,6 +85,9 @@
 
   "domain_menu":"Domain Menu",
   "domain_menu_set_comp":"Set Component Folder",
+  "domain_menu_show_file_code":"Show Selected File Code",
+  "domain_menu_sfc_invalid":"Please select a valid component file",
+  "domain_menu_sfc_not_found":"File not found, check your model and component pool",
 
   "domain_implementation_set_params":"Set Derivation Parameters",
   "domain_implementation_execute":"Execute Derivation",

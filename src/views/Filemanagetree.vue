@@ -302,43 +302,41 @@ export default{
 		 */
 		createproject(){
 			let data = this.getdata;
-			setTimeout(()=>{
-				let pro = this.newProject;
-				// check the duplicated project name
-				if(typeof (data.find(function(data_diagram){
-					return data_diagram.data.nodeName === pro.formval.projectName && data_diagram.data.parentId == -1;
-				}))!=='undefined')
-				{
-					this.newProject.loading = false;
-					this.$nextTick(() => {
-						this.newProject.loading = true;
-						this.$Message.warning('Duplicated name!');
-					});
-				}
-				// check the empty project name
-                else if(this.newProject.formval.projectName.length === 0){
-					this.newProject.loading = false;
-					this.$nextTick(() => {
-						this.newProject.loading = true;
-						this.$Message.warning('Empty is not allowed!');
-					});
-				}
-				// check the other opened project
-				else if(this.checkopenproject()){
-					this.newProject.loading = false;
-					this.newProject.isshow = false;
-					this.$Message.warning('Please close the opened project!');
-				}
-				/**
-				 * create the new project in the tree data
-				 * @fires module:store~actions:createproject
-				 */
-				else {
-					this.$store.dispatch('createproject', this.newProject.formval.projectName);
-					this.newProject.loading = false;
-					this.newProject.isshow = false;
-				}
-            }, 300);
+			let pro = this.newProject;
+			// check the duplicated project name
+			if(typeof (data.find(function(data_diagram){
+				return data_diagram.data.nodeName === pro.formval.projectName && data_diagram.data.parentId == -1;
+			}))!=='undefined')
+			{
+				this.newProject.loading = false;
+				this.$nextTick(() => {
+					this.newProject.loading = true;
+					this.$Message.warning('Duplicated name!');
+				});
+			}
+			// check the empty project name
+			else if(this.newProject.formval.projectName.length === 0){
+				this.newProject.loading = false;
+				this.$nextTick(() => {
+					this.newProject.loading = true;
+					this.$Message.warning('Empty is not allowed!');
+				});
+			}
+			// check the other opened project
+			else if(this.checkopenproject()){
+				this.newProject.loading = false;
+				this.newProject.isshow = false;
+				this.$Message.warning('Please close the opened project!');
+			}
+			/**
+			 * create the new project in the tree data
+			 * @fires module:store~actions:createproject
+			 */
+			else {
+				this.$store.dispatch('createproject', this.newProject.formval.projectName);
+				this.newProject.loading = false;
+				this.newProject.isshow = false;
+			}
 		},
 		/**
 		 * create a new application folder
@@ -352,48 +350,46 @@ export default{
 			if(!data[this.newApplication.index].data.open){
 				this.$refs.cotalogue.expand_menu(this.newApplication.index);
 			}
-			setTimeout(()=>{
-				let app = this.newApplication;
-				// check the duplicated application name
-				if(typeof (data.find(function(data_diagram){
-					return data_diagram.data.nodeName.split('- ')[2] === app.applicationName && data_diagram.data.parentId === app.parentId;
-				}))!=='undefined')
+
+			let app = this.newApplication;
+			// check the duplicated application name
+			if(typeof (data.find(function(data_diagram){
+				return data_diagram.data.nodeName.split('- ')[2] === app.applicationName && data_diagram.data.parentId === app.parentId;
+			}))!=='undefined')
+			{
+				this.newApplication.loading = false;
+				this.$nextTick(() => {
+					this.newApplication.loading = true;
+					this.$Message.warning('Duplicated name!');
+				});
+			}
+			// check the empty application name
+			else if(this.newApplication.applicationName.length === 0){
+				this.newApplication.loading = false;
+				this.$nextTick(() => {
+					this.newApplication.loading = true;
+					this.$Message.warning('Empty is not allowed!');
+				});
+			}
+			else {
+				/**
+				 * @deprecated the counter of application folder is not used
+				 */
+				let index = 0;
+				for(let i = 0; i < data.length; i++)
 				{
-					this.newApplication.loading = false;
-					this.$nextTick(() => {
-						this.newApplication.loading = true;
-						this.$Message.warning('Duplicated name!');
-					});
+					if(data[i].data.parentId === app.parentId && data[i].data.nodeName.includes('Application'))
+						index++;
 				}
-				// check the empty application name
-				else if(this.newApplication.applicationName.length === 0){
-					this.newApplication.loading = false;
-					this.$nextTick(() => {
-						this.newApplication.loading = true;
-						this.$Message.warning('Empty is not allowed!');
-					});
-				}
-				else {
-					/**
-					 * @deprecated the counter of application folder is not used
-					 */
-					let index = 0;
-					for(let i = 0; i < data.length; i++)
-					{
-						if(data[i].data.parentId === app.parentId && data[i].data.nodeName.includes('Application'))
-							index++;
-					}
-					this.newApplication.appindex = index + 1;
-					/**
-					 * add new application folder and close modal
-					 * @fires module:store~actions:createapplication
-					 */
-					this.$store.dispatch('createapplication', this.newApplication);
-					this.newApplication.loading = false;
-					this.newApplication.isshow = false;
-                }
-            }, 300);
-            
+				this.newApplication.appindex = index + 1;
+				/**
+				 * add new application folder and close modal
+				 * @fires module:store~actions:createapplication
+				 */
+				this.$store.dispatch('createapplication', this.newApplication);
+				this.newApplication.loading = false;
+				this.newApplication.isshow = false;
+			}
 		},
 		/**
 		 * create a new adaptation folder
@@ -406,49 +402,46 @@ export default{
 			// if(!data[this.newAdaptation.index].data.open){
 			// 	this.$refs.cotalogue.expand_menu(this.newAdaptation.index);
 			// }
-			setTimeout(()=>{
-				let adp = this.newAdaptation;
-				// check the duplicated adaptation folder
-				if(typeof (data.find(function(data_diagram){
-					return data_diagram.data.nodeName.split('- ')[3] === adp.adapatationName && data_diagram.data.parentId == adp.parentId;
-				}))!=='undefined')
+			let adp = this.newAdaptation;
+			// check the duplicated adaptation folder
+			if(typeof (data.find(function(data_diagram){
+				return data_diagram.data.nodeName.split('- ')[3] === adp.adapatationName && data_diagram.data.parentId == adp.parentId;
+			}))!=='undefined')
+			{
+				this.newAdaptation.loading = false;
+				this.$nextTick(() => {
+					this.newAdaptation.loading = true;
+					this.$Message.warning('Duplicated name!');
+				});
+			}
+			// check the empty adaptation folder
+			else if(this.newAdaptation.adapatationName.length === 0)
+			{
+				this.newAdaptation.loading = false;
+				this.$nextTick(() => {
+					this.newAdaptation.loading = true;
+					this.$Message.warning('Empty is not allowed!');
+				});
+			}
+			else {
+				/**
+				 * @deprecated the counter of adaptation folder is not used
+				 */
+				let index = 0;
+				for(let i = 0; i < data.length; i++)
 				{
-					this.newAdaptation.loading = false;
-					this.$nextTick(() => {
-						this.newAdaptation.loading = true;
-						this.$Message.warning('Duplicated name!');
-					});
+					if(data[i].data.parentId === adp.parentId && data[i].data.nodeName.includes('Adaptation'))
+						index++;
 				}
-				// check the empty adaptation folder
-				else if(this.newAdaptation.adapatationName.length === 0)
-				{
-					this.newAdaptation.loading = false;
-					this.$nextTick(() => {
-						this.newAdaptation.loading = true;
-						this.$Message.warning('Empty is not allowed!');
-					});
-				}
-				else {
-					/**
-					 * @deprecated the counter of adaptation folder is not used
-					 */
-					let index = 0;
-					for(let i = 0; i < data.length; i++)
-					{
-						if(data[i].data.parentId === adp.parentId && data[i].data.nodeName.includes('Adaptation'))
-							index++;
-					}
-					this.newApplication.adpindex = index + 1;
-					/**
-					 * add a new adaptation folder and close modal
-					 * @fires module:store~actions:createadaptation
-					 */
-					this.$store.dispatch('createadaptation', this.newAdaptation);
-					this.newAdaptation.loading = false;
-					this.newAdaptation.isshow = false;
-                }
-            }, 300);
-            
+				this.newApplication.adpindex = index + 1;
+				/**
+				 * add a new adaptation folder and close modal
+				 * @fires module:store~actions:createadaptation
+				 */
+				this.$store.dispatch('createadaptation', this.newAdaptation);
+				this.newAdaptation.loading = false;
+				this.newAdaptation.isshow = false;
+			}
 		},
 		// change name
 		rename(){
@@ -463,62 +456,60 @@ export default{
 				this.newName.formval.id=null;
 				return;
 			}
-			setTimeout(()=>{
-				let nn = this.newName;
-				// put the new name in the format "type" - "project name" - "application name" - "adaptation name"
-				if(nn.formval.type === 'Application ')
-					nn.formval.changedName = data[nn.index].data.nodeName.split('-')[0] + '-' + data[nn.index].data.nodeName.split('-')[1] + '- ' + nn.formval.changedName;
-				else if(nn.formval.type === 'Adaptation ')
-					nn.formval.changedName = data[nn.index].data.nodeName.split('-')[0] + '-' + data[nn.index].data.nodeName.split('-')[1] + '-' + data[nn.index].data.nodeName.split('-')[2] + '- ' + nn.formval.changedName;
-				// check the duplicated name
-				if(typeof (data.find(function(data_diagram){
-					return data_diagram.data.nodeName === nn.formval.changedName && data_diagram.data.projectId == nn.formval.projectId
-					&& data_diagram.data.nodeType === 3;
-				}))!=='undefined')
+			let nn = this.newName;
+			// put the new name in the format "type" - "project name" - "application name" - "adaptation name"
+			if(nn.formval.type === 'Application ')
+				nn.formval.changedName = data[nn.index].data.nodeName.split('-')[0] + '-' + data[nn.index].data.nodeName.split('-')[1] + '- ' + nn.formval.changedName;
+			else if(nn.formval.type === 'Adaptation ')
+				nn.formval.changedName = data[nn.index].data.nodeName.split('-')[0] + '-' + data[nn.index].data.nodeName.split('-')[1] + '-' + data[nn.index].data.nodeName.split('-')[2] + '- ' + nn.formval.changedName;
+			// check the duplicated name
+			if(typeof (data.find(function(data_diagram){
+				return data_diagram.data.nodeName === nn.formval.changedName && data_diagram.data.projectId == nn.formval.projectId
+				&& data_diagram.data.nodeType === 3;
+			}))!=='undefined')
+			{
+				this.newName.loading = false;
+				this.$nextTick(() => {
+					this.newName.loading = true;
+					this.$Message.warning('Duplicated name!');
+				});
+			}
+			else{
+				// check localstorage, if exists, replace it
+				if(localStorage[data[nn.index].data.nodeName])
 				{
-					this.newName.loading = false;
-					this.$nextTick(() => {
-						this.newName.loading = true;
-						this.$Message.warning('Duplicated name!');
-					});
+					localStorage[nn.formval.changedName] = localStorage[data[nn.index].data.nodeName];
+					localStorage.removeItem(data[nn.index].data.nodeName);
 				}
-				else{
-					// check localstorage, if exists, replace it
-					if(localStorage[data[nn.index].data.nodeName])
+				// if type is application, check the localstorage of adapatation and replace them
+				if(nn.formval.type === 'Application ')
+				{
+					for(let i = nn.index + 1; i < data.length; i++)
 					{
-						localStorage[nn.formval.changedName] = localStorage[data[nn.index].data.nodeName];
-						localStorage.removeItem(data[nn.index].data.nodeName);
-					}
-					// if type is application, check the localstorage of adapatation and replace them
-					if(nn.formval.type === 'Application ')
-					{
-						for(let i = nn.index + 1; i < data.length; i++)
+						if(data[i].data.parentId === data[nn.index].data.nodeId && data[i].data.nodeName.includes('Adaptation') && localStorage[data[i].data.nodeName])
 						{
-							if(data[i].data.parentId === data[nn.index].data.nodeId && data[i].data.nodeName.includes('Adaptation') && localStorage[data[i].data.nodeName])
-							{
-								localStorage['Adaptation -'+ nn.formval.changedName.split('-')[1] + '-' + nn.formval.changedName.split('-')[2] + ' -' + data[i].data.nodeName.split('-')[3]] = localStorage[data[i].data.nodeName];
-								localStorage.removeItem(data[i].data.nodeName);
-							}
+							localStorage['Adaptation -'+ nn.formval.changedName.split('-')[1] + '-' + nn.formval.changedName.split('-')[2] + ' -' + data[i].data.nodeName.split('-')[3]] = localStorage[data[i].data.nodeName];
+							localStorage.removeItem(data[i].data.nodeName);
 						}
 					}
-					/**
-					 * change name in the tree data and close modal
-					 * @fires module:store~actions:changename
-					 */
-					this.$store.dispatch('changename', this.newName);
-					this.newName.isshow = false;
-					this.newName.loading = false;
-					// change the router path to the new one
-					let projectname = '';
-			        for(let i = 0; i < data.length; i++)
-			        {
-				        if(data[i].data.nodeId === data[nn.index].data.projectId)
-					        projectname = data[i].data.nodeName;
-					}
-					if(data[this.newName.index].data.open)
-				    	this.$router.push("/models/"+projectname+"/"+nn.formval.changedName.replace(/\s+/g,"")+"/"+this.getactivetab);
-                }
-            }, 250);
+				}
+				/**
+				 * change name in the tree data and close modal
+				 * @fires module:store~actions:changename
+				 */
+				this.$store.dispatch('changename', this.newName);
+				this.newName.isshow = false;
+				this.newName.loading = false;
+				// change the router path to the new one
+				let projectname = '';
+				for(let i = 0; i < data.length; i++)
+				{
+					if(data[i].data.nodeId === data[nn.index].data.projectId)
+						projectname = data[i].data.nodeName;
+				}
+				if(data[this.newName.index].data.open)
+					this.$router.push("/models/"+projectname+"/"+nn.formval.changedName.replace(/\s+/g,"")+"/"+this.getactivetab);
+			}
 		}
 	},
 	computed: {

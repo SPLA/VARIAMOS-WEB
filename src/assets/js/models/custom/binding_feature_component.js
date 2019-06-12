@@ -1,18 +1,12 @@
-import messages from '../../common/messages'
-
 var binding_feature_component_main = function binding_feature_component_main(graph)
 {
     binding_f_c_constraints(graph);
-    var data=[];
-	data[0]="binding" //custom type
-	data[1]=binding_f_c_elements(); //custom elements
-	data[2]=binding_f_c_attributes(); //custom attributes
-	data[3]=null; //custom relations
-	data[4]=binding_f_c_properties_styles(); //custom properties styles
-	data[5]=binding_f_c_labels(); //custom labels
-	data[6]=null; //custom clon cells
-	data[7]=null; //custom constraints in element creation
-	data[8]=null; //custom overlays
+    var data={};
+	data["m_type"]="binding"; //custom type
+	data["m_elements"]=binding_f_c_elements(); //custom elements
+	data["m_attributes"]=binding_f_c_attributes(); //custom attributes
+	data["m_properties_styles"]=binding_f_c_properties_styles(); //custom properties styles
+	data["m_labels"]=binding_f_c_labels(); //custom labels
     return data;
     
     function binding_f_c_constraints(graph){
@@ -110,7 +104,7 @@ var binding_feature_component_main = function binding_feature_component_main(gra
 			var lowRange = document.getElementById("input-lowRange").value;
 			var highRange = document.getElementById("input-highRange").value;
 			if(lowRange>highRange){
-				alert(messages["feature_custom_range_check"]);
+				alert(global.messages["feature_custom_range_check"]);
 				return false;
 			}
 			return true;
