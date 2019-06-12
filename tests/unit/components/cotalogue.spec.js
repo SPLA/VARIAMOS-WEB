@@ -156,7 +156,7 @@ describe('Catalogue', () => {
     expect(stub.callCount).to.deep.equal(2)
   })
 
-  it('clicking on the arrows calls expand_menu()', () => {
+  it('Only clicking on the project arrow calls expand_menu()', () => {
     const emptyState = false;
     const wrapper = wrapperFactory(emptyState);
     const stub = sinon.stub(wrapper.vm, 'expand_menu')
@@ -164,7 +164,8 @@ describe('Catalogue', () => {
     for(let i = 0; i < 5; i++){
       images.at(i).trigger('click')
     }
-    expect(stub.callCount).to.deep.equal(5)
+    expect(stub.callCount).to.deep.equal(1)
+    expect(stub.getCall(0).args[0]).to.deep.equal(0);
   })
 
   //TODO: REMOVE TIMEOUT
