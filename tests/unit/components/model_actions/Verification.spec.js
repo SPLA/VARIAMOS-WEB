@@ -134,6 +134,8 @@ import {
       expect(mockGraph.removeCellOverlay.callCount).to.deep.equal(5)
     })
 
+    //https://github.com/speedskater/babel-plugin-rewire
+    //https://www.dotnetcurry.com/vuejs/1441/vuejs-unit-testing
     it('test()', async () => {
       Verification.__Rewire__('setupModal', setupModalStub)
       Verification.__Rewire__('modalH3', modalH3Stub)

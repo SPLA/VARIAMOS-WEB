@@ -53,6 +53,11 @@ import {
      * function.
      */
     let mockDispatch;
+
+    let setupModalStub = sinon.stub();
+    let modalH3Stub = sinon.stub();
+    let modalInputTextsStub = sinon.stub();
+    let modalButtonStub = sinon.stub();
   
     /**
      * WrapperFactory creates a Vue component wrapper
@@ -83,7 +88,7 @@ import {
        * component structure so as to not overload the required
        * dependecies.
        */
-      return shallowMount(Verification, {
+      return shallowMount(BackEnd, {
         localVue,
         store,
         //router,
@@ -99,14 +104,33 @@ import {
             push: routPushStub
           },
         },
+        i18n
       })
     }
   
     beforeEach(function () {
-      localgetters = {
-        getdata: sinon.spy(getters, 'getdata'),
+
+      class LocalStorageMock {
+        constructor() {
+          this.store = {};
+        }
+        clear() {
+          this.store = {};
+        }
+        getItem(key) {
+          return this.store[key] || null;
+        }
+        setItem(key, value) {
+          this.store[key] = value.toString();
+          this[key] = value
+        }
+        removeItem(key) {
+          delete this.store[key];
+        }
       }
   
+      global.localStorage = new LocalStorageMock;
+      
       routPushStub = sinon.stub();
     })
   
@@ -114,11 +138,35 @@ import {
       sinon.restore();
     })
   
-    it.skip('set_params() - TODO', () => {
-        
+    it('set_params() - TODO', () => {
+      BackEnd.__Rewire__('setupModal', setupModalStub)
+      BackEnd.__Rewire__('modalH3', modalH3Stub)
+      BackEnd.__Rewire__('modalInputTexts', modalInputTextsStub)
+      BackEnd.__Rewire__('modalButton', modalButtonStub)
+      const emptyState = false;
+      const wrapper = wrapperFactory(emptyState);
+      wrapper.vm.set_params()
+      expect(setupModalStub).to.have.been.called
+      expect(modalH3Stub).to.have.been.called
+      expect(modalInputTextsStub).to.have.been.called
+      expect(modalButtonStub).to.have.been.called
+      __rewire_reset_all__();
     })
 
-    it.skip('save_parameters() - TODO', () => {
-        
+    it.skip('save_parameters() - IN PROGRESS', () => {
+      const getElementByIdMock = { 
+        value: 'BLABLA', 
+        style: {
+          display: 'BLABLA'
+        } 
+      }
+      Object.defineProperty(document, 'getElementById', {
+        value: () => getElementByIdMock,
+      });
+      const emptyState = false;
+      const wrapper = wrapperFactory(emptyState);
+      wrapper.vm.save_parameters()
+      console.log(JSON.stringify(getElementByIdMock,null,2))
+      console.log(JSON.stringify(global.localStorage,null,2))
     })
   })
