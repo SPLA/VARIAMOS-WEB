@@ -73,9 +73,9 @@ var feature_main = function feature_main(graph)
 	function feature_relations(){
 		var relations=[];
 		relations[0]={
-			"source":["abstract","concrete"],
+			"source":["abstract","concrete","relations"],
 			"rel_source_target":"and",
-			"target":["abstract","concrete","root"],
+			"target":["abstract","concrete","root","relations"],
 			"attributes":[{
 				"name":"relType",
 				"def_value":"mandatory"

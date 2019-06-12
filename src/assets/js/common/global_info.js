@@ -8,6 +8,7 @@
 export function getModelInfo(){
     var info =[];
     //list of graphical models
+    
     info["gmodels"]=["feature","component","feedback","binding_feature_component"];
     //define feature model main info
     info["feature"]={projFolders:["Domain","Application","Adaptation"], shown_Elements:["root", "abstract", "concrete"], checkbox_enable:true};
@@ -16,7 +17,7 @@ export function getModelInfo(){
     //define binding model main info
     info["binding_feature_component"]={projFolders:["Domain"], shown_Elements:['concrete', 'component'], checkbox_enable:false};
     //define feedback model main info
-    info["feedback"]={projFolders:["Domain"], shown_Elements:["component", "file", "summing_point"], checkbox_enable:false};
+    info["feedback"]={projFolders:["Application"], shown_Elements:["component", "file", "summing_point"], checkbox_enable:false};
     return info;
 }
 

@@ -62,6 +62,51 @@
 	</foreground>
 </shape>
 
+<shape name="reference_input" aspect="variable">
+	<background>
+		<path>
+			<move x="0" y="0"/>
+			<line x="100" y="0"/>
+			<line x="100" y="100"/>
+			<line x="0" y="100"/>
+			<line x="0" y="0"/>
+			<close/>
+			<move x="0" y="90"/>
+			<line x="50" y="90"/>
+			<line x="50" y="10"/>
+			<line x="100" y="10"/>
+			<line x="50" y="10"/>
+			<line x="50" y="90"/>
+			<close/>
+		</path>		
+	</background>
+	<foreground>
+		<fillstroke/>
+	</foreground>
+</shape>
+
+<shape name="measured_ouput" aspect="variable">
+	<background>
+		<path>
+			<move x="0" y="0"/>
+			<line x="100" y="0"/>
+			<line x="100" y="100"/>
+			<line x="0" y="100"/>
+			<line x="0" y="0"/>
+			<close/>
+			<move x="10" y="10"/>
+			<line x="90" y="10"/>
+			<line x="90" y="40"/>
+			<line x="10" y="40"/>
+			<line x="10" y="10"/>
+			<close/>
+		</path>		
+	</background>
+	<foreground>
+		<fillstroke/>
+	</foreground>
+</shape>
+
 
 
 
