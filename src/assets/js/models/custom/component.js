@@ -1,16 +1,11 @@
 var component_main = function component_main(graph)
 {
 	component_constraints(graph);
-	var data=[];
-	data[0]="normal" //custom type
-	data[1]=component_elements(); //custom elements
-	data[2]=component_attributes(); //custom attributes
-	data[3]=null; //custom relations
-	data[4]=null; //custom properties styles
-	data[5]=null; //custom labels
-	data[6]=component_clon_cells(); //custom clon cells
-	data[7]=null; //custom constraints in element creation
-	data[8]=null; //custom overlays
+	var data={};
+	data["m_type"]="normal"; //custom type
+	data["m_elements"]=component_elements(); //custom elements
+	data["m_attributes"]=component_attributes(); //custom attributes
+	data["m_clon_cells"]=component_clon_cells(); //custom clon cells
 	return data;
 	
 	function component_constraints(graph){
