@@ -24,7 +24,7 @@
 								class="fa"
 								aria-hidden="true"
 								:class="[item.data.open?'fa-angle-down':'fa-angle-right']"
-								@click="expand_menu($index)"
+								
 								:style="{position: 'absolute',left: (20 * item.data.level - 17) + 'px',top: '6px'}"
 								data-test="modelFolder">
 							</i>
@@ -60,7 +60,6 @@
 							</span>
 						</a>
 					</li>
-					<subcotalogue v-if="item.data.nodeType === 3 && item.data.open" :style="{paddingLeft: (20 * item.data.level) + 'px'}" :layername="item.data.nodeName" :layertype="item.data.modeltype"></subcotalogue>
 				</div>
 			</ul>
 		</div>
@@ -68,15 +67,13 @@
 </template>
 <script>
 import contextMenu from './contextMenu.vue'
-import subcotalogue from './sub_cotalogue.vue'
 import Bus from '../assets/js/common/bus.js'
 import { getcontextmenulist } from '../assets/js/common/global_info'
 
 export default {
 	name: 'cotalogue',
 	components: {
-		contextMenu,
-		subcotalogue
+		contextMenu
 	},
 	data () {
 		return {
