@@ -2,7 +2,7 @@ var component_main = function component_main(graph)
 {
 	component_constraints(graph);
 	var data={};
-	data["m_type"]="normal" //custom type
+	data["m_type"]="normal"; //custom type
 	data["m_elements"]=component_elements(); //custom elements
 	data["m_attributes"]=component_attributes(); //custom attributes
 	data["m_clon_cells"]=component_clon_cells(); //custom clon cells

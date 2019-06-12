@@ -2,7 +2,7 @@ var binding_feature_component_main = function binding_feature_component_main(gra
 {
     binding_f_c_constraints(graph);
     var data={};
-	data["m_type"]="binding" //custom type
+	data["m_type"]="binding"; //custom type
 	data["m_elements"]=binding_f_c_elements(); //custom elements
 	data["m_attributes"]=binding_f_c_attributes(); //custom attributes
 	data["m_properties_styles"]=binding_f_c_properties_styles(); //custom properties styles

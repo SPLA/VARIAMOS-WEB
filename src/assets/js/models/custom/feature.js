@@ -1,8 +1,8 @@
 var feature_main = function feature_main(graph)
 {
 	feature_constraints(graph);
-	var data={}
-	data["m_type"]="normal" //custom type
+	var data={};
+	data["m_type"]="normal"; //custom type
 	data["m_elements"]=feature_elements(); //custom elements
 	data["m_attributes"]=feature_attributes(); //custom attributes
 	data["m_relations"]=feature_relations(); //custom relations
