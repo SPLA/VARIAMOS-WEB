@@ -5,6 +5,7 @@
     </a>
     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
       <a @click="test()" class="dropdown-item">Test sending the model</a>
+      <a @click="test_web()" class="dropdown-item">Test sending the model to microservices</a>
       <a v-for="item in menu_options" v-bind:key="item.label" v-on:click="clear_overlays(); item.func(current_graph, cell_errors, cell_overlays);" class="dropdown-item">
         {{ item.label }}
       </a>
@@ -15,7 +16,7 @@
 
 <script>
 import axios from "axios";
-import { setupModal, modalH3, modalSimpleText } from '../../assets/js/common/util'
+import { setupModal, modalH3, modalSimpleText, modalButton } from '../../assets/js/common/util'
 
 export default {
   data: function(){
@@ -74,14 +75,41 @@ export default {
         this.errors=[];
         var encoder = new mxCodec();
         var result = encoder.encode(this.current_graph.getModel());
-        var xml = mxUtils.getXml(result);
+        var xml = mxUtils.getPrettyXml(result);
         axios.post(localStorage["domain_implementation_main_path"]+'Verification/test', {
           data: xml
         })
         .then(response => {
           var c_header = modalH3("Test response");
-          var c_body = modalSimpleText(response.data);
+          var c_body = modalSimpleText("XML code received by the server.");
           setupModal(c_header,c_body);
+          mxUtils.popup(response.data, true);
+        })
+        .catch(e => {
+          this.errors.push(e); 
+          var c_header = modalH3(this.$t("modal_error"),"error");
+          var c_body = modalSimpleText(e + this.$t("model_actions_backend_problem"));
+          setupModal(c_header,c_body);
+        });
+      }else{
+        var c_header = modalH3(this.$t("modal_error"),"error");
+        var c_body = modalSimpleText(this.$t("verification_path_problem"));
+        setupModal(c_header,c_body);
+      }
+      
+    },
+    test_web(){
+      if (localStorage["domain_implementation_main_path"]) {
+        this.errors=[];
+        var encoder = new mxCodec();
+        var result = encoder.encode(this.current_graph.getModel());
+        var xml = mxUtils.getPrettyXml(result);
+        axios.post('http://localhost:8091/api/application/xml/1/1/configuration', xml)
+        .then(response => {
+          var c_header = modalH3("Test response");
+          var c_body = modalSimpleText("XML code received by the server.");
+          setupModal(c_header,c_body);
+          mxUtils.popup(response.data, true);
         })
         .catch(e => {
           this.errors.push(e); 
