@@ -30,7 +30,7 @@ import {
   localVue.use(iView)
   localVue.use(VueI18n)
   
-  describe('ApplicationMenu', () => {
+  describe.skip('ApplicationMenu - NOT DONE', () => {
     /**
      * The localgetters object permits us to spy
      * on the behaviour of the getters within the
@@ -102,47 +102,19 @@ import {
       })
     }
   
-    beforeEach(function () {
+    before(() => {
       localgetters = {
         getdata: sinon.spy(getters, 'getdata'),
       }
-  
+    })
+
+    beforeEach(function () {
       routPushStub = sinon.stub();
     })
-  
-    afterEach(function () {
+
+    after(() => {
       sinon.restore();
     })
-  
-    it.skip('set_parameters() - TODO', () => {
-        
-    })
 
-    it.skip('execute_derivation() - TODO', () => {
-        
-    })
-
-    it.skip('verify_derivation() - TODO', () => {
-        
-    })
-
-    it.skip('customize_derivation() - TODO', () => {
-        
-    })
-
-    it.skip('save_parameters() - TODO', () => {
-        
-    })
-
-    it.skip('run_customization() - TODO', () => {
-        
-    })
-
-    it.skip('send_file() - TODO', () => {
-        
-    })
-
-    it.skip('find_destination_file() - TODO', () => {
-        
-    })
+    //TODO: TEST WITH BACKEND
   })
