@@ -4,7 +4,7 @@
       {{ $t("verification") }}
     </a>
     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-      <a @click="test()" class="dropdown-item">Test sending the model</a>
+      <a @click="test()" class="dropdown-item">Test sending the model for verification</a>
       <a @click="test_web()" class="dropdown-item">Test sending the model to microservices</a>
       <a v-for="item in menu_options" v-bind:key="item.label" v-on:click="clear_overlays(); item.func(current_graph, cell_errors, cell_overlays);" class="dropdown-item">
         {{ item.label }}
@@ -76,14 +76,29 @@ export default {
         var encoder = new mxCodec();
         var result = encoder.encode(this.current_graph.getModel());
         var xml = mxUtils.getPrettyXml(result);
+        var model_root = this.current_graph.getModel().getCell(this.getactivetab);
+        var childs = this.current_graph.getModel().getChildVertices(model_root);
+        var selection_parameter = {};
+
+        for(let i = 0; i < childs.length; i++)
+        {
+          if(childs[i].getAttribute("label") !== "bundle")
+          {
+            if(this.getcache_selected.includes(childs[i].getId()))
+              selection_parameter[childs[i].getAttribute("label")] = true;
+            else
+              selection_parameter[childs[i].getAttribute("label")] = false;
+          }
+        }
+
         axios.post(localStorage["domain_implementation_main_path"]+'Verification/test', {
-          data: xml
+          data: xml, name: this.getmodel_component, param: selection_parameter
         })
         .then(response => {
           var c_header = modalH3("Test response");
-          var c_body = modalSimpleText("XML code received by the server.");
+          var c_body = modalSimpleText("XML code received by the server.\n Results:\n" + JSON.stringify(response.data["solution"]));
           setupModal(c_header,c_body);
-          mxUtils.popup(response.data, true);
+          mxUtils.popup(response.data["hlvl"], true);
         })
         .catch(e => {
           this.errors.push(e); 
@@ -123,6 +138,17 @@ export default {
         setupModal(c_header,c_body);
       }
       
+    }
+  },
+  computed:{
+    getmodel_component (){
+        return this.$store.getters.getmodelcomponent;
+    },
+    getactivetab (){
+        return this.$store.getters.getactivetab;
+    },
+    getcache_selected (){
+    		return this.$store.getters.getcacheselected;
     }
   }
 }
