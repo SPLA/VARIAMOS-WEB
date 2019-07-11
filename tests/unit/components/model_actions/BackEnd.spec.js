@@ -53,7 +53,7 @@ describe('BackEnd', () => {
    * function.
    */
   let mockDispatch;
-
+  
   /**
    * These variables will hold both the stub that replaces
    * getElementbyId() and the object it returns.
