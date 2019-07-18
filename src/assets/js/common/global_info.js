@@ -5,13 +5,14 @@
 export function getModelInfo(){
     var info =[];
     //list of graphical models
-    info["gmodels"]=["feature","component","binding_feature_component"];
+    info["gmodels"]=["feature","component","binding_feature_component","istar"];
     //define feature model main info
     info["feature"]={projFolders:["Domain","Application","Adaptation"]};
     //define component model main info
     info["component"]={projFolders:["Domain"]};
     //define binding model main info
     info["binding_feature_component"]={projFolders:["Domain"]};
+    info["istar"]={projFolders:["Domain"]}
     return info;
 }
 
