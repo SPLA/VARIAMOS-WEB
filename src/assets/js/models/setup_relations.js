@@ -1,4 +1,4 @@
-var setup_relations = function setup_relations(graph,relations){
+var setup_relations = function setup_relations(graph,relations,relation_styles){
     graph.connectionHandler.insertEdge = function(parent, id, value, source, target, style)
     {
         var doc = mxUtils.createXmlDocument();
@@ -30,6 +30,22 @@ var setup_relations = function setup_relations(graph,relations){
                         for(var j = 0; j < relations[i]["attributes"].length; j++){
                             node.setAttribute(relations[i]["attributes"][j]["name"],relations[i]["attributes"][j]["def_value"]);
                         }
+                    }
+                }
+            }
+        }
+
+        //setup custom styles for relations
+        if(relation_styles){
+            for (var i = 0; i < relation_styles.length; i++) {
+                if(relation_styles[i]["rel_source_target"]=="and"){
+                    if((relation_styles[i]["source"].indexOf(source.getAttribute("type")) > -1) && (relation_styles[i]["target"].indexOf(target.getAttribute("type"))> -1)){
+                        style=relation_styles[i]["style"];
+                    }
+                }
+                else{
+                    if((relation_styles[i]["source"].indexOf(source.getAttribute("type")) > -1) || (relation_styles[i]["target"].indexOf(target.getAttribute("type"))> -1)){
+                        style=relation_styles[i]["style"];
                     }
                 }
             }
