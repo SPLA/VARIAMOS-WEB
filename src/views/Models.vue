@@ -79,6 +79,8 @@ import Bus from '../assets/js/common/bus.js'
 import { getModelInfo } from '../assets/js/common/global_info'
 import { setupModal, modalH3, modalSimpleText } from '../assets/js/common/util'
 
+import setup_istar_relations from '../assets/js/models/istar/setup_istar_relations'
+
 /* import actions */
 import DomainMenu from '../components/model_actions/DomainMenu'
 import ApplicationMenu from '../components/model_actions/ApplicationMenu'
@@ -117,7 +119,7 @@ export default{
     });
     this.models = getModelInfo()["gmodels"]; //represent the available models
     this.setupFunctions = {
-      "setup_relations":setup_relations,
+      "setup_relations":this.$route.params.type === "istar" ? setup_istar_relations : setup_relations, //Surely there's a better way to do this.
       "setup_buttons":setup_buttons,
       "setup_keys":setup_keys,
       "setup_properties":setup_properties,
@@ -195,6 +197,11 @@ export default{
         document.getElementById('navigator').innerHTML="";
         this.modelType=this.$route.params.type;
 
+        if (this.$route.params.type === "istar"){
+          this.setupFunctions.setup_relations = setup_istar_relations;
+        } else {
+          this.setupFunctions.setup_relations = setup_relations;
+        }
         //Import only the current need model file
         var modelToImport = require('@/assets/js/models/custom/'+this.modelType+'.js');
         this.currentModel = modelToImport.default;

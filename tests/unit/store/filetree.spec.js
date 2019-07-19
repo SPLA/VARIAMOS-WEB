@@ -193,7 +193,7 @@ describe('Filetree Store Unit tests', () => {
       expect(state.data).to.deep.equal([])
     })
 
-    it('create new project empty state', () => {
+    it('create new project empty state -- PROJECT GENERATION MUST BE UPDATED', () => {
       const state = stateFactory(true)
       const getters = {
         getnewnodeid: 1
@@ -204,10 +204,10 @@ describe('Filetree Store Unit tests', () => {
         getters
       })
       //console.log(JSON.stringify(state.data,null,2))
-      expect(state.data.length).to.deep.equal(9)
+      expect(state.data.length).to.deep.equal(10)
     })
 
-    it('create new project non empty state', () => {
+    it('create new project non empty state -- PROJECT GENERATION MUST BE UPDATED', () => {
       const state = stateFactory(false)
       const getters = {
         getnewnodeid: 10
@@ -217,7 +217,8 @@ describe('Filetree Store Unit tests', () => {
         name,
         getters
       })
-      expect(state.data.length).to.deep.equal(18)
+      //console.log(JSON.stringify(state.data,null,2))
+      expect(state.data.length).to.deep.equal(20)
     })
 
     //There is a bug if you change the application name

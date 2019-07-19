@@ -119,7 +119,7 @@ describe('Catalogue', () => {
     const emptyState = false;
     const wrapper = wrapperFactory(emptyState);
     const lis = wrapper.findAll('li')
-    expect(lis.length).to.deep.equal(5) 
+    expect(lis.length).to.deep.equal(6) 
   })
 
   it('checkchildnode() works', () => {
@@ -128,10 +128,10 @@ describe('Catalogue', () => {
     //given wrapper factory's state is known
     let i
     let res = []
-    for(i = 0; i < 9 ; i++){
+    for(i = 0; i < 10 ; i++){
       res[i] = wrapper.vm.checkchildnode(i)
     }
-    const correct = [true,true,true,true,true,false,false,false,false]
+    const correct = [true,true,true,true,true,true,false,false,false,false]
     expect(res).to.deep.equal(correct)
   })
 

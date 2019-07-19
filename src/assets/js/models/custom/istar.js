@@ -48,19 +48,13 @@ var istar_main = function istar_main(graph)
 
 	function istar_attributes(){
     var attributes=[];
-    /*
 		attributes[0]={
-			"types":["file"],
+			"types":["actor","role","agent"],
 			"custom_attributes":[{
-				"name":"filename",
-				"def_value":""
-			},
-			{
-				"name":"destination",
-				"def_value":""
+				"name":"boundary",
+				"def_value":"false"
 			}]
 		};
-    */
 		return attributes;
   }
 
@@ -72,7 +66,7 @@ var istar_main = function istar_main(graph)
       "target":["actor","agent","role"],
       "attributes":[{
         "name":"relType",
-        "def_value":"is-a"
+        "def_value":"participates-in"
       }]
     }
     relations[1]={
@@ -89,23 +83,117 @@ var istar_main = function istar_main(graph)
   
   function istar_properties_styles(){
     return {
-      "relation":[{
+      //Actor
+      "actor":[{
+        "attribute":"boundary",
+        "input_type":"checkbox",
+        "onchange":actorboundary
+      }],
+      //Actor as source for a relation
+      "rel_actor_actor":[{
         "attribute": "relType",
         "input_type": "select",
-        "input_values":["is-a","participates-in",]
-      }]
+        "input_values":["participates-in","is-a"],
+      }],
+      "rel_actor_agent":[{
+        "attribute": "relType",
+        "input_type": "select",
+        "input_values":["participates-in"]
+      }],
+      "rel_actor_role":[{
+        "attribute": "relType",
+        "input_type": "select",
+        "input_values":["participates-in"]
+      }],
+      //Agent
+      "agent":[{
+        "attribute":"boundary",
+        "input_type":"checkbox",
+        "onchange":actorboundary
+      }],
+      //Agent as source for a relation
+      "rel_agent_actor":[{
+        "attribute": "relType",
+        "input_type": "select",
+        "input_values":["participates-in"]
+      }],
+      "rel_agent_agent":[{
+        "attribute": "relType",
+        "input_type": "select",
+        "input_values":["participates-in"]
+      }],
+      "rel_agent_role":[{
+        "attribute": "relType",
+        "input_type": "select",
+        "input_values":["participates-in"]
+      }],
+      //Role
+      "role":[{
+        "attribute":"boundary",
+        "input_type":"checkbox",
+        "onchange":actorboundary
+      }],
+      //Role as source for a relation
+      "rel_role_actor":[{
+        "attribute": "relType",
+        "input_type": "select",
+        "input_values":["participates-in"]
+      }],
+      "rel_role_agent":[{
+        "attribute": "relType",
+        "input_type": "select",
+        "input_values":["participates-in"]
+      }],
+      "rel_role_role":[{
+        "attribute": "relType",
+        "input_type": "select",
+        "input_values":["participates-in","is-a"]
+      }],
+      //
     }
   }
 
-	function istar_clon_cells(){
-    var clons={};
-    /*
-		clons={
-			"component":"binding_feature_component"
-		};
-    */
-		return clons;
-	}
+  function actorboundary(){  
+    const currentCell = graph.getModel().getCell(this.name);
+    const parent = currentCell.getParent();
+
+    let checked = currentCell.getAttribute('boundary');
+    checked = checked === 'true' ? 'false' : 'true';
+
+    currentCell.setAttribute('boundary', checked);
+    //graph.stopEditing(false);
+    graph.getModel().beginUpdate();
+    try {
+      if (checked === 'true') {
+        const boundryCell = graph.insertVertex(parent, null, '', currentCell.getGeometry().x, currentCell.getGeometry().y, 100, 100, 'shape=ellipse;fillColor=none;dashed=1;dashPattern=10 10;');
+        boundryCell.setConnectable(false);
+        graph.groupCells(boundryCell, 100, [currentCell]);
+        const geo = currentCell.getGeometry();
+        geo.x = 0;
+        geo.y = 0;
+        currentCell.setGeometry(geo);
+        graph.setCellStyles(mxConstants.STYLE_MOVABLE, '0', [currentCell])
+      } else {
+        const boundaryCell = parent;
+        const mainparent = boundaryCell.getParent();
+        const parentGeo = boundaryCell.getGeometry();
+        const currentGeo = currentCell.getGeometry();
+        currentGeo.x = parentGeo.x + 100;
+        currentGeo.y = parentGeo.y + 100;
+        graph.ungroupCells([currentCell]);
+        //graph.removeCells([boundaryCell]);
+        graph.removeCells([boundaryCell]);
+        graph.getModel().add(mainparent,currentCell)
+        //mainparent.insert(currentCell);
+        //currentCell.setParent(mainparent);
+        currentCell.setGeometry(currentGeo);
+        graph.setCellStyles(mxConstants.STYLE_MOVABLE, '1', [currentCell])
+      }
+    } finally {
+      //console.log(currentCell.getAttribute('boundary'))
+      graph.getModel().endUpdate();
+    }
+  }
 	
 }
 
