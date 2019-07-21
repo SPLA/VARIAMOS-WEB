@@ -2,21 +2,18 @@ var feedback_main = function feedback_main(graph)
 {
     feedback_constraints(graph);
     var data=[];
-    data[0]="normal" //custom type
-    data[1]=feedback_elements(); //custom elements
-    data[2]=feedback_attributes(); //custom attributes
-    data[3]=feature_relations(); //custom relations
-    data[4]=feature_properties_styles(); //custom properties styles
-    data[5]=null; //custom labels
-    data[6]=null; //custom clon cells
-    data[7]=null; //custom constraints in element creation
-    data[8]=null; //custom overlays
-    return data;
+    data["m_type"]="normal"; //custom type
+	data["m_elements"]=feedback_elements(); //custom elements
+	data["m_attributes"]=feedback_attributes(); //custom attributes
+	data["m_relations"]=feedback_relations(); //custom relations
+    data["m_properties_styles"]=feedback_properties_styles(); //custom properties styles
+  
+	return data;
     
     function feedback_constraints(graph){
         graph.multiplicities=[]; //reset multiplicities
         graph.multiplicities.push(new mxMultiplicity(
-            true, "reference_input", null, null, 0, 0, ["summing_point"],
+            true, "reference_input", null, null, 0, 1, ["summing_point"],
             "Invalid connection",
             "Only shape targets allowed"));
         graph.multiplicities.push(new mxMultiplicity(
@@ -27,14 +24,14 @@ var feedback_main = function feedback_main(graph)
     }
 
     function feedback_elements(){
-        var controller = {src:projectPath+"images/models/feedback/controller.png", wd:100, hg:40, style:"shape=rectangle", type:"controller", pname:"Controller"};
-        var target_system = {src:projectPath+"images/models/feedback/target_system.png", wd:100, hg:40, style:"shape=rectangle", type:"target-system", pname:"Target system"};
-        var transducer = {src:projectPath+"images/models/feedback/transducer.png", wd:100, hg:40, style:"shape=rectangle", type:"transducer", pname:"Transducer"};
+        var controller = {src:projectPath+"images/models/feedback/controller.png", wd:100, hg:40, style:"shape=rectangle", type:"controlador", pname:"Controller"};
+        var target_system = {src:projectPath+"images/models/feedback/target_system.png", wd:100, hg:40, style:"shape=rectangle", type:"planta", pname:"Target system"};
+        var transducer = {src:projectPath+"images/models/feedback/transducer.png", wd:100, hg:40, style:"shape=rectangle", type:"sensor", pname:"Transducer"};
         var summing_point   = {src:projectPath+"images/models/feedback/summing_point.PNG", wd:100, hg:40, style:"shape=ellipse", type:"summing_point", pname:"Summing point"};
-        var reference_input   = {src:projectPath+"images/models/feedback/reference_input.png", wd:100, hg:40, style:"shape=reference_input", type:"reference_input", pname:"Reference input "};
+        var reference_input   = {src:projectPath+"images/models/feedback/reference_input.png", wd:100, hg:40, style:"shape=reference_input", type:"temperature", pname:"Reference input "};
         var measured_output   = {src:projectPath+"images/models/feedback/measured-output.png", wd:100, hg:40, style:"shape=measured_ouput", type:"measured_output", pname:"Measured output "};
         var branchpoint   = {src:projectPath+"images/models/feedback/bifurcation.png", wd:100, hg:40, style:"shape=rhombus", type:"branchpoint", pname:"Branchpoint"};
-        
+       
         
         var elements=[];
         elements[0]=controller;
@@ -55,42 +52,72 @@ var feedback_main = function feedback_main(graph)
         attributes[0]={
             "types":["file"],
             "custom_attributes":[{
-                "name":"filename",
-                "def_value":""
+                
+            
             },
             {
-                "name":"destination",
-                "def_value":""
+                
             }]
         };
         attributes[1]={
-            "types":["controller"],
+            "types":["controlador"],
             "custom_attributes":[{
                 "name":"Proportional",
-                "def_value":"1"
+                "def_value":"0.25"
+        
             },
             {
                 "name":"Integral",
-                "def_value":"1"
+                "def_value":"0.01"
             },
             {
                 "name":"Derivate",
-                "def_value":"0"
+                "def_value":"0.4"
             }]
         };
         attributes[2]={
-            "types":["reference_input"],
+            "types":["Set Point"],
             "custom_attributes":[{
-                "name":"StepTime",
-                "def_value":"1"
-            },
-            {
-                "name":"InitialValue",
+                "name":"SetPoint",
                 "def_value":"0"
             },
             {
-                "name":"FinalValue",
-                "def_value":"1"
+                "name":"Time",
+                "def_value":"0"
+            }]
+        };
+        attributes[3]={
+            "types":["sensor"],
+            "custom_attributes":[{
+                "name":"Variable",
+                "def_value":""
+            },
+            {
+                "name":"Value",
+                "def_value":"0"
+            }]
+        };
+        attributes[4]={
+            "types":["planta"],
+            "custom_attributes":[{
+                "name":"Value",
+                "def_value":"0"
+            }]
+        };
+
+        attributes[5]={
+            "types":["summing_point"],
+            "custom_attributes":[{
+                "name":"Value",
+                "def_value":"++"
+            }]
+        };
+
+        attributes[6]={
+            "types":["measured_output"],
+            "custom_attributes":[{
+                "name":"Value",
+                "def_value":"0"
             }]
         };
 
@@ -99,7 +126,7 @@ var feedback_main = function feedback_main(graph)
         return attributes;
     }
 
-    function feature_relations(){
+    function feedback_relations(){
 		var relations=[];
 		relations[0]={
 			"source":["controller","transducer","target-system","summing_point","reference_input","branchpoint"],
@@ -107,7 +134,7 @@ var feedback_main = function feedback_main(graph)
 			"target":["controller","transducer","summing_point","target-system","measured_output","branchpoint"],
 			"attributes":[{
 				"name":"relType",
-                "def_value":"signal",
+                "def_value":"",
                 
                 
 
@@ -118,7 +145,10 @@ var feedback_main = function feedback_main(graph)
 		return relations;
     }
     
-    function feature_properties_styles(){
+    function feedback_properties_styles(){
+
+       
+
 		var styles={};
 		styles={
 			
@@ -133,8 +163,8 @@ var feedback_main = function feedback_main(graph)
 		}
 
 		return styles;
-	}
-    
+    }
+
 }
 
 export default feedback_main
