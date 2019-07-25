@@ -8,6 +8,7 @@ var istar_main = function istar_main(graph)
   data["m_relations"]=istar_relations(); //custom relations
   data["m_properties_styles"]=istar_properties_styles(); //custom properties styles
   data["m_labels"]=null; //custom labels
+  data["m_constraints_ic"]=istar_constraints_in_creation();
 	data["m_clon_cells"]=null; //custom clon cells
 	return data;
 	
@@ -153,6 +154,30 @@ var istar_main = function istar_main(graph)
     }
   }
 
+  function istar_custom_methods(pos){
+		var methods=[]
+		methods[0]=function(prototype, cell){
+      if(cell != null){
+        alert("you may not add actor within another\'s boundary")
+        return false;
+      }
+      //console.log(JSON.stringify(prototype, null, 2));
+      //console.log(JSON.stringify(cell !== null ? cell.getValue()['type'] : null,null, 2));
+      return true;
+		};
+		return methods[pos];
+	}
+
+  function istar_constraints_in_creation(){
+		var constraints_ic={};
+		constraints_ic={
+      "actor":istar_custom_methods(0),
+      "agent":istar_custom_methods(0),
+      "role":istar_custom_methods(0)
+		};
+		return constraints_ic;
+	}
+
   function actorboundary(){  
     const currentCell = graph.getModel().getCell(this.name);
     const parent = currentCell.getParent();
@@ -165,9 +190,10 @@ var istar_main = function istar_main(graph)
     graph.getModel().beginUpdate();
     try {
       if (checked === 'true') {
-        const boundryCell = graph.insertVertex(parent, null, '', currentCell.getGeometry().x, currentCell.getGeometry().y, 100, 100, 'shape=ellipse;fillColor=none;dashed=1;dashPattern=10 10;');
-        boundryCell.setConnectable(false);
-        graph.groupCells(boundryCell, 100, [currentCell]);
+        const boundaryCell = graph.insertVertex(parent, null, '', currentCell.getGeometry().x, currentCell.getGeometry().y, 100, 100, 'shape=ellipse;fillColor=none;dashed=1;dashPattern=10 10;');
+        boundaryCell.setConnectable(false);
+        boundaryCell.setValue({'type':'boundary'});
+        graph.groupCells(boundaryCell, 100, [currentCell]);
         const geo = currentCell.getGeometry();
         geo.x = 0;
         geo.y = 0;

@@ -80,6 +80,7 @@ import { getModelInfo } from '../assets/js/common/global_info'
 import { setupModal, modalH3, modalSimpleText } from '../assets/js/common/util'
 
 import setup_istar_relations from '../assets/js/models/istar/setup_istar_relations'
+import setup_istar_elements from '../assets/js/models/istar/setup_istar_elements'
 
 /* import actions */
 import DomainMenu from '../components/model_actions/DomainMenu'
@@ -119,11 +120,11 @@ export default{
     });
     this.models = getModelInfo()["gmodels"]; //represent the available models
     this.setupFunctions = {
-      "setup_relations":this.$route.params.type === "istar" ? setup_istar_relations : setup_relations, //Surely there's a better way to do this.
+      "setup_relations": this.$route.params.type === "istar" ? setup_istar_relations : setup_relations, //Surely there's a better way to do this.
       "setup_buttons":setup_buttons,
       "setup_keys":setup_keys,
       "setup_properties":setup_properties,
-      "setup_elements":setup_elements
+      "setup_elements": this.$route.params.type === "istar" ? setup_istar_elements : setup_elements
     }
     //preload the saved model if exists
     let temp = this.getmodel_component;
@@ -199,8 +200,10 @@ export default{
 
         if (this.$route.params.type === "istar"){
           this.setupFunctions.setup_relations = setup_istar_relations;
+          this.setupFunctions.setup_elements = setup_istar_elements;
         } else {
           this.setupFunctions.setup_relations = setup_relations;
+          this.setupFunctions.setup_elements = setup_elements;
         }
         //Import only the current need model file
         var modelToImport = require('@/assets/js/models/custom/'+this.modelType+'.js');
