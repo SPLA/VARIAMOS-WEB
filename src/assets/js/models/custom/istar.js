@@ -200,19 +200,41 @@ var istar_main = function istar_main(graph)
         currentCell.setGeometry(geo);
         graph.setCellStyles(mxConstants.STYLE_MOVABLE, '0', [currentCell])
       } else {
+        //get the position information from the parent (and its references)
         const boundaryCell = parent;
         const mainparent = boundaryCell.getParent();
         const parentGeo = boundaryCell.getGeometry();
         const currentGeo = currentCell.getGeometry();
+        //set the postion to the parent's old position
         currentGeo.x = parentGeo.x + 100;
         currentGeo.y = parentGeo.y + 100;
+        //When you ungroup a cell, it removes all connections.
+        //With this logic, we obtain the important values of these edges,
+        //then we store the information in an array.
+        const edgeCount = currentCell.getEdgeCount();
+        let edges = [];
+        if (edgeCount > 0){
+          for(let i = 0; i < edgeCount; i++){
+            const edge = currentCell.getEdgeAt(i);
+            const value = edge.getValue();
+            const source = edge.getTerminal(true).getId();
+            const isSource = source === currentCell.getId();
+            const target = edge.getTerminal(false).getId();
+            edges.push({value, isSource, source, target});
+          }
+        }
+        //remove the cell from the hierarchy and then add it back to the model.
         graph.ungroupCells([currentCell]);
-        //graph.removeCells([boundaryCell]);
         graph.removeCells([boundaryCell]);
-        graph.getModel().add(mainparent,currentCell)
-        //mainparent.insert(currentCell);
-        //currentCell.setParent(mainparent);
-        currentCell.setGeometry(currentGeo);
+        graph.getModel().add(mainparent, currentCell);
+        //After, we re add the cell to the graph with the info from the array.
+        if(edges.length !== 0){
+          edges.forEach(item => {
+            const sourceCell = item.isSource ? currentCell : graph.getModel().getCell(item.source);
+            const targetCell = item.isSource ? graph.getModel().getCell(item.target) : currentCell;
+            graph.insertEdge(mainparent, null, item.value, sourceCell, targetCell);
+          });
+        }
         graph.setCellStyles(mxConstants.STYLE_MOVABLE, '1', [currentCell])
       }
     } finally {
