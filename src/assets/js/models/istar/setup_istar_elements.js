@@ -64,6 +64,17 @@ var setup_elements = function setup_elements(graph, elements, custom_attributes,
                 vertex.geometry.y = pt.y;
 
                 var new_cells = graph.importCells([vertex], 0, 0, cell);
+                new_cells.forEach(element => {
+                    const type = element.getAttribute("type");
+                    if(["goal","quality","task","resource"].includes(type)){
+                        if(cell == null){
+                            element.setAttribute("dependum", "true");
+                            element.setAttribute("type", type + "-dependum");
+                        } else {
+                            element.setAttribute("dependum", "false");
+                        }
+                    }
+                })
                 graph.setSelectionCells(new_cells);
 
                 //execute if there are clons for the current element
