@@ -6,7 +6,7 @@ export function getModelInfo(){
     var info =[];
     //list of graphical models
     
-    info["gmodels"]=["feature","component","binding_feature_component","feedback"];
+    info["gmodels"]=["feature","component","binding_feature_component","control"];
     //define feature model main info
     info["feature"]={projFolders:["Domain","Application","Adaptation"]};
     //define component model main info
@@ -14,7 +14,7 @@ export function getModelInfo(){
     //define binding model main info
     info["binding_feature_component"]={projFolders:["Domain"]};
     //define feedback model main info
-    info["feedback"]={projFolders:["Application","Domain"]};
+    info["control"]={projFolders:["Application"]};
     
     return info;
 }

@@ -460,7 +460,7 @@ export default {
           datasets: [
             {
               data: this.pid(),
-              label: "Y",
+              label: "PV",
               lineTension: 0,
               backgroundColor: "transparent",
               borderColor: "#D83A18",
@@ -509,11 +509,11 @@ export default {
      setpoint()
     {
       var setpoint=[]
-      var feedback_root = this.current_graph.getModel().getCell("feedback");
+      var feedback_root = this.current_graph.getModel().getCell("control");
       var childs = this.current_graph.getModel().getChildVertices(feedback_root);
        for (var i = 0; i < childs.length; i++)
         {
-          if (childs[i].getAttribute("type") == "temperature")
+          if (childs[i].getAttribute("type") == "set_point")
           {
           var set = childs[i].getAttribute("SetPoint");
           }
@@ -535,11 +535,11 @@ export default {
       var timef = [];
       var timeto = 0;
       var tiempoDecimal =0
-      var feedback_root = this.current_graph.getModel().getCell("feedback");
+      var feedback_root = this.current_graph.getModel().getCell("control");
       var childs = this.current_graph.getModel().getChildVertices(feedback_root);
        for (var i = 0; i < childs.length; i++)
         {
-          if (childs[i].getAttribute("type") == "temperature")
+          if (childs[i].getAttribute("type") == "set_point")
           {
           var set = childs[i].getAttribute("SetPoint");
           var ti = childs[i].getAttribute("Time");
@@ -559,29 +559,32 @@ export default {
     pid() {
       var prueb2 = [];
       var timef = [];
-      var feedback_root = this.current_graph.getModel().getCell("feedback");
+      var feedback_root = this.current_graph.getModel().getCell("control");
       var childs = this.current_graph.getModel().getChildVertices(feedback_root);
       var names = [];
       var nuevoSensor = 0;
 
       //navigates through the feature model childs
       for (var i = 0; i < childs.length; i++) {
-        if (childs[i].getAttribute("type") == "controlador") {
+        if (childs[i].getAttribute("type") == "controller") {
           var proportional = childs[i].getAttribute("Proportional");
           var derivate = childs[i].getAttribute("Derivate");
           var integral = childs[i].getAttribute("Integral");
         }
-        if (childs[i].getAttribute("type") == "temperature") {
+        if (childs[i].getAttribute("type") == "set_point") {
           var set = childs[i].getAttribute("SetPoint");
           var ti = childs[i].getAttribute("Time");
         }
         if (childs[i].getAttribute("type") == "sensor") {
-          var sensor = childs[i].getAttribute("Value");
+          var sensor = childs[i].getAttribute("InitialPosition");
           nuevoSensor = sensor;
+        }
+        else{
+          nuevoSensor=0;
         }
       }
       var MiniPID = (function() {
-        function MiniPID(p, i, d,dt) {
+        function MiniPID(kp, ki, kd, dt) {
           this.P = 0;
           this.I = 0;
           this.D = 0;
@@ -602,9 +605,9 @@ export default {
           this.dt=0;
           this.outputFilter = 0;
           this.setpointRange = 0;
-          this.P = p;
-          this.I = i;
-          this.D = d;
+          this.P = kp;
+          this.I = ki;
+          this.D = kd;
           this.DT=dt;
           this.checkSigns();
         }
@@ -615,31 +618,41 @@ export default {
           var Doutput;
           var Foutput;
           this.setpoint = setpoint;
-          if (this.setpointRange !== 0) {
-            setpoint = this.constrain(
-              setpoint,
-              actual - this.setpointRange,
-              actual + this.setpointRange
-            );
-          }
-          var error = setpoint - actual;
-          Foutput = this.F * setpoint;
-          Poutput = this.P * error;
+          if (this.setpointRange !== 0) 
+            {
+              setpoint = this.constrain(setpoint,actual - this.setpointRange,actual + this.setpointRange);
+            }
+
+            
+            
+
+          var error = setpoint - actual;// error 
+          Foutput = this.F * setpoint; 
+          Poutput = this.P * error; // Proportional value
+           
           if (this.firstRun) {
             this.lastActual = actual;
             this.lastError= error;
             this.lastOutput = Poutput + Foutput;
+
+
+
+
+
+
+
+            
             this.firstRun = false;
           }
-        
-          var dError = (error - this.lastError)/this.DT;  
-          this.lastError = error;
-          Doutput = this.D *  dError;
 
-          this.lastActual = actual;
-          var integral= 0
-          integral += this.DT * error;
-          Ioutput = this.I * integral;
+          var dError = (actual - this.lastActual)/this.DT;  // derivate error
+            this.lastActual = actual;
+
+         
+          Doutput = -this.D * dError;
+                
+                Ioutput = this.I * (this.errorSum*this.DT);
+
           if (this.maxIOutput !== 0) {
             Ioutput = this.constrain(
               Ioutput,
@@ -647,7 +660,7 @@ export default {
               this.maxIOutput
             );
           }
-          output = Foutput + Poutput + Ioutput + Doutput;
+          output = Foutput + Poutput + Ioutput + Doutput; 
           if (
             this.minOutput !== this.maxOutput &&
             !this.bounded(output, this.minOutput, this.maxOutput)
