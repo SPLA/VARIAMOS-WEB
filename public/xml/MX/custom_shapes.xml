@@ -62,4 +62,247 @@
 	</foreground>
 </shape>
 <!-- end component model -->
+
+
+
+<!-- begin adaptation states model -->
+<shape name="transition" aspect="variable">
+	<background>
+		<path>
+			<move x="0" y="0"/> 
+			<line x="90" y="0"/> 
+			<line x="100" y="50"/> 
+			<line x="90" y="100"/> 
+			<line x="0" y="100"/> 
+			<line x="10" y="50"/> 
+			<line x="0" y="0"/> 
+			<close/>
+		</path>		
+	</background>
+	<foreground>
+		<fillstroke/>
+	</foreground>
+</shape>
+
+
+<shape name="activity" aspect="variable">
+	<background>
+		<path>
+			<move x="0" y="0"/> 
+			<line x="100" y="0"/>  
+			<line x="100" y="100"/>  
+			<line x="0" y="100"/> 
+			<line x="0" y="0"/>   
+			<close/>
+			<move x="10" y="0"/>
+			<line x="10" y="100"/> 
+			<close/>
+			<move x="90" y="0"/>
+			<line x="90" y="100"/> 
+			<close/>
+		</path>		
+	</background>
+	<foreground>
+		<fillstroke/>
+	</foreground>
+</shape>
+ 
+<shape name="writeAction" aspect="variable">
+	<background>
+		<path>
+			<move x="20" y="0"/> 
+			<line x="100" y="0"/>  
+			<line x="80" y="100"/>  
+			<line x="0" y="100"/> 
+			<line x="20" y="0"/>   
+			<close/> 
+		</path>		
+	</background>
+	<foreground>
+		<fillstroke/>
+	</foreground>
+</shape>
+
+
+<shape name="readAction" aspect="variable">
+	<background>
+		<path>
+			<move x="0" y="50"/> 
+			<line x="100" y="0"/>  
+			<line x="100" y="100"/>  
+			<line x="0" y="100"/> 
+			<line x="0" y="50"/>   
+			<close/> 
+		</path>		
+	</background>
+	<foreground>
+		<fillstroke/>
+	</foreground>
+</shape>
+
+<shape name="predicate" aspect="variable">
+	<background>
+		<path>
+			<move x="50" y="0"/> 
+			<line x="100" y="50"/>  
+			<line x="50" y="100"/> 
+			<line x="0" y="50"/> 
+			<line x="50" y="0"/> 
+			<close/>
+		</path>		
+	</background>
+	<foreground>
+		<fillstroke/>
+	</foreground>
+</shape>
+
+<shape name="digitalVariable" aspect="variable">
+	<background>
+		<path>
+			<move x="50" y="0"/>  
+			<line x="75" y="100"/> 
+			<line x="25" y="100"/> 
+			<line x="50" y="0"/> 
+			<close/> 
+			<move x="35" y="90"/>  
+			<line x="45" y="90"/>  
+			<line x="45" y="70"/>   
+			<line x="55" y="70"/>  
+			<line x="55" y="90"/> 
+			<line x="65" y="90"/>  
+		</path>		
+	</background>
+	<foreground>
+		<fillstroke/>
+	</foreground>
+</shape>
+
+<shape name="analogVariable" aspect="variable">
+	<background>
+		<path>
+			<move x="50" y="0"/>  
+			<line x="75" y="100"/> 
+			<line x="25" y="100"/> 
+			<line x="50" y="0"/> 
+			<close/>
+			<move x="35" y="90"/>  
+			<line x="45" y="70"/>  
+			<line x="55" y="90"/>   
+			<move x="55" y="90"/>   
+			<line x="65" y="70"/>  
+		</path>		
+	</background>
+	<foreground>
+		<fillstroke/>
+	</foreground>
+</shape>
+
+<shape name="timer" aspect="variable">
+	<background>
+		<path>
+			<move x="25" y="0"/>  
+			<line x="75" y="0"/> 
+			<line x="25" y="100"/> 
+			<line x="75" y="100"/> 
+			<line x="25" y="0"/>  
+			<close/>
+		</path>		
+	</background>
+	<foreground>
+		<fillstroke/>
+	</foreground>
+</shape>
+
+<shape name="analogSensor" aspect="variable">
+	<background>
+		<path>
+			<move x="50" y="00"/>  
+			<arc rx="1" ry="3" x-axis-rotation="0" large-arc-flag="0" sweep-flag="0" x="50" y="100"/>
+			<arc rx="1" ry="3" x-axis-rotation="0" large-arc-flag="0" sweep-flag="0" x="50" y="0"/>
+			<close/> 
+			<move x="42" y="80"/>  
+			<line x="48" y="20"/>  
+			<move x="48" y="20"/>  
+			<line x="55" y="80"/> 
+			<move x="55" y="80"/>   
+			<line x="60" y="20"/>   
+		</path>		
+	</background>
+	<foreground>
+		<fillstroke/>
+	</foreground>
+</shape>
+
+<shape name="digitalSensor" aspect="variable">
+	<background>
+		<path>
+			<move x="50" y="00"/>  
+			<arc rx="1" ry="3" x-axis-rotation="0" large-arc-flag="0" sweep-flag="0" x="50" y="100"/>
+			<arc rx="1" ry="3" x-axis-rotation="0" large-arc-flag="0" sweep-flag="0" x="50" y="0"/>
+			<close/> 
+			<move x="42" y="80"/>  
+			<line x="47" y="80"/>
+			<move x="47" y="80"/>  
+			<line x="47" y="20"/>  
+			<move x="47" y="20"/>  
+			<line x="52" y="20"/> 
+			<move x="52" y="20"/>  
+			<line x="52" y="80"/> 
+			<move x="52" y="80"/>  
+			<line x="57" y="80"/> 
+		</path>		
+	</background>
+	<foreground>
+		<fillstroke/>
+	</foreground>
+</shape>
+
+<shape name="digitalActuator" aspect="variable">
+	<background>
+		<path>
+			<move x="25" y="00"/>
+			<line x="75" y="00"/>  
+			<line x="75" y="100"/> 
+			<line x="25" y="100"/> 
+			<line x="25" y="00"/> 
+			<close/> 
+			<move x="42" y="80"/>  
+			<line x="47" y="80"/>
+			<move x="47" y="80"/>  
+			<line x="47" y="20"/>  
+			<move x="47" y="20"/>  
+			<line x="52" y="20"/> 
+			<move x="52" y="20"/>  
+			<line x="52" y="80"/> 
+			<move x="52" y="80"/>  
+			<line x="57" y="80"/> 
+		</path>		
+	</background>
+	<foreground>
+		<fillstroke/>
+	</foreground>
+</shape>
+
+<shape name="analogActuator" aspect="variable">
+	<background>
+		<path>
+			<move x="25" y="00"/>
+			<line x="75" y="00"/>  
+			<line x="75" y="100"/> 
+			<line x="25" y="100"/> 
+			<line x="25" y="00"/> 
+			<close/> 
+			<move x="42" y="80"/>  
+			<line x="48" y="20"/>  
+			<move x="48" y="20"/>  
+			<line x="55" y="80"/> 
+			<move x="55" y="80"/>   
+			<line x="60" y="20"/>    
+		</path>		
+	</background>
+	<foreground>
+		<fillstroke/>
+	</foreground>
+</shape>
+<!-- end adaptation states model -->
 </shapes>
