@@ -56,7 +56,7 @@ var component_main = function component_main(graph)
 
 		return clons;
 	}
-	
+
 }
 
 export default component_main

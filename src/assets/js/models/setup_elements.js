@@ -79,20 +79,21 @@ var setup_elements = function setup_elements(graph, elements, custom_attributes,
                 }
             }
 
-		}
+        }
         
         var tbContainer = document.getElementById('tbContainer');
+        var mdiv = document.createElement('div');
         var span = document.createElement('span');
         span.innerHTML = namepalette+"<br />";
-        tbContainer.appendChild(span);
+        mdiv.appendChild(span);
 
         // Creates the image which is used as the drag icon (preview)
         var img = toolbar.addMode(namepalette, image, funct);
         mxUtils.makeDraggable(img, graph, funct);
         
-        span = document.createElement('span');
-        span.innerHTML = "<br />";
-        tbContainer.appendChild(span);
+        mdiv.classList.add("pallete-div"); 
+        mdiv.appendChild(img);
+        tbContainer.appendChild(mdiv);
     }
 }
 

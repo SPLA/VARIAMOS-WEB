@@ -333,3 +333,21 @@ table{
 	padding: 5px;
 }
 </style>
+
+<style>
+#tbContainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.pallete-div {
+  display: block;
+  max-width: 60px;
+  margin: 3px;
+}
+
+.pallete-div span{
+  font-size: 12px;
+}
+</style>
