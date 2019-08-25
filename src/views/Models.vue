@@ -343,7 +343,7 @@ table{
 
 .pallete-div {
   display: block;
-  max-width: 60px;
+  max-width: 70px;
   margin: 3px;
 }
 
