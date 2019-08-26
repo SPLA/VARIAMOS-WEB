@@ -120,6 +120,18 @@ export default{
                 localStorage.clear();
             },100);
         });
+        //update activetab
+        if(this.$route["params"]["type"] != "default"){
+            this.$store.dispatch('updateactivetab', this.$route["params"]["type"]);
+        }
+    },
+    watch:{
+        $route (to, from){
+            //update activetab
+            if(to["params"]["type"] != "default"){
+                this.$store.dispatch('updateactivetab', to["params"]["type"]);
+            }
+        }
     }
 }
 </script>
