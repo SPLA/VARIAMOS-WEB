@@ -1,7 +1,7 @@
-var component_main = function component_main(graph)
+let component_main = function component_main(graph)
 {
 	component_constraints(graph);
-	var data={};
+	let data={};
 	data["m_type"]="normal"; //custom type
 	data["m_elements"]=component_elements(); //custom elements
 	data["m_attributes"]=component_attributes(); //custom attributes
@@ -21,10 +21,10 @@ var component_main = function component_main(graph)
 	}
 
 	function component_elements(){
-		var component = {src:projectPath+"images/models/component/component.png", wd:100, hg:40, style:"shape=component", type:"component", pname:"Component"};
-		var file = {src:projectPath+"images/models/component/file.png", wd:100, hg:40, style:"shape=file", type:"file", pname:"File"};
+		let component = {src:projectPath+"images/models/component/component.png", wd:100, hg:40, style:"shape=component", type:"component", pname:"Component"};
+		let file = {src:projectPath+"images/models/component/file.png", wd:100, hg:40, style:"shape=file", type:"file", pname:"File"};
 
-		var elements=[];
+		let elements=[];
 		elements[0]=component;
 		elements[1]=file;
 		
@@ -32,7 +32,7 @@ var component_main = function component_main(graph)
 	}
 
 	function component_attributes(){
-		var attributes=[];
+		let attributes=[];
 		attributes[0]={
 			"types":["file"],
 			"custom_attributes":[{
@@ -49,7 +49,7 @@ var component_main = function component_main(graph)
 	}
 
 	function component_clon_cells(){
-		var clons={};
+		let clons={};
 		clons={
 			"component":"binding_feature_component"
 		};

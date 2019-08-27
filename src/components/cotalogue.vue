@@ -299,13 +299,13 @@ export default {
 		},
 		// get the right click event and the current location
 		showMenu(index,event){
-			var _this = this;
+			let _this = this;
 			// trigger clickme function
 			_this.clickme(index);
 			event.preventDefault();
 			_this.className = event.target.closest('.name-container').classList[1];
-			var x = event.clientX;
-			var y = event.clientY;
+			let x = event.clientX;
+			let y = event.clientY;
 			// Get the current location and change the property axios
 			_this.contextMenuData.axios = {
 				x, y

@@ -133,8 +133,8 @@ export default{
     this.layers=model_load(this.graph,this.models,this.modelCode);
     this.modelType=this.$route.params.type; //based on URL Route
 
-    //Import only the current need model file
-    var modelToImport = require('@/assets/js/models/custom/'+this.modelType+'.js');
+    //Import the current model file
+    let modelToImport = require('@/assets/js/models/custom/'+this.modelType+'.js');
     this.currentModel = modelToImport.default;
     this.toolbar = new mxToolbar(document.getElementById('tbContainer'));
     this.keyHandler = new mxKeyHandler(this.graph);
@@ -154,16 +154,16 @@ export default{
       let temp = this.getmodel_component;
       localStorage[temp] = document.getElementById('model_code').value;
       if(document.getElementById('model_code').value!=""){
-        var c_header = modalH3(this.$t("modal_success"),"success");
-        var c_body = modalSimpleText(this.$t("models_save_model"));
+        let c_header = modalH3(this.$t("modal_success"),"success");
+        let c_body = modalSimpleText(this.$t("models_save_model"));
         setupModal(c_header,c_body);
       }
     },
     initialize_mx(counter){
       //counter equals 1 load the entire mxGraph
-      var graphContainer = document.getElementById('graphContainer');
+      let graphContainer = document.getElementById('graphContainer');
       main(this.graph,this.layers,this.mxModel,this.toolbar,this.keyHandler,graphContainer,this.modelType,this.currentModel,counter,this.setupFunctions,this.undoManager, this.$route.params, this.$store);
-      var outline = new mxOutline(this.graph, document.getElementById('navigator'));
+      let outline = new mxOutline(this.graph, document.getElementById('navigator'));
 		  outline.refresh();
     }
   },
@@ -196,7 +196,7 @@ export default{
         this.modelType=this.$route.params.type;
 
         //Import only the current need model file
-        var modelToImport = require('@/assets/js/models/custom/'+this.modelType+'.js');
+        let modelToImport = require('@/assets/js/models/custom/'+this.modelType+'.js');
         this.currentModel = modelToImport.default;
         this.undoManager = new mxUndoManager();
         this.initialize_mx(2);
@@ -210,9 +210,9 @@ export default{
      */ 
     mxModel:{
       handler(val) {
-        var encoder = new mxCodec();
-        var result = encoder.encode(this.graph.getModel());
-        var xml = mxUtils.getPrettyXml(result);
+        let encoder = new mxCodec();
+        let result = encoder.encode(this.graph.getModel());
+        let xml = mxUtils.getPrettyXml(result);
         this.$store.dispatch('updatexml', xml);
       },
       deep:true

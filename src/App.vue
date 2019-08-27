@@ -127,9 +127,9 @@ export default {
       document.getElementById('main_modal').style.display="none";
     },
     custom_collapse(){
-      var element = document.getElementById("top-menu");
-      var elementb = document.getElementById("main-button-col");
-      var elementc = document.getElementById("main-sketch");
+      let element = document.getElementById("top-menu");
+      let elementb = document.getElementById("main-button-col");
+      let elementc = document.getElementById("main-sketch");
       if(element.classList.contains("col-sm-1")){
         element.classList.remove("col-sm-1"); element.classList.remove("col-md-1");
         element.classList.add("col-sm-4"); element.classList.add("col-md-2");

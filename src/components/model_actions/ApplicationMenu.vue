@@ -45,17 +45,17 @@ export default {
   methods: {
     //Start set parameters
     set_parameters(){
-      var c_header = modalH3(this.$t("application_menu_set_app"));
-      var default_vals = "";
-      var texts = [this.$t("domain_implementation_derived_path")];
-      var inputs = ["server_derived_path"];
+      let c_header = modalH3(this.$t("application_menu_set_app"));
+      let default_vals = "";
+      let texts = [this.$t("domain_implementation_derived_path")];
+      let inputs = ["server_derived_path"];
       if (localStorage["domain_implementation_pool_path"]) {
         default_vals = [localStorage["domain_implementation_derived_path"]];
       }else{
         default_vals = ["uploads/component_derived/"];
       }
-      var c_body = modalInputTexts(texts,inputs,default_vals);
-      var c_footer = modalButton(this.$t("modal_save"),this.save_parameters);
+      let c_body = modalInputTexts(texts,inputs,default_vals);
+      let c_footer = modalButton(this.$t("modal_save"),this.save_parameters);
       setupModal(c_header,c_body,c_footer);
     },
     //Start execute derivation
@@ -69,20 +69,20 @@ export default {
           p_derived: localStorage["domain_implementation_derived_path"]
         })
         .then(response => {
-          var c_header = modalH3(this.$t("models_actions_derivation_response"));
-          var c_body = modalSimpleText(response.data);
+          let c_header = modalH3(this.$t("models_actions_derivation_response"));
+          let c_body = modalSimpleText(response.data);
           setupModal(c_header,c_body);
         })
         .catch(e => {
           this.errors.push(e); 
-          var c_header = modalH3(this.$t("modal_error"),"error");
+          let c_header = modalH3(this.$t("modal_error"),"error");
           console.log(this.$t("model_actions_backend_problem"));
-          var c_body = modalSimpleText(e + this.$t("model_actions_backend_problem"));
+          let c_body = modalSimpleText(e + this.$t("model_actions_backend_problem"));
           setupModal(c_header,c_body);
         });
       }else{
-        var c_header = modalH3(this.$t("modal_error"),"error");
-        var c_body = modalSimpleText(this.$t("domain_implementation_path_problem"));
+        let c_header = modalH3(this.$t("modal_error"),"error");
+        let c_body = modalSimpleText(this.$t("domain_implementation_path_problem"));
         setupModal(c_header,c_body);
       }
     },
@@ -96,20 +96,20 @@ export default {
           p_derived: localStorage["domain_implementation_derived_path"]
         })
         .then(response => {
-          var c_header = modalH3(this.$t("models_actions_derivation_response"));
-          var c_body = modalSimpleText(response.data);
+          let c_header = modalH3(this.$t("models_actions_derivation_response"));
+          let c_body = modalSimpleText(response.data);
           setupModal(c_header,c_body);
         })
         .catch(e => {
           this.errors.push(e); 
-          var c_header = modalH3(this.$t("modal_error"),"error");
+          let c_header = modalH3(this.$t("modal_error"),"error");
           console.log(this.$t("model_actions_backend_problem"));
-          var c_body = modalSimpleText(e + this.$t("model_actions_backend_problem"));
+          let c_body = modalSimpleText(e + this.$t("model_actions_backend_problem"));
           setupModal(c_header,c_body);
         });
       }else{
-        var c_header = modalH3(this.$t("modal_error"),"error");
-        var c_body = modalSimpleText(this.$t("domain_implementation_path_problem"));
+        let c_header = modalH3(this.$t("modal_error"),"error");
+        let c_body = modalSimpleText(this.$t("domain_implementation_path_problem"));
         setupModal(c_header,c_body);
       }
     },
@@ -121,8 +121,8 @@ export default {
         this.customization_data=di_actions(this.current_graph,"customize");
 
         if(this.customization_data.length==0){
-          var c_header = modalH3(this.$t("modal_error"),"error");
-          var c_body = modalSimpleText("No components to customize");
+          let c_header = modalH3(this.$t("modal_error"),"error");
+          let c_body = modalSimpleText("No components to customize");
           setupModal(c_header,c_body);
         }else{
           if(this.customization_data[0]){
@@ -138,31 +138,31 @@ export default {
               this.customization_cus_pos=0;
               this.customization_cus_max_pos=0;
               this.customization_comp_max_pos=this.customization_response.length;
-              var default_vals = ["","","","",""];
-              var c_header = modalH3("Start Customization Process");
-              var texts = ["Current file","Default content","New customized content", "File to upload","Notification"];
-              var inputs = ["current","default","customized","filetoupload","notification"];
-              var c_body = modalCustomization(texts,inputs,default_vals);
-              var c_footer = modalButton("Start/Next",this.run_customization);
+              let default_vals = ["","","","",""];
+              let c_header = modalH3("Start Customization Process");
+              let texts = ["Current file","Default content","New customized content", "File to upload","Notification"];
+              let inputs = ["current","default","customized","filetoupload","notification"];
+              let c_body = modalCustomization(texts,inputs,default_vals);
+              let c_footer = modalButton("Start/Next",this.run_customization);
               setupModal(c_header,c_body, c_footer);
               document.getElementById('filetoupload').onchange=this.send_file;
             })
             .catch(e => {
               this.errors.push(e); 
-              var c_header = modalH3(this.$t("modal_error"),"error");
+              let c_header = modalH3(this.$t("modal_error"),"error");
               console.log(this.$t("model_actions_backend_problem"));
-              var c_body = modalSimpleText(e + this.$t("model_actions_backend_problem"));
+              let c_body = modalSimpleText(e + this.$t("model_actions_backend_problem"));
               setupModal(c_header,c_body);
             });
           }else{
-            var c_header = modalH3("Customization response");
-            var c_body = modalSimpleText("customization completed");
+            let c_header = modalH3("Customization response");
+            let c_body = modalSimpleText("customization completed");
             setupModal(c_header,c_body);
           }
         }
       }else{
-        var c_header = modalH3(this.$t("modal_error"),"error");
-        var c_body = modalSimpleText(this.$t("domain_implementation_path_problem"));
+        let c_header = modalH3(this.$t("modal_error"),"error");
+        let c_body = modalSimpleText(this.$t("domain_implementation_path_problem"));
         setupModal(c_header,c_body);
       }
     },
@@ -178,22 +178,22 @@ export default {
       if(this.customization_comp_pos<this.customization_comp_max_pos){
         this.customization_cus_max_pos=this.customization_response[this.customization_comp_pos][1];
         if(this.customization_cus_pos<this.customization_cus_max_pos){
-          var current_pos=2+this.customization_cus_pos*3;
+          let current_pos=2+this.customization_cus_pos*3;
           document.getElementById('notification').value="";
           document.getElementById('default').value="";
-          var customized_content="";
+          let customized_content="";
           if(this.previous_dest!=""){
             customized_content=document.getElementById('customized').value;
           }
           document.getElementById('customized').value="";
           document.getElementById('current').value=this.customization_response[this.customization_comp_pos][current_pos];
-          var destination=this.find_destination_file(this.customization_response[this.customization_comp_pos][current_pos]);
+          let destination=this.find_destination_file(this.customization_response[this.customization_comp_pos][current_pos]);
           if(destination==""){
             this.previous_dest="";
             document.getElementById('notification').value="Current file not found, verify the component diagram";
           }else{
             document.getElementById('current').value="ID: " + this.customization_response[this.customization_comp_pos][current_pos] + " - DEST: " + destination;
-            var model_datax=[];
+            let model_datax=[];
             model_datax[0]=destination;
             model_datax[1]=this.customization_response[this.customization_comp_pos][current_pos+1];
             model_datax[2]=this.customization_response[this.customization_comp_pos][current_pos+2];
@@ -237,9 +237,9 @@ export default {
           }
           this.customization_cus_pos++;
         }else{
-          var customized_content=document.getElementById('customized').value;
+          let customized_content=document.getElementById('customized').value;
           if(this.previous_dest!="" && customized_content!=""){
-            var model_datax=[];
+            let model_datax=[];
             model_datax[0]=this.previous_dest;
             model_datax[1]=this.previous_cpoint;
             model_datax[2]=this.previous_plan;
@@ -266,8 +266,8 @@ export default {
           this.customization_comp_pos++;
         }
       }else{
-        var c_header = modalH3("Customization response");
-        var c_body = modalSimpleText("Customization completed");
+        let c_header = modalH3("Customization response");
+        let c_body = modalSimpleText("Customization completed");
         setupModal(c_header,c_body);
       }
     },
@@ -294,13 +294,13 @@ export default {
     },
     find_destination_file(id){
       //collect the information of the components and files to be customized
-      var component_root = this.current_graph.getModel().getCell("component");    
-      var component_relations = this.current_graph.getModel().getChildEdges(component_root);
+      let component_root = this.current_graph.getModel().getCell("component");    
+      let component_relations = this.current_graph.getModel().getChildEdges(component_root);
 
-      var destination = "";
+      let destination = "";
 
-      for (var i = 0; i < component_relations.length; i++) {
-        var source = component_relations[i].source.getAttribute("label");
+      for (let i = 0; i < component_relations.length; i++) {
+        let source = component_relations[i].source.getAttribute("label");
         if(source==id){
           return component_relations[i].source.getAttribute("destination");
           break;
