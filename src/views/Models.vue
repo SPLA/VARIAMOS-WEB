@@ -68,11 +68,6 @@
 </template>
 
 <script>
-import setup_relations from '@/assets/js/models/setup_relations.js'
-import setup_elements from '@/assets/js/models/setup_elements.js'
-import setup_buttons from '@/assets/js/models/setup_buttons.js'
-import setup_keys from '@/assets/js/models/setup_keys.js'
-import setup_properties from '@/assets/js/models/setup_properties.js'
 import main from '@/assets/js/models/model_main.js'
 import model_load from '@/assets/js/models/model_load.js'
 import Bus from '../assets/js/common/bus.js'
@@ -116,13 +111,6 @@ export default{
       this.graph.setEnabled(false);
     });
     this.models = getModelInfo()["gmodels"]; //represent the available models
-    this.setupFunctions = {
-      "setup_relations":setup_relations,
-      "setup_buttons":setup_buttons,
-      "setup_keys":setup_keys,
-      "setup_properties":setup_properties,
-      "setup_elements":setup_elements
-    }
     //preload the saved model if exists
     let temp = this.getmodel_component;
     if (localStorage[temp]) {
@@ -132,6 +120,20 @@ export default{
     //load saved model into the graph if exists, and return layers
     this.layers=model_load(this.graph,this.models,this.modelCode);
     this.modelType=this.$route.params.type; //based on URL Route
+
+    //dynamic load of setup functions
+    let all_setups = ["setup_relations","setup_buttons","setup_keys","setup_properties","setup_elements","setup_events"];
+    for(let i=0;i<all_setups.length;i++){
+      try{
+        //try to load setup functions from custom model folder
+        let st_fun = require(`@/assets/js/models/custom/${this.modelType}/${all_setups[i]}.js`);
+        this.setupFunctions[all_setups[i]]=st_fun.default;
+      }catch (ex) {
+        //load setup functions from models folder
+        let st_fun = require(`@/assets/js/models/${all_setups[i]}.js`);
+        this.setupFunctions[all_setups[i]]=st_fun.default;
+      }
+    }
 
     //Import the current model file
     let modelToImport = require('@/assets/js/models/custom/'+this.modelType+'.js');
