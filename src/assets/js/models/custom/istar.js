@@ -136,29 +136,37 @@ var istar_main = function istar_main(graph)
   };
 
 	function istar_elements(){
-    //var actor = {src:projectPath+"images/models/istar/Actor.svg", wd:87, hg:87, style:"shape=image;image=images/models/istar/Actor.svg;perimeter=ellipsePerimeter", type:"actor", pname:"Actor"};
-    var actor = {src:projectPath+"images/models/istar/Actor.svg", wd:100, hg:100, style:"shape=actor;perimeter=ellipsePerimeter", type:"actor", pname:"Actor"};
-		//var agent = {src:projectPath+"images/models/istar/Agent.svg", wd:87, hg:87, style:"shape=image;image=images/models/istar/Agent.svg;perimeter=ellipsePerimeter", type:"agent", pname:"Agent"};
-    var agent = {src:projectPath+"images/models/istar/Agent.svg", wd:100, hg:100, style:"shape=agent;perimeter=ellipsePerimeter", type:"agent", pname:"Agent"};
-    //var role = {src:projectPath+"images/models/istar/Role.svg", wd:87, hg:87, style:"shape=image;image=images/models/istar/Role.svg;perimeter=ellipsePerimeter", type:"role", pname:"Role"};
-    var role = {src:projectPath+"images/models/istar/Role.svg", wd:100, hg:100, style:"shape=role;perimeter=ellipsePerimeter", type:"role", pname:"Role"};
-    //var goal = {src:projectPath+"images/models/istar/Goal.svg", wd:88, hg:40, style:"shape=image;image=images/models/istar/Goal.svg;perimeter=ellipsePerimeter", type:"goal", pname:"Goal"};
-    var goal = {src:projectPath+"images/models/istar/Goal.svg", wd:125, hg:50, style:"shape=goal;perimeter=ellipsePerimeter", type:"goal", pname:"Goal"};
-    //var quality = {src:projectPath+"images/models/istar/Quality.svg", wd:127, hg:55, style:"shape=image;image=images/models/istar/Quality.svg", type:"quality", pname:"Quality"};
-    var quality = {src:projectPath+"images/models/istar/Quality.svg", wd:125, hg:50, style:"shape=quality", type:"quality", pname:"Quality"};
-		//var task = {src:projectPath+"images/models/istar/Task.svg", wd:141, hg:40, style:"shape=image;image=images/models/istar/Task.svg", type:"task", pname:"Task"};
-		var task = {src:projectPath+"images/models/istar/Task.svg", wd:125, hg:50, style:"shape=task", type:"task", pname:"Task"};
-    //var resource = {src:projectPath+"images/models/istar/Resource.svg", wd:80, hg:41, style:"shape=image;image=images/models/istar/Resource.svg", type:"resource", pname:"Resource"};
-    var resource = {src:projectPath+"images/models/istar/Resource.svg", wd:125, hg:50, style:"shape=resource", type:"resource", pname:"Resource"};
+    var actor = {src:projectPath+"images/models/istar/Actor.png", wd:100, hg:100, style:"shape=actor;perimeter=ellipsePerimeter;html=1;whiteSpace=wrap;overflow=visible;fontColor=black;", type:"actor", pname:"Actor"};
+    var agent = {src:projectPath+"images/models/istar/Agent.png", wd:100, hg:100, style:"shape=agent;perimeter=ellipsePerimeter;html=1;whiteSpace=wrap;overflow=visible;fontColor=black;", type:"agent", pname:"Agent"};
+    var role = {src:projectPath+"images/models/istar/Role.png", wd:100, hg:100, style:"shape=role;perimeter=ellipsePerimeter;html=1;whiteSpace=wrap;overflow=visible;fontColor=black;", type:"role", pname:"Role"};
+    var goal = {src:projectPath+"images/models/istar/Goal.png", wd:125, hg:50, style:"shape=goal;perimeter=ellipsePerimeter;html=1;whiteSpace=wrap;overflow=visible;fontColor=black;", type:"goal", pname:"Goal"};
+    var quality = {src:projectPath+"images/models/istar/Quality.png", wd:125, hg:50, style:"shape=quality;html=1;whiteSpace=wrap;overflow=visible;fontColor=black;", type:"quality", pname:"Quality"};
+		var task = {src:projectPath+"images/models/istar/Task.png", wd:125, hg:50, style:"shape=task;html=1;whiteSpace=wrap;;overflow=visible;fontColor=black;", type:"task", pname:"Task"};
+    var resource = {src:projectPath+"images/models/istar/Resource.png", wd:125, hg:50, style:"shape=resource;html=1;whiteSpace=wrap;overflow=visible;fontColor=black;", type:"resource", pname:"Resource"};
+
+    const securityConstraint = {src:projectPath+"images/models/component/file.png", wd:100, hg:100, style:"shape=secconstraint;html=1;whiteSpace=wrap;overflow=visible;fontColor=black;", type:"secconst", pname:"secconst"};
+    const securityObjective = {src:projectPath+"images/models/component/file.png", wd:100, hg:100, style:"shape=secobjective;html=1;whiteSpace=wrap;overflow=visible;fontColor=black;", type:"secobjective", pname:"secobjective"};
+    const securityMechanism = {src:projectPath+"images/models/component/file.png", wd:125, hg:50, style:"shape=secmechanism;html=1;whiteSpace=wrap;overflow=visible;fontColor=black;", type:"secmechanism", pname:"secmechanism"};
+    const threat = {src:projectPath+"images/models/component/file.png", wd:100, hg:100, style:"shape=threat;html=1;whiteSpace=wrap;overflow=visible;fontColor=black;", type:"threat", pname:"threat"};
+    const attack = {src:projectPath+"images/models/component/file.png", wd:100, hg:100, style:"shape=attack;html=1;whiteSpace=wrap;overflow=visible;fontColor=black;", type:"attack", pname:"attack"};
+    const vulnerability = {src:projectPath+"images/models/component/file.png", wd:125, hg:50, style:"shape=vulnerability;html=1;whiteSpace=wrap;overflow=visible;fontColor=black;", type:"vulnerability", pname:"vulnerability"};
 
 		var elements=[];
-		elements[0]=actor;
-    elements[1]=agent;
-    elements[2]=role;
-    elements[3]=goal;
-    elements[4]=quality;
-    elements[5]=task;
-    elements[6]=resource;
+		elements.push(actor);
+    elements.push(agent);
+    elements.push(role);
+    elements.push(goal);
+    elements.push(quality);
+    elements.push(task);
+    elements.push(resource);
+
+    //tests
+    elements.push(securityConstraint);
+    elements.push(securityObjective);
+    elements.push(securityMechanism);
+    elements.push(threat);
+    elements.push(attack);
+    elements.push(vulnerability)
 
 		return elements;
 	}
@@ -519,6 +527,7 @@ var istar_main = function istar_main(graph)
 	}
 
   function actorboundary(){
+    const uuidv1 = require('uuid/v1');
     //this.name points to the id of the cell that contains the element.  
     const currentCell = graph.getModel().getCell(this.name);
     const parent = currentCell.getParent();
@@ -531,53 +540,201 @@ var istar_main = function istar_main(graph)
     graph.getModel().beginUpdate();
     try {
       if (checked === 'true') {
-        const boundaryCell = graph.insertVertex(parent, null, '', currentCell.getGeometry().x, currentCell.getGeometry().y, 100, 100, 'shape=rectangle;fillColor=none;dashed=1;dashPattern=10 10;rounded=1;arcSize=15;');
+        const boundaryCell = graph.insertVertex(parent, uuidv1(), '', currentCell.getGeometry().x, currentCell.getGeometry().y, 100, 100, 'shape=rectangle;fillColor=none;dashed=1;dashPattern=10 10;rounded=1;arcSize=15;');
         boundaryCell.setConnectable(false);
         boundaryCell.setValue({'type':'boundary'});
-        graph.groupCells(boundaryCell, 100, [currentCell]);
+        graph.groupCells(boundaryCell, 0, [currentCell]);
         const geo = currentCell.getGeometry();
         geo.x = 0;
         geo.y = 0;
         graph.setCellStyles(mxConstants.STYLE_MOVABLE, '0', [currentCell])
-      } else {
-        //get the position information from the parent (and its references)
-        const boundaryCell = parent;
-        const mainparent = boundaryCell.getParent();
-        const parentGeo = boundaryCell.getGeometry();
-        const currentGeo = currentCell.getGeometry();
-        //set the postion to the parent's old position
-        currentGeo.x = parentGeo.x + 100;
-        currentGeo.y = parentGeo.y + 100;
-        //When you ungroup a cell, it removes all connections.
-        //With this logic, we obtain the important values of these edges,
-        //then we store the information in an array.
+        //Set the size of the boundary.
+        let boundaryH = 300;
+        let boundaryW = 300;
+        //If the boundary was already set before, set it to the old limits.
+        if(currentCell.boundarySize !== undefined){
+          boundaryH = currentCell.boundarySize.height;
+          boundaryW = currentCell.boundarySize.width;
+          delete currentCell.boundarySize;
+        }
+        //Apply the changes. The bounds indicate the absolute shape of the cell.
+        const bounds = new mxRectangle(boundaryCell.getGeometry().x, boundaryCell.getGeometry().y, boundaryW, boundaryH);
+        graph.resizeCell(boundaryCell, bounds);
+        //Find any edges that were promoted and remove them.
         const edgeCount = currentCell.getEdgeCount();
-        let edges = [];
+        const promotedEdges = [];
         if (edgeCount > 0){
           for(let i = 0; i < edgeCount; i++){
             const edge = currentCell.getEdgeAt(i);
-            const value = edge.getValue();
-            const source = edge.getTerminal(true).getId();
-            const isSource = source === currentCell.getId();
-            const target = edge.getTerminal(false).getId();
-            edges.push({value, isSource, source, target});
+            if(edge.promotedEdge !== undefined && edge.promotedEdge){
+              promotedEdges.push(edge);
+            }
           }
         }
-        //remove the cell from the hierarchy and then add it back to the model.
-        graph.ungroupCells([currentCell]);
-        graph.removeCells([boundaryCell]);
-        graph.getModel().add(mainparent, currentCell);
-        //After, we re add the cell to the graph with the info from the array.
-        //This works because the cell ids do not change despite the changes.
-        if(edges.length !== 0){
-          edges.forEach(item => {
-            const sourceCell = item.isSource ? currentCell : graph.getModel().getCell(item.source);
-            const targetCell = item.isSource ? graph.getModel().getCell(item.target) : currentCell;
-            graph.insertEdge(mainparent, null, item.value, sourceCell, targetCell);
-          });
+        //Remove the edges that were promoted.
+        graph.removeCells(promotedEdges);
+        //If there were elements that existed previously, reconstruct them.
+        const newCells = new Map;
+        if(currentCell.elements !== undefined){
+          //key is the id of the old cell
+          //value contains the cell.
+          for(let [key, value] of currentCell.elements){
+            const cells = graph.importCells([value], 0,0, boundaryCell);
+            //This ties the old cell's id to the new one's so that the relations can be reconstructed.
+            newCells.set(key, cells[0].getId());
+            //graph.insertVertex(boundaryCell, null, child.getValue(), childGeo.x, childGeo.y, childGeo.width, childGeo.height, child.getStyle());
+          }
+          delete currentCell.elements;
         }
+        const done = [];
+        const boundaryGeo = boundaryCell.getGeometry();
+        if(currentCell.relations !== undefined){
+          for(let [key, value] of currentCell.relations){
+            console.log('key :', key);
+            console.log('value :', value);
+            //Within value is every edge coming or going from the <<old>> cell given by key.
+            value.forEach(edge => {
+              //For both the terminals, check if the reference is one of the cells that are destroyed, otherwise it is the normal one.
+              const sourceCell = graph.getModel().getCell(newCells.has(edge.source) ? newCells.get(edge.source) : edge.source);
+              const srcId = sourceCell.getId();
+              const targetCell = graph.getModel().getCell(newCells.has(edge.target) ? newCells.get(edge.target) : edge.target);
+              const tgtId = targetCell.getId();
+              //If the relation was already added, skip all of the code to add it.
+              if(!done.some(pair => {
+                return (pair.t1 === srcId && pair.t2 === tgtId) || (pair.t1 === tgtId && pair.t2 === tgtId);
+              })){
+                console.log('sourceCell :', sourceCell);
+                console.log('targetCell :', targetCell);
+                const newEdge = graph.insertEdge(boundaryCell, uuidv1(), edge.value, sourceCell, targetCell, edge.style);
+                if(newEdge.getAttribute('type').includes('dependum')){
+                  //Gather the state information of both the source and target elements.
+                  const sourceState = graph.view.getState(sourceCell);
+                  const sourceGeo = sourceCell.getGeometry();
+                  const targetState = graph.view.getState(targetCell);
+                  const targetGeo = targetCell.getGeometry();
+                  //Obtain the coordinates and offset to the center of the bounding rectangle.
+                  //If the state is undefined, it is because it has just been created.
+                  const initX = sourceState !== undefined ? (sourceState.origin.x + (sourceGeo.width/2)) : (boundaryGeo.x + sourceGeo.getCenterX());
+                  const initY = sourceState !== undefined ? (sourceState.origin.y + (sourceGeo.height/2)) : (boundaryGeo.y + sourceGeo.getCenterY());
+                  const destX = targetState !== undefined ? (targetState.origin.x + (targetGeo.width/2)) : (boundaryGeo.x + targetGeo.getCenterX());
+                  const destY = targetState !== undefined ? (targetState.origin.y + (targetGeo.height/2)) : (boundaryGeo.y + targetGeo.getCenterY());
+                  //Calculate the angle given by the edge in its current orientation.
+                  const angle = (Math.atan2(destY-initY,destX-initX) * (180/Math.PI)).toFixed(0);
+                  //Insert a new element onto the the edge with the calculated angle.
+                  const capitald = graph.insertVertex(newEdge,uuidv1(),null,0,0,20,20,'shape=capitald;fillColor=#FFFFFF;rotation='+angle+';');
+                  //Set the offset of the element so that it is centered. 
+                  capitald.geometry.offset = new mxPoint(-10, -10);
+                  capitald.geometry.relative = true;
+                  //Set the element as unconnectable.
+                  capitald.connectable = false;
+                }
+                done.push({t1:sourceCell.getId(),t2:targetCell.getId()});
+              }
+            })
+          }
+        }
+      } else {
+        //get the references to the boundary cell and the main graph.
+        const boundaryCell = parent;
+        const mainparent = boundaryCell.getParent();
+        const innerElementCount = boundaryCell.getChildCount();
+        const innerElements = new Map;
+        const relations = new Map;
+        //get the position information from the parent (and its references)
+        const parentGeo = boundaryCell.getGeometry();
+        const currentGeo = currentCell.getGeometry();
+        //There are other elements inside
+        //get their references.
+        if(innerElementCount > 1){
+          for(let i = 0; i < innerElementCount; i++){
+            const child = boundaryCell.getChildAt(i);
+            if(child !== currentCell && !child.isEdge()){
+              //With this logic, we obtain the important values of these edges,
+              //then we store the information in an array.
+              const edgeCount = child.getEdgeCount();
+              const innerEdges = [];
+              if (edgeCount > 0){
+                for(let i = 0; i < edgeCount; i++){
+                  const edge = child.getEdgeAt(i);
+                  const value = edge.getValue();
+                  const source = edge.getTerminal(true).getId();
+                  const isSource = source === child.getId();
+                  const target = edge.getTerminal(false).getId();
+                  const style = edge.getStyle();
+                  innerEdges.push({value, isSource, source, target, style});
+                }
+              }
+              //Now we map every id to its corresponding cell and edges so that we can reconstruct it later.
+              innerElements.set(child.getId(), child.clone());
+              relations.set(child.getId(),innerEdges);
+              //innerElements.push({child: child.clone(), id: child.getId(), edges: innerEdges});
+            }
+          }
+          //We will now do edge promotion based on what was calculated before.
+          for(let [_key, value] of relations){
+            //We will now iterate over the inner edges of every inner element.
+            //If they contain external connections we will now add them to the actor cell.
+            value.forEach(edge => {
+              const terminal = edge.isSource ? edge.target : edge.source;
+              //The only allowed external connections are done with dependums.
+              if(!innerElements.has(terminal)){
+                const sourceCell = edge.isSource ? currentCell : graph.getModel().getCell(edge.source);
+                const targetCell = edge.isSource ? graph.getModel().getCell(edge.target) : currentCell;
+                const newEdge = graph.insertEdge(mainparent, uuidv1(), edge.value, sourceCell, targetCell, edge.style);
+                newEdge.promotedEdge = true;
+                //Gather the state information of both the source and target elements.
+                const sourceState = graph.view.getState(sourceCell);
+                const targetState = graph.view.getState(targetCell);
+                //Obtain the coordinates and offset to the center of the bounding rectangle.
+                const initX = sourceState.x + (sourceState.width/2);
+                const initY = sourceState.y + (sourceState.height/2);
+                const destX = targetState.x + (targetState.width/2);
+                const destY = targetState.y + (targetState.height/2);
+                //Calculate the angle given by the edge in its current orientation.
+                const angle = (Math.atan2(destY-initY,destX-initX) * (180/Math.PI)).toFixed(0);
+                //Insert a new element onto the the edge with the calculated angle.
+                const capitald = graph.insertVertex(newEdge,uuidv1(),null,0,0,20,20,'shape=capitald;fillColor=#FFFFFF;rotation='+angle+';');
+                //Set the offset of the element so that it is centered. 
+                capitald.geometry.offset = new mxPoint(-10, -10);
+                capitald.geometry.relative = true;
+                //Set the element as unconnectable.
+                capitald.connectable = false;
+              }
+            })
+          }
+        }
+
+        //We modify the actor cell to have the information of both its boundary cell and that of the inner elements.
+        currentCell.elements = innerElements;
+        currentCell.relations = relations;
+        currentCell.boundarySize = {height: parentGeo.height, width: parentGeo.width};
+
+        //These cells are fundamentally different to those that are returned by ungroupCells.
+        //They retain their properties though. I suspect they are cloned from the first ones.
+        const innerCells = graph.ungroupCells([boundaryCell]);
+        //Remove the superfluous cells from the graph.
+        innerCells.forEach(cell => {
+          if(cell !== currentCell){
+            graph.removeCells([cell]);
+          }
+        })
+
+        //set the postion to the parent's old position
+        currentGeo.x = parentGeo.x + 100;
+        currentGeo.y = parentGeo.y + 100;
+        //remove the cell from the hierarchy and then add it back to the model.
+        //graph.ungroupCells([currentCell]);
+        /* const innerCells = graph.ungroupCells([boundaryCell]); */
+        //graph.removeCells([boundaryCell]);
+        //graph.getModel().add(mainparent, currentCell);
         //Change the cell's properties so that it can move again.
         graph.setCellStyles(mxConstants.STYLE_MOVABLE, '1', [currentCell]);
+        //Make it so the edges, and promoted edges, are all correctly aligned.
+        reorientElement(null, {
+          getProperty: function(_type){
+            return [currentCell];
+          }
+        })
       }
     } finally {
       //console.log(currentCell.getAttribute('boundary'))
@@ -585,22 +742,32 @@ var istar_main = function istar_main(graph)
     }
   }
 
+  /**
+   * This function updates all edges that link to a particular goal, thus setting the refinement style.
+   */
   function refinementStyle(){
+    const admittedTypes = ['goal', 'task'];
     //Get the reference to the edge and find its target
     const currentCell = graph.getModel().getCell(this.name);
     const target = currentCell.getTerminal(false);
     //this.value should carry the value that has been changed to
     graph.getModel().beginUpdate();
     try {
-      //Set the arrow style based on the incoming value of the select
-      graph.setCellStyles(mxConstants.STYLE_ENDARROW, this.value === 'and' ? 'dash' : 'block', target.edges);
       if (target.edges.length > 1){
         target.edges.forEach(edge => {
-          if(edge !== currentCell){
-            const edit = new mxCellAttributeChange(
-							edge, "refinement",
-							this.value);
-					  graph.getModel().execute(edit);
+          const source = edge.getTerminal(true);
+          const sourceType = source.getAttribute('type');
+          const destination = edge.getTerminal(false);
+          const destType = destination.getAttribute('type');
+          if(source !== target && admittedTypes.includes(sourceType) && admittedTypes.includes(destType)){
+            //Set the arrow style based on the incoming value of the select
+            graph.setCellStyles(mxConstants.STYLE_ENDARROW, this.value === 'and' ? 'dash' : 'block', [edge]);
+            if(edge !== currentCell){
+              const edit = new mxCellAttributeChange(
+                edge, "refinement",
+                this.value);
+              graph.getModel().execute(edit);
+            }
           }
         })
       }
@@ -609,6 +776,11 @@ var istar_main = function istar_main(graph)
     }
   }
 
+  /**
+   * This function reorients the "D" elements that exist as children of dependum edges. 
+   * @param {Object} _sender This is the graph that generated the event.
+   * @param {Object} evt This is the event itself, it contains all the parameters of the associated MOVED_CELLS event.
+   */
   function reorientElement(_sender, evt) {
     //Obtain the moved cells.
     const cells = evt.getProperty('cells');
@@ -654,9 +826,9 @@ var istar_main = function istar_main(graph)
                 //position of the boundary + its offset + the center of its bounding rectangle.
                 //The state allows us to calculate the current size of the element and
                 //thus we can obtain the center of the bounding rectangle.
-                const sourceStateShape = graph.view.getState(source);
-                initX = sourceParentGeo.x + sourceGeo.x + (sourceStateShape.width/2);
-                initY = sourceParentGeo.y + sourceGeo.y + (sourceStateShape.height/2);
+                //const sourceStateShape = graph.view.getState(source);
+                initX = sourceParentGeo.x + sourceGeo.x + (sourceGeo.width/2);
+                initY = sourceParentGeo.y + sourceGeo.y + (sourceGeo.height/2);
               } else {
                 //If the cell is outside a boundary, its position is given by its geometry.
                 initX = sourceGeo.getCenterX();
@@ -671,9 +843,9 @@ var istar_main = function istar_main(graph)
               //Check if the target cell is inside a boudary.
               if(targetParentValue !== undefined && targetParentValue.type !== undefined && targetParentValue.type  === 'boundary'){
                 //Same as above...
-                const targetStateShape = graph.view.getState(target);
-                destX = targetParentGeo.x + targetGeo.x + (targetStateShape.width/2);
-                destY = targetParentGeo.y + targetGeo.y + (targetStateShape.height/2);
+                //const targetStateShape = graph.view.getState(target);
+                destX = targetParentGeo.x + targetGeo.x + (targetGeo.width/2);
+                destY = targetParentGeo.y + targetGeo.y + (targetGeo.height/2);
               } else {
                 //Same as above...
                 destX = targetGeo.getCenterX();
