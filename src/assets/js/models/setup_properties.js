@@ -1,4 +1,4 @@
-var setup_properties = function setup_properties(graph,properties_styles){
+let setup_properties = function setup_properties(graph,properties_styles){
 	//remove previous listeners
 	if(graph.getSelectionModel().eventListeners.length>3){
 		graph.getSelectionModel().eventListeners.pop();
@@ -14,13 +14,13 @@ var setup_properties = function setup_properties(graph,properties_styles){
 
     function selectionChanged(graph,properties_styles)
 	{
-		var div = document.getElementById('properties');
+		let div = document.getElementById('properties');
 		// Forces focusout in IE
 		graph.container.focus();
 		// Clears the DIV the non-DOM way
 		div.innerHTML = '';
 		// Gets the selection cell
-		var cell = graph.getSelectionCell();
+		let cell = graph.getSelectionCell();
 		
 		if (cell == null)
 		{
@@ -32,15 +32,15 @@ var setup_properties = function setup_properties(graph,properties_styles){
 				mxUtils.writeln(div, global.messages["setup_properties_clon"]);
 			}else{
 				if(cell.value.attributes){
-					var form = new mxForm("properties-table");
-					var attrs = cell.value.attributes;
+					let form = new mxForm("properties-table");
+					let attrs = cell.value.attributes;
 					
-					for (var i = 0; i < attrs.length; i++)
+					for (let i = 0; i < attrs.length; i++)
 					{
 						if(properties_styles!=null && properties_styles[cell.getAttribute("type")]){
-							var type = cell.getAttribute("type");
-							var passed = false;
-							for (var j = 0; j < properties_styles[type].length; j++)
+							let type = cell.getAttribute("type");
+							let passed = false;
+							for (let j = 0; j < properties_styles[type].length; j++)
 							{
 								if(properties_styles[type][j]["attribute"]==attrs[i].nodeName){
 									if(properties_styles[type][j]["input_type"]=="text"){
@@ -75,8 +75,8 @@ var setup_properties = function setup_properties(graph,properties_styles){
 	 */
 	function createCheckboxField(graph, form, cell, attribute, custom){
 
-		var def_display = getDisplayValue(cell,custom);
-		var input = form.addCheckbox(attribute.nodeName, attribute.nodeValue, def_display);
+		let def_display = getDisplayValue(cell,custom);
+		let input = form.addCheckbox(attribute.nodeName, attribute.nodeValue, def_display);
 
 		executeApplyHandler(graph, form, cell, attribute, input, custom);
 	}
@@ -86,11 +86,11 @@ var setup_properties = function setup_properties(graph,properties_styles){
 	 */
 	function createSelectField(graph, form, cell, attribute, custom){
 
-		var values=custom["input_values"];
-		var def_display = getDisplayValue(cell,custom);
-		var input = form.addCombo(attribute.nodeName, false, 1, def_display);
+		let values=custom["input_values"];
+		let def_display = getDisplayValue(cell,custom);
+		let input = form.addCombo(attribute.nodeName, false, 1, def_display);
 
-		for (var i = 0; i < values.length; i++)
+		for (let i = 0; i < values.length; i++)
 		{
 			if(values[i]==attribute.nodeValue){
 				form.addOption(input,values[i],values[i],true);
@@ -107,9 +107,9 @@ var setup_properties = function setup_properties(graph,properties_styles){
 	 */
 	function createTextField(graph, form, cell, attribute, custom)
 	{
-		var def_display = getDisplayValue(cell,custom);
+		let def_display = getDisplayValue(cell,custom);
 
-		var input = form.addText(attribute.nodeName, attribute.nodeValue, "text", def_display);
+		let input = form.addText(attribute.nodeName, attribute.nodeValue, "text", def_display);
 		
 		//attribute type can not be modified
 		if(attribute.nodeName=="type"){
@@ -125,9 +125,9 @@ var setup_properties = function setup_properties(graph,properties_styles){
 		//apply custom configurations
 		applyCustomElements(input, custom, cell);
 
-		var applyHandler = function()
+		let applyHandler = function()
 		{
-			var newValue = "";
+			let newValue = "";
 
 			if(input.type=="checkbox"){
 				newValue = "false";
@@ -138,8 +138,8 @@ var setup_properties = function setup_properties(graph,properties_styles){
 				newValue = input.value || '';
 			}
 
-			var oldValue = cell.getAttribute(attribute.nodeName, '');
-			var onchange_allowed = true;
+			let oldValue = cell.getAttribute(attribute.nodeName, '');
+			let onchange_allowed = true;
 
 			//check custom changes that are not allowed
 			if(custom["onchangerestrictive"]!=null){
@@ -155,15 +155,15 @@ var setup_properties = function setup_properties(graph,properties_styles){
 				
 				try
 				{
-					var edit = new mxCellAttributeChange(
+					let edit = new mxCellAttributeChange(
 							cell, attribute.nodeName,
 							newValue);
 					graph.getModel().execute(edit);
 					
 					//update cloned cell if exists
-					var clon = graph.getModel().getCell("clon"+cell.getId());
+					let clon = graph.getModel().getCell("clon"+cell.getId());
 					if(clon){
-						var edit2 = new mxCellAttributeChange(
+						let edit2 = new mxCellAttributeChange(
 							clon, attribute.nodeName,
 							newValue);
 						graph.getModel().execute(edit2);
@@ -203,7 +203,7 @@ var setup_properties = function setup_properties(graph,properties_styles){
 	}
 
 	function getDisplayValue(cell,custom){
-		var def_display = "";
+		let def_display = "";
  		if(custom!=null && custom["def_display"]!=null){
 			def_display=custom["def_display"];
 			if(custom["display_check_attribute"]){
@@ -226,7 +226,7 @@ var setup_properties = function setup_properties(graph,properties_styles){
 
 			//custom input type
 			if(custom["input_text_type"]){
-				var type=custom["input_text_type"];
+				let type=custom["input_text_type"];
 				input.setAttribute('type', type);
 			}
 		}

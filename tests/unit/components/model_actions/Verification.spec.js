@@ -158,7 +158,8 @@ describe('Verification', () => {
       this.encode = sinon.stub()
     }
     global.mxUtils = {
-      getPrettyXml: sinon.stub()
+      getPrettyXml: sinon.stub(),
+      getXml: sinon.stub().returns(""),
     }
     global.localStorage.setItem("domain_implementation_main_path", 'XXXX')
     const emptyState = false;

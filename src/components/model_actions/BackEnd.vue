@@ -21,19 +21,19 @@ export default {
   methods: {
     set_params(){
       // modal header
-      var c_header = modalH3(this.$t("backend_setup"));
+      let c_header = modalH3(this.$t("backend_setup"));
       // modal body
-      var default_vals = "";
-      var texts = [this.$t("backend_setup_path")];
-      var inputs = ["server_main_path"];
+      let default_vals = "";
+      let texts = [this.$t("backend_setup_path")];
+      let inputs = ["server_main_path"];
       if (localStorage["domain_implementation_main_path"]) {
         default_vals = [localStorage["domain_implementation_main_path"]];
       }else{
         default_vals = ["http://localhost:8090/VariaMosServices/"];
       }
-      var c_body = modalInputTexts(texts,inputs,default_vals);
+      let c_body = modalInputTexts(texts,inputs,default_vals);
       // modal footer
-      var c_footer = modalButton(this.$t("modal_save"),this.save_parameters);
+      let c_footer = modalButton(this.$t("modal_save"),this.save_parameters);
       setupModal(c_header,c_body,c_footer);
     },
     save_parameters(){

@@ -31,17 +31,17 @@ export default {
   methods: {
     //Start set parameters
     set_parameters(){
-      var c_header = modalH3(this.$t("domain_menu_set_comp"));
-      var default_vals = "";
-      var texts = [this.$t("domain_implementation_pool_path")];
-      var inputs = ["server_component_path"];
+      let c_header = modalH3(this.$t("domain_menu_set_comp"));
+      let default_vals = "";
+      let texts = [this.$t("domain_implementation_pool_path")];
+      let inputs = ["server_component_path"];
       if (localStorage["domain_implementation_pool_path"]) {
         default_vals = [localStorage["domain_implementation_pool_path"]];
       }else{
         default_vals = ["uploads/component_pool/"];
       }
-      var c_body = modalInputTexts(texts,inputs,default_vals);
-      var c_footer = modalButton(this.$t("modal_save"),this.save_parameters);
+      let c_body = modalInputTexts(texts,inputs,default_vals);
+      let c_footer = modalButton(this.$t("modal_save"),this.save_parameters);
       setupModal(c_header,c_body,c_footer);
     },
     //Start save parameters
@@ -51,13 +51,13 @@ export default {
     },
     show_file_code(){
       //get selected cell
-      var cell = this.current_graph.getSelectionCell(); 
+      let cell = this.current_graph.getSelectionCell(); 
       if(cell==null){
-        var c_header = modalH3(this.$t("modal_error"),"error");
-        var c_body = modalSimpleText(this.$t("domain_menu_sfc_invalid"));
+        let c_header = modalH3(this.$t("modal_error"),"error");
+        let c_body = modalSimpleText(this.$t("domain_menu_sfc_invalid"));
         setupModal(c_header,c_body);
       }else if(cell.getAttribute("type")=="file"){
-        var data={};
+        let data={};
         data["filename"]=cell.getAttribute("filename");
         data["component"]=cell.getEdgeAt(0).target.getAttribute("label");
         if (localStorage["domain_implementation_main_path"] && localStorage["domain_implementation_pool_path"]) {
@@ -70,15 +70,15 @@ export default {
           })
           .then(response => {
             if(response.data=="File not found"){
-              var c_header = modalH3(this.$t("modal_error"),"error");
-              var c_body = modalSimpleText(this.$t("domain_menu_sfc_not_found"));
+              let c_header = modalH3(this.$t("modal_error"),"error");
+              let c_body = modalSimpleText(this.$t("domain_menu_sfc_not_found"));
               setupModal(c_header,c_body);
             }else{
               //append code to the properties area
-              var properties_table = document.getElementById("properties");
-              var tr = document.createElement('div');
-              var td = document.createElement('div');
-              var input = document.createElement('textarea');
+              let properties_table = document.getElementById("properties");
+              let tr = document.createElement('div');
+              let td = document.createElement('div');
+              let input = document.createElement('textarea');
               input.style.width = '100%';
               input.setAttribute('rows', 10);
               input.disabled = true;
@@ -89,18 +89,18 @@ export default {
           })
           .catch(e => {
             this.errors.push(e); 
-            var c_header = modalH3(this.$t("modal_error"),"error");
-            var c_body = modalSimpleText(e + this.$t("model_actions_backend_problem"));
+            let c_header = modalH3(this.$t("modal_error"),"error");
+            let c_body = modalSimpleText(e + this.$t("model_actions_backend_problem"));
             setupModal(c_header,c_body);
           });
         }else{
-          var c_header = modalH3(this.$t("modal_error"),"error");
-          var c_body = modalSimpleText(this.$t("domain_implementation_path_problem"));
+          let c_header = modalH3(this.$t("modal_error"),"error");
+          let c_body = modalSimpleText(this.$t("domain_implementation_path_problem"));
           setupModal(c_header,c_body);
         }
       }else{
-        var c_header = modalH3(this.$t("modal_error"),"error");
-        var c_body = modalSimpleText(this.$t("domain_menu_sfc_invalid"));
+        let c_header = modalH3(this.$t("modal_error"),"error");
+        let c_body = modalSimpleText(this.$t("domain_menu_sfc_invalid"));
         setupModal(c_header,c_body);
       }                   
     }
