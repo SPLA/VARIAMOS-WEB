@@ -197,6 +197,20 @@ export default{
         document.getElementById('navigator').innerHTML="";
         this.modelType=this.$route.params.type;
 
+        //dynamic load of setup functions
+        let all_setups = ["setup_relations","setup_buttons","setup_keys","setup_properties","setup_elements","setup_events"];
+        for(let i=0;i<all_setups.length;i++){
+          try{
+            //try to load setup functions from custom model folder
+            let st_fun = require(`@/assets/js/models/custom/${this.modelType}/${all_setups[i]}.js`);
+            this.setupFunctions[all_setups[i]]=st_fun.default;
+          }catch (ex) {
+            //load setup functions from models folder
+            let st_fun = require(`@/assets/js/models/${all_setups[i]}.js`);
+            this.setupFunctions[all_setups[i]]=st_fun.default;
+          }
+        }
+
         //Import only the current need model file
         let modelToImport = require('@/assets/js/models/custom/'+this.modelType+'.js');
         this.currentModel = modelToImport.default;
