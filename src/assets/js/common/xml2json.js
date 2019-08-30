@@ -6,16 +6,16 @@
 	Web:     http://goessner.net/ 
 */
 function xml2json(xml, tab) {
-   var X = {
+   let X = {
       toObj: function(xml) {
-         var o = {};
+         let o = {};
          if (xml.nodeType==1) {   // element node ..
             if (xml.attributes.length)   // element with attributes  ..
-               for (var i=0; i<xml.attributes.length; i++)
+               for (let i=0; i<xml.attributes.length; i++)
                   o["@"+xml.attributes[i].nodeName] = (xml.attributes[i].nodeValue||"").toString();
             if (xml.firstChild) { // element has child nodes ..
-               var textChild=0, cdataChild=0, hasElementChild=false;
-               for (var n=xml.firstChild; n; n=n.nextSibling) {
+               let textChild=0, cdataChild=0, hasElementChild=false;
+               for (let n=xml.firstChild; n; n=n.nextSibling) {
                   if (n.nodeType==1) hasElementChild = true;
                   else if (n.nodeType==3 && n.nodeValue.match(/[^ \f\n\r\t\v]/)) textChild++; // non-whitespace text
                   else if (n.nodeType==4) cdataChild++; // cdata section node
@@ -23,7 +23,7 @@ function xml2json(xml, tab) {
                if (hasElementChild) {
                   if (textChild < 2 && cdataChild < 2) { // structured element with evtl. a single text or/and cdata node ..
                      X.removeWhite(xml);
-                     for (var n=xml.firstChild; n; n=n.nextSibling) {
+                     for (let n=xml.firstChild; n; n=n.nextSibling) {
                         if (n.nodeType == 3)  // text node
                            o["#text"] = X.escape(n.nodeValue);
                         else if (n.nodeType == 4)  // cdata node
@@ -55,7 +55,7 @@ function xml2json(xml, tab) {
                   if (cdataChild > 1)
                      o = X.escape(X.innerXml(xml));
                   else
-                     for (var n=xml.firstChild; n; n=n.nextSibling)
+                     for (let n=xml.firstChild; n; n=n.nextSibling)
                         o["#cdata"] = X.escape(n.nodeValue);
                }
             }
@@ -69,17 +69,17 @@ function xml2json(xml, tab) {
          return o;
       },
       toJson: function(o, name, ind) {
-         var json = name ? ("\""+name+"\"") : "";
+         let json = name ? ("\""+name+"\"") : "";
          if (o instanceof Array) {
-            for (var i=0,n=o.length; i<n; i++)
+            for (let i=0,n=o.length; i<n; i++)
                o[i] = X.toJson(o[i], "", ind+"\t");
             json += (name?":[":"[") + (o.length > 1 ? ("\n"+ind+"\t"+o.join(",\n"+ind+"\t")+"\n"+ind) : o.join("")) + "]";
          }
          else if (o == null)
             json += (name&&":") + "null";
          else if (typeof(o) == "object") {
-            var arr = [];
-            for (var m in o)
+            let arr = [];
+            for (let m in o)
                arr[arr.length] = X.toJson(o[m], m, ind+"\t");
             json += (name?":{":"{") + (arr.length > 1 ? ("\n"+ind+"\t"+arr.join(",\n"+ind+"\t")+"\n"+ind) : arr.join("")) + "}";
          }
@@ -90,19 +90,19 @@ function xml2json(xml, tab) {
          return json;
       },
       innerXml: function(node) {
-         var s = ""
+         let s = ""
          if ("innerHTML" in node)
             s = node.innerHTML;
          else {
-            var asXml = function(n) {
-               var s = "";
+            let asXml = function(n) {
+               let s = "";
                if (n.nodeType == 1) {
                   s += "<" + n.nodeName;
-                  for (var i=0; i<n.attributes.length;i++)
+                  for (let i=0; i<n.attributes.length;i++)
                      s += " " + n.attributes[i].nodeName + "=\"" + (n.attributes[i].nodeValue||"").toString() + "\"";
                   if (n.firstChild) {
                      s += ">";
-                     for (var c=n.firstChild; c; c=c.nextSibling)
+                     for (let c=n.firstChild; c; c=c.nextSibling)
                         s += asXml(c);
                      s += "</"+n.nodeName+">";
                   }
@@ -115,7 +115,7 @@ function xml2json(xml, tab) {
                   s += "<![CDATA[" + n.nodeValue + "]]>";
                return s;
             };
-            for (var c=node.firstChild; c; c=c.nextSibling)
+            for (let c=node.firstChild; c; c=c.nextSibling)
                s += asXml(c);
          }
          return s;
@@ -128,10 +128,10 @@ function xml2json(xml, tab) {
       },
       removeWhite: function(e) {
          e.normalize();
-         for (var n = e.firstChild; n; ) {
+         for (let n = e.firstChild; n; ) {
             if (n.nodeType == 3) {  // text node
                if (!n.nodeValue.match(/[^ \f\n\r\t\v]/)) { // pure whitespace text node
-                  var nxt = n.nextSibling;
+                  let nxt = n.nextSibling;
                   e.removeChild(n);
                   n = nxt;
                }
@@ -150,7 +150,7 @@ function xml2json(xml, tab) {
    };
    if (xml.nodeType == 9) // document node
       xml = xml.documentElement;
-   var json = X.toJson(X.toObj(X.removeWhite(xml)), xml.nodeName, "\t");
+   let json = X.toJson(X.toObj(X.removeWhite(xml)), xml.nodeName, "\t");
    return "{\n" + tab + (tab ? json.replace(/\t/g, tab) : json.replace(/\t|\n/g, "")) + "\n}";
 }
 

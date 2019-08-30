@@ -68,11 +68,6 @@
 </template>
 
 <script>
-import setup_relations from '@/assets/js/models/setup_relations.js'
-import setup_elements from '@/assets/js/models/setup_elements.js'
-import setup_buttons from '@/assets/js/models/setup_buttons.js'
-import setup_keys from '@/assets/js/models/setup_keys.js'
-import setup_properties from '@/assets/js/models/setup_properties.js'
 import main from '@/assets/js/models/model_main.js'
 import model_load from '@/assets/js/models/model_load.js'
 import Bus from '../assets/js/common/bus.js'
@@ -116,13 +111,6 @@ export default{
       this.graph.setEnabled(false);
     });
     this.models = getModelInfo()["gmodels"]; //represent the available models
-    this.setupFunctions = {
-      "setup_relations":setup_relations,
-      "setup_buttons":setup_buttons,
-      "setup_keys":setup_keys,
-      "setup_properties":setup_properties,
-      "setup_elements":setup_elements
-    }
     //preload the saved model if exists
     let temp = this.getmodel_component;
     if (localStorage[temp]) {
@@ -133,8 +121,22 @@ export default{
     this.layers=model_load(this.graph,this.models,this.modelCode);
     this.modelType=this.$route.params.type; //based on URL Route
 
-    //Import only the current need model file
-    var modelToImport = require('@/assets/js/models/custom/'+this.modelType+'.js');
+    //dynamic load of setup functions
+    let all_setups = ["setup_relations","setup_buttons","setup_keys","setup_properties","setup_elements","setup_events"];
+    for(let i=0;i<all_setups.length;i++){
+      try{
+        //try to load setup functions from custom model folder
+        let st_fun = require(`@/assets/js/models/custom/${this.modelType}/${all_setups[i]}.js`);
+        this.setupFunctions[all_setups[i]]=st_fun.default;
+      }catch (ex) {
+        //load setup functions from models folder
+        let st_fun = require(`@/assets/js/models/${all_setups[i]}.js`);
+        this.setupFunctions[all_setups[i]]=st_fun.default;
+      }
+    }
+
+    //Import the current model file
+    let modelToImport = require('@/assets/js/models/custom/'+this.modelType+'.js');
     this.currentModel = modelToImport.default;
     this.toolbar = new mxToolbar(document.getElementById('tbContainer'));
     this.keyHandler = new mxKeyHandler(this.graph);
@@ -154,16 +156,16 @@ export default{
       let temp = this.getmodel_component;
       localStorage[temp] = document.getElementById('model_code').value;
       if(document.getElementById('model_code').value!=""){
-        var c_header = modalH3(this.$t("modal_success"),"success");
-        var c_body = modalSimpleText(this.$t("models_save_model"));
+        let c_header = modalH3(this.$t("modal_success"),"success");
+        let c_body = modalSimpleText(this.$t("models_save_model"));
         setupModal(c_header,c_body);
       }
     },
     initialize_mx(counter){
       //counter equals 1 load the entire mxGraph
-      var graphContainer = document.getElementById('graphContainer');
+      let graphContainer = document.getElementById('graphContainer');
       main(this.graph,this.layers,this.mxModel,this.toolbar,this.keyHandler,graphContainer,this.modelType,this.currentModel,counter,this.setupFunctions,this.undoManager, this.$route.params, this.$store);
-      var outline = new mxOutline(this.graph, document.getElementById('navigator'));
+      let outline = new mxOutline(this.graph, document.getElementById('navigator'));
 		  outline.refresh();
     }
   },
@@ -196,7 +198,7 @@ export default{
         this.modelType=this.$route.params.type;
 
         //Import only the current need model file
-        var modelToImport = require('@/assets/js/models/custom/'+this.modelType+'.js');
+        let modelToImport = require('@/assets/js/models/custom/'+this.modelType+'.js');
         this.currentModel = modelToImport.default;
         this.undoManager = new mxUndoManager();
         this.initialize_mx(2);
@@ -210,9 +212,9 @@ export default{
      */ 
     mxModel:{
       handler(val) {
-        var encoder = new mxCodec();
-        var result = encoder.encode(this.graph.getModel());
-        var xml = mxUtils.getPrettyXml(result);
+        let encoder = new mxCodec();
+        let result = encoder.encode(this.graph.getModel());
+        let xml = mxUtils.getPrettyXml(result);
         this.$store.dispatch('updatexml', xml);
       },
       deep:true
@@ -331,5 +333,23 @@ table{
 
 .properties-table td{
 	padding: 5px;
+}
+</style>
+
+<style>
+#tbContainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.pallete-div {
+  display: block;
+  max-width: 70px;
+  margin: 3px;
+}
+
+.pallete-div span{
+  font-size: 12px;
 }
 </style>

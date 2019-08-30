@@ -3,7 +3,7 @@
  * @property    {array} projFolders             - each folder should have how many models when the folder or project is generated
  */
 export function getModelInfo(){
-    var info =[];
+    let info =[];
     //list of graphical models
     
     info["gmodels"]=["feature","component","binding_feature_component","control"];
@@ -52,7 +52,7 @@ export function insertmodel(data, index, temp) {
 
 // define the list of right click functions, icons and names
 export function getcontextmenulist(){
-    var info =[];
+    let info =[];
     info['delete_project'] = {
         fnHandler: 'deleteproject',
         icoName: 'fa fa-times',

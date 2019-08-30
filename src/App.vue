@@ -1,7 +1,10 @@
 <template>
   <div id="app">
     <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
-          <router-link  to="/" class="navbar-brand col-sm-4 col-md-2 mr-0">{{ $t("app_variamos") }}</router-link>
+          <div id="top-menu" class="navbar-brand col-sm-4 col-md-2 mr-0"><div class="main-text collapseMulti collapse show"><router-link class="link-white" to="/">{{ $t("app_variamos") }}</router-link></div>
+          <div id="main-button-col" class="main-button"> <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".collapseMulti" aria-controls="collapseMulti" aria-expanded="true" aria-label="Toggle navigation">
+            <span @click="custom_collapse()" class="navbar-toggler-icon"></span>
+          </button></div></div>
           <input class="form-control form-control-dark w-100 height-100" name="keyword" type="text" v-bind:placeholder="$t('app_search')" v-bind:aria-label="$t('app_search')">
           <ul class="navbar-nav px-3">
             <li class="nav-item text-nowrap">
@@ -11,7 +14,7 @@
         </nav>
         <div class="container-fluid">
             <div class="row">
-              <Menu class="col-md-2 d-none d-md-block bg-light sidebar">
+              <Menu class="col-md-2 bg-light sidebar collapseMulti collapse show">
                 <div class="sidebar-sticky">
                       <Filetree></Filetree>
                       <Divider />
@@ -65,9 +68,9 @@
                 </div>
               </Menu>
 
-              <main role="main" class="top-main col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+              <main role="main" id="main-sketch" class="top-main col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
 
-                <div class="container">
+                <div>
                   <div id="mainview">
                     <keep-alive>
                       <router-view></router-view>
@@ -122,6 +125,24 @@ export default {
   methods: {
     hide_modal(){
       document.getElementById('main_modal').style.display="none";
+    },
+    custom_collapse(){
+      let element = document.getElementById("top-menu");
+      let elementb = document.getElementById("main-button-col");
+      let elementc = document.getElementById("main-sketch");
+      if(element.classList.contains("col-sm-1")){
+        element.classList.remove("col-sm-1"); element.classList.remove("col-md-1");
+        element.classList.add("col-sm-4"); element.classList.add("col-md-2");
+        elementb.classList.remove("center-button");
+        elementc.classList.remove("col-md-12"); elementc.classList.remove("col-lg-12");
+        elementc.classList.add("col-md-9"); elementc.classList.add("col-lg-10");
+      }else{
+        element.classList.remove("col-sm-4"); element.classList.remove("col-md-2");
+        element.classList.add("col-sm-1"); element.classList.add("col-md-1");
+        elementb.classList.add("center-button");
+        elementc.classList.remove("col-md-9"); elementc.classList.remove("col-lg-9");
+        elementc.classList.add("col-md-12"); elementc.classList.add("col-lg-12");
+      }
     }
   }
 }
@@ -134,6 +155,35 @@ export default {
       flex: 0 0 83%;
       max-width: 83%;
   }
+}
+
+.link-white, .link-white:hover{
+    color: #fff;
+}
+
+.navbar-toggler {
+    padding: 0px !important;
+    font-size: 1 !important;
+}
+
+.center-button{
+  text-align: center;
+  float: none !important;
+}
+
+.main-text{
+  display: inline;
+  line-height: 32px;
+}
+
+.main-button{
+  line-height: 32px;
+  float: right;
+}
+
+.navbar-brand {
+    padding-top: .5rem !important;
+    padding-bottom: .5rem !important;
 }
 
 .height-100 {
