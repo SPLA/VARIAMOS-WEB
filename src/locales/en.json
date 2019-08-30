@@ -126,5 +126,7 @@
   "filemanagement_newadaptation_title": "New adaptation",
   "filemanagement_newadaptation_father": "Father:",
   "filemanagement_newadaptation_label": "Adaptation name:",
-  "filemanagement_newadaptation_context": "Please enter a new adaptation name"
+  "filemanagement_newadaptation_context": "Please enter a new adaptation name",
+  
+  "adaptation_state_source_code_generation":"Source code generation"
 }
