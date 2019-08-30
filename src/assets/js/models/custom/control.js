@@ -1,44 +1,34 @@
-var feedback_main = function feedback_main(graph)
+let  feedback_main = function feedback_main(graph)
 {
     feedback_constraints(graph);
-    var data=[];
+    let  data=[];
     data["m_type"]="normal"; //custom type
 	data["m_elements"]=feedback_elements(); //custom elements
 	data["m_attributes"]=feedback_attributes(); //custom attributes
 	data["m_relations"]=feedback_relations(); //custom relations
     data["m_properties_styles"]=feedback_properties_styles(); //custom properties styles
-    data["m_overlay"]=feature_overlay(); //custom overlay
   
 	return data;
     
     function feedback_constraints(graph){
         graph.multiplicities=[]; //reset multiplicities
         graph.multiplicities.push(new mxMultiplicity(
-            true, "set_point", null, null, 0, 0, ["measured_output"],
-            "Invalid connection"));
-        graph.multiplicities.push(new mxMultiplicity(
-            true, ["summing_point","controller","set_point","filter","target_system","transducer", "branchpoint"], null, null, 0, 1, ["control"],
-            "Only 1 target allowed",
-            "Only shape targets allowed"));
-            graph.multiplicities.push(new mxMultiplicity(
-                true, "measured_output", null, null, 0, 0, ["control"],
-                "Invalid connection"));
-           
-            
+            false, 'set_point', null, null, 0, 0, null,
+				   'set_point must have no incoming edge',
+				   null));            
     }
 
     function feedback_elements(){
-        var controller = {src:projectPath+"images/models/feedback/controller.png", wd:100, hg:40, style:"shape=rectangle", type:"controller", pname:"Controller"};
-
-        var target_system = {src:projectPath+"images/models/feedback/target_system.png", wd:100, hg:40, style:"shape=rectangle", type:"target_system", pname:"Target system"};
-        var transducer = {src:projectPath+"images/models/feedback/transducer.png", wd:100, hg:40, style:"shape=rectangle", type:"sensor", pname:"Transducer"};
-        var summing_point   = {src:projectPath+"images/models/feedback/summing_point.PNG", wd:100, hg:40, style:"shape=ellipse", type:"summing_point", pname:"Summing point"};
-        var reference_input   = {src:projectPath+"images/models/feedback/reference_input.png", wd:100, hg:40, style:"shape=reference_input", type:"set_point", pname:"Set point "};
-        var measured_output   = {src:projectPath+"images/models/feedback/measured-output.png", wd:100, hg:40, style:"shape=measured_ouput", type:"measured_output", pname:"Measured output "};
-        var branchpoint   = {src:projectPath+"images/models/feedback/bifurcation.png", wd:100, hg:40, style:"shape=rhombus", type:"branchpoint", pname:"Branchpoint"};
-        var filter = {src:projectPath+"images/models/feedback/controller.png", wd:100, hg:40, style:"shape=rectangle", type:"filter", pname:"filter"};
+        let  controller = {src:projectPath+"images/models/feedback/controller.png", wd:100, hg:40, style:"shape=rectangle", type:"controller", pname:"Controller"};
+        let  target_system = {src:projectPath+"images/models/feedback/target_system.png", wd:100, hg:40, style:"shape=rectangle", type:"target_system", pname:"Target system"};
+        let  transducer = {src:projectPath+"images/models/feedback/transducer.png", wd:100, hg:40, style:"shape=rectangle", type:"transducer", pname:"Transducer"};
+        let  summing_point   = {src:projectPath+"images/models/feedback/summing_point.PNG", wd:100, hg:40, style:"shape=ellipse", type:"summing_point", pname:"Summing point"};
+        let  reference_input   = {src:projectPath+"images/models/feedback/reference_input.png", wd:100, hg:40, style:"shape=reference_input", type:"set_point", pname:"Set point "};
+        let  measured_output   = {src:projectPath+"images/models/feedback/measured-output.png", wd:100, hg:40, style:"shape=measured_ouput", type:"measured_output", pname:"Measured output "};
+        let  branchpoint   = {src:projectPath+"images/models/feedback/bifurcation.png", wd:100, hg:40, style:"shape=rhombus", type:"branchpoint", pname:"Branchpoint"};
+        let  filter = {src:projectPath+"images/models/feedback/controller.png", wd:100, hg:40, style:"shape=rectangle", type:"filter", pname:"filter"};
         
-        var elements=[];
+        let  elements=[];
         elements[0]=controller;
         elements[1]=summing_point;
         elements[2]=target_system;
@@ -54,7 +44,7 @@ var feedback_main = function feedback_main(graph)
     }
 
     function feedback_attributes(){
-        var attributes=[];
+        let  attributes=[];
         attributes[0]={
             "types":["controller"],
             "custom_attributes":[{
@@ -70,6 +60,7 @@ var feedback_main = function feedback_main(graph)
                 "name":"Derivate",
                 "def_value":"0.4"
             }]
+
         };
         attributes[1]={
             "types":["set_point"],
@@ -83,7 +74,7 @@ var feedback_main = function feedback_main(graph)
             }]
         };
         attributes[2]={
-            "types":["sensor"],
+            "types":["transducer"],
             "custom_attributes":[{
                 "name":"InitialPosition",
                 "def_value":"0"
@@ -99,8 +90,6 @@ var feedback_main = function feedback_main(graph)
             "custom_attributes":[{
                 "name":"Direction",
                 "def_value":"++",
-                "name":"selected",
-				"def_value":"false"
             }]
         };
 
@@ -115,7 +104,7 @@ var feedback_main = function feedback_main(graph)
     }
 
     function feedback_relations(){
-		var relations=[];
+		let  relations=[];
 		relations[0]={
 			"source":["controller","transducer","target-system","summing_point","reference_input","branchpoint"],
 			"rel_source_target":"and",
@@ -123,9 +112,6 @@ var feedback_main = function feedback_main(graph)
 			"attributes":[{
 				"name":"relType",
                 "def_value":"",
-                
-                
-
                 
 			}]
 		}
@@ -137,7 +123,7 @@ var feedback_main = function feedback_main(graph)
 
        
 
-		var styles={};
+		let  styles={};
 		styles={
 			
 			"Signal":[{
@@ -148,11 +134,7 @@ var feedback_main = function feedback_main(graph)
 				}
             ],
             
-            "summing_point":[
-				{
-					"attribute":"selected",
-					"input_type":"checkbox",
-				}],
+            
 			
         }
         
@@ -160,25 +142,6 @@ var feedback_main = function feedback_main(graph)
 		return styles;
     }
 
-    function feature_overlay(){
-		var func1=function(){
-			var feature_root = graph.getModel().getCell("control");
-			var feature_elements = graph.getModel().getChildEdges(feature_root);
-			for (var i = 0; i < feature_elements.length; i++) {
-				var source = feature_elements[i].source;
-				var type = source.getAttribute("type");
-				if(type=="summing_point"){
-					var sel = source.getAttribute("selected");
-					if(sel=="true"){
-						var overlay = new mxCellOverlay(new mxImage('images/MX/check.png', 16, 16), 'Overlay tooltip');
-						graph.addCellOverlay(source,overlay);
-					}
-				}
-			}
-		};
-
-		return func1;
-	}
 
 }
 

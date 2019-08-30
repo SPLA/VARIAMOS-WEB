@@ -1,3 +1,4 @@
+
 <template>
   <li class="nav-item dropdown">
     <a
@@ -19,7 +20,13 @@
         class="dropdown-item"
       >{{ $t("domain_implementation_customize") }}</a>
       <a @click="verify_derivation()" class="dropdown-item">{{ $t("domain_implementation_verify") }}</a>
-      <a @click="generate_graph()" class="dropdown-item">{{ $t("generate_graph") }}</a>
+
+      <a @click="component()" class="dropdown-item">{{ $t("generate_graph") }}</a>
+
+      <a
+        @click="adaptation_state_source_code_generation()"
+        class="dropdown-item"
+      >Source code generation</a>
     </div>
   </li>
 </template>
@@ -36,7 +43,8 @@ import {
   modalCustomization,
   modalButton
 } from "../../assets/js/common/util";
-import { uptime } from 'os';
+import { uptime } from "os";
+import { deepStrictEqual } from 'assert';
 
 export default {
   data: function() {
@@ -65,17 +73,17 @@ export default {
   methods: {
     //Start set parameters
     set_parameters() {
-      var c_header = modalH3(this.$t("application_menu_set_app"));
-      var default_vals = "";
-      var texts = [this.$t("domain_implementation_derived_path")];
-      var inputs = ["server_derived_path"];
+      let c_header = modalH3(this.$t("application_menu_set_app"));
+      let default_vals = "";
+      let texts = [this.$t("domain_implementation_derived_path")];
+      let inputs = ["server_derived_path"];
       if (localStorage["domain_implementation_pool_path"]) {
         default_vals = [localStorage["domain_implementation_derived_path"]];
       } else {
         default_vals = ["uploads/component_derived/"];
       }
-      var c_body = modalInputTexts(texts, inputs, default_vals);
-      var c_footer = modalButton(this.$t("modal_save"), this.save_parameters);
+      let c_body = modalInputTexts(texts, inputs, default_vals);
+      let c_footer = modalButton(this.$t("modal_save"), this.save_parameters);
       setupModal(c_header, c_body, c_footer);
     },
     //Start execute derivation
@@ -100,24 +108,24 @@ export default {
             }
           )
           .then(response => {
-            var c_header = modalH3(
+            let c_header = modalH3(
               this.$t("models_actions_derivation_response")
             );
-            var c_body = modalSimpleText(response.data);
+            let c_body = modalSimpleText(response.data);
             setupModal(c_header, c_body);
           })
           .catch(e => {
             this.errors.push(e);
-            var c_header = modalH3(this.$t("modal_error"), "error");
+            let c_header = modalH3(this.$t("modal_error"), "error");
             console.log(this.$t("model_actions_backend_problem"));
-            var c_body = modalSimpleText(
+            let c_body = modalSimpleText(
               e + this.$t("model_actions_backend_problem")
             );
             setupModal(c_header, c_body);
           });
       } else {
-        var c_header = modalH3(this.$t("modal_error"), "error");
-        var c_body = modalSimpleText(
+        let c_header = modalH3(this.$t("modal_error"), "error");
+        let c_body = modalSimpleText(
           this.$t("domain_implementation_path_problem")
         );
         setupModal(c_header, c_body);
@@ -143,24 +151,24 @@ export default {
             }
           )
           .then(response => {
-            var c_header = modalH3(
+            let c_header = modalH3(
               this.$t("models_actions_derivation_response")
             );
-            var c_body = modalSimpleText(response.data);
+            let c_body = modalSimpleText(response.data);
             setupModal(c_header, c_body);
           })
           .catch(e => {
             this.errors.push(e);
-            var c_header = modalH3(this.$t("modal_error"), "error");
+            let c_header = modalH3(this.$t("modal_error"), "error");
             console.log(this.$t("model_actions_backend_problem"));
-            var c_body = modalSimpleText(
+            let c_body = modalSimpleText(
               e + this.$t("model_actions_backend_problem")
             );
             setupModal(c_header, c_body);
           });
       } else {
-        var c_header = modalH3(this.$t("modal_error"), "error");
-        var c_body = modalSimpleText(
+        let c_header = modalH3(this.$t("modal_error"), "error");
+        let c_body = modalSimpleText(
           this.$t("domain_implementation_path_problem")
         );
         setupModal(c_header, c_body);
@@ -178,8 +186,8 @@ export default {
         this.customization_data = di_actions(this.current_graph, "customize");
 
         if (this.customization_data.length == 0) {
-          var c_header = modalH3(this.$t("modal_error"), "error");
-          var c_body = modalSimpleText("No components to customize");
+          let c_header = modalH3(this.$t("modal_error"), "error");
+          let c_body = modalSimpleText("No components to customize");
           setupModal(c_header, c_body);
         } else {
           if (this.customization_data[0]) {
@@ -200,24 +208,24 @@ export default {
                 this.customization_cus_pos = 0;
                 this.customization_cus_max_pos = 0;
                 this.customization_comp_max_pos = this.customization_response.length;
-                var default_vals = ["", "", "", "", ""];
-                var c_header = modalH3("Start Customization Process");
-                var texts = [
+                let default_vals = ["", "", "", "", ""];
+                let c_header = modalH3("Start Customization Process");
+                let texts = [
                   "Current file",
                   "Default content",
                   "New customized content",
                   "File to upload",
                   "Notification"
                 ];
-                var inputs = [
+                let inputs = [
                   "current",
                   "default",
                   "customized",
                   "filetoupload",
                   "notification"
                 ];
-                var c_body = modalCustomization(texts, inputs, default_vals);
-                var c_footer = modalButton(
+                let c_body = modalCustomization(texts, inputs, default_vals);
+                let c_footer = modalButton(
                   "Start/Next",
                   this.run_customization
                 );
@@ -228,22 +236,22 @@ export default {
               })
               .catch(e => {
                 this.errors.push(e);
-                var c_header = modalH3(this.$t("modal_error"), "error");
+                let c_header = modalH3(this.$t("modal_error"), "error");
                 console.log(this.$t("model_actions_backend_problem"));
-                var c_body = modalSimpleText(
+                let c_body = modalSimpleText(
                   e + this.$t("model_actions_backend_problem")
                 );
                 setupModal(c_header, c_body);
               });
           } else {
-            var c_header = modalH3("Customization response");
-            var c_body = modalSimpleText("customization completed");
+            let c_header = modalH3("Customization response");
+            let c_body = modalSimpleText("customization completed");
             setupModal(c_header, c_body);
           }
         }
       } else {
-        var c_header = modalH3(this.$t("modal_error"), "error");
-        var c_body = modalSimpleText(
+        let c_header = modalH3(this.$t("modal_error"), "error");
+        let c_body = modalSimpleText(
           this.$t("domain_implementation_path_problem")
         );
         setupModal(c_header, c_body);
@@ -265,10 +273,10 @@ export default {
           this.customization_comp_pos
         ][1];
         if (this.customization_cus_pos < this.customization_cus_max_pos) {
-          var current_pos = 2 + this.customization_cus_pos * 3;
+          let current_pos = 2 + this.customization_cus_pos * 3;
           document.getElementById("notification").value = "";
           document.getElementById("default").value = "";
-          var customized_content = "";
+          let customized_content = "";
           if (this.previous_dest != "") {
             customized_content = document.getElementById("customized").value;
           }
@@ -278,7 +286,7 @@ export default {
           ).value = this.customization_response[this.customization_comp_pos][
             current_pos
           ];
-          var destination = this.find_destination_file(
+          let destination = this.find_destination_file(
             this.customization_response[this.customization_comp_pos][
               current_pos
             ]
@@ -295,7 +303,7 @@ export default {
               ] +
               " - DEST: " +
               destination;
-            var model_datax = [];
+            let model_datax = [];
             model_datax[0] = destination;
             model_datax[1] = this.customization_response[
               this.customization_comp_pos
@@ -348,9 +356,9 @@ export default {
           }
           this.customization_cus_pos++;
         } else {
-          var customized_content = document.getElementById("customized").value;
+          let customized_content = document.getElementById("customized").value;
           if (this.previous_dest != "" && customized_content != "") {
-            var model_datax = [];
+            let model_datax = [];
             model_datax[0] = this.previous_dest;
             model_datax[1] = this.previous_cpoint;
             model_datax[2] = this.previous_plan;
@@ -383,8 +391,8 @@ export default {
           this.customization_comp_pos++;
         }
       } else {
-        var c_header = modalH3("Customization response");
-        var c_body = modalSimpleText("Customization completed");
+        let c_header = modalH3("Customization response");
+        let c_body = modalSimpleText("Customization completed");
         setupModal(c_header, c_body);
       }
     },
@@ -421,15 +429,15 @@ export default {
     },
     find_destination_file(id) {
       //collect the information of the components and files to be customized
-      var component_root = this.current_graph.getModel().getCell("component");
-      var component_relations = this.current_graph
+      let component_root = this.current_graph.getModel().getCell("component");
+      let component_relations = this.current_graph
         .getModel()
         .getChildEdges(component_root);
 
-      var destination = "";
+      let destination = "";
 
-      for (var i = 0; i < component_relations.length; i++) {
-        var source = component_relations[i].source.getAttribute("label");
+      for (let i = 0; i < component_relations.length; i++) {
+        let source = component_relations[i].source.getAttribute("label");
         if (source == id) {
           return component_relations[i].source.getAttribute("destination");
           break;
@@ -438,158 +446,215 @@ export default {
 
       return "";
     },
+    component()
+    {
+      let c_header = modalH3("Monitoring");
+      let default_vals=["target_system"]
+      let texts = ["Target system to be controlled: "];
+      let inputs = ["target_system"];
+      
+      let c_body = modalInputTexts(texts, inputs, default_vals);
+      let c_footer = modalButton(this.$t("modal_save"), this.generate_graph, this.pid);
+     
+     
+      setupModal(c_header, c_body, c_footer);
 
+      
+
+    },
     generate_graph() {
-      var c_header = modalH3(this.$t("generate_graph_title"));
-      /*var c_body = modalSimpleText("");*/
-      setupModal(c_header);
-      var main_modal = document.getElementById("main_modal_body");
-      var canvas = document.createElement("canvas");
-    
-
-      canvas.id = "myChart";
-      canvas.width = 800;
-      canvas.height = 300;
-      canvas.className = "my-4 chartjs-render-monitor";
-      main_modal.appendChild(canvas);
-      var ctx = document.getElementById("myChart");
-      var myChart = new Chart(ctx, {
-        type: "line",
-         data: {
-          labels: this.time(),
-          datasets: [
-            {
-              data: this.pid(),
-              label: "PV",
-              lineTension: 0,
-              backgroundColor: "transparent",
-              borderColor: "#D83A18",
-              borderWidth: 2,
-              pointBackgroundColor: "#D83A18",
-              pointBorderColor: "transparent",
-              pointBackgroundColor:"transparent",
-              pointBorderWidth:0
-              
-            
-               
-            },
-             {
-              data: this.setpoint(),
-              label: "Set Point",
-              lineTension: 0,
-              backgroundColor: "transparent",
-              borderColor: "#007bff",
-              borderWidth: 2,
-              pointBackgroundColor: "#007bff",
-              pointBorderColor: "transparent",
-              pointBackgroundColor:"transparent",
-              pointBorderWidth:0
-              
-            },
-
-          ]
-        },
-        options: { 
-          scales: {
-            yAxes: [
-              {
-                ticks: {
-                  beginAtZero: false
-                }
-              }
-            ]
-          },
-          legend: {
-            display: true,
-          }
-        }
-      });
-    },
-   
-     setpoint()
-    {
-      var setpoint=[]
-      var feedback_root = this.current_graph.getModel().getCell("control");
-      var childs = this.current_graph.getModel().getChildVertices(feedback_root);
-       for (var i = 0; i < childs.length; i++)
-        {
-          if (childs[i].getAttribute("type") == "set_point")
-          {
-          var set = childs[i].getAttribute("SetPoint");
-          }
-        }
-            for (var i = 0; i < 150; i++)
-             {
-             
-           
-            setpoint.push(set);
-            }
-          return setpoint
-
-
-
-    },
-
-    time()
-    {
-      var timef = [];
-      var timeto = 0;
-      var tiempoDecimal =0
-      var feedback_root = this.current_graph.getModel().getCell("control");
-      var childs = this.current_graph.getModel().getChildVertices(feedback_root);
-       for (var i = 0; i < childs.length; i++)
-        {
-          if (childs[i].getAttribute("type") == "set_point")
-          {
-          var set = childs[i].getAttribute("SetPoint");
-          var ti = childs[i].getAttribute("Time");
-          }
-        }
-            for (var i = 0; i < 40; i++)
-             {
-              if (i > 0) 
-              {
-                timeto = i * ti;
-              }
-            tiempoDecimal = timeto.toFixed(2);
-            timef.push(tiempoDecimal);
-            }
-          return timef
-    },
-    pid() {
-      var prueb2 = [];
-      var timef = [];
-      var feedback_root = this.current_graph.getModel().getCell("control");
-      var childs = this.current_graph.getModel().getChildVertices(feedback_root);
-      var names = [];
-      var nuevoSensor = 0;
-
+      let c_header = modalH3(this.$t("generate_graph_title"));
+      let value_label=document.getElementById('target_system').value;
+      let blank=""
+      let c_footer = modalButton("Return", this.component);
+      let lista = [];
+  
+      setupModal(c_header,blank,c_footer);
+      let main_modal = document.getElementById("main_modal_body");
+      let canvas = document.createElement("canvas");
+      
+      let prueb2 = [];
+      let timef = [];
+      let names = [];
+      let feedback_control = this.current_graph.getModel().getCell("control");
+      let target_system_vertices = this.current_graph.getModel().getChildVertices(feedback_control);
       //navigates through the feature model childs
-      for (var i = 0; i < childs.length; i++) {
-        if (childs[i].getAttribute("type") == "controller") {
-          var proportional = childs[i].getAttribute("Proportional");
-          var derivate = childs[i].getAttribute("Derivate");
-          var integral = childs[i].getAttribute("Integral");
-        }
-        if (childs[i].getAttribute("type") == "set_point") {
-          var set = childs[i].getAttribute("SetPoint");
-          var ti = childs[i].getAttribute("Time");
-        }
-        if (childs[i].getAttribute("type") == "sensor") {
-          var sensor = childs[i].getAttribute("InitialPosition");
-          nuevoSensor = sensor;
-        }
-        else{
-          nuevoSensor=0;
+      for (let i = 0; i < target_system_vertices.length; i++)
+       {
+        if(target_system_vertices[i].getAttribute("type")=="target_system")
+        {
+          let target_sys = target_system_vertices[i].getAttribute("label");
+          names.push(target_sys)
         }
       }
-      var MiniPID = (function() {
+
+  
+
+      //  target system variables
+      let target;// 
+      let target_system_id; // target system id
+      let proportional;// proportional value of the target system element
+      let derivate;// derivate value of the target system element
+      let integral;// integral value of the target system element
+      let target_system_relations; // relations target system
+
+      // controller variables
+      let id_controller;// controller id
+      let controller_relations; // controller relations
+
+      // summing point variables
+      let id_summing; // summing point id
+      let summing_relations; // summing relations
+
+      // filter variables
+      let id_filter; // filter relations
+      let filter_relations;
+
+      // set point variables
+      let setpoint_value; // value setpoint
+      let setpoint_time; // time setpoint
+      let setpoints=[]; // array
+      let id_set;// id setpoint
+      let times=[];
+
+      // branch variables
+      let id_branch// id branchpoint
+      let branch_relations_targets// target relations branchpoint
+      let branch_relations// source relations branchpoint
+
+      // output variables
+      let id_output// id output
+
+      // transducer variables
+      let value_transducer// value transducer
+
+      let feedback_root = this.current_graph.getModel().getCell("control");
+      let childs = this.current_graph.getModel().getChildEdges(feedback_root);
+      
+
+      for (let i = 0; i < names.length; i++) 
+      {    
+        if ( value_label== names[i]  )
+        {
+
+          
+
+           for (let i = 0; i < childs.length; i++)
+            {
+              let source = childs[i].source;
+              if(source.getAttribute("type")=="target_system" )
+                { //only selected concrete features are analyzed
+                   target_system_id = source.getId();
+                   proportional = source.getAttribute("Proportional");
+                   derivate = source.getAttribute("Derivate");
+                   integral = source.getAttribute("Integral"); 
+                   
+                      
+                }
+
+           
+            }
+
+            
+
+            target_system_relations = this.current_graph.getModel().getIncomingEdges
+            (this.current_graph.getModel().getCell(target_system_id));
+            for (let i = 0; i < target_system_relations.length; i++)
+            {
+            let source = target_system_relations[i].source;    
+            if(source.getAttribute("type")=="controller")
+              { 
+                id_controller = source.getId();
+                proportional = source.getAttribute("Proportional");
+                derivate = source.getAttribute("Derivate");
+                integral = source.getAttribute("Integral"); 
+              }
+         
+            }
+
+            controller_relations = this.current_graph.getModel().getIncomingEdges
+            (this.current_graph.getModel().getCell(id_controller));
+      
+            for (let i = 0; i < controller_relations.length; i++)
+            {
+              let source = controller_relations[i].source;
+              if(source.getAttribute("type")=="summing_point"  )
+              {
+                id_summing = source.getId();      
+              } 
+            }
+
+            summing_relations = this.current_graph.getModel().getIncomingEdges
+            (this.current_graph.getModel().getCell(id_summing));
+            for (let i = 0; i < summing_relations.length; i++)
+            {
+              let source = summing_relations[i].source;
+
+              if(source.getAttribute("type")=="filter")
+              {
+                id_filter = source.getId(); 
+              }
+              else if(source.getAttribute("type")=="set_point"  )
+              { 
+                id_set = source.getId(); 
+                setpoint_value = source.getAttribute("SetPoint"); 
+                setpoints.push(setpoint_value);
+                setpoint_time = source.getAttribute("Time");
+                times.push(setpoint_time);
+              }    
+            }
+               filter_relations =  this.current_graph.getModel().getIncomingEdges
+              ( this.current_graph.getModel().getCell(id_filter));
+            for (let i = 0; i < filter_relations.length; i++)
+            {
+               let source = filter_relations[i].source;
+              if(source.getAttribute("type")=="branchpoint")
+              {
+                id_branch = source.getId(); 
+              }
+              else if(source.getAttribute("type")=="transducer")
+              {
+                id_branch = source.getId();
+                value_transducer=source.getAttribute("InitialPosition");
+              }   
+            }
+
+            branch_relations_targets =this.current_graph.getModel().getOutgoingEdges
+            (this.current_graph.getModel().getCell(id_branch));
+            for (let i = 0; i < branch_relations_targets.length; i++)
+            {
+                let target = branch_relations_targets[i].target;
+              if(target.getAttribute("type")=="measured_output")
+              {
+                id_output= target.getId()
+              }
+            }
+
+           branch_relations = this.current_graph.getModel().getIncomingEdges
+           (this.current_graph.getModel().getCell(id_branch));
+          for(let i = 0; i < branch_relations.length; i++)
+          {
+            let source = branch_relations[i].source;
+            if(source.getId() == target_system_id)
+            {
+            alert("termino");
+            }
+          }
+
+        }
+
+      }
+
+    
+
+    
+      let MiniPID = (function() {
         function MiniPID(kp, ki, kd, dt) {
           this.P = 0;
           this.I = 0;
           this.D = 0;
           this.F = 0;
-          this.DT=0;
+          this.DT = 0;
           this.maxIOutput = 0;
           this.maxError = 0;
           this.errorSum = 0;
@@ -597,163 +662,73 @@ export default {
           this.minOutput = 0;
           this.setpoint = 0;
           this.lastActual = 0;
-          this.lastError=0;
+          this.lastError = 0;
           this.firstRun = true;
           this.reversed = false;
           this.outputRampRate = 0;
           this.lastOutput = 0;
-          this.dt=0;
+          this.dt;
           this.outputFilter = 0;
           this.setpointRange = 0;
           this.P = kp;
           this.I = ki;
           this.D = kd;
-          this.DT=dt;
+          this.DT = dt;
           this.checkSigns();
         }
         MiniPID.prototype.getOutput = function(actual, setpoint) {
-          var output;
-          var Poutput;
-          var Ioutput;
-          var Doutput;
-          var Foutput;
-          this.setpoint = setpoint;
-          if (this.setpointRange !== 0) 
-            {
-              setpoint = this.constrain(setpoint,actual - this.setpointRange,actual + this.setpointRange);
-            }
-
-            
-            
-
-          var error = setpoint - actual;// error 
-          Foutput = this.F * setpoint; 
-          Poutput = this.P * error; // Proportional value
-           
-          if (this.firstRun) {
+           var output;
+        var Poutput;
+        var Ioutput;
+        var Doutput;
+        var Foutput;
+        this.setpoint = setpoint;
+        if (this.setpointRange !== 0) {
+            setpoint = this.constrain(setpoint, actual - this.setpointRange, actual + this.setpointRange);
+        }
+        var error = setpoint - actual;
+        Foutput = this.F * setpoint;
+        Poutput = this.P * error;
+        if (this.firstRun) {
             this.lastActual = actual;
-            this.lastError= error;
             this.lastOutput = Poutput + Foutput;
-
-
-
-
-
-
-
-            
             this.firstRun = false;
-          }
+        }
+        Doutput = this.D * ((actual - this.lastActual)/this.DT);
+        this.lastActual = actual;
 
-          var dError = (actual - this.lastActual)/this.DT;  // derivate error
-            this.lastActual = actual;
+        
 
-         
-          Doutput = -this.D * dError;
-                
-                Ioutput = this.I * (this.errorSum*this.DT);
-
-          if (this.maxIOutput !== 0) {
-            Ioutput = this.constrain(
-              Ioutput,
-              -this.maxIOutput,
-              this.maxIOutput
-            );
-          }
-          output = Foutput + Poutput + Ioutput + Doutput; 
-          if (
-            this.minOutput !== this.maxOutput &&
-            !this.bounded(output, this.minOutput, this.maxOutput)
-          ) {
+        Ioutput = this.I * (this.errorSum*this.DT);
+        if (this.maxIOutput !== 0) {
+            Ioutput = this.constrain(Ioutput, -this.maxIOutput, this.maxIOutput);
+        }
+        output = Foutput + Poutput + Ioutput + Doutput;
+        if (this.minOutput !== this.maxOutput && !this.bounded(output, this.minOutput, this.maxOutput)) {
             this.errorSum = error;
-          } else if (
-            this.outputRampRate !== 0 &&
-            !this.bounded(
-              output,
-              this.lastOutput - this.outputRampRate,
-              this.lastOutput + this.outputRampRate
-            )
-          ) {
+        }
+        else if (this.outputRampRate !== 0 && !this.bounded(output, this.lastOutput - this.outputRampRate, this.lastOutput + this.outputRampRate)) {
             this.errorSum = error;
-          } else if (this.maxIOutput !== 0) {
-            this.errorSum = this.constrain(
-              this.errorSum + error,
-              -this.maxError,
-              this.maxError
-            );
-          } else {
+        }
+        else if (this.maxIOutput !== 0) {
+            this.errorSum = this.constrain(this.errorSum + error, -this.maxError, this.maxError);
+        }
+        else {
             this.errorSum += error;
-          }
-          if (this.outputRampRate !== 0) {
-            output = this.constrain(
-              output,
-              this.lastOutput - this.outputRampRate,
-              this.lastOutput + this.outputRampRate
-            );
-          }
-          if (this.minOutput !== this.maxOutput) {
+        }
+        if (this.outputRampRate !== 0) {
+            output = this.constrain(output, this.lastOutput - this.outputRampRate, this.lastOutput + this.outputRampRate);
+        }
+        if (this.minOutput !== this.maxOutput) {
             output = this.constrain(output, this.minOutput, this.maxOutput);
-          }
-          if (this.outputFilter !== 0) {
-            output =
-              this.lastOutput * this.outputFilter +
-              output * (1 - this.outputFilter);
-          }
-          this.lastOutput = output;
-          return output;
-        };
-        MiniPID.prototype.constrain = function(value, min, max) {
-          if (value > max) {
-            return max;
-          }
-          if (value < min) {
-            return min;
-          }
-          return value;
-        };
-        MiniPID.prototype.bounded = function(value, min, max) {
-          return min < value && value < max;
-        };
-        MiniPID.prototype.setSetpointRange = function(range) {
-          this.setpointRange = range;
-        };
-        MiniPID.prototype.setSetpoint = function(setpoint) {
-          this.setpoint = setpoint;
-        };
-        MiniPID.prototype.setOutputLimits$double = function(output) {
-          this.setOutputLimits$double$double(-output, output);
-        };
-        MiniPID.prototype.setMaxIOutput = function(maximum) {
-          this.maxIOutput = maximum;
-          if (this.I !== 0) {
-            this.maxError = this.maxIOutput / this.I;
-          }
-        };
-        MiniPID.prototype.setOutputLimits$double$double = function(
-          minimum,
-          maximum
-        ) {
-          if (maximum < minimum) return;
-          this.maxOutput = maximum;
-          this.minOutput = minimum;
-          if (this.maxIOutput === 0 || this.maxIOutput > maximum - minimum) {
-            this.setMaxIOutput(maximum - minimum);
-          }
-        };
-        MiniPID.prototype.setOutputLimits = function(minimum, maximum) {
-          if (
-            (typeof minimum === "number" || minimum === null) &&
-            (typeof maximum === "number" || maximum === null)
-          ) {
-            return this.setOutputLimits$double$double(minimum, maximum);
-          } else if (
-            (typeof minimum === "number" || minimum === null) &&
-            maximum === undefined
-          ) {
-            return this.setOutputLimits$double(minimum);
-          } else throw new Error("invalid overload");
-        };
-        /*private*/ MiniPID.prototype.checkSigns = function() {
+        }
+        if (this.outputFilter !== 0) {
+            output = this.lastOutput * this.outputFilter + output * (1 - this.outputFilter);
+        }
+        this.lastOutput = output;
+        return output;
+    };
+         MiniPID.prototype.checkSigns = function() {
           if (this.reversed) {
             if (this.P > 0) this.P *= -1;
             if (this.I > 0) this.I *= -1;
@@ -769,45 +744,137 @@ export default {
         };
         return MiniPID;
       })();
-      
-    
-      function main()
-      {
-          var miniPID;
-          miniPID = new MiniPID(proportional, integral, derivate, ti);
-          miniPID.setOutputLimits$double(100);
-          miniPID.setSetpointRange(10);
-          var target = set;
-          var actual = parseInt(sensor);
-          var output = 0;
-          miniPID.setSetpoint(0);
-          miniPID.setSetpoint(target);
-          console.log("Entrada\tPosicion\tSalida\tError\tTiempo\n");
-          for (var i = 0; i < 150; i++) {
-            output = miniPID.getOutput(actual, target);
+      let control_loop = [];
+      let listaset=[];
+      function main() {
+          let miniPID;
+          miniPID = new MiniPID(proportional, integral, derivate, setpoint_time);
+         // let actual = parseInt(sensor);//
+          let actual=0
+          let output = 0;
+          let times_sum=0;
+          alert(setpoint_time)
+          let time_float=parseFloat(setpoint_time)
+          alert(t)
+          for (let i = 0; i < 150; i++) {
+            output = miniPID.getOutput(actual, setpoint_value);
             actual = actual + output;
             prueb2.push(actual);
-            /*var ouputdecimal = output.toFixed(2);
-            var error = (target - actual).toFixed(2);
-            var actualdecimal = actual.toFixed(2);*/
-           /* console.log(target,"    ",actualdecimal," ",ouputdecimal," ",error," ",tiempoDecimal);*/
+            times_sum=i*time_float;
+            times.push(times_sum)
           }
-          return prueb2
+          return prueb2;
+          
+          
+         
         }
-        /*Time control*/
+        control_loop = main();
+
+        console.log(times)
+
+
        
 
-      var d=[];
-      d=main()
       
-       
+      
+     
 
-       return d
+      canvas.id = "myChart";
+      canvas.width = 800;
+      canvas.height = 300;
+      canvas.className = "my-4 chartjs-render-monitor";
+
+      for (let i = 0; i < childs.length; i++) {
+        if (childs[i].getAttribute("type") == "set_point") {
+          let set = childs[i].getAttribute("SetPoint");
+           let plant = childs[i].getAttribute("Plant");
+        }
+      }
+      
+      main_modal.appendChild(canvas);
+       let ctx = document.getElementById("myChart");
+      let myChart = new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: times,
+          datasets: [
+            {
+              data: control_loop,
+              label: "PV",
+              lineTension: 0,
+              backgroundColor: "transparent",
+              borderColor: "#D83A18",
+              borderWidth: 2,
+              pointBackgroundColor: "#D83A18",
+              pointBorderColor: "transparent",
+
+              pointBackgroundColor: "transparent",
+              pointBorderWidth: 0
+            },
+            {
+              data: listaset,
+              label: "Set Point",
+              lineTension: 0,
+              backgroundColor: "transparent",
+              borderColor: "#007bff",
+              borderWidth: 2,
+              pointBackgroundColor: "#007bff",
+              pointBorderColor: "transparent",
+              pointBackgroundColor: "transparent",
+              pointBorderWidth: 0
+            }
+          ]
+        },
+        options: {
+          scales: {
+            yAxes: [
+              {
+                ticks: {
+                  beginAtZero: false
+                }
+              }
+            ]
+          },
+          legend: {
+            display: true
+          }
+        }
+      });
+      
+    },
+    adaptation_state_source_code_generation() {
+      try {
+        let serverUrl =
+          localStorage["domain_implementation_main_path"] +
+          "AdaptationStateImplementation/generateSourceCode";
+        alert(serverUrl);
+        let directory = localStorage["domain_implementation_pool_path"];
+        alert(directory);
+        let modelJson = adaptation_state_actions(
+          this.current_graph,
+          "serializeJson"
+        );
+        alert(modelJson);
+        downloadFile("BindingStateHardwareModel.json", modelJson);
+        axios
+          .post(serverUrl, {
+            data: modelJson,
+            p_pool: directory
+          })
+          .then(response => {
+            downloadFile("Arduino.ino", response.data);
+          })
+          .catch(e => {
+            this.previous_dest = "";
+            document.getElementById("Start/Next").disabled = false;
+          });
+      } catch (ex) {
+        alert(ex);
+      }
+      return "";
     }
   }
 };
 </script>
-
-
 <style scoped>
 </style>
