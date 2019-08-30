@@ -107,6 +107,16 @@ export function modalButton(text,function_to_append){
     button.addEventListener("click", function_to_append, false);
     return button;
 }
+ 
+export function downloadFile(filename, text) {
+    var element = document.createElement('a');
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+    element.setAttribute('download', filename); 
+    element.style.display = 'none';
+    document.body.appendChild(element); 
+    element.click(); 
+    document.body.removeChild(element);
+  }
 
 /* end util */
 

@@ -8,6 +8,7 @@
       <a @click="execute_derivation()" class="dropdown-item">{{ $t("domain_implementation_execute") }}</a>      
       <a @click="customize_derivation()" class="dropdown-item">{{ $t("domain_implementation_customize") }}</a>
       <a @click="verify_derivation()" class="dropdown-item">{{ $t("domain_implementation_verify") }}</a>
+      <a @click="adaptation_state_source_code_generation()" class="dropdown-item">Source code generation</a>
     </div>
 
   </li>
@@ -16,7 +17,8 @@
 <script>
 import axios from "axios";
 import di_actions from '@/assets/js/models/actions/domain_implementation/di_actions.js'
-import { setupModal, modalH3, modalSimpleText, modalInputTexts, modalCustomization, modalButton } from '../../assets/js/common/util'
+import { setupModal, modalH3, modalSimpleText, modalInputTexts, modalCustomization, modalButton, downloadFile } from '../../assets/js/common/util'
+import adaptation_state_actions from '@/assets/js/models/actions/domain_implementation/adaptation_state_actions.js';
 
 export default {
   data: function(){
@@ -307,6 +309,31 @@ export default {
         }
       }
 
+      return "";
+    },
+    adaptation_state_source_code_generation(){
+      try{
+        var serverUrl=localStorage["domain_implementation_main_path"]+'AdaptationStateImplementation/generateSourceCode';
+        // alert(serverUrl);
+        var directory=localStorage["domain_implementation_pool_path"];
+        // alert(directory);
+        var modelJson=adaptation_state_actions(this.current_graph, "serializeJson");  
+        alert(modelJson);  
+        downloadFile("BindingStateHardwareModel.json", modelJson);
+        axios.post(serverUrl, {
+              data: modelJson,
+              p_pool: directory
+            })
+            .then(response => { 
+                downloadFile("Arduino.ino", response.data);
+            })
+            .catch(e => {
+              this.previous_dest="";
+              document.getElementById('Start/Next').disabled = false;
+            }); 
+      }catch(ex){
+        alert(ex);
+      }
       return "";
     }
   }
