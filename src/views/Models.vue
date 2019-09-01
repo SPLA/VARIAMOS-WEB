@@ -74,9 +74,6 @@ import Bus from '../assets/js/common/bus.js'
 import { getModelInfo } from '../assets/js/common/global_info'
 import { setupModal, modalH3, modalSimpleText } from '../assets/js/common/util'
 
-import setup_istar_relations from '../assets/js/models/istar/setup_istar_relations'
-import setup_istar_elements from '../assets/js/models/istar/setup_istar_elements'
-
 /* import actions */
 import DomainMenu from '../components/model_actions/DomainMenu'
 import ApplicationMenu from '../components/model_actions/ApplicationMenu'

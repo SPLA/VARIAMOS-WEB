@@ -130,6 +130,7 @@ var istar_main = function istar_main(graph)
     })
   };
 
+  //Temporary Workaround to the setup Events change...
   function istar_custom_events(){
     //This function fires when a cell is moved and makes sure that the dependum custom icon is correctly oriented.
     graph.addListener(mxEvent.MOVE_CELLS, reorientElement);
@@ -139,17 +140,19 @@ var istar_main = function istar_main(graph)
     var actor = {src:projectPath+"images/models/istar/Actor.png", wd:100, hg:100, style:"shape=actor;perimeter=ellipsePerimeter;html=1;whiteSpace=wrap;overflow=visible;fontColor=black;", type:"actor", pname:"Actor"};
     var agent = {src:projectPath+"images/models/istar/Agent.png", wd:100, hg:100, style:"shape=agent;perimeter=ellipsePerimeter;html=1;whiteSpace=wrap;overflow=visible;fontColor=black;", type:"agent", pname:"Agent"};
     var role = {src:projectPath+"images/models/istar/Role.png", wd:100, hg:100, style:"shape=role;perimeter=ellipsePerimeter;html=1;whiteSpace=wrap;overflow=visible;fontColor=black;", type:"role", pname:"Role"};
-    var goal = {src:projectPath+"images/models/istar/Goal.png", wd:125, hg:50, style:"shape=goal;perimeter=ellipsePerimeter;html=1;whiteSpace=wrap;overflow=visible;fontColor=black;", type:"goal", pname:"Goal"};
+    var goal = {src:projectPath+"images/models/istar/Goal.png", wd:125, hg:50, style:"shape=goal;html=1;whiteSpace=wrap;overflow=visible;fontColor=black;", type:"goal", pname:"Goal"};
     var quality = {src:projectPath+"images/models/istar/Quality.png", wd:125, hg:50, style:"shape=quality;html=1;whiteSpace=wrap;overflow=visible;fontColor=black;", type:"quality", pname:"Quality"};
 		var task = {src:projectPath+"images/models/istar/Task.png", wd:125, hg:50, style:"shape=task;html=1;whiteSpace=wrap;;overflow=visible;fontColor=black;", type:"task", pname:"Task"};
     var resource = {src:projectPath+"images/models/istar/Resource.png", wd:125, hg:50, style:"shape=resource;html=1;whiteSpace=wrap;overflow=visible;fontColor=black;", type:"resource", pname:"Resource"};
-
-    const securityConstraint = {src:projectPath+"images/models/component/file.png", wd:100, hg:100, style:"shape=secconstraint;html=1;whiteSpace=wrap;overflow=visible;fontColor=black;", type:"secconst", pname:"secconst"};
-    const securityObjective = {src:projectPath+"images/models/component/file.png", wd:100, hg:100, style:"shape=secobjective;html=1;whiteSpace=wrap;overflow=visible;fontColor=black;", type:"secobjective", pname:"secobjective"};
-    const securityMechanism = {src:projectPath+"images/models/component/file.png", wd:125, hg:50, style:"shape=secmechanism;html=1;whiteSpace=wrap;overflow=visible;fontColor=black;", type:"secmechanism", pname:"secmechanism"};
-    const threat = {src:projectPath+"images/models/component/file.png", wd:100, hg:100, style:"shape=threat;html=1;whiteSpace=wrap;overflow=visible;fontColor=black;", type:"threat", pname:"threat"};
-    const attack = {src:projectPath+"images/models/component/file.png", wd:100, hg:100, style:"shape=attack;html=1;whiteSpace=wrap;overflow=visible;fontColor=black;", type:"attack", pname:"attack"};
-    const vulnerability = {src:projectPath+"images/models/component/file.png", wd:125, hg:50, style:"shape=vulnerability;html=1;whiteSpace=wrap;overflow=visible;fontColor=black;", type:"vulnerability", pname:"vulnerability"};
+    
+    /*
+    const securityConstraint = {src:projectPath+"images/models/component/file.png", wd:100, hg:100, style:"shape=secconstraint;html=1;whiteSpace=wrap;overflow=visible;fontColor=black;", type:"secconstraint", pname:"Security Constraint"};
+    const securityObjective = {src:projectPath+"images/models/component/file.png", wd:100, hg:100, style:"shape=secobjective;html=1;whiteSpace=wrap;overflow=visible;fontColor=black;", type:"secobjective", pname:"Security Objective"};
+    const securityMechanism = {src:projectPath+"images/models/component/file.png", wd:125, hg:50, style:"shape=secmechanism;html=1;whiteSpace=wrap;overflow=visible;fontColor=black;", type:"secmechanism", pname:"Security Mechanism"};
+    const threat = {src:projectPath+"images/models/component/file.png", wd:100, hg:100, style:"shape=threat;html=1;whiteSpace=wrap;overflow=visible;fontColor=black;", type:"threat", pname:"Threat"};
+    const attack = {src:projectPath+"images/models/component/file.png", wd:100, hg:100, style:"shape=attack;html=1;whiteSpace=wrap;overflow=visible;fontColor=black;", type:"attack", pname:"Attack"};
+    const vulnerability = {src:projectPath+"images/models/component/file.png", wd:125, hg:50, style:"shape=vulnerability;html=1;whiteSpace=wrap;overflow=visible;fontColor=black;", type:"vulnerability", pname:"Vulnerability"};
+    */
 
 		var elements=[];
 		elements.push(actor);
@@ -160,6 +163,7 @@ var istar_main = function istar_main(graph)
     elements.push(task);
     elements.push(resource);
 
+    /*
     //tests
     elements.push(securityConstraint);
     elements.push(securityObjective);
@@ -167,7 +171,8 @@ var istar_main = function istar_main(graph)
     elements.push(threat);
     elements.push(attack);
     elements.push(vulnerability)
-
+    */
+   
 		return elements;
 	}
 
@@ -299,6 +304,13 @@ var istar_main = function istar_main(graph)
       "target":["task"],
       "style":"endArrow=oval;endFill=1;"
     });
+    //Restricts
+    relations.push({
+      "source":["secconstraint"],
+      "rel_source_target":"and",
+      "target":["goal"],
+      "style":"endArrow=none;"
+    })
     return relations;
   }
   

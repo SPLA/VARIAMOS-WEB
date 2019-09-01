@@ -181,6 +181,36 @@
 <!-- /i* -->
 
 <!-- secure tropos -->
+<shape name="satisfies" aspect="fixed" strokewidth="3">
+	<foreground>
+		<path>
+			<move x="0" y="0"/>
+			<line x="50" y="50"/>
+			<line x="0" y="100"/>
+			<move x="50" y="0"/>
+			<line x="100" y="50"/>
+			<line x="50" y="100"/>
+			<stroke/>
+		</path>
+	</foreground>
+</shape>
+
+<shape name="diamond" aspect="fixed">
+	<background>
+		<path>
+			<move x="0" y="0"/>
+			<line x="100" y="50"/>
+			<line x="0" y="100"/>
+			<close/>
+		</path>
+	</background>
+	<foreground>
+		<strokecolor color="#000000"/>
+		<fillcolor color="#000000"/>
+		<fillstroke/>
+	</foreground>
+</shape>
+
 <shape name="secconstraint" aspect="fixed" strokewidth="3" w="100" h="100">
 	<background>
 		<path>
@@ -197,7 +227,7 @@
 	</background>
 	<foreground>
 		<strokecolor color="#000000"/>
-		<fillcolor color="#F54245"/>
+		<fillcolor color="#CDFECD"/>
 		<fillstroke/>
 	</foreground>
 </shape>
@@ -216,7 +246,7 @@
 	</background>
 	<foreground>
 		<strokecolor color="#000000"/>
-		<fillcolor color="#40ECF5"/>
+		<fillcolor color="#CDFECD"/>
 		<fillstroke/>
 	</foreground>
 </shape>
@@ -235,7 +265,7 @@
 	</background>
 	<foreground>
 		<strokecolor color="#000000"/>
-		<fillcolor color="#59FF7A"/>
+		<fillcolor color="#CDFECD"/>
 		<fillstroke/>
 		<path>
 			<move x="20" y="5"/>
@@ -260,7 +290,7 @@
 	</background>
 	<foreground>
 		<strokecolor color="#000000"/>
-		<fillcolor color="#59FF7A"/>
+		<fillcolor color="#CDFECD"/>
 		<fillstroke/>
 	</foreground>
 </shape>
@@ -280,7 +310,7 @@
 	</background>
 	<foreground>
 		<strokecolor color="#000000"/>
-		<fillcolor color="#59FF7A"/>
+		<fillcolor color="#CDFECD"/>
 		<fillstroke/>
 	</foreground>
 </shape>

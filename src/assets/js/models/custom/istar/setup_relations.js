@@ -1,4 +1,4 @@
-var setup_istar_relations = function setup_istar_relations(graph,relations,relation_styles){
+let setup_istar_relations = function setup_istar_relations(graph,relations,relation_styles){
     graph.connectionHandler.insertEdge = function(parent, id, value, source, target, style)
     {
         let sourceType = source.getAttribute("type");
@@ -13,15 +13,18 @@ var setup_istar_relations = function setup_istar_relations(graph,relations,relat
             && target.getAttribute("dependum") === "true"
         )
 
+        const restricts = false; /*["secconstraint"].includes(sourceType) && ["goal"].includes(targetType);*/
+        const satisfies = false;
+
         let relationType = 'rel_'+sourceType+'_'+targetType;
 
-        var doc = mxUtils.createXmlDocument();
-        var node = doc.createElement(relationType);
+        let doc = mxUtils.createXmlDocument();
+        let node = doc.createElement(relationType);
         node.setAttribute('type', relationType);
 
         //by default bidirectional edges are not allowed (disjoint)
         if(target.edges != null && target.edges.length>0){
-            for (var i = 0; i < target.edges.length; i++) {
+            for (let i = 0; i < target.edges.length; i++) {
                 if(target.edges[i].target.getId()==source.getId()){
                     alert(global.messages["setup_relations_bidirectional"]);
                     return null;
@@ -49,17 +52,17 @@ var setup_istar_relations = function setup_istar_relations(graph,relations,relat
 
         //setup custom attributes for relations
         if(relations){
-            for (var i = 0; i < relations.length; i++) {
+            for (let i = 0; i < relations.length; i++) {
                 if(relations[i]["rel_source_target"]=="and"){
                     if((relations[i]["source"].indexOf(source.getAttribute("type")) > -1) && (relations[i]["target"].indexOf(target.getAttribute("type"))> -1)){
-                        for(var j = 0; j < relations[i]["attributes"].length; j++){
+                        for(let j = 0; j < relations[i]["attributes"].length; j++){
                             node.setAttribute(relations[i]["attributes"][j]["name"],relations[i]["attributes"][j]["def_value"]);
                         }
                     }
                 }
                 else{
                     if((relations[i]["source"].indexOf(source.getAttribute("type")) > -1) || (relations[i]["target"].indexOf(target.getAttribute("type"))> -1)){
-                        for(var j = 0; j < relations[i]["attributes"].length; j++){
+                        for(let j = 0; j < relations[i]["attributes"].length; j++){
                             node.setAttribute(relations[i]["attributes"][j]["name"],relations[i]["attributes"][j]["def_value"]);
                         }
                     }
@@ -68,7 +71,7 @@ var setup_istar_relations = function setup_istar_relations(graph,relations,relat
         }
 
         if(relation_styles){
-            for (var i = 0; i < relation_styles.length; i++) {
+            for (let i = 0; i < relation_styles.length; i++) {
                 if(relation_styles[i]["rel_source_target"]=="and"){
                     if((relation_styles[i]["source"].indexOf(source.getAttribute("type")) > -1) && (relation_styles[i]["target"].indexOf(target.getAttribute("type"))> -1)){
                         style=relation_styles[i]["style"];
@@ -93,7 +96,7 @@ var setup_istar_relations = function setup_istar_relations(graph,relations,relat
         const cell = graph.insertEdge(parent, id, node, source, target, style);
 
         //Check if the edge belongs is connected to a dependum element.
-        if(dependum){
+        if(dependum || restricts){
             //Gather the state information of both the source and target elements.
             const sourceState = graph.view.getState(source);
             const targetState = graph.view.getState(target);
@@ -105,7 +108,15 @@ var setup_istar_relations = function setup_istar_relations(graph,relations,relat
             //Calculate the angle given by the edge in its current orientation.
             const angle = (Math.atan2(destY-initY,destX-initX) * (180/Math.PI)).toFixed(0);
             //Insert a new element onto the the edge with the calculated angle.
-            const capitald = graph.insertVertex(cell,null,null,0,0,20,20,'shape=capitald;fillColor=#FFFFFF;rotation='+angle+';');
+            const shape = 
+            dependum 
+            ? "capitald" 
+            : restricts 
+            ? "diamond" 
+            : satisfies 
+            ? "satisfies" 
+            : "file";
+            const capitald = graph.insertVertex(cell,null,null,0,0,20,20,'shape='+shape+';fillColor=#FFFFFF;rotation='+angle+';');
             //Set the offset of the element so that it is centered. 
             capitald.geometry.offset = new mxPoint(-10, -10);
             capitald.geometry.relative = true;
@@ -117,6 +128,7 @@ var setup_istar_relations = function setup_istar_relations(graph,relations,relat
             console.log('destY :', destY);
             console.log('angle :', angle); */
         }
+
         return cell;
     };
 }
