@@ -121,6 +121,16 @@ export default{
     this.layers=model_load(this.graph,this.models,this.modelCode);
     this.modelType=this.$route.params.type; //based on URL Route
 
+    // display custom menu options for domain-menu
+    let domain_childs = document.querySelectorAll('#domain-menu a');
+    this.hide_menu_options(domain_childs);
+    // display custom menu options for verification-menu
+    domain_childs = document.querySelectorAll('#verification-menu a');
+    this.hide_menu_options(domain_childs);
+    // display custom menu options for application-menu
+    domain_childs = document.querySelectorAll('#application-menu a');
+    this.hide_menu_options(domain_childs);
+
     //dynamic load of setup functions
     let all_setups = ["setup_relations","setup_buttons","setup_keys","setup_properties","setup_elements","setup_events"];
     for(let i=0;i<all_setups.length;i++){
@@ -167,6 +177,18 @@ export default{
       main(this.graph,this.layers,this.mxModel,this.toolbar,this.keyHandler,graphContainer,this.modelType,this.currentModel,counter,this.setupFunctions,this.undoManager, this.$route.params, this.$store);
       let outline = new mxOutline(this.graph, document.getElementById('navigator'));
 		  outline.refresh();
+    },
+    hide_menu_options(domain_childs){
+        for (let i = 0; i < domain_childs.length; i++) {
+        if(domain_childs[i].dataset.menudisplay!=null){
+          let listdis = domain_childs[i].dataset.menudisplay;
+          if(listdis.includes(this.modelType)){
+            domain_childs[i].style.display="";
+          }else{
+            domain_childs[i].style.display="none";
+          }
+        }
+      }
     }
   },
   beforeRouteLeave(to, from, next){
@@ -196,6 +218,16 @@ export default{
         document.getElementById('tbContainer').innerHTML="";
         document.getElementById('navigator').innerHTML="";
         this.modelType=this.$route.params.type;
+
+        // display custom menu options for domain-menu
+        let domain_childs = document.querySelectorAll('#domain-menu a');
+        this.hide_menu_options(domain_childs);
+        // display custom menu options for verification-menu
+        domain_childs = document.querySelectorAll('#verification-menu a');
+        this.hide_menu_options(domain_childs);
+        // display custom menu options for application-menu
+        domain_childs = document.querySelectorAll('#application-menu a');
+        this.hide_menu_options(domain_childs);
 
         //dynamic load of setup functions
         let all_setups = ["setup_relations","setup_buttons","setup_keys","setup_properties","setup_elements","setup_events"];

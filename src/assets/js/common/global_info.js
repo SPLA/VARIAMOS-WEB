@@ -12,7 +12,8 @@ export function getModelInfo(){
     info["component"]={projFolders:["Domain"]};
     //define binding model main info
     info["binding_feature_component"]={projFolders:["Domain"]};
-    info["istar"]={projFolders:["Domain"]}
+    //define istar model main info
+    info["istar"]={projFolders:["Domain"]};
     //define adaptation_state model main info
     info["adaptation_state"]={projFolders:["Application"]};
     //define adaptation_hardware model main info
