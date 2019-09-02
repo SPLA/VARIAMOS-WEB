@@ -93,7 +93,7 @@ export default{
       models:[], //available models
       currentModel:"",
       mxModel: new Object(), //mxGraphModel
-      modelType:"" 
+      modelType:"", 
     }
   },
   components: {
@@ -210,7 +210,6 @@ export default{
             this.setupFunctions[all_setups[i]]=st_fun.default;
           }
         }
-
         //Import only the current need model file
         let modelToImport = require('@/assets/js/models/custom/'+this.modelType+'.js');
         this.currentModel = modelToImport.default;

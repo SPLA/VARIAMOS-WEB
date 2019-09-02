@@ -2,12 +2,13 @@ import {
   shallowMount,
   createLocalVue
 } from '@vue/test-utils';
-import {
-  getters
-} from "../../../src/store/filetree";
 import Vuex from 'vuex';
-import MultiModels from '../../../src/views/Multi-models'
-import model from '../../../src/views/Models'
+//import VueRouter from 'vue-router'
+import VueI18n from 'vue-i18n'
+import i18n from '../../../src/i18n'
+// eslint-disable-next-line no-unused-vars
+import contextMenu from '../../../src/components/contextMenu.vue'
+import iView from 'iview';
 import {
   stateFactory
 } from '../util/StateManagement'
@@ -20,8 +21,10 @@ chai.use(sinonChai)
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
+localVue.use(iView)
+localVue.use(VueI18n)
 
-describe('Multi-Models', () => {
+describe('ContextMenu', () => {
   /**
    * The localgetters object permits us to spy
    * on the behaviour of the getters within the
@@ -46,6 +49,16 @@ describe('Multi-Models', () => {
   let mockDispatch;
 
   /**
+   * localBus will hold a custom instance of the
+   * event bus.
+   */
+  let localBus;
+
+  let mockObj;
+
+  let addEventListenerStub;
+
+  /**
    * WrapperFactory creates a Vue component wrapper
    * with the selected parameters.
    * @param {Boolean} empty Set whether the state is empty.
@@ -65,15 +78,27 @@ describe('Multi-Models', () => {
       }
     })
     mockDispatch = sinon.stub(store, 'dispatch')
-    routPushStub = sinon.stub()
+    routPushStub = sinon.stub();
+
+    const contextMenuDataMock = {
+      menuName: 'menu',
+      axios: {
+        x: 0,
+        y: 0,
+      },
+      menulists: {}
+    }
+    const targetClassMock = 'vue-contextmenuName-menu11'
+    const dataMock = filetree.state.data[0]
     /**
      * We use shallowMount to avoid mounting the underlying
      * component structure so as to not overload the required
      * dependecies.
      */
-    return shallowMount(MultiModels, {
+    return shallowMount(contextMenu, {
       localVue,
       store,
+      //router,
       mocks: {
         $route: {
           params: {
@@ -86,53 +111,43 @@ describe('Multi-Models', () => {
           push: routPushStub
         },
       },
+      propsData: {
+        contextMenuData: contextMenuDataMock,
+        targetClass: targetClassMock,
+        data: dataMock,
+      }
     })
   }
 
-  before( () => {
-    localgetters = {
-      getactivetab: sinon.spy(getters, 'getactivetab'),
-      getdata: sinon.spy(getters, 'getdata'),
-      getmodelcomponent: sinon.spy(getters, 'getmodelcomponent'),
-      getmodelcomponentindex: sinon.spy(getters, 'getmodelcomponentindex')
+  beforeEach(function () {
+    mockObj = {
+      style: {
+        display: 'TEST',
+        left: '',
+        top: ''
+      }
     }
+    global.document.getElementById = sinon.stub().returns(mockObj)
+    addEventListenerStub = sinon.stub()
+    global.document.addEventListener = addEventListenerStub
   })
 
-  it('model is shown with complete state', async () => {
-    const emptyState = false
-    const wrapper = wrapperFactory(emptyState)
-    const componentModel = wrapper.find(model)
-    await wrapper.vm.$nextTick()
-    expect(componentModel.exists()).to.be.ok
+  afterEach(function () {
+    sinon.restore();
   })
 
-  it('model is not shown with empty state', () => {
-    const emptyState = true
-    const wrapper = wrapperFactory(emptyState)
-    const componentModel = wrapper.find(model)
-    expect(componentModel.exists()).to.not.be.ok
-  })
-
-  it('Message is shown when only selecting project', () => {
-    const emptyState = true
-    const wrapper = wrapperFactory(emptyState, 'Model1', 'default', 'default')
-    const message = wrapper.find('[data-test="nofolder"]')
-    expect(message.exists()).to.be.ok
-  })
-
-  it('Message is shown when there is no project', () => {
-    const emptyState = true
-    const wrapper = wrapperFactory(emptyState, 'default', 'default', 'default')
-    const message = wrapper.find('[data-test="noproject"]')
-    expect(message.exists()).to.be.ok
-  })
-
-  it('clickActiveTab() works when clicking on tab', () => {
-    const emptyState = false
-    const wrapper = wrapperFactory(emptyState, 'Model1', 'Domain-Model1', 'feature')
-    const link = wrapper.findAll('#atabs').at(1)
-    link.trigger('click')
-    expect(routPushStub).to.have.been.called
-    expect(mockDispatch).to.have.been.called
+  it('watch is triggered when contextMenuData.axios changes', async () => {
+    const emptyState = false;
+    const wrapper = wrapperFactory(emptyState);
+    const contextMenuDataMock2 = {
+      menuName: 'menu',
+      axios: {
+        x: 0,
+        y: 0,
+      },
+      menulists: {}
+    }
+    wrapper.setProps({contextMenuData: contextMenuDataMock2})
+    expect(addEventListenerStub).to.have.been.called
   })
 })
