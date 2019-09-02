@@ -114,17 +114,25 @@ export default {
       
     },
     test_web(){
-      if (localStorage["domain_implementation_main_path"]) {
         this.errors=[];
         var encoder = new mxCodec();
         var result = encoder.encode(this.current_graph.getModel());
         var xml = mxUtils.getPrettyXml(result);
-        axios.post('http://localhost:8091/api/application/xml/1/1/configuration', xml)
+        var authOptions = {
+          method: 'POST',
+          url: 'http://localhost:8080/api/models/dummy?solver_id=GECODE',
+          data: xml,
+          headers: {
+            'Content-Type': 'text/plain'
+          },
+          json: true
+        };
+        axios(authOptions)
         .then(response => {
           var c_header = modalH3("Test response");
           var c_body = modalSimpleText("XML code received by the server.");
           setupModal(c_header,c_body);
-          mxUtils.popup(response.data, true);
+          mxUtils.popup(response, true);
         })
         .catch(e => {
           this.errors.push(e); 
@@ -132,12 +140,6 @@ export default {
           var c_body = modalSimpleText(e + this.$t("model_actions_backend_problem"));
           setupModal(c_header,c_body);
         });
-      }else{
-        var c_header = modalH3(this.$t("modal_error"),"error");
-        var c_body = modalSimpleText(this.$t("verification_path_problem"));
-        setupModal(c_header,c_body);
-      }
-      
     }
   },
   computed:{
