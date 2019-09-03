@@ -156,11 +156,11 @@ export default {
 
 <style>
 @media (min-width: 768px){
-  .top-main{
+  /*.top-main{
       -ms-flex: 0 0 83%;
       flex: 0 0 83%;
       max-width: 83%;
-  }
+  }*/
 }
 
 .link-white, .link-white:hover{
