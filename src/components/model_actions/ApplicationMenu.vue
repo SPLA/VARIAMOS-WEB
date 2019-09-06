@@ -16,8 +16,8 @@
 
 <script>
 import axios from "axios";
-import di_actions from '@/assets/js/models/actions/domain_implementation/di_actions.js'
-import { setupModal, modalH3, modalSimpleText, modalInputTexts, modalCustomization, modalButton, downloadFile } from '../../assets/js/common/util'
+import di_actions from '@/assets/js/models/actions/domain_implementation/di_actions.js';
+import { setupModal, modalH3, modalSimpleText, modalInputTexts, modalCustomization, modalButton, downloadFile } from '../../assets/js/common/util';
 import adaptation_state_actions from '@/assets/js/models/actions/domain_implementation/adaptation_state_actions.js';
 
 export default {
