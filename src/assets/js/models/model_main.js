@@ -1,5 +1,5 @@
 //main function
-var main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model_type,model_specific_main,counter,setupFunctions,undoManager, route_pare, store)
+let main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model_type,model_specific_main,counter,setupFunctions,undoManager, route_pare, store)
 {
 	// Checks if the browser is supported
 	if (!mxClient.isBrowserSupported())
@@ -9,26 +9,16 @@ var main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model
 	}
 	else
 	{
-		var currentLayer="";
+		let currentLayer="";
 		currentLayer=layers[model_type]; //current layer to be displayed (feature, component, etc)
 		graph.setDefaultParent(currentLayer); //any new graphic element will be connected with this parent
 
-		var data=[], c_type="", c_overlay="", c_elements=[], c_attributes=[], c_relations=[], c_properties_styles=[] , c_labels=[];
-		var c_clon_cells=[], c_constraints_ic=[];
+		let data={};
 		data=model_specific_main(graph); //specific model data
-		c_type=data[0];
-		c_elements=data[1];
-		c_attributes=data[2];
-		c_relations=data[3];
-		c_properties_styles=data[4];
-		c_labels=data[5];
-		c_clon_cells=data[6];
-		c_constraints_ic=data[7];
-		c_overlay=data[8];
 
 		//collect functions that are used in multiple places
-		var reused_functions=[];
-		reused_functions=get_reused_functions(graph,c_type);
+		let reused_functions=[];
+		reused_functions=get_reused_functions(graph,data["m_type"]);
 
 		//counter equals 1 load the entire mxGraph 
 		if(counter==1){
@@ -37,7 +27,7 @@ var main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model
 			
 			// Matches DnD inside the graph
 			mxDragSource.prototype.getDropTarget = function(graph, x, y){
-				var cell = graph.getCellAt(x, y);
+				let cell = graph.getCellAt(x, y);
 				
 				if (!graph.isValidDropTarget(cell)){
 					cell = null;
@@ -55,37 +45,39 @@ var main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model
 		//setup buttons
 		setupFunctions["setup_buttons"](graph,undoManager,reused_functions,route_pare,store);
 		//setup properties
-		setupFunctions["setup_properties"](graph,c_properties_styles);
+		setupFunctions["setup_properties"](graph,data["m_properties_styles"]);
 		//setup keys
 		setupFunctions["setup_keys"](keyHandler,graph,reused_functions);
 		//setup custom elements
-		setupFunctions["setup_elements"](graph,c_elements,c_attributes,c_clon_cells,c_constraints_ic,toolbar,c_type);
+		setupFunctions["setup_elements"](graph,data["m_elements"],data["m_attributes"],data["m_clon_cells"],data["m_constraints_ic"],toolbar,data["m_type"]);
 		//setup label changed
-		setup_label_changed(graph,c_labels);	
+		setup_label_changed(graph,data["m_labels"]);	
 		//setup relations
-		setupFunctions["setup_relations"](graph,c_relations);
+		setupFunctions["setup_relations"](graph,data["m_relations"],data["m_relation_styles"]);
 		//setup custom features by model type
-		setup_custom_features_by_type(c_type);
+		setup_custom_features_by_type(data["m_type"]);
 		//setup overlay
-		setup_overlay(c_overlay);
+		setup_overlay(data["m_overlay"]);
+		// setup events
+		setupFunctions["setup_events"](graph);
 
 		//hide all elements that do not belong to the current layer (parent)
-		for (var key in layers) {
+		for (let key in layers) {
 			mxModel.setVisible(layers[key], false);
 		}
 		mxModel.setVisible(currentLayer, true);
 	}
 
-	function setup_overlay(c_overlay){
-		if(c_overlay){
-			c_overlay();
+	function setup_overlay(m_overlay){
+		if(m_overlay){
+			m_overlay();
 		}
 	}
 
-	function setup_custom_features_by_type(c_type){
+	function setup_custom_features_by_type(m_type){
 		//hide "reset current model" button for binding models
-		var buttonRESET = document.getElementById('buttonRESET');
-		if(c_type=="binding"){
+		let buttonRESET = document.getElementById('buttonRESET');
+		if(m_type=="binding"){
 			buttonRESET.style.display="none";
 		}else{
 			buttonRESET.style.display="";
@@ -103,9 +95,9 @@ var main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model
 		mxCellRenderer.registerShape('customShape', CustomShape);
 		
 		// Loads the stencils into the registry
-		var req = mxUtils.load(projectPath+'xml/MX/custom_shapes.xml');
-		var root = req.getDocumentElement();
-		var shape = root.firstChild;
+		let req = mxUtils.load(projectPath+'xml/MX/custom_shapes.xml');
+		let root = req.getDocumentElement();
+		let shape = root.firstChild;
 		
 		while (shape != null)
 		{
@@ -131,13 +123,13 @@ var main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model
 		// new mxOutline(graph, document.getElementById('navigator'));
 	}
 
-	function setup_label_changed(graph,c_labels){		
+	function setup_label_changed(graph,m_labels){		
 		graph.convertValueToString = function(cell)
 		{
 		  if (mxUtils.isNode(cell.value))
 		  {
-			if(c_labels != null && c_labels[cell.getAttribute("type")]){
-				return cell.getAttribute(c_labels[cell.getAttribute("type")], '')
+			if(m_labels != null && m_labels[cell.getAttribute("type")]){
+				return cell.getAttribute(m_labels[cell.getAttribute("type")], '')
 			}else{
 				if(cell.isEdge()){
 					//default attribute showed in drawing area for edges is relType
@@ -151,18 +143,17 @@ var main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model
 		};
 	}
 
-	function get_reused_functions(graph,c_type){
-		var reused_functions=[];
+	function get_reused_functions(graph,m_type){
+		let reused_functions=[];
 		reused_functions[0]=function(evt)
 		{
 			if (graph.isEnabled())
 			{
-				if(c_type=="binding"){
-					console.log("binding");
+				if(m_type=="binding"){
 					//binding models allow to remove egdes but not vertexs
-					var cells = graph.getSelectionCells();
-					var contain_clons = false;
-					for (var i = 0; i < cells.length; i++) {
+					let cells = graph.getSelectionCells();
+					let contain_clons = false;
+					for (let i = 0; i < cells.length; i++) {
 						if(cells[i].isVertex()){
 							if(cells[i].getId().includes("clon")){ //cloned elements are not allowed to remove directly
 								contain_clons = true;
@@ -176,14 +167,14 @@ var main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model
 						graph.removeCells();
 					}
 				}else{
-					var removed_cells=graph.removeCells();
+					let removed_cells=graph.removeCells();
 
 					//remove clons if exist
-					for (var i = 0; i < removed_cells.length; i++) {
+					for (let i = 0; i < removed_cells.length; i++) {
 						if(removed_cells[i].isVertex()){
-							var clon = graph.getModel().getCell("clon"+removed_cells[i].getId());
+							let clon = graph.getModel().getCell("clon"+removed_cells[i].getId());
 							if(clon){
-								var cells=[]
+								let cells=[]
 								cells[0]=clon;
 								graph.removeCells(cells);
 							}

@@ -1,23 +1,23 @@
 /**
  * return the VariaMos main model info
  * @property    {array} projFolders             - each folder should have how many models when the folder or project is generated
- * @property    {array} shown_Elements          - each model should display how many elements in the element tree
- * @property    {boolean} checkbox_enable       - each model should enable or disable checkbox in the element tree
- * @property    {boolean} select_constraint     - the selection constratins of the element tree for the binding model, if true, it will only show selected ones in the other models
- * @property    {array} rel_list                - the list of accepted relations between models
- * @property    {array} rel_bundle_list1        - the list of accepted relations from bundle to models
- * @property    {array} rel_bundle_list2        - the list of accepted relations from models to bundle
  */
 export function getModelInfo(){
-    var info =[];
+    let info =[];
     //list of graphical models
-    info["gmodels"]=["feature","component","binding_feature_component"];
+    info["gmodels"]=["feature","component","binding_feature_component","adaptation_state","adaptation_hardware","adaptation_binding_state_hardware"];
     //define feature model main info
-    info["feature"]={projFolders:["Domain","Application","Adaptation"], shown_Elements:["root", "abstract", "concrete"], rel_list:['rel_abstract_abstract', 'rel_abstract_root', 'rel_concrete_abstract', 'rel_concrete_concrete', 'rel_concrete_root'], rel_bundle_list1:['rel_bundle_root', 'rel_bundle_abstract'], rel_bundle_list2:['rel_abstract_bundle', 'rel_concrete_bundle'], checkbox_enable:true};
+    info["feature"]={projFolders:["Domain","Application","Adaptation"]};
     //define component model main info
-    info["component"]={projFolders:["Domain"], shown_Elements:["component", "file"], rel_list:["rel_file_component"], rel_bundle_list1:[], rel_bundle_list2:[], checkbox_enable:true};
+    info["component"]={projFolders:["Domain"]};
     //define binding model main info
-    info["binding_feature_component"]={projFolders:["Domain"], shown_Elements:['concrete', 'component'], rel_list:[], rel_bundle_list1:[], rel_bundle_list2:[], checkbox_enable:true, select_constraint:true};
+    info["binding_feature_component"]={projFolders:["Domain"]};
+    //define adaptation_state model main info
+    info["adaptation_state"]={projFolders:["Application"]};
+    //define adaptation_hardware model main info
+    info["adaptation_hardware"]={projFolders:["Application"]};
+    //define adaptation_binding_state_hardware model main info
+    info["adaptation_binding_state_hardware"]={projFolders:["Application"]};
     return info;
 }
 
@@ -52,7 +52,7 @@ export function insertmodel(data, index, temp) {
 
 // define the list of right click functions, icons and names
 export function getcontextmenulist(){
-    var info =[];
+    let info =[];
     info['delete_project'] = {
         fnHandler: 'deleteproject',
         icoName: 'fa fa-times',

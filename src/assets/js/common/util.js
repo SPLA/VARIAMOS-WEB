@@ -8,10 +8,10 @@ export function jsUcfirst(string)
 // setup main modal view
 export function setupModal(header_content,body_content="",footer_content="") 
 {
-    var main_modal=document.getElementById('main_modal');
-    var main_modal_header=document.getElementById('main_modal_header');
-    var main_modal_body=document.getElementById('main_modal_body');
-    var main_modal_footer=document.getElementById('main_modal_footer');
+    let main_modal=document.getElementById('main_modal');
+    let main_modal_header=document.getElementById('main_modal_header');
+    let main_modal_body=document.getElementById('main_modal_body');
+    let main_modal_footer=document.getElementById('main_modal_footer');
     main_modal_header.innerHTML="";
     main_modal_body.innerHTML="";
     main_modal_footer.innerHTML="";
@@ -23,7 +23,7 @@ export function setupModal(header_content,body_content="",footer_content="")
 }
 
 export function modalH3(text,type="normal"){
-    var c_h3 = document.createElement('h3');
+    let c_h3 = document.createElement('h3');
     c_h3.innerText=text;
     if(type=="error"){
         c_h3.style.color="crimson";
@@ -34,26 +34,26 @@ export function modalH3(text,type="normal"){
 }
 
 export function modalSimpleText(text){
-    var c_span = document.createElement('span');
+    let c_span = document.createElement('span');
     c_span.innerText=text;
     return c_span;
 }
 
 export function modalInputTexts(texts,inputs,default_vals){
-    var table = document.createElement('table');
-    for(var i=0;i<texts.length;i++){
-        var tr = document.createElement('tr');
-        var td = document.createElement('td');
+    let table = document.createElement('table');
+    for(let i=0;i<texts.length;i++){
+        let tr = document.createElement('tr');
+        let td = document.createElement('td');
         td.innerHTML=texts[i];
         tr.appendChild(td);
         
-        var input = document.createElement('input');
+        let input = document.createElement('input');
         input.value=default_vals[i];
         input.type="text";
         input.id=inputs[i];
         input.size=40;
         input.name=inputs[i];
-        var td2 = document.createElement('td');
+        let td2 = document.createElement('td');
         td2.appendChild(input);
         tr.appendChild(td2);
         table.appendChild(tr);
@@ -62,26 +62,26 @@ export function modalInputTexts(texts,inputs,default_vals){
 }
 
 export function modalCustomization(texts,inputs,default_vals){
-    var table = document.createElement('table');
-    for(var i=0;i<texts.length;i++){
-        var tr = document.createElement('tr');
+    let table = document.createElement('table');
+    for(let i=0;i<texts.length;i++){
+        let tr = document.createElement('tr');
         if(i==3){
             tr.id="filetouploadtr";
             tr.style.display="none";
         }
-        var td = document.createElement('td');
+        let td = document.createElement('td');
         td.innerHTML=texts[i];
         tr.appendChild(td);
 
         if(i==0){
-            var input = document.createElement('input');
+            let input = document.createElement('input');
             input.size=48;
         }
         else if(i==3){
-            var input = document.createElement('input');
+            let input = document.createElement('input');
             input.type="file";
         }else{
-            var input = document.createElement('textarea');
+            let input = document.createElement('textarea');
             input.cols=50;
         }
 
@@ -92,7 +92,7 @@ export function modalCustomization(texts,inputs,default_vals){
             input.disabled="disabled";
         }
 
-        var td2 = document.createElement('td');
+        let td2 = document.createElement('td');
         td2.appendChild(input);
         tr.appendChild(td2);
         table.appendChild(tr);
@@ -101,12 +101,22 @@ export function modalCustomization(texts,inputs,default_vals){
 }
 
 export function modalButton(text,function_to_append){
-    var button = document.createElement('button');
+    let button = document.createElement('button');
     button.innerText=text;
     button.id=text;
     button.addEventListener("click", function_to_append, false);
     return button;
 }
+ 
+export function downloadFile(filename, text) {
+    var element = document.createElement('a');
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+    element.setAttribute('download', filename); 
+    element.style.display = 'none';
+    document.body.appendChild(element); 
+    element.click(); 
+    document.body.removeChild(element);
+  }
 
 /* end util */
 

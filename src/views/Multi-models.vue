@@ -1,5 +1,5 @@
 <template>
-    <div id="tabs" class="container">
+    <div id="tabs" class="p20">
         <div class="tabs">
 			<div v-for="(item, $index) in getModels()" :key="item" >
 				<a id="atabs" v-if="checktabs(item,$index)" @click="clickactivetab($index)" v-bind:class="[ getactivetab === item ? 'active' : '' ]">
@@ -15,17 +15,14 @@
 				</keep-alive>
 			</div>
         </div>
-        <div v-if="getactivetab === '' && $route.params.project !== 'default' && $route.params.folder !== 'null'" data-test="nofolder">
+        <div v-if="getactivetab === '' && $route.params.project !== 'default'" data-test="nofolder">
             <div class="border-bottom text-left" style="padding-bottom: 10px"><h1 class="h2">Project: {{ $route.params.project }}</h1></div>
             <div class="div-text-area" style="padding-up: 10px">Please select one folder
                 <br /><br />
             </div>
         </div>
-        <div v-if="getactivetab === '' && $route.params.project === 'default' && $route.params.folder !== 'null'" data-test="noproject">
+        <div v-if="getactivetab === '' && $route.params.project === 'default'" data-test="noproject">
             <div class="border-bottom text-left" style="padding-bottom: 10px"><h1 class="h2">Please select one project</h1></div>
-        </div>
-        <div v-if="getactivetab === '' && $route.params.folder === 'null'">
-            <div class="border-bottom text-left" style="padding-bottom: 10px"><h1 class="h2">No models available</h1></div>
         </div>
     </div>
 </template>
@@ -123,6 +120,18 @@ export default{
                 localStorage.clear();
             },100);
         });
+        //update activetab
+        if(this.$route["params"]["type"] != "default"){
+            this.$store.dispatch('updateactivetab', this.$route["params"]["type"]);
+        }
+    },
+    watch:{
+        $route (to, from){
+            //update activetab
+            if(to["params"]["type"] != "default"){
+                this.$store.dispatch('updateactivetab', to["params"]["type"]);
+            }
+        }
     }
 }
 </script>
@@ -133,6 +142,10 @@ export default{
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+}
+
+.p20{
+    padding-bottom: 20px;
 }
 
 .container {  

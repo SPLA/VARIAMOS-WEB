@@ -54,7 +54,7 @@ export default {
       this.menu_options=[];
       try {
         //load custom model verification file
-        var verificationToImport = require('@/assets/js/models/custom/verification/'+this.modelType+'.js');
+        let verificationToImport = require(`@/assets/js/models/custom/${this.modelType}/verification/${this.modelType}.js`);
         this.currentVerification = verificationToImport.default();
         this.menu_options=this.currentVerification;
       } catch (ex) {
@@ -63,7 +63,7 @@ export default {
     },
     //clear all the overlays
     clear_overlays(){
-      for (var i = 0; i < this.cell_errors.length; i++) {
+      for (let i = 0; i < this.cell_errors.length; i++) {
         this.current_graph.removeCellOverlay(this.cell_errors[i], this.cell_overlays[i]);
       }
       this.cell_errors=[];
@@ -102,13 +102,13 @@ export default {
         })
         .catch(e => {
           this.errors.push(e); 
-          var c_header = modalH3(this.$t("modal_error"),"error");
-          var c_body = modalSimpleText(e + this.$t("model_actions_backend_problem"));
+          let c_header = modalH3(this.$t("modal_error"),"error");
+          let c_body = modalSimpleText(e + this.$t("model_actions_backend_problem"));
           setupModal(c_header,c_body);
         });
       }else{
-        var c_header = modalH3(this.$t("modal_error"),"error");
-        var c_body = modalSimpleText(this.$t("verification_path_problem"));
+        let c_header = modalH3(this.$t("modal_error"),"error");
+        let c_body = modalSimpleText(this.$t("verification_path_problem"));
         setupModal(c_header,c_body);
       }
       
