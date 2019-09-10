@@ -17,7 +17,6 @@
               <Menu class="col-md-2 bg-light sidebar collapseMulti collapse show">
                 <div class="sidebar-sticky">
                       <Filetree></Filetree>
-                      <Divider />
                   <ul class="nav flex-column" style="display:none;">
                     <li class="nav-item">
                       <router-link class="nav-link" to="/">

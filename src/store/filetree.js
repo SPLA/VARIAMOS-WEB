@@ -6,7 +6,6 @@ import {insertmodel} from '../assets/js/common/global_info'
  * @property	{string} activetab				- the current active tab or diagram
  * @property	{string} model_component		- the name of the opened folder in the data array
  * @property	{number} model_component_index	- the index of the opened folder in the data array
- * @property	{string} xml					- the xml file from the current model
  * @property	{array}  cache_selected			- the cache of selected elements from the feature and component models
  */
 const state = {
@@ -14,7 +13,6 @@ const state = {
     activetab: '',
     model_component: '',
     model_component_index: -1,
-	xml: '',
 	cache_selected: []
 }
 
@@ -38,9 +36,6 @@ export const getters = {
             temp = state.data[i].data.nodeId > temp ? state.data[i].data.nodeId : temp;
         return temp + 1;
     },
-    getxml: state => {
-        return state.xml;
-	},
 	getcacheselected: state => {
 		return state.cache_selected;
 	}
@@ -83,9 +78,6 @@ export const actions = {
     setselect({commit}, index) {
         commit('setitemselect', index);
     },
-    updatexml({commit}, xml) {
-        commit('updatexml', xml);
-	},
 	updatecacheselected({commit}, cache) {
 		commit('updatecacheselected', cache);
 	},
@@ -98,9 +90,6 @@ export const actions = {
 }
 
 export const mutations = {
-    updatexml(state, xml) {
-        state.xml = xml;
-	},
 	updatecacheselected(state, cache) {
         state.cache_selected = cache;
 	},
@@ -279,7 +268,6 @@ export const mutations = {
         state.activetab = '';
         state.model_component = '';
 		state.model_component_index = -1;
-		state.xml = '';
 		state.cache_selected = [];
     },
     setmodelcomponent(state, index) {
