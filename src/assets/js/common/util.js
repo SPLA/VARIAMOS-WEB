@@ -73,15 +73,17 @@ export function modalCustomization(texts,inputs,default_vals){
         td.innerHTML=texts[i];
         tr.appendChild(td);
 
+        let input = {};
+
         if(i==0){
-            let input = document.createElement('input');
+            input = document.createElement('input');
             input.size=48;
         }
         else if(i==3){
-            let input = document.createElement('input');
+            input = document.createElement('input');
             input.type="file";
         }else{
-            let input = document.createElement('textarea');
+            input = document.createElement('textarea');
             input.cols=50;
         }
 

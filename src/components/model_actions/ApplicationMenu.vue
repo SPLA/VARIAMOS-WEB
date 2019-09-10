@@ -3,12 +3,12 @@
     <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
       {{ $t("application_menu") }}
     </a>
-    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-      <a @click="set_parameters()" class="dropdown-item">{{ $t("application_menu_set_app") }}</a>
-      <a @click="execute_derivation()" class="dropdown-item">{{ $t("domain_implementation_execute") }}</a>      
-      <a @click="customize_derivation()" class="dropdown-item">{{ $t("domain_implementation_customize") }}</a>
-      <a @click="verify_derivation()" class="dropdown-item">{{ $t("domain_implementation_verify") }}</a>
-      <a @click="adaptation_state_source_code_generation()" class="dropdown-item">Source code generation</a>
+    <div id="application-menu" class="dropdown-menu" aria-labelledby="navbarDropdown">
+      <a data-menudisplay="['feature','component','binding_feature_component']" @click="set_parameters()" class="dropdown-item">{{ $t("application_menu_set_app") }}</a>
+      <a data-menudisplay="['feature','component','binding_feature_component']" @click="execute_derivation()" class="dropdown-item">{{ $t("domain_implementation_execute") }}</a>      
+      <a data-menudisplay="['feature','component','binding_feature_component']" @click="customize_derivation()" class="dropdown-item">{{ $t("domain_implementation_customize") }}</a>
+      <a data-menudisplay="['feature','component','binding_feature_component']" @click="verify_derivation()" class="dropdown-item">{{ $t("domain_implementation_verify") }}</a>
+      <a data-menudisplay="['adaptation_state','adaptation_hardware','adaptation_binding_state_hardware']" @click="adaptation_state_source_code_generation()" class="dropdown-item">Source code generation</a>
     </div>
 
   </li>
@@ -16,8 +16,8 @@
 
 <script>
 import axios from "axios";
-import di_actions from '@/assets/js/models/actions/domain_implementation/di_actions.js'
-import { setupModal, modalH3, modalSimpleText, modalInputTexts, modalCustomization, modalButton, downloadFile } from '../../assets/js/common/util'
+import di_actions from '@/assets/js/models/actions/domain_implementation/di_actions.js';
+import { setupModal, modalH3, modalSimpleText, modalInputTexts, modalCustomization, modalButton, downloadFile } from '../../assets/js/common/util';
 import adaptation_state_actions from '@/assets/js/models/actions/domain_implementation/adaptation_state_actions.js';
 
 export default {

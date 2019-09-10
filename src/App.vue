@@ -1,8 +1,8 @@
 <template>
   <div id="app">
     <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
-          <div id="top-menu" class="navbar-brand col-sm-4 col-md-2 mr-0"><div class="main-text collapseMulti collapse show"><router-link class="link-white" to="/">{{ $t("app_variamos") }}</router-link></div>
-          <div id="main-button-col" class="main-button"> <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".collapseMulti" aria-controls="collapseMulti" aria-expanded="true" aria-label="Toggle navigation">
+          <div id="top-menu" class="navbar-brand col-sm-4 col-md-2 mr-0"><div id="main-text" class="main-text"><router-link class="link-white" to="/">{{ $t("app_variamos") }}</router-link></div>
+          <div id="main-button-col" class="main-button"> <button class="navbar-toggler" type="button">
             <span @click="custom_collapse()" class="navbar-toggler-icon"></span>
           </button></div></div>
           <input class="form-control form-control-dark w-100 height-100" name="keyword" type="text" v-bind:placeholder="$t('app_search')" v-bind:aria-label="$t('app_search')">
@@ -14,7 +14,7 @@
         </nav>
         <div class="container-fluid">
             <div class="row">
-              <Menu class="col-md-2 bg-light sidebar collapseMulti collapse show">
+              <Menu id="sidebar" class="col-md-2 bg-light sidebar">
                 <div class="sidebar-sticky">
                       <Filetree></Filetree>
                   <ul class="nav flex-column" style="display:none;">
@@ -126,16 +126,22 @@ export default {
       document.getElementById('main_modal').style.display="none";
     },
     custom_collapse(){
+      let sidebar = document.getElementById("sidebar");
+      let maintext = document.getElementById("main-text");
       let element = document.getElementById("top-menu");
       let elementb = document.getElementById("main-button-col");
       let elementc = document.getElementById("main-sketch");
       if(element.classList.contains("col-sm-1")){
+        sidebar.style.display="";
+        maintext.style.display="";
         element.classList.remove("col-sm-1"); element.classList.remove("col-md-1");
         element.classList.add("col-sm-4"); element.classList.add("col-md-2");
         elementb.classList.remove("center-button");
         elementc.classList.remove("col-md-12"); elementc.classList.remove("col-lg-12");
         elementc.classList.add("col-md-9"); elementc.classList.add("col-lg-10");
       }else{
+        sidebar.style.display="none";
+        maintext.style.display="none";
         element.classList.remove("col-sm-4"); element.classList.remove("col-md-2");
         element.classList.add("col-sm-1"); element.classList.add("col-md-1");
         elementb.classList.add("center-button");
@@ -149,11 +155,11 @@ export default {
 
 <style>
 @media (min-width: 768px){
-  .top-main{
+  /*.top-main{
       -ms-flex: 0 0 83%;
       flex: 0 0 83%;
       max-width: 83%;
-  }
+  }*/
 }
 
 .link-white, .link-white:hover{

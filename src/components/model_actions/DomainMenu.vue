@@ -3,9 +3,9 @@
     <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
       {{ $t("domain_menu") }}
     </a>
-    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-      <a @click="set_parameters()" class="dropdown-item">{{ $t("domain_menu_set_comp") }}</a>
-      <a @click="show_file_code()" class="dropdown-item">{{ $t("domain_menu_show_file_code") }}</a>
+    <div id="domain-menu" class="dropdown-menu" aria-labelledby="navbarDropdown">
+      <a data-menudisplay="['feature','component','binding_feature_component']" @click="set_parameters()" class="dropdown-item">{{ $t("domain_menu_set_comp") }}</a>
+      <a data-menudisplay="['component']" @click="show_file_code()" class="dropdown-item">{{ $t("domain_menu_show_file_code") }}</a>
     </div>
 
   </li>

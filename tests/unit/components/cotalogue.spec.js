@@ -119,7 +119,7 @@ describe('Catalogue', () => {
     const emptyState = false;
     const wrapper = wrapperFactory(emptyState);
     const lis = wrapper.findAll('li')
-    expect(lis.length).to.deep.equal(5) 
+    expect(lis.length).to.deep.equal(6) 
   })
 
   it('checkchildnode() works', () => {
@@ -128,10 +128,10 @@ describe('Catalogue', () => {
     //given wrapper factory's state is known
     let i
     let res = []
-    for(i = 0; i < 9 ; i++){
+    for(i = 0; i < 10 ; i++){
       res[i] = wrapper.vm.checkchildnode(i)
     }
-    const correct = [true,true,true,true,true,false,false,false,false]
+    const correct = [true,true,true,true,true,true,false,false,false,false]
     expect(res).to.deep.equal(correct)
   })
 
@@ -156,7 +156,7 @@ describe('Catalogue', () => {
     expect(stub.callCount).to.deep.equal(2)
   })
 
-  it('clicking on the arrows calls expand_menu()', () => {
+  it('Only clicking on the project arrow calls expand_menu()', () => {
     const emptyState = false;
     const wrapper = wrapperFactory(emptyState);
     const stub = sinon.stub(wrapper.vm, 'expand_menu')
@@ -164,11 +164,12 @@ describe('Catalogue', () => {
     for(let i = 0; i < 5; i++){
       images.at(i).trigger('click')
     }
-    expect(stub.callCount).to.deep.equal(5)
+    expect(stub.callCount).to.deep.equal(1)
+    expect(stub.getCall(0).args[0]).to.deep.equal(0);
   })
 
   //TODO: REMOVE TIMEOUT
-  it.skip('expand_menu() works correctly - HAS A BREAKING TIMEOUT', () => {
+  it.skip('expand_menu() - BROKEN - HAS A BREAKING TIMEOUT', () => {
   })
 
   it('Click anywhere calls the clickme() function', () => {

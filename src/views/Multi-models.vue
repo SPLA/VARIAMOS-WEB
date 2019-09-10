@@ -178,6 +178,7 @@ export default{
     background-color: #f1f1f1;
     border-radius: 10px 10px 0 0;
     font-weight: bold;
+    font-size: 12px;
 }
 .tabs a:last-child { 
     border-right: 1px solid #ccc;
