@@ -5,7 +5,7 @@
 export function getModelInfo(){
     let info =[];
     //list of graphical models
-    info["gmodels"]=["feature","component","binding_feature_component","istar","adaptation_state","adaptation_hardware","adaptation_binding_state_hardware"];
+    info["gmodels"]=["feature","component","binding_feature_component","istar","adaptation_state","adaptation_hardware","adaptation_binding_state_hardware","control"];
     //define feature model main info
     info["feature"]={projFolders:["Domain"]};
     //define component model main info
@@ -20,6 +20,8 @@ export function getModelInfo(){
     info["adaptation_hardware"]={projFolders:["Application"]};
     //define adaptation_binding_state_hardware model main info
     info["adaptation_binding_state_hardware"]={projFolders:["Application"]};
+    //define control model main info
+    info["control"]={projFolders:["Application"]};
     return info;
 }
 
