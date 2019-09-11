@@ -119,7 +119,7 @@ let main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model
 		graph.setPanning(true);
 		graph.setCellsEditable(false); // Avoid double click cells
 		new mxRubberband(graph); // Enables rectangular selection
-		graph.maximumGraphBounds = new mxRectangle(0, 0, 2000, 2000);
+		graph.maximumGraphBounds = new mxRectangle(0, 0, 4000, 4000);
 		// new mxOutline(graph, document.getElementById('navigator'));
 	}
 

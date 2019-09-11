@@ -1,107 +1,107 @@
 <template>
 	<div>
-					<div class="button_tree_element">
-                        <div class="button-unique" >
-                            <button class="btn-model-area btn btn-sm btn-outline-secondary" type="primary" @click="newProject.isshow=!newProject.isshow" data-test="newprojectbutton">
-                                <div style="padding:1px; font-size:12px;">
-                                    <i class="fas fa-plus"></i>
-                                    {{$t("filemanagement_addproject_button")}}
-                                </div>
-                            </button>
-							<Modal
-								v-model="newProject.isshow"
-								:loading="newProject.loading"
-								:title="$t('filemanagement_addproject_title')"
-								class-name="vertical-center-modal"
-								width="600"
-								ok-text="OK"
-        						cancel-text="Cancel"
-								@on-ok="createproject"
-								@on-cancel="newProject.isshow=false,newProject.formval.projectName=''"
-								data-test="newprojectmodal">
-								<div class="form-horizontal">
-									<div class="form-group">
-										<label class="col-md-3 control-label"><em>*</em> {{$t("filemanagement_addproject_label")}}</label>
-										<div class="col-md-9">
-											<input type="text" class="form-control" maxlength="70" v-model="newProject.formval.projectName" :placeholder="$t('filemanagement_addproject_context')" data-test="newprojectmodalinput"/>
-										</div>
-									</div>
-								</div>
-							</Modal>
-                        </div>
-                    </div>
-                    <div v-if="getdata" style="margin-right:10px; margin-bottom:10px;">
-                        <cotalogue ref="cotalogue"></cotalogue>
-                    </div>
-					<Modal
-						v-model="newName.isshow"
-						:loading="newName.loading"
-						:title="$t('filemanagement_changename_title')"
-						class-name="vertical-center-modal"
-						width="600"
-						ok-text="OK"
-        				cancel-text="Cancel"
-						@on-ok="rename"
-						@on-cancel="newName.isshow=false,newName.formval.changedName='',newName.formval.id=null">
-						<div class="form-horizontal">
-							<div class="form-group">
-								<label class="col-md-3 control-label"><em>*</em>{{$t("filemanagement_changename_label")}}</label>
-								<div class="col-md-9">
-									<input type="text" class="form-control" maxlength="70" v-model="newName.formval.changedName" :placeholder="$t('filemanagement_changename_context')" />
-								</div>
+		<div class="button_tree_element">
+			<div class="button-unique" >
+				<button class="btn-model-area btn btn-sm btn-outline-secondary" type="primary" @click="newProject.isshow=!newProject.isshow" data-test="newprojectbutton">
+					<div style="padding:1px; font-size:12px;">
+						<i class="fas fa-plus"></i>
+						{{$t("filemanagement_addproject_button")}}
+					</div>
+				</button>
+				<Modal
+					v-model="newProject.isshow"
+					:loading="newProject.loading"
+					:title="$t('filemanagement_addproject_title')"
+					class-name="vertical-center-modal"
+					width="600"
+					ok-text="OK"
+					cancel-text="Cancel"
+					@on-ok="createproject"
+					@on-cancel="newProject.isshow=false,newProject.formval.projectName=''"
+					data-test="newprojectmodal">
+					<div class="form-horizontal">
+						<div class="form-group">
+							<label class="col-md-3 control-label"><em>*</em> {{$t("filemanagement_addproject_label")}}</label>
+							<div class="col-md-9">
+								<input type="text" class="form-control" maxlength="70" v-model="newProject.formval.projectName" :placeholder="$t('filemanagement_addproject_context')" data-test="newprojectmodalinput"/>
 							</div>
 						</div>
-					</Modal>
-					<Modal
-						v-model="newApplication.isshow"
-						:loading="newApplication.loading"
-						:title="$t('filemanagement_newapplication_title')"
-						class-name="vertical-center-modal"
-						width="600"
-						ok-text="OK"
-        				cancel-text="Cancel"
-						@on-ok="createApplication"
-						@on-cancel="newApplication.isshow=false,newApplication.applicationName='',newApplication.id=null">
-						<div class="form-horizontal">
-							<div class="form-group">
-								<label class="col-md-2 control-label">{{$t("filemanagement_newapplication_father")}}</label>
-								<div class="col-md-9">
-									<input type="text" class="form-control" disabled v-model="newApplication.parentFolder" />
-								</div>
-							</div>
-							<div class="form-group">
-								<label class="col-md-3 control-label"><em>*</em>{{$t("filemanagement_newapplication_label")}}</label>
-								<div class="col-md-9">
-									<input type="text" class="form-control" maxlength="70" v-model="newApplication.applicationName" :placeholder="$t('filemanagement_newapplication_context')" />
-								</div>
-							</div>
-						</div>
-					</Modal>
-					<Modal
-						v-model="newAdaptation.isshow"
-						:loading="newAdaptation.loading"
-						:title="$t('filemanagement_newadaptation_title')"
-						class-name="vertical-center-modal"
-						width="600"
-						ok-text="OK"
-        				cancel-text="Cancel"
-						@on-ok="createAdaptation"
-						@on-cancel="newAdaptation.isshow=false,newAdaptation.adapatationName='',newAdaptation.id=null">
-						<div class="form-horizontal">
-							<div class="form-group">
-								<label class="col-md-2 control-label">{{$t('filemanagement_newadaptation_father')}}</label>
-								<div class="col-md-9">
-									<input type="text" class="form-control" disabled v-model="newAdaptation.parentFolder" />
-								</div>
-							</div>
-							<div class="form-group">
-								<label class="col-md-3 control-label"><em>*</em>{{$t('filemanagement_newadaptation_label')}}</label>
-								<div class="col-md-9">
-									<input type="text" class="form-control" maxlength="70" v-model="newAdaptation.adapatationName" :placeholder="$t('filemanagement_newadaptation_context')" />
-								</div>
-							</div>
-						</div>
-					</Modal>
+					</div>
+				</Modal>
+			</div>
+		</div>
+		<div v-if="getdata" style="margin-right:10px; margin-bottom:10px;">
+			<cotalogue ref="cotalogue"></cotalogue>
+		</div>
+		<Modal
+			v-model="newName.isshow"
+			:loading="newName.loading"
+			:title="$t('filemanagement_changename_title')"
+			class-name="vertical-center-modal"
+			width="600"
+			ok-text="OK"
+			cancel-text="Cancel"
+			@on-ok="rename"
+			@on-cancel="newName.isshow=false,newName.formval.changedName='',newName.formval.id=null">
+			<div class="form-horizontal">
+				<div class="form-group">
+					<label class="col-md-3 control-label"><em>*</em>{{$t("filemanagement_changename_label")}}</label>
+					<div class="col-md-9">
+						<input type="text" class="form-control" maxlength="70" v-model="newName.formval.changedName" :placeholder="$t('filemanagement_changename_context')" />
+					</div>
+				</div>
+			</div>
+		</Modal>
+		<Modal
+			v-model="newApplication.isshow"
+			:loading="newApplication.loading"
+			:title="$t('filemanagement_newapplication_title')"
+			class-name="vertical-center-modal"
+			width="600"
+			ok-text="OK"
+			cancel-text="Cancel"
+			@on-ok="createApplication"
+			@on-cancel="newApplication.isshow=false,newApplication.applicationName='',newApplication.id=null">
+			<div class="form-horizontal">
+				<div class="form-group">
+					<label class="col-md-2 control-label">{{$t("filemanagement_newapplication_father")}}</label>
+					<div class="col-md-9">
+						<input type="text" class="form-control" disabled v-model="newApplication.parentFolder" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-3 control-label"><em>*</em>{{$t("filemanagement_newapplication_label")}}</label>
+					<div class="col-md-9">
+						<input type="text" class="form-control" maxlength="70" v-model="newApplication.applicationName" :placeholder="$t('filemanagement_newapplication_context')" />
+					</div>
+				</div>
+			</div>
+		</Modal>
+		<Modal
+			v-model="newAdaptation.isshow"
+			:loading="newAdaptation.loading"
+			:title="$t('filemanagement_newadaptation_title')"
+			class-name="vertical-center-modal"
+			width="600"
+			ok-text="OK"
+			cancel-text="Cancel"
+			@on-ok="createAdaptation"
+			@on-cancel="newAdaptation.isshow=false,newAdaptation.adapatationName='',newAdaptation.id=null">
+			<div class="form-horizontal">
+				<div class="form-group">
+					<label class="col-md-2 control-label">{{$t('filemanagement_newadaptation_father')}}</label>
+					<div class="col-md-9">
+						<input type="text" class="form-control" disabled v-model="newAdaptation.parentFolder" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-3 control-label"><em>*</em>{{$t('filemanagement_newadaptation_label')}}</label>
+					<div class="col-md-9">
+						<input type="text" class="form-control" maxlength="70" v-model="newAdaptation.adapatationName" :placeholder="$t('filemanagement_newadaptation_context')" />
+					</div>
+				</div>
+			</div>
+		</Modal>
 					
                     
     </div>

@@ -73,15 +73,17 @@ export function modalCustomization(texts,inputs,default_vals){
         td.innerHTML=texts[i];
         tr.appendChild(td);
 
+        let input = {};
+
         if(i==0){
-            let input = document.createElement('input');
+            input = document.createElement('input');
             input.size=48;
         }
         else if(i==3){
-            let input = document.createElement('input');
+            input = document.createElement('input');
             input.type="file";
         }else{
-            let input = document.createElement('textarea');
+            input = document.createElement('textarea');
             input.cols=50;
         }
 
@@ -107,6 +109,16 @@ export function modalButton(text,function_to_append){
     button.addEventListener("click", function_to_append, false);
     return button;
 }
+ 
+export function downloadFile(filename, text) {
+    var element = document.createElement('a');
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+    element.setAttribute('download', filename); 
+    element.style.display = 'none';
+    document.body.appendChild(element); 
+    element.click(); 
+    document.body.removeChild(element);
+  }
 
 /* end util */
 

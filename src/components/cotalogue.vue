@@ -24,19 +24,9 @@
 								class="fa"
 								aria-hidden="true"
 								:class="[item.data.open?'fa-angle-down':'fa-angle-right']"
-								
+								@dblclick="dblClick($index)"
 								:style="{position: 'absolute',left: (20 * item.data.level - 17) + 'px',top: '6px'}"
 								data-test="modelFolder">
-							</i>
-							<i v-if="item.data.nodeType===2"
-								aria-hidden="true"
-								class="fa fa-circle"
-								:title="['Feature','Relation','Bundle'][item.data.status]"
-								:style="{position: 'absolute',
-										left: (20 * item.data.level - 14) + 'px',
-										top: '9px',
-										color: ['#0f0','#ddd','#f00'][item.data.status],
-										fontSize: '10px'}">
 							</i>
 							<span class="name-container"
 								:class="'vue-contextmenuName-menu' + item.data.nodeType + item.data.nodeId"
@@ -98,7 +88,8 @@ export default {
 					// accepts old version of delete project
 					3:[getcontextmenulist()['delete_project']],
 					'empty':[],
-					'application_folder':[getcontextmenulist()['create_adp'],getcontextmenulist()['rename'],getcontextmenulist()['delete_folder']],
+					//'application_folder':[getcontextmenulist()['create_adp'],getcontextmenulist()['rename'],getcontextmenulist()['delete_folder']],
+					'application_folder':[getcontextmenulist()['rename'],getcontextmenulist()['delete_folder']],
 					'adaptation_folder':[getcontextmenulist()['rename'],getcontextmenulist()['delete_folder']]}
 			}
 		}
@@ -189,9 +180,22 @@ export default {
 					 * @fires module:store~actions:updatemodelcomponent
 					 * @fires module:store~actions:updateactivetab
 					 */
-				    this.$router.push("/models/"+projectname+"/"+foldername+"/feature");
-					this.$store.dispatch('updatemodelcomponent', index);
-					this.$store.dispatch('updateactivetab', 'feature');
+					let parentId = data[index].data.nodeId;
+					let nodeName = "";
+					for(let i = 0; i < data.length; i++)
+					{
+						if(data[i].data.parentId === parentId){
+							nodeName = data[i].data.nodeName;
+							break;
+						}
+					}
+					if(nodeName == ""){
+						this.$router.push("/models/"+projectname+"/default/default");
+					}else{
+						this.$router.push("/models/"+projectname+"/"+foldername+"/"+nodeName);
+						this.$store.dispatch('updatemodelcomponent', index);
+						this.$store.dispatch('updateactivetab', nodeName);
+					}
 				}
 				// if we are closing one folder
 				else if(data[index].data.nodeType === 1 && data[index].data.open)
@@ -288,7 +292,8 @@ export default {
 			// if application folder is not open, change its context menu
 			else if(data[index].data.contextmenuIndex === 'application_folder' && !data[index].data.open)
 			{
-				this.contextMenuData.menulists['application_folder'] = [getcontextmenulist()['create_adp'], getcontextmenulist()['rename'], getcontextmenulist()['delete_folder']];
+				//this.contextMenuData.menulists['application_folder'] = [getcontextmenulist()['create_adp'], getcontextmenulist()['rename'], getcontextmenulist()['delete_folder']];
+				this.contextMenuData.menulists['application_folder'] = [getcontextmenulist()['rename'], getcontextmenulist()['delete_folder']];
 			}
 		},
 		// double click folder and project will trigger expand menu

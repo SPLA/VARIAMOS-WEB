@@ -3,14 +3,21 @@ import {
   createLocalVue
 } from '@vue/test-utils';
 import {
-  getters
-} from "../../../src/store/filetree";
+  getters,
+} from "../../../../src/store/filetree";
 import Vuex from 'vuex';
-import MultiModels from '../../../src/views/Multi-models'
-import model from '../../../src/views/Models'
+//import VueRouter from 'vue-router'
+import VueI18n from 'vue-i18n'
+import i18n from '../../../../src/i18n'
+// eslint-disable-next-line no-unused-vars
+import ApplicationMenu from '../../../../src/components/model_actions/ApplicationMenu.vue'
+import iView from 'iview';
+import 'iview/dist/styles/iview.css';
+// eslint-disable-next-line no-unused-vars
+import flushPromises from 'flush-promises'
 import {
   stateFactory
-} from '../util/StateManagement'
+} from '../../util/StateManagement'
 const chai = require("chai");
 const expect = chai.expect;
 const sinon = require("sinon");
@@ -20,8 +27,10 @@ chai.use(sinonChai)
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
+localVue.use(iView)
+localVue.use(VueI18n)
 
-describe('Multi-Models', () => {
+describe.skip('ApplicationMenu - NOT DONE', () => {
   /**
    * The localgetters object permits us to spy
    * on the behaviour of the getters within the
@@ -55,8 +64,12 @@ describe('Multi-Models', () => {
    * @returns A wrapper for the component.
    */
   const wrapperFactory = (empty, projectName = '', folderName = '', typeName = '') => {
+    const actions = {
+
+    }
     const filetree = {
       state: stateFactory(empty),
+      actions,
       getters: localgetters
     }
     const store = new Vuex.Store({
@@ -65,15 +78,15 @@ describe('Multi-Models', () => {
       }
     })
     mockDispatch = sinon.stub(store, 'dispatch')
-    routPushStub = sinon.stub()
     /**
      * We use shallowMount to avoid mounting the underlying
      * component structure so as to not overload the required
      * dependecies.
      */
-    return shallowMount(MultiModels, {
+    return shallowMount(Verification, {
       localVue,
       store,
+      //router,
       mocks: {
         $route: {
           params: {
@@ -89,50 +102,19 @@ describe('Multi-Models', () => {
     })
   }
 
-  before( () => {
+  before(() => {
     localgetters = {
-      getactivetab: sinon.spy(getters, 'getactivetab'),
       getdata: sinon.spy(getters, 'getdata'),
-      getmodelcomponent: sinon.spy(getters, 'getmodelcomponent'),
-      getmodelcomponentindex: sinon.spy(getters, 'getmodelcomponentindex')
     }
   })
 
-  it('model is shown with complete state', async () => {
-    const emptyState = false
-    const wrapper = wrapperFactory(emptyState)
-    const componentModel = wrapper.find(model)
-    await wrapper.vm.$nextTick()
-    expect(componentModel.exists()).to.be.ok
+  beforeEach(function () {
+    routPushStub = sinon.stub();
   })
 
-  it('model is not shown with empty state', () => {
-    const emptyState = true
-    const wrapper = wrapperFactory(emptyState)
-    const componentModel = wrapper.find(model)
-    expect(componentModel.exists()).to.not.be.ok
+  after(() => {
+    sinon.restore();
   })
 
-  it('Message is shown when only selecting project', () => {
-    const emptyState = true
-    const wrapper = wrapperFactory(emptyState, 'Model1', 'default', 'default')
-    const message = wrapper.find('[data-test="nofolder"]')
-    expect(message.exists()).to.be.ok
-  })
-
-  it('Message is shown when there is no project', () => {
-    const emptyState = true
-    const wrapper = wrapperFactory(emptyState, 'default', 'default', 'default')
-    const message = wrapper.find('[data-test="noproject"]')
-    expect(message.exists()).to.be.ok
-  })
-
-  it('clickActiveTab() works when clicking on tab', () => {
-    const emptyState = false
-    const wrapper = wrapperFactory(emptyState, 'Model1', 'Domain-Model1', 'feature')
-    const link = wrapper.findAll('#atabs').at(1)
-    link.trigger('click')
-    expect(routPushStub).to.have.been.called
-    expect(mockDispatch).to.have.been.called
-  })
+  //TODO: TEST WITH BACKEND
 })

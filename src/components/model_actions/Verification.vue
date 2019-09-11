@@ -3,8 +3,9 @@
     <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
       {{ $t("verification") }}
     </a>
-    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+    <div id="verification-menu" class="dropdown-menu" aria-labelledby="navbarDropdown">
       <a @click="test()" class="dropdown-item">Test sending the model</a>
+      <a data-menudisplay="['adaptation_state','adaptation_hardware','adaptation_binding_state_hardware']" @click="test_web()" class="dropdown-item">Test sending the model to microservices</a>
       <a v-for="item in menu_options" v-bind:key="item.label" v-on:click="clear_overlays(); item.func(current_graph, cell_errors, cell_overlays);" class="dropdown-item">
         {{ item.label }}
       </a>
@@ -15,7 +16,7 @@
 
 <script>
 import axios from "axios";
-import { setupModal, modalH3, modalSimpleText } from '../../assets/js/common/util'
+import { setupModal, modalH3, modalSimpleText, modalButton } from '../../assets/js/common/util'
 
 export default {
   data: function(){
@@ -82,6 +83,33 @@ export default {
           let c_header = modalH3("Test response");
           let c_body = modalSimpleText(response.data);
           setupModal(c_header,c_body);
+          mxUtils.popup(response.data, true);
+        })
+        .catch(e => {
+          this.errors.push(e); 
+          let c_header = modalH3(this.$t("modal_error"),"error");
+          let c_body = modalSimpleText(e + this.$t("model_actions_backend_problem"));
+          setupModal(c_header,c_body);
+        });
+      }else{
+        let c_header = modalH3(this.$t("modal_error"),"error");
+        let c_body = modalSimpleText(this.$t("verification_path_problem"));
+        setupModal(c_header,c_body);
+      }
+      
+    },
+    test_web(){
+      if (localStorage["domain_implementation_main_path"]) {
+        this.errors=[];
+        let encoder = new mxCodec();
+        let result = encoder.encode(this.current_graph.getModel());
+        let xml = mxUtils.getPrettyXml(result);
+        axios.post('http://localhost:8091/api/application/xml/1/1/configuration', xml)
+        .then(response => {
+          let c_header = modalH3("Test response");
+          let c_body = modalSimpleText("XML code received by the server.");
+          setupModal(c_header,c_body);
+          mxUtils.popup(response.data, true);
         })
         .catch(e => {
           this.errors.push(e); 

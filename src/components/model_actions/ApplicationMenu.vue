@@ -1,50 +1,27 @@
 
 <template>
   <li class="nav-item dropdown">
-    <a
-      class="nav-link dropdown-toggle"
-      id="navbarDropdown"
-      role="button"
-      data-toggle="dropdown"
-      aria-haspopup="true"
-      aria-expanded="false"
-    >{{ $t("application_menu") }}</a>
-    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-      <a @click="set_parameters()" class="dropdown-item">{{ $t("application_menu_set_app") }}</a>
-      <a
-        @click="execute_derivation()"
-        class="dropdown-item"
-      >{{ $t("domain_implementation_execute") }}</a>
-      <a
-        @click="customize_derivation()"
-        class="dropdown-item"
-      >{{ $t("domain_implementation_customize") }}</a>
-      <a @click="verify_derivation()" class="dropdown-item">{{ $t("domain_implementation_verify") }}</a>
-
-      <a @click="component()" class="dropdown-item">{{ $t("generate_graph") }}</a>
-
-      <a
-        @click="adaptation_state_source_code_generation()"
-        class="dropdown-item"
-      >Source code generation</a>
+    <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      {{ $t("application_menu") }}
+    </a>
+    <div id="application-menu" class="dropdown-menu" aria-labelledby="navbarDropdown">
+      <a data-menudisplay="['feature','component','binding_feature_component']" @click="set_parameters()" class="dropdown-item">{{ $t("application_menu_set_app") }}</a>
+      <a data-menudisplay="['feature','component','binding_feature_component']" @click="execute_derivation()" class="dropdown-item">{{ $t("domain_implementation_execute") }}</a>      
+      <a data-menudisplay="['feature','component','binding_feature_component']" @click="customize_derivation()" class="dropdown-item">{{ $t("domain_implementation_customize") }}</a>
+      <a data-menudisplay="['feature','component','binding_feature_component']" @click="verify_derivation()" class="dropdown-item">{{ $t("domain_implementation_verify") }}</a>
+      <a data-menudisplay="['adaptation_state','adaptation_hardware','adaptation_binding_state_hardware']" @click="adaptation_state_source_code_generation()" class="dropdown-item">Source code generation</a>
+      <a data-menudisplay="['control']" @click="component()" class="dropdown-item">{{ $t("generate_graph") }}</a>
     </div>
+
   </li>
 </template>
 
 <script>
 import axios from "axios";
-import di_actions from "@/assets/js/models/actions/domain_implementation/di_actions.js";
+import di_actions from '@/assets/js/models/actions/domain_implementation/di_actions.js';
 import "@/assets/js/chart/Chart.min.js";
-import {
-  setupModal,
-  modalH3,
-  modalSimpleText,
-  modalInputTexts,
-  modalCustomization,
-  modalButton
-} from "../../assets/js/common/util";
-import { uptime } from "os";
-import { deepStrictEqual } from 'assert';
+import { setupModal, modalH3, modalSimpleText, modalInputTexts, modalCustomization, modalButton, downloadFile } from '../../assets/js/common/util';
+import adaptation_state_actions from '@/assets/js/models/actions/domain_implementation/adaptation_state_actions.js';
 
 export default {
   data: function() {
@@ -372,9 +349,7 @@ export default {
      
      
       setupModal(c_header, c_body, c_footer);
-
       
-
     },
     generate_graph() {
       let c_header = modalH3(this.$t("generate_graph_title"));
@@ -402,9 +377,7 @@ export default {
           names.push(target_sys)
         }
       }
-
   
-
       //  target system variables
       let target;// 
       let target_system_id; // target system id
@@ -412,18 +385,14 @@ export default {
       let derivate;// derivate value of the target system element
       let integral;// integral value of the target system element
       let target_system_relations; // relations target system
-
       // controller variables
       let id_controller;// controller id
       let controller_relations; // controller relations
       let id_controller_inner;
       let controller_inner_relations;
-
       let proportional_inner;// proportional value of the target system element
       let derivate_inner;// derivate value of the target system element
       let integral_inner;// integral value of the target system element
-
-
       // summing point variables
       let id_summing; // summing point id
       let summing_relations; // summing relations
@@ -432,11 +401,9 @@ export default {
       let summing_value;// value summing
       let summing_value_inner; // value summing inner
       let id_summing_plant // id summing plant
-
       // filter variables
       let id_filter; // filter relations
       let filter_relations;
-
       // set point variables
       let setpoint_value; // value setpoint
       let setpoint_time;
@@ -444,14 +411,11 @@ export default {
       let id_set;// id setpoint
       let times=[];
       let id_set2=false;
-
       // subtraction
-
       let id_subtraction;
       let subtraction_relations;
       let subraction_value;
     
-
       // branch variables
       let id_branch// id branchpoint
       let id_final_branch
@@ -459,33 +423,26 @@ export default {
       let branch_relations_targets2// target relations branchpoint
       let branch_relations// source relations branchpoint
        let final_branch_relations// source relations branchpoint
-
       // output variables
       let id_output// id output
       let currentoutput// current output
-
       // transducer variables
       let value_transducer// value transducer
       let id_transducer// id transducer
       let transducer_relations// transducer relations
-
       // list elements
       let list_elements=[];
       let id_final;
-
       let feedback_root = this.current_graph.getModel().getCell("control");
       let childs = this.current_graph.getModel().getChildEdges(feedback_root);
       for (let i = 0; i < names.length; i++) 
       {    
         if ( value_label== names[i]  )
         {
-
           setupModal(c_header,blank,c_footer);
       let main_modal = document.getElementById("main_modal_body");
       let canvas = document.createElement("canvas");
-
           
-
            for (let i = 0; i < childs.length; i++)
             {
               let source = childs[i].source;
@@ -534,7 +491,6 @@ export default {
               }
          
             }
-
             controller_inner_relations = this.current_graph.getModel().getIncomingEdges
             (this.current_graph.getModel().getCell(id_summing_plant));
       
@@ -555,8 +511,6 @@ export default {
               }
               
             }
-
-
            
            controller_inner_relations = this.current_graph.getModel().getIncomingEdges
             (this.current_graph.getModel().getCell(id_controller_inner));
@@ -577,13 +531,11 @@ export default {
               
             }
             
-
             summing_relations = this.current_graph.getModel().getIncomingEdges
             (this.current_graph.getModel().getCell(id_summing));
             for (let i = 0; i < summing_relations.length; i++)
             {
               let source = summing_relations[i].source;
-
               if(source.getAttribute("type")=="filter")
               {
                 id_filter = source.getId(); 
@@ -595,7 +547,6 @@ export default {
                 id_final_branch = source.getId(); 
                 
               } 
-
               if(source.getAttribute("type")=="target_system"  )
               { 
                 target_system_id = source.getId(); 
@@ -608,7 +559,6 @@ export default {
                 proportional = source.getAttribute("Proportional");
                 derivate = source.getAttribute("Derivate");
                 integral = source.getAttribute("Integral");
-
               
               } 
               
@@ -626,17 +576,14 @@ export default {
                 id_transducer=source.getId();
                
               }
-
               
             }
             
-
             controller_relations =  this.current_graph.getModel().getIncomingEdges
               ( this.current_graph.getModel().getCell(id_controller));
             for (let i = 0; i < controller_relations.length; i++)
             {
                     let source = controller_relations[i].source;
-
                     if(source.getAttribute("type")=="summing_point")
               {
                 id_initial_summing = source.getId(); 
@@ -645,16 +592,13 @@ export default {
                 
               }
               
-
             }
-
             summing_relations2 =  this.current_graph.getModel().getIncomingEdges
               ( this.current_graph.getModel().getCell(id_initial_summing));
             for (let i = 0; i < summing_relations2.length; i++)
             {
                     let source = summing_relations2[i].source;
                    
-
                   if(source.getAttribute("type")=="set_point"  )
               { 
                 id_set = source.getId(); 
@@ -664,7 +608,6 @@ export default {
                 times.push(setpoint_time);
                  list_elements.push(id_set); 
               } 
-
               else if(source.getAttribute("type")=="filter")
               {
                 id_filter = source.getId(); 
@@ -681,7 +624,6 @@ export default {
                 id_transducer = source.getId(); 
                 
               } 
-
             }
                filter_relations =  this.current_graph.getModel().getIncomingEdges
               ( this.current_graph.getModel().getCell(id_filter));
@@ -700,7 +642,6 @@ export default {
                 list_elements.push(id_branch); 
               }   
             }
-
              transducer_relations =  this.current_graph.getModel().getIncomingEdges
               ( this.current_graph.getModel().getCell(id_transducer));
             for (let i = 0; i < transducer_relations.length; i++)
@@ -713,7 +654,6 @@ export default {
               }
                
             }
-
               branch_relations_targets =this.current_graph.getModel().getOutgoingEdges
             (this.current_graph.getModel().getCell(id_final_branch));
             for (let i = 0; i < branch_relations_targets.length; i++)
@@ -725,7 +665,6 @@ export default {
                  list_elements.push(id_output); 
               }
             }
-
              final_branch_relations =this.current_graph.getModel().getIncomingEdges
             (this.current_graph.getModel().getCell(id_final_branch));
             for (let i = 0; i < final_branch_relations.length; i++)
@@ -741,7 +680,6 @@ export default {
               
             }
            
-
             branch_relations = this.current_graph.getModel().getIncomingEdges
            (this.current_graph.getModel().getCell(id_branch));
           for(let i = 0; i < branch_relations.length; i++)
@@ -769,9 +707,7 @@ export default {
           else{
             this.current_graph.getModel().setVisible(childs2[i], true)
           }
-
           }
-
            let MiniPID = (function()
        {
           function MiniPID(kp, ki, kd, dt)
@@ -805,7 +741,6 @@ export default {
             }
             // methods
             MiniPID.prototype.getOutput = function(actual, setpoint, error) {
-
             let output=currentoutput;
             let Poutput;
             let Ioutput;
@@ -814,23 +749,18 @@ export default {
             let derivate;
             this.error =error;
             this.setpoint = setpoint;
-
            
             Foutput = this.F * setpoint;
             Poutput = this.P * error;
-
             // first run 
             if (this.firstRun) {
                 this.lastActual = error;
                 this.lastOutput = Poutput + Foutput;
                 this.firstRun = false;
             }
-
             Doutput = Doutput = -this.D * ((actual - this.lastActual) / this.DT);
             this.lastActual = actual;
-
         
-
             Ioutput = this.I * (this.errorSum);
             if (this.maxIOutput !== 0)
               {
@@ -876,7 +806,6 @@ export default {
                     this.maxError = this.maxIOutput / this.I;
                 }
               }
-
               MiniPID.prototype.RampRateOutput = function (rate) 
               {
                 this.outputRampRate = rate;
@@ -892,18 +821,15 @@ export default {
                 }
                 return value;
               };
-
               MiniPID.prototype.delimited = function (value, min, max)
               {
                 return (min < value) && (value < max);
               };
-
               MiniPID.prototype.reversedf = function ()
               {
                   this.P = (0 - this.P);
                   this.I = (0 - this.I);
                   this.D = (0 - this.D);
-
                 
               }
               MiniPID.prototype.checkSigns = function()
@@ -926,7 +852,6 @@ export default {
               }
         return MiniPID;
       })();
-
       let control_loop = [];// list outputs
       let listaset=[];// list set points
       function main()
@@ -1038,7 +963,6 @@ export default {
       canvas.width = 800;
       canvas.height = 300;
       canvas.className = "my-4 chartjs-render-monitor";
-
       for (let i = 0; i < childs.length; i++) {
         if (childs[i].getAttribute("type") == "set_point") {
           let set = childs[i].getAttribute("SetPoint");
@@ -1062,7 +986,6 @@ export default {
               borderWidth: 2,
               pointBackgroundColor: "#D83A18",
               pointBorderColor: "transparent",
-
               pointBackgroundColor: "transparent",
               pointBorderWidth: 0
             },
@@ -1095,21 +1018,11 @@ export default {
           }
         }
       });
-
-        }
-
-       
-        
-        
-       
+        }   
       }
-
     
-
-     
-      
     },
-    adaptation_state_source_code_generation() {
+     adaptation_state_source_code_generation() {
       try {
         let serverUrl =
           localStorage["domain_implementation_main_path"] +

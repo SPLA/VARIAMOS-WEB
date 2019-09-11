@@ -12,9 +12,7 @@ import Filemanagetree from '../../../src/views/Filemanagetree.vue'
 import cotalogue from '../../../src/components/cotalogue.vue'
 import iView from 'iview';
 import 'iview/dist/styles/iview.css';
-// eslint-disable-next-line no-unused-vars
-import flushPromises from 'flush-promises'
-import Bus from '../../../src/assets/js/common/bus.js'
+import Vue from 'vue'
 import {
   stateFactory
 } from '../util/StateManagement'
@@ -54,6 +52,31 @@ describe('Filemanagetree', () => {
    * function.
    */
   let mockDispatch;
+
+  /**
+   * localBus will hold a custom instance of the
+   * event bus.
+   */
+  let localBus;
+
+  class LocalStorageMock {
+    constructor() {
+      this.store = {};
+    }
+    clear() {
+      this.store = {};
+    }
+    getItem(key) {
+      return this.store[key] || null;
+    }
+    setItem(key, value) {
+      this.store[key] = value.toString();
+      this[key] = value
+    }
+    removeItem(key) {
+      delete this.store[key];
+    }
+  }
 
   /**
    * WrapperFactory creates a Vue component wrapper
@@ -103,25 +126,12 @@ describe('Filemanagetree', () => {
     })
   }
 
+  /**
+   * The rationale for using resetting it all before each test is
+   * to make sure every instance that appears in the tests is
+   * independent from all others.
+   */
   beforeEach(() => {
-    class LocalStorageMock {
-      constructor() {
-        this.store = {};
-      }
-      clear() {
-        this.store = {};
-      }
-      getItem(key) {
-        return this.store[key] || null;
-      }
-      setItem(key, value) {
-        this.store[key] = value.toString();
-      }
-      removeItem(key) {
-        delete this.store[key];
-      }
-    }
-
     global.localStorage = new LocalStorageMock;
 
     localgetters = {
@@ -131,12 +141,13 @@ describe('Filemanagetree', () => {
       getmodelcomponentindex: sinon.spy(getters, 'getmodelcomponentindex')
     }
 
+    localBus = new Vue();
+
     routPushStub = sinon.stub();
   })
 
   afterEach(function () {
     sinon.restore();
-    mockDispatch = undefined;
   })
 
   it('localStorage correctly accessed for filetree data', () => {
@@ -188,10 +199,11 @@ describe('Filemanagetree', () => {
   })
 
   it('createApplication() Creates a new application folder in non-empty project', () => {
+    Filemanagetree.__Rewire__('Bus', localBus)
     const emptyState = false;
     const wrapper = wrapperFactory(emptyState)
     const data = wrapper.vm.getdata[0]
-    Bus.$emit('createapplication', data)
+    localBus.$emit('createapplication', data)
     wrapper.setData({
       newApplication: {
         ...wrapper.vm.newApplication,
@@ -201,47 +213,57 @@ describe('Filemanagetree', () => {
     wrapper.vm.createApplication()
     expect(mockDispatch).to.have.been.calledWith('createapplication')
     expect(mockDispatch.getCall(0).args[1].applicationName).to.deep.equal('TEST')
+    __rewire_reset_all__();
   })
 
   it('Bus.$on("createapplication") shows modal correctly', () => {
+    Filemanagetree.__Rewire__('Bus', localBus)
     const emptyState = false
     const wrapper = wrapperFactory(emptyState)
     const data = wrapper.vm.getdata[0]
-    Bus.$emit('createapplication', data)
+    localBus.$emit('createapplication', data)
     expect(wrapper.vm.newApplication.isshow).to.be.ok
+    __rewire_reset_all__();
   })
 
   it('Bus.$on("createadaption")(sic) shows modal correctly', () => {
+    Filemanagetree.__Rewire__('Bus', localBus)
     const emptyState = false
     const wrapper = wrapperFactory(emptyState)
     const data = wrapper.vm.getdata[5]
-    Bus.$emit('createadaption', data)
+    localBus.$emit('createadaption', data)
     expect(wrapper.vm.newAdaptation.isshow).to.be.ok
+    __rewire_reset_all__();
   })
 
-  //TODO Fix dispatch stub
-  it.skip('Bus.$on("deletedire") deletes the folder PASSING BUT STRANGE OUTPUT', () => {
+  it('Bus.$on("deletedire") deletes the folder', () => {
+    Filemanagetree.__Rewire__('Bus', localBus)
     const emptyState = false
     const wrapper = wrapperFactory(emptyState)
     const data = wrapper.vm.getdata[5]
-    Bus.$emit('deletedire', data)
+    localBus.$emit('deletedire', data)
+    expect(mockDispatch).to.have.been.called
+    __rewire_reset_all__();
   })
 
-  //TODO Fix dispatch stub
-  it.skip('Bus.$on("deleteproject") deletes the folder PASSING BUT STRANGE OUTPUT', () => {
+  it('Bus.$on("deleteproject") deletes the folder', () => {
+    Filemanagetree.__Rewire__('Bus', localBus)
     const emptyState = false
     const wrapper = wrapperFactory(emptyState)
     const data = wrapper.vm.getdata[0]
-    Bus.$emit('deleteproject', data)
+    localBus.$emit('deleteproject', data)
     expect(mockDispatch).to.have.been.called
     expect(routPushStub).to.have.been.called
+    __rewire_reset_all__();
   })
 
   it('Bus.$on("newname") creates the modal', () => {
+    Filemanagetree.__Rewire__('Bus', localBus)
     const emptyState = false
     const wrapper = wrapperFactory(emptyState)
     const data = wrapper.vm.getdata[5]
-    Bus.$emit('newname', data)
+    localBus.$emit('newname', data)
     expect(wrapper.vm.newName.isshow).to.be.ok
+    __rewire_reset_all__();
   })
 })
