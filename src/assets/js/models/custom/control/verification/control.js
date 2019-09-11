@@ -6,11 +6,6 @@ let control_verification = function control_verification()
       "label":"Check unique  target system",
       "func":check_unique_ids
   }
-  data[1]={
-    "label":"test",
-    "func":collap
-}
-
 
   return data;
 
@@ -44,46 +39,6 @@ let control_verification = function control_verification()
         alert("No errors found");
       }
   }
-
-
-  function collap(graph)
-  {
-  var binding_root = graph.getModel().getCell("control");    
-        var control_relations = graph.getModel().getChildEdges(binding_root);
-
-        var customizations = [];
-
-        for (var i = 0; i < control_relations.length; i++) {
-            var source = control_relations[i].source;
-            var target = control_relations[i].target;
-            if(source.getAttribute("type")=="target_system"  || source.getAttribute("type")=="summing_point" || source.getAttribute("type")=="branchpoint"  )
-            { //only selected concrete features are analyzed
-                var label = target.getAttribute("label");
-                alert("destinos:  "+label)
-                var id = target.getId();
-                /*var origin = source.getAttribute("label")*/
-               /* alert("destino"+label+"origen"+origin);*/
-               
-
-                graph.cellsToggled(target,true);
-                var inco_egdes = graph.getModel().getIncomingEdges(graph.getModel().getCell(label))
-
-                for (var j = 0; j < inco_egdes.length; j++) {
-                  var file_source = inco_egdes[j].source;
-                  
-                }
-            }
-
-           
-        }
-
-          
-        
-        return customizations;
-
-  }
-
-
 
 
 }

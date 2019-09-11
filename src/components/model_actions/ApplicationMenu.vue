@@ -363,7 +363,7 @@ export default {
     component()
     {
       let c_header = modalH3("Monitoring");
-      let default_vals=["target_system"]
+      let default_vals=[""]
       let texts = ["Target system to be controlled: "];
       let inputs = ["target_system"];
       
@@ -383,21 +383,22 @@ export default {
       let c_footer = modalButton("Return", this.component);
       let lista = [];
   
-      setupModal(c_header,blank,c_footer);
-      let main_modal = document.getElementById("main_modal_body");
-      let canvas = document.createElement("canvas");
       
-      let prueb2 = [];
+      
+      let result_outputs = [];
+      let result_outputs2 = [];
+      let result=[]
       let timef = [];
       let names = [];
       let feedback_control = this.current_graph.getModel().getCell("control");
-      let target_system_vertices = this.current_graph.getModel().getChildVertices(feedback_control);
-      //navigates through the feature model childs
+      let target_system_vertices = this.current_graph.getModel().getChildEdges(feedback_control);
+      //navigates through the feature model childsld
       for (let i = 0; i < target_system_vertices.length; i++)
        {
-        if(target_system_vertices[i].getAttribute("type")=="target_system")
+         let source = target_system_vertices[i].source; 
+        if(source.getAttribute("type")=="target_system")
         {
-          let target_sys = target_system_vertices[i].getAttribute("label");
+          let target_sys = source.getAttribute("label");
           names.push(target_sys)
         }
       }
@@ -415,10 +416,22 @@ export default {
       // controller variables
       let id_controller;// controller id
       let controller_relations; // controller relations
+      let id_controller_inner;
+      let controller_inner_relations;
+
+      let proportional_inner;// proportional value of the target system element
+      let derivate_inner;// derivate value of the target system element
+      let integral_inner;// integral value of the target system element
+
 
       // summing point variables
       let id_summing; // summing point id
       let summing_relations; // summing relations
+      let id_initial_summing; // summing initial id
+      let summing_relations2;
+      let summing_value;// value summing
+      let summing_value_inner; // value summing inner
+      let id_summing_plant // id summing plant
 
       // filter variables
       let id_filter; // filter relations
@@ -426,30 +439,50 @@ export default {
 
       // set point variables
       let setpoint_value; // value setpoint
-      let setpoint_time; // time setpoint
+      let setpoint_time;
       let setpoints=[]; // array
       let id_set;// id setpoint
       let times=[];
+      let id_set2=false;
+
+      // subtraction
+
+      let id_subtraction;
+      let subtraction_relations;
+      let subraction_value;
+    
 
       // branch variables
       let id_branch// id branchpoint
+      let id_final_branch
       let branch_relations_targets// target relations branchpoint
+      let branch_relations_targets2// target relations branchpoint
       let branch_relations// source relations branchpoint
+       let final_branch_relations// source relations branchpoint
 
       // output variables
       let id_output// id output
+      let currentoutput// current output
 
       // transducer variables
       let value_transducer// value transducer
+      let id_transducer// id transducer
+      let transducer_relations// transducer relations
+
+      // list elements
+      let list_elements=[];
+      let id_final;
 
       let feedback_root = this.current_graph.getModel().getCell("control");
       let childs = this.current_graph.getModel().getChildEdges(feedback_root);
-      
-
       for (let i = 0; i < names.length; i++) 
       {    
         if ( value_label== names[i]  )
         {
+
+          setupModal(c_header,blank,c_footer);
+      let main_modal = document.getElementById("main_modal_body");
+      let canvas = document.createElement("canvas");
 
           
 
@@ -458,19 +491,22 @@ export default {
               let source = childs[i].source;
               if(source.getAttribute("type")=="target_system" )
                 { //only selected concrete features are analyzed
+                
+                  if(source.getAttribute("label")== value_label)
+                  {
                    target_system_id = source.getId();
                    proportional = source.getAttribute("Proportional");
                    derivate = source.getAttribute("Derivate");
                    integral = source.getAttribute("Integral"); 
+                   list_elements.push(target_system_id);
                    
-                      
+                
+                  }
+                 
+                                 
                 }
-
-           
+              
             }
-
-            
-
             target_system_relations = this.current_graph.getModel().getIncomingEdges
             (this.current_graph.getModel().getCell(target_system_id));
             for (let i = 0; i < target_system_relations.length; i++)
@@ -478,25 +514,69 @@ export default {
             let source = target_system_relations[i].source;    
             if(source.getAttribute("type")=="controller")
               { 
-                id_controller = source.getId();
-                proportional = source.getAttribute("Proportional");
-                derivate = source.getAttribute("Derivate");
-                integral = source.getAttribute("Integral"); 
+                
+                id_controller_inner= source.getId();
+                proportional_inner = source.getAttribute("Proportional");
+                derivate_inner = source.getAttribute("Derivate");
+                integral_inner = source.getAttribute("Integral");
+                list_elements.push(id_controller);
+                
+                  
+                    
+              }
+         
+            
+               if(source.getAttribute("type")=="summing_point")
+              { 
+                     id_summing_plant = source.getId();
+                
+                list_elements.push(id_summing);     
               }
          
             }
 
-            controller_relations = this.current_graph.getModel().getIncomingEdges
-            (this.current_graph.getModel().getCell(id_controller));
+            controller_inner_relations = this.current_graph.getModel().getIncomingEdges
+            (this.current_graph.getModel().getCell(id_summing_plant));
       
-            for (let i = 0; i < controller_relations.length; i++)
+            for (let i = 0; i < controller_inner_relations.length; i++)
             {
-              let source = controller_relations[i].source;
+              let source = controller_inner_relations[i].source;
+             if(source.getAttribute("type")=="controller")
+              { 
+                
+                id_controller_inner= source.getId();
+                proportional_inner = source.getAttribute("Proportional");
+                derivate_inner = source.getAttribute("Derivate");
+                integral_inner = source.getAttribute("Integral");
+                list_elements.push(id_controller);
+                
+                  
+                    
+              }
+              
+            }
+
+
+           
+           controller_inner_relations = this.current_graph.getModel().getIncomingEdges
+            (this.current_graph.getModel().getCell(id_controller_inner));
+      
+            for (let i = 0; i < controller_inner_relations.length; i++)
+            {
+              let source = controller_inner_relations[i].source;
               if(source.getAttribute("type")=="summing_point"  )
               {
-                id_summing = source.getId();      
+                id_summing = source.getId();
+                
+                list_elements.push(id_summing);
+                 summing_value_inner = source.getAttribute("Direction");
+                
+                
+                    
               } 
+              
             }
+            
 
             summing_relations = this.current_graph.getModel().getIncomingEdges
             (this.current_graph.getModel().getCell(id_summing));
@@ -507,15 +587,101 @@ export default {
               if(source.getAttribute("type")=="filter")
               {
                 id_filter = source.getId(); 
+                 list_elements.push(id_filter); 
               }
-              else if(source.getAttribute("type")=="set_point"  )
+                
+               if(source.getAttribute("type")=="branchpoint"  )
+              { 
+                id_final_branch = source.getId(); 
+                
+              } 
+
+              if(source.getAttribute("type")=="target_system"  )
+              { 
+                target_system_id = source.getId(); 
+                
+              } 
+               if(source.getAttribute("type")=="controller"  )
+              {
+                id_set2 = true;
+                id_controller = source.getId();
+                proportional = source.getAttribute("Proportional");
+                derivate = source.getAttribute("Derivate");
+                integral = source.getAttribute("Integral");
+
+              
+              } 
+              
+                  if(source.getAttribute("type")=="set_point"  )
               { 
                 id_set = source.getId(); 
                 setpoint_value = source.getAttribute("SetPoint"); 
                 setpoints.push(setpoint_value);
                 setpoint_time = source.getAttribute("Time");
                 times.push(setpoint_time);
-              }    
+                 list_elements.push(id_set); 
+              }
+              if(source.getAttribute("type")=="transducer"  )
+              { 
+                id_transducer=source.getId();
+               
+              }
+
+              
+            }
+            
+
+            controller_relations =  this.current_graph.getModel().getIncomingEdges
+              ( this.current_graph.getModel().getCell(id_controller));
+            for (let i = 0; i < controller_relations.length; i++)
+            {
+                    let source = controller_relations[i].source;
+
+                    if(source.getAttribute("type")=="summing_point")
+              {
+                id_initial_summing = source.getId(); 
+                 list_elements.push(id_initial_summing);
+                 summing_value = source.getAttribute("Direction");
+                
+              }
+              
+
+            }
+
+            summing_relations2 =  this.current_graph.getModel().getIncomingEdges
+              ( this.current_graph.getModel().getCell(id_initial_summing));
+            for (let i = 0; i < summing_relations2.length; i++)
+            {
+                    let source = summing_relations2[i].source;
+                   
+
+                  if(source.getAttribute("type")=="set_point"  )
+              { 
+                id_set = source.getId(); 
+                setpoint_value = source.getAttribute("SetPoint"); 
+                setpoints.push(setpoint_value);
+                setpoint_time = source.getAttribute("Time");
+                times.push(setpoint_time);
+                 list_elements.push(id_set); 
+              } 
+
+              else if(source.getAttribute("type")=="filter")
+              {
+                id_filter = source.getId(); 
+                 list_elements.push(id_filter); 
+              }
+                
+             else if(source.getAttribute("type")=="branchpoint"  )
+              { 
+                id_final_branch = source.getId(); 
+                
+              } 
+               else if(source.getAttribute("type")=="transducer"  )
+              { 
+                id_transducer = source.getId(); 
+                
+              } 
+
             }
                filter_relations =  this.current_graph.getModel().getIncomingEdges
               ( this.current_graph.getModel().getCell(id_filter));
@@ -524,175 +690,350 @@ export default {
                let source = filter_relations[i].source;
               if(source.getAttribute("type")=="branchpoint")
               {
-                id_branch = source.getId(); 
+                id_final_branch = source.getId(); 
+                 list_elements.push(id_branch); 
               }
-              else if(source.getAttribute("type")=="transducer")
+             else if(source.getAttribute("type")=="transducer")
               {
-                id_branch = source.getId();
+                id_transducer = source.getId();
                 value_transducer=source.getAttribute("InitialPosition");
+                list_elements.push(id_branch); 
               }   
             }
 
-            branch_relations_targets =this.current_graph.getModel().getOutgoingEdges
-            (this.current_graph.getModel().getCell(id_branch));
+             transducer_relations =  this.current_graph.getModel().getIncomingEdges
+              ( this.current_graph.getModel().getCell(id_transducer));
+            for (let i = 0; i < transducer_relations.length; i++)
+            {
+               let source = transducer_relations[i].source;
+              if(source.getAttribute("type")=="branchpoint")
+              {
+                id_final_branch = source.getId(); 
+                 list_elements.push(id_branch); 
+              }
+               
+            }
+
+              branch_relations_targets =this.current_graph.getModel().getOutgoingEdges
+            (this.current_graph.getModel().getCell(id_final_branch));
             for (let i = 0; i < branch_relations_targets.length; i++)
             {
                 let target = branch_relations_targets[i].target;
               if(target.getAttribute("type")=="measured_output")
               {
-                id_output= target.getId()
+                id_output= target.getId();
+                 list_elements.push(id_output); 
               }
             }
 
-           branch_relations = this.current_graph.getModel().getIncomingEdges
+             final_branch_relations =this.current_graph.getModel().getIncomingEdges
+            (this.current_graph.getModel().getCell(id_final_branch));
+            for (let i = 0; i < final_branch_relations.length; i++)
+            {
+                let source = final_branch_relations[i].source;
+               
+              if(source.getAttribute("type")=="branchpoint")
+              {
+                id_branch= source.getId();
+                
+                 list_elements.push(id_branch); 
+              }
+              
+            }
+           
+
+            branch_relations = this.current_graph.getModel().getIncomingEdges
            (this.current_graph.getModel().getCell(id_branch));
           for(let i = 0; i < branch_relations.length; i++)
           {
             let source = branch_relations[i].source;
-            if(source.getId() == target_system_id)
+            if(source.getId() == target_system_id && source.getAttribute("type")=="target_system")
             {
-            alert("termino");
+                 id_final=source.getId();
             }
+            
+            
+          }
+            
+          let feedback_root = this.current_graph.getModel().getCell("control");
+          let childs2 = this.current_graph.getModel().getChildVertices(feedback_root);
+          for (let i = 0; i < childs2.length; i++) 
+          {
+            if(childs2[i].getId()!= target_system_id && childs2[i].getId()!= id_summing && childs2[i].getId()!= id_set
+                && childs2[i].getId()!= id_filter && childs2[i].getId()!= id_controller && childs2[i].getId()!= id_branch
+                && childs2[i].getId()!= id_output && childs2[i].getId()!= id_controller_inner && childs2[i].getId()!= id_initial_summing
+                && childs2[i].getId()!= id_final_branch && childs2[i].getId()!=  id_transducer && childs2[i].getId()!=  id_summing_plant) 
+          {
+           this.current_graph.getModel().setVisible(childs2[i], false)
+          }
+          else{
+            this.current_graph.getModel().setVisible(childs2[i], true)
           }
 
-        }
+          }
 
-      }
+           let MiniPID = (function()
+       {
+          function MiniPID(kp, ki, kd, dt)
+           { 
+          // variables
+            this.P = 0;
+            this.I = 0;
+            this.D = 0;
+            this.F = 0;
+            this.DT = 0;
+            this.maxIOutput = 0;
+            this.maxError = 0;
+            this.errorSum = 0;
+            this.maxOutput = 0;
+            this.minOutput = 0;
+            this.setpoint = 0;
+            this.lastActual = 0;
+            this.lastError = 0;
+            this.firstRun = true;
+            this.reversed = false;
+            this.outputRampRate = 0;
+            this.lastOutput = 0;
+            this.dt;
+            this.outputFilter = 0;
+            this.setpointRange = 0;
+            this.P = kp;
+            this.I = ki;
+            this.D = kd;
+            this.DT = dt;
+            this.checkSigns();
+            }
+            // methods
+            MiniPID.prototype.getOutput = function(actual, setpoint, error) {
 
-    
+            let output=currentoutput;
+            let Poutput;
+            let Ioutput;
+            let Doutput;
+            let Foutput;
+            let derivate;
+            this.error =error;
+            this.setpoint = setpoint;
 
-    
-      let MiniPID = (function() {
-        function MiniPID(kp, ki, kd, dt) {
-          this.P = 0;
-          this.I = 0;
-          this.D = 0;
-          this.F = 0;
-          this.DT = 0;
-          this.maxIOutput = 0;
-          this.maxError = 0;
-          this.errorSum = 0;
-          this.maxOutput = 0;
-          this.minOutput = 0;
-          this.setpoint = 0;
-          this.lastActual = 0;
-          this.lastError = 0;
-          this.firstRun = true;
-          this.reversed = false;
-          this.outputRampRate = 0;
-          this.lastOutput = 0;
-          this.dt;
-          this.outputFilter = 0;
-          this.setpointRange = 0;
-          this.P = kp;
-          this.I = ki;
-          this.D = kd;
-          this.DT = dt;
-          this.checkSigns();
-        }
-        MiniPID.prototype.getOutput = function(actual, setpoint) {
-           var output;
-        var Poutput;
-        var Ioutput;
-        var Doutput;
-        var Foutput;
-        this.setpoint = setpoint;
-        if (this.setpointRange !== 0) {
-            setpoint = this.constrain(setpoint, actual - this.setpointRange, actual + this.setpointRange);
-        }
-        var error = setpoint - actual;
-        Foutput = this.F * setpoint;
-        Poutput = this.P * error;
-        if (this.firstRun) {
+           
+            Foutput = this.F * setpoint;
+            Poutput = this.P * error;
+
+            // first run 
+            if (this.firstRun) {
+                this.lastActual = error;
+                this.lastOutput = Poutput + Foutput;
+                this.firstRun = false;
+            }
+
+            Doutput = Doutput = -this.D * ((actual - this.lastActual) / this.DT);
             this.lastActual = actual;
-            this.lastOutput = Poutput + Foutput;
-            this.firstRun = false;
-        }
-        Doutput = this.D * ((actual - this.lastActual)/this.DT);
-        this.lastActual = actual;
 
         
 
-        Ioutput = this.I * (this.errorSum*this.DT);
-        if (this.maxIOutput !== 0) {
-            Ioutput = this.constrain(Ioutput, -this.maxIOutput, this.maxIOutput);
-        }
-        output = Foutput + Poutput + Ioutput + Doutput;
-        if (this.minOutput !== this.maxOutput && !this.bounded(output, this.minOutput, this.maxOutput)) {
-            this.errorSum = error;
-        }
-        else if (this.outputRampRate !== 0 && !this.bounded(output, this.lastOutput - this.outputRampRate, this.lastOutput + this.outputRampRate)) {
-            this.errorSum = error;
-        }
-        else if (this.maxIOutput !== 0) {
-            this.errorSum = this.constrain(this.errorSum + error, -this.maxError, this.maxError);
-        }
-        else {
-            this.errorSum += error;
-        }
-        if (this.outputRampRate !== 0) {
-            output = this.constrain(output, this.lastOutput - this.outputRampRate, this.lastOutput + this.outputRampRate);
-        }
-        if (this.minOutput !== this.maxOutput) {
-            output = this.constrain(output, this.minOutput, this.maxOutput);
-        }
-        if (this.outputFilter !== 0) {
-            output = this.lastOutput * this.outputFilter + output * (1 - this.outputFilter);
-        }
-        this.lastOutput = output;
-        return output;
-    };
-         MiniPID.prototype.checkSigns = function() {
-          if (this.reversed) {
-            if (this.P > 0) this.P *= -1;
-            if (this.I > 0) this.I *= -1;
-            if (this.D > 0) this.D *= -1;
-            if (this.F > 0) this.F *= -1;
-            if (this.DF > 0) this.DF *= -1;
-          } else {
-            if (this.P < 0) this.P *= -1;
-            if (this.I < 0) this.I *= -1;
-            if (this.D < 0) this.D *= -1;
-            if (this.DF < 0) this.DF *= -1;
-          }
-        };
+            Ioutput = this.I * (this.errorSum);
+            if (this.maxIOutput !== 0)
+              {
+                  Ioutput = this.limit(Ioutput, -this.maxIOutput, this.maxIOutput);
+              }
+              output = Foutput + Poutput + Ioutput + Doutput;
+              if (this.minOutput !== this.maxOutput && !this.delimited(output, this.minOutput, this.maxOutput)) 
+              {
+                  this.errorSum = error* this.DT;
+              }
+                else if (this.outputRampRate !== 0 && !this.delimited(output, this.lastOutput - this.outputRampRate,
+                this.lastOutput + this.outputRampRate))
+                {
+                    this.errorSum = error* this.DT;
+                }
+                else if (this.maxIOutput !== 0)
+                {
+                    this.errorSum = this.limit(this.errorSum + error, -this.maxError, this.maxError);
+                }
+              else 
+              {
+                this.errorSum += (error * this.DT);
+              }
+              if (this.outputRampRate !== 0)
+              {
+                output = this.limit(output, this.lastOutput - this.outputRampRate, this.lastOutput + this.outputRampRate);
+              }
+              if (this.minOutput !== this.maxOutput)
+              {
+                output = this.limit(output, this.minOutput, this.maxOutput);
+              }
+              if (this.outputFilter !== 0)  
+              {
+                output = this.lastOutput * this.outputFilter + output * (1 - this.outputFilter);
+              }
+                this.lastOutput = output;
+                return output;
+            }
+              MiniPID.prototype.setmaxIOutput = function (maximum)
+              {
+                this.maxIOutput = maximum;
+                if (this.I !== 0) {
+                    this.maxError = this.maxIOutput / this.I;
+                }
+              }
+
+              MiniPID.prototype.RampRateOutput = function (rate) 
+              {
+                this.outputRampRate = rate;
+              }
+            
+              MiniPID.prototype.limit = function (value, min, max)
+              {
+                if (value > max) {
+                    return max;
+                }
+                if (value < min) {
+                    return min;
+                }
+                return value;
+              };
+
+              MiniPID.prototype.delimited = function (value, min, max)
+              {
+                return (min < value) && (value < max);
+              };
+
+              MiniPID.prototype.reversedf = function ()
+              {
+                  this.P = (0 - this.P);
+                  this.I = (0 - this.I);
+                  this.D = (0 - this.D);
+
+                
+              }
+              MiniPID.prototype.checkSigns = function()
+              {
+                if (this.reversed)
+                 {
+                  if (this.P > 0) this.P *= -1;
+                  if (this.I > 0) this.I *= -1;
+                  if (this.D > 0) this.D *= -1;
+                  if (this.F > 0) this.F *= -1;
+                  if (this.DF > 0) this.DF *= -1;
+                }
+                else 
+                {
+                  if (this.P < 0) this.P *= -1;
+                  if (this.I < 0) this.I *= -1;
+                  if (this.D < 0) this.D *= -1;
+                  if (this.DF < 0) this.DF *= -1;
+                }
+              }
         return MiniPID;
       })();
-      let control_loop = [];
-      let listaset=[];
-      function main() {
+
+      let control_loop = [];// list outputs
+      let listaset=[];// list set points
+      function main()
+       {
           let miniPID;
-          miniPID = new MiniPID(proportional, integral, derivate, setpoint_time);
-         // let actual = parseInt(sensor);//
+          let miniPID2;
+          miniPID = new MiniPID(proportional_inner, integral_inner, derivate_inner, setpoint_time);
           let actual=0
-          let output = 0;
-          let times_sum=0;
-          alert(setpoint_time)
-          let time_float=parseFloat(setpoint_time)
-          alert(t)
-          for (let i = 0; i < 150; i++) {
-            output = miniPID.getOutput(actual, setpoint_value);
-            actual = actual + output;
-            prueb2.push(actual);
-            times_sum=i*time_float;
-            times.push(times_sum)
+          let output = 50;
+          let actual2;
+          let error=0;
+          result_outputs.push(actual);
+          let times_sum=0; 
+          let time_float=parseFloat(setpoint_time);
+          miniPID.setmaxIOutput(2);
+          miniPID.RampRateOutput(3);
+           if(summing_value_inner == "-/+" ||summing_value_inner == "-/-" )
+          {
+            miniPID.reversedf();
           }
-          return prueb2;
+          if(id_set2 == false)
+          {
+          for (let i = 0; i < 150; i++) {
+             output = miniPID.getOutput(actual, setpoint_value,error)
+            if(summing_value_inner == "+/-")
+            {
+              error = setpoint_value - actual;
+            }
+            else if(summing_value_inner == "+/+")
+            {
+              error = setpoint_value + actual;
+            }
+            else{
+              error = setpoint_value-actual
+            }
+            actual = actual + output;
+            result_outputs.push(actual); 
+            times_sum=i*time_float.toFixed(2);
+            times_sum=times_sum.toFixed(2)
+            times.push(times_sum)
+            listaset.push(setpoint_value)
+             
+          }
+          result=result_outputs;
+          }
+           else if(id_set2== true)
+           {
+          miniPID = new MiniPID(proportional, integral, derivate, setpoint_time);
+          if(summing_value == "-/+" ||summing_value == "-/-" )
+          {
+            miniPID.reversedf();
+          } 
+            miniPID.setmaxIOutput(2);
+            miniPID.RampRateOutput(3);
+          for (let i = 0; i < 150; i++) {
+               
+            output = miniPID.getOutput(actual, setpoint_value,error)
+            if(summing_value == "+/-" )
+            {
+             error = setpoint_value - actual;
+            }
+            else if(summing_value == "+/+" )
+            {
+             error = setpoint_value + actual;
+            }
+            actual = actual + output;
+            result_outputs.push(actual);
+          }
+          let error2=0; 
+          miniPID2 = new MiniPID(proportional_inner, integral_inner, derivate_inner, setpoint_time);
+          for (let i = 0; i < result_outputs.length; i++) 
+            {
+            let output2 = miniPID2.getOutput(result_outputs[i], setpoint_value, error2)
+            if(summing_value_inner == "+/-" )
+            {
+             error2 = setpoint_value - result_outputs[i];
+            actual2 = result_outputs[i] + output2;
+            }
+            else if(summing_value_inner == "+/+" )
+            {
+             error = setpoint_value + result_outputs[i];
+            actual2 = result_outputs[i] + output2;
+            }
+            else if(summing_value_inner == "-/+" )
+            {
+             error = setpoint_value + result_outputs[i];
+            actual2 = result_outputs[i] - output2;
+            }
+            else if(summing_value_inner == "-/-" )
+            {
+            error = setpoint_value - result_outputs[i];
+            actual2 = result_outputs[i] - output2;
+            }
+            result_outputs2.push(actual2);
+            times_sum=i*time_float.toFixed(1);
+            times_sum=times_sum.toFixed(1)
+            times.push(times_sum)
+            listaset.push(setpoint_value)
+          }
+           
+          result=result_outputs2;
           
-          
-         
+           }
+          return result;
         }
         control_loop = main();
-
-        console.log(times)
-
-
-       
-
       
-      
-     
-
       canvas.id = "myChart";
       canvas.width = 800;
       canvas.height = 300;
@@ -754,6 +1095,18 @@ export default {
           }
         }
       });
+
+        }
+
+       
+        
+        
+       
+      }
+
+    
+
+     
       
     },
     adaptation_state_source_code_generation() {
