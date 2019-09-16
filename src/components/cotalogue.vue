@@ -176,8 +176,6 @@ export default {
 			{
 				this.$store.dispatch('updatefolder', index);
 			}
-			console.log(cache.toString());
-			console.log(treecache.toString());
 		},
 		/**
 		 * open or close the tree elements
@@ -218,7 +216,7 @@ export default {
 					let nodeName = "";
 					for(let i = 0; i < data.length; i++)
 					{
-						if(data[i].data.parentId === parentId){
+						if(data[i].data.parentId === parentId && data[i].data.nodeType !== 1){
 							nodeName = data[i].data.nodeName;
 							break;
 						}
