@@ -161,24 +161,12 @@ export default {
 		checkoldfolder(index) {
 			let data = this.getdata;
 			let cache = [];
+			let treecache = [];
 			for(let i = 0; i < getModelInfo()['gmodels'].length; i++)
 			{
 				if(getModelInfo()[getModelInfo()['gmodels'][getModelInfo()['gmodels'].length-i-1]].projFolders.includes(data[index].data.nodeName.split(' -')[0]))
 					cache.unshift(getModelInfo()['gmodels'][getModelInfo()['gmodels'].length-i-1]);
 			}
-			if(cache.length === 0)
-			{
-				if(data[index].data.open)
-				{
-					Bus.$emit('setfalsegraph',false);
-					this.$store.dispatch('updatemodelcomponent', -1);
-					this.$store.dispatch('setopen', index);
-				}
-				this.$store.dispatch('deletefolder', index);
-				localStorage.removeItem(data[index].data.nodeName);
-				return;
-			}
-			let treecache = [];
 			for(let i = 0 ; i < data.length; i++)
 			{
 				if(data[index].data.nodeId === data[i].data.parentId)
@@ -188,6 +176,8 @@ export default {
 			{
 				this.$store.dispatch('updatefolder', index);
 			}
+			console.log(cache.toString());
+			console.log(treecache.toString());
 		},
 		/**
 		 * open or close the tree elements

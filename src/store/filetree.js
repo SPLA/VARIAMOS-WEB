@@ -244,7 +244,7 @@ export const mutations = {
 	updatefolder (state, index){
 		for(let i = index + 1; i < state.data.length; i++)
 		{
-			if(state.data[i].data.level < state.data[index].data.level || state.data[i].data.level === state.data[index].data.level)
+			if(state.data[i].data.level < state.data[index].data.level || state.data[i].data.level === state.data[index].data.level || state.data[i].data.nodeType !== 3)
 			{
 				state.data.splice(index + 1, i - index - 1);
 				break;
