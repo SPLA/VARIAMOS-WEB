@@ -66,7 +66,7 @@
 <script>
 import contextMenu from './contextMenu.vue'
 import Bus from '../assets/js/common/bus.js'
-import { getcontextmenulist } from '../assets/js/common/global_info'
+import { getcontextmenulist, getModelInfo } from '../assets/js/common/global_info'
 
 export default {
 	name: 'cotalogue',
@@ -158,12 +158,48 @@ export default {
 			}
 			return true;
 		},
+		checkoldfolder(index) {
+			let data = this.getdata;
+			let cache = [];
+			for(let i = 0; i < getModelInfo()['gmodels'].length; i++)
+			{
+				if(getModelInfo()[getModelInfo()['gmodels'][getModelInfo()['gmodels'].length-i-1]].projFolders.includes(data[index].data.nodeName.split(' -')[0]))
+					cache.unshift(getModelInfo()['gmodels'][getModelInfo()['gmodels'].length-i-1]);
+			}
+			if(cache.length === 0)
+			{
+				if(data[index].data.open)
+				{
+					Bus.$emit('setfalsegraph',false);
+					this.$store.dispatch('updatemodelcomponent', -1);
+					this.$store.dispatch('setopen', index);
+				}
+				this.$store.dispatch('deletefolder', index);
+				localStorage.removeItem(data[index].data.nodeName);
+				return;
+			}
+			let treecache = [];
+			for(let i = 0 ; i < data.length; i++)
+			{
+				if(data[index].data.nodeId === data[i].data.parentId)
+					treecache.push(data[i].data.nodeName);
+			}
+			if(cache.toString()!==treecache.toString())
+			{
+				this.$store.dispatch('updatefolder', index);
+			}
+		},
 		/**
 		 * open or close the tree elements
 		 * @param {number} index	- the index of the tree data array
 		 */
 		expand_menu(index) {
 			let data = this.getdata;
+			// update the tree based when global_info is updated
+			if(data[index].data.level !== 1)
+			{
+				this.checkoldfolder(index);
+			}
 			// get the opend project name and opened folder name
 			let projectname = '';
 			let foldername = data[index].data.nodeName.replace(/\s+/g,"");

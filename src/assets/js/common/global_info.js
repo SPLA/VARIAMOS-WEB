@@ -25,18 +25,22 @@ export function getModelInfo(){
 
 // insert models according to main model info
 export function insertmodel(data, index, temp) {
+    let empty_folder = true;
     for(let i = 0; i < getModelInfo()['gmodels'].length; i++)
 	{
-		if(getModelInfo()[getModelInfo()['gmodels'][i]].projFolders.includes(data[index].data.nodeName.split(' -')[0]))
+		if(getModelInfo()[getModelInfo()['gmodels'][getModelInfo()['gmodels'].length-i-1]].projFolders.includes(data[index].data.nodeName.split(' -')[0]))
 		{
-			data.splice(index + 1 + i, 0 , {
+            /**
+             * @deprecated modeltype element tree is removed
+             */
+			data.splice(index + 1, 0 , {
 				children: [],
 				data: {
 					open: false,
 					isSelected: false,
 					level: data[index].data.level + 1,
 					nodeId: temp,
-					nodeName: getModelInfo()['gmodels'][i],
+					nodeName: getModelInfo()['gmodels'][getModelInfo()['gmodels'].length-i-1],
 					nodeType: 3,
 					parentId: data[index].data.nodeId,
 					projectId: data[index].data.projectId,
@@ -47,7 +51,12 @@ export function insertmodel(data, index, temp) {
 			});
             data[index].numberOfChildren++;
             temp++;
+            empty_folder = false;
         }
+    }
+    if(empty_folder)
+    {
+        data.splice(index,1);
     }
     return data;
 }

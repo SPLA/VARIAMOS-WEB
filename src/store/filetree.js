@@ -53,6 +53,9 @@ export const actions = {
     },
     createadaptation ({commit, getters}, adp) {
         commit('createnewadaptation', {adp, getters});
+	},
+	updatefolder ({commit}, index) {
+        commit('updatefolder', index);
     },
     deletefolder ({commit}, index) {
         commit('deletetree', index);
@@ -237,7 +240,18 @@ export const mutations = {
 		});
 		state.data[adp.index].numberOfChildren++;
 		state.data = insertmodel(state.data, adp.index + 1, getters.getnewnodeid);
-    },
+	},
+	updatefolder (state, index){
+		for(let i = index + 1; i < state.data.length; i++)
+		{
+			if(state.data[i].data.level < state.data[index].data.level || state.data[i].data.level === state.data[index].data.level)
+			{
+				state.data.splice(index + 1, i - index - 1);
+				break;
+			}	
+		}
+		state.data = insertmodel(state.data, index, getters.getnewnodeid);
+	},
     deletetree (state, index) {
         for(let i = index + 1; i < state.data.length; i++)
 		{
