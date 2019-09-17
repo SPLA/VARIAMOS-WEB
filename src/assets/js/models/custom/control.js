@@ -18,24 +18,24 @@ let  control_main = function control_main(graph)
             'Measured output must have no outcoming edges',
             null));
         graph.multiplicities.push(new mxMultiplicity(
-            false, 'set_point', null, null, 0, 0, 'target_system',
+            false, 'set_point', null, null, 0, 0, 'controlAction',
             'Setpoint must have no incoming edges ',
             null));
-            // Target needs exactly one incoming connection from Source
-				graph.multiplicities.push(new mxMultiplicity(
-                    false, 'target_system', null, null, 1, 1, ['controller', 'summing_point'],
-                    'Target Must Have 1 incoming connection ',
-                    'Target Must Connect From controller or summing point'));
+            
+		graph.multiplicities.push(new mxMultiplicity(
+            false, 'controlAction', null, null, 1, 1, ['controller', 'summing_point'],
+            'ControlAction Must Have 1 incoming connection ',
+            'ControlAction Must Connect From controller or summing point'));
         graph.multiplicities.push(new mxMultiplicity(
-            false, 'branchpoint', null, null, 1, 1, ['target_system'],
+            false, 'branchpoint', null, null, 1, 1, ['controlAction'],
             'Branchpoint Must Have 1 Target system',
             'Branchpoint Must Connect From Target system'));
         graph.multiplicities.push(new mxMultiplicity(
-            true, 'target_system', null, null, 1, 1, ['branchpoint'],
-            'Target system Must Have 1  branchpoint',
-            'Target system Must Connect to branchpoint'));
+            true, 'controlAction', null, null, 1, 1, ['branchpoint'],
+            'ControlAction Must Have 1  branchpoint',
+            'ControlAction system Must Connect to branchpoint'));
             
-            graph.multiplicities.push(new mxMultiplicity(
+        graph.multiplicities.push(new mxMultiplicity(
             true, 'set_point', null, null, 1, 1, ['summing_point'],
             'Setpoint system Must Have 1  summing_point',
             'Setpoint system Must Connect to summing_point'));     
@@ -44,23 +44,21 @@ let  control_main = function control_main(graph)
 
     function control_elements(){
         let  controller = {src:projectPath+"images/models/control/controller.png", wd:100, hg:40, style:"shape=rectangle", type:"controller", pname:"Controller"};
-        let  target_system = {src:projectPath+"images/models/control/target_system.png", wd:100, hg:40, style:"shape=rectangle", type:"target_system", pname:"Target system"};
-        let  transducer = {src:projectPath+"images/models/control/transducer.png", wd:100, hg:40, style:"shape=rectangle", type:"transducer", pname:"Transducer"};
+        let  transducer = {src:projectPath+"images/models/control/transducer.png", wd:100, hg:40, style:"shape=transducer", type:"transducer", pname:"Transducer"};
         let  summing_point   = {src:projectPath+"images/models/control/summing_point.PNG", wd:100, hg:40, style:"shape=ellipse", type:"summing_point", pname:"Summing point"};
-        let  reference_input   = {src:projectPath+"images/models/control/reference_input.png", wd:100, hg:40, style:"shape=reference_input", type:"set_point", pname:"Set point "};
-        let  measured_output   = {src:projectPath+"images/models/control/measured-output.png", wd:100, hg:40, style:"shape=measured_ouput", type:"measured_output", pname:"Measured output "};
+        let  setpoint   = {src:projectPath+"images/models/control/setpoint.png", wd:100, hg:40, style:"shape=setpoint", type:"set_point", pname:"Setpoint "};
+        let  measured_output   = {src:projectPath+"images/models/control/measured-output.png", wd:100, hg:40, style:"shape=measured_output", type:"measured_output", pname:"Measured output "};
         let  branchpoint   = {src:projectPath+"images/models/control/bifurcation.png", wd:100, hg:40, style:"shape=rhombus", type:"branchpoint", pname:"Branchpoint"};
-        let  filter = {src:projectPath+"images/models/control/controller.png", wd:100, hg:40, style:"shape=rectangle", type:"filter", pname:"filter"};
+        let  filter = {src:projectPath+"images/models/control/filter.png", wd:100, hg:40, style:"shape=filter", type:"filter", pname:"filter"};
         
         let  elements=[];
         elements[0]=controller;
         elements[1]=summing_point;
-        elements[2]=target_system;
-        elements[3]=transducer;
-        elements[4]=reference_input;
-        elements[5]=measured_output;
-        elements[6]=branchpoint;
-        elements[7]=filter;        
+        elements[2]=transducer;
+        elements[3]=setpoint;
+        elements[4]=measured_output;
+        elements[5]=branchpoint;
+        elements[6]=filter;        
         
         return elements;
     }
@@ -102,12 +100,9 @@ let  control_main = function control_main(graph)
                 "def_value":"0"
             }]
         };
-        attributes[3]={
-            "types":["target_system"],
-            "custom_attributes":[]
-        };
+       
 
-        attributes[4]={
+        attributes[3]={
             "types":["summing_point"],
             "custom_attributes":[{
                 "name":"Direction",
@@ -115,7 +110,7 @@ let  control_main = function control_main(graph)
             }]
         };
 
-        attributes[5]={
+        attributes[4]={
             "types":["measured_output"],
             "custom_attributes":[{
                 "name":"CurrentOutput",
@@ -151,8 +146,7 @@ let  control_main = function control_main(graph)
     function control_labels(){
 		let labels={};
 		labels={
-            "subtraction":"Value",
-            "summing_point":"Direction"
+            "summing_point":"Direction",
 		};
 
 		return labels;

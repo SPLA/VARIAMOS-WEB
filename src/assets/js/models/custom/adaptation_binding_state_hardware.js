@@ -18,10 +18,6 @@ var adaptation_binding_state_hardware_main = function adaptation_binding_state_h
 	function adaptation_binding_state_hardware_constraints(graph) {
 		graph.multiplicities = []; //reset multiplicities
 		graph.multiplicities.push(new mxMultiplicity(
-			true, "state", null, null, 0, 0, null,
-			"Invalid connection",
-			"Only shape targets allowed"));
-		graph.multiplicities.push(new mxMultiplicity(
 			true, "bundle", null, null, 0, 1, ["root", "abstract"],
 			"Only 1 target allowed",
 			"Only shape targets allowed"));
@@ -256,8 +252,8 @@ var adaptation_binding_state_hardware_main = function adaptation_binding_state_h
 
 	function adaptation_binding_state_hardware_clon_cells() {
 		var clons = {};
-		clons = {
-			"concrete": "binding_adaptation_binding_state_hardware_component"
+		clons={
+			"controlAction":"control"
 		};
 
 		return clons;
