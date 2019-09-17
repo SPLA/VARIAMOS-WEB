@@ -4,8 +4,7 @@
       {{ $t("verification") }}
     </a>
     <div id="verification-menu" class="dropdown-menu" aria-labelledby="navbarDropdown">
-      <a @click="test()" class="dropdown-item">Test sending the model for verification</a>
-      <a @click="test_web()" class="dropdown-item">Test sending the model to microservices</a>
+      <a @click="test()" class="dropdown-item">Test sending the model</a>
       <a data-menudisplay="['adaptation_state','adaptation_hardware','adaptation_binding_state_hardware']" @click="test_web()" class="dropdown-item">Test sending the model to microservices</a>
       <a v-for="item in menu_options" v-bind:key="item.label" v-on:click="clear_overlays(); item.func(current_graph, cell_errors, cell_overlays);" class="dropdown-item">
         {{ item.label }}
@@ -74,32 +73,17 @@ export default {
     test(){
       if (localStorage["domain_implementation_main_path"]) {
         this.errors=[];
-        var encoder = new mxCodec();
-        var result = encoder.encode(this.current_graph.getModel());
-        var xml = mxUtils.getPrettyXml(result);
-        var model_root = this.current_graph.getModel().getCell(this.getactivetab);
-        var childs = this.current_graph.getModel().getChildVertices(model_root);
-        var selection_parameter = {};
-
-        for(let i = 0; i < childs.length; i++)
-        {
-          if(childs[i].getAttribute("label") !== "bundle")
-          {
-            if(this.getcache_selected.includes(childs[i].getId()))
-              selection_parameter[childs[i].getAttribute("label")] = true;
-            else
-              selection_parameter[childs[i].getAttribute("label")] = false;
-          }
-        }
-
+        let encoder = new mxCodec();
+        let result = encoder.encode(this.current_graph.getModel());
+        let xml = mxUtils.getXml(result);
         axios.post(localStorage["domain_implementation_main_path"]+'Verification/test', {
-          data: xml, name: this.getmodel_component, param: selection_parameter
+          data: xml
         })
         .then(response => {
-          var c_header = modalH3("Test response");
-          var c_body = modalSimpleText("XML code received by the server.\n Results:\n" + JSON.stringify(response.data["solution"]));
+          let c_header = modalH3("Test response");
+          let c_body = modalSimpleText(response.data);
           setupModal(c_header,c_body);
-          mxUtils.popup(response.data["hlvl"], true);
+          mxUtils.popup(response.data, true);
         })
         .catch(e => {
           this.errors.push(e); 
@@ -115,43 +99,30 @@ export default {
       
     },
     test_web(){
+      if (localStorage["domain_implementation_main_path"]) {
         this.errors=[];
-        var encoder = new mxCodec();
-        var result = encoder.encode(this.current_graph.getModel());
-        var xml = mxUtils.getPrettyXml(result);
-        var authOptions = {
-          method: 'POST',
-          url: 'http://localhost:8080/api/models/dummy?solver_id=GECODE',
-          data: xml,
-          headers: {
-            'Content-Type': 'text/plain'
-          },
-          json: true
-        };
-        axios(authOptions)
+        let encoder = new mxCodec();
+        let result = encoder.encode(this.current_graph.getModel());
+        let xml = mxUtils.getPrettyXml(result);
+        axios.post('http://localhost:8091/api/application/xml/1/1/configuration', xml)
         .then(response => {
-          var c_header = modalH3("Test response");
-          var c_body = modalSimpleText("XML code received by the server.");
+          let c_header = modalH3("Test response");
+          let c_body = modalSimpleText("XML code received by the server.");
           setupModal(c_header,c_body);
-          mxUtils.popup(response, true);
+          mxUtils.popup(response.data, true);
         })
         .catch(e => {
           this.errors.push(e); 
-          var c_header = modalH3(this.$t("modal_error"),"error");
-          var c_body = modalSimpleText(e + this.$t("model_actions_backend_problem"));
+          let c_header = modalH3(this.$t("modal_error"),"error");
+          let c_body = modalSimpleText(e + this.$t("model_actions_backend_problem"));
           setupModal(c_header,c_body);
         });
-    }
-  },
-  computed:{
-    getmodel_component (){
-        return this.$store.getters.getmodelcomponent;
-    },
-    getactivetab (){
-        return this.$store.getters.getactivetab;
-    },
-    getcache_selected (){
-    		return this.$store.getters.getcacheselected;
+      }else{
+        let c_header = modalH3(this.$t("modal_error"),"error");
+        let c_body = modalSimpleText(this.$t("verification_path_problem"));
+        setupModal(c_header,c_body);
+      }
+      
     }
   }
 }
