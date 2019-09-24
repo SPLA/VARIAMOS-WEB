@@ -56,9 +56,15 @@ export default {
         let c_header = modalH3(this.$t("modal_error"),"error");
         let c_body = modalSimpleText(this.$t("domain_menu_sfc_invalid"));
         setupModal(c_header,c_body);
-      }else if(cell.getAttribute("type")=="file"){
+      }else if(cell.getAttribute("type")=="file" || cell.getAttribute("type")=="fragment" || cell.getAttribute("type")=="custom"){
         let data={};
-        data["filename"]=cell.getAttribute("filename");
+        let custom_file=false;
+        if(cell.getAttribute("type")=="custom"){
+          data["filename"]="customization.json";
+          custom_file=true;
+        }else{
+          data["filename"]=cell.getAttribute("filename");
+        }
         data["component"]=cell.getEdgeAt(0).target.getAttribute("label");
         if (localStorage["domain_implementation_main_path"] && localStorage["domain_implementation_pool_path"]) {
           this.errors=[];
@@ -82,7 +88,13 @@ export default {
               input.style.width = '100%';
               input.setAttribute('rows', 10);
               input.disabled = true;
-              input.value = response.data;
+
+              if(custom_file){
+                input.value = JSON.stringify(response.data, undefined, 2);
+              }else{
+                input.value = response.data;
+              }
+
               td.appendChild(input);
               tr.appendChild(td); properties_table.appendChild(tr);
             }
