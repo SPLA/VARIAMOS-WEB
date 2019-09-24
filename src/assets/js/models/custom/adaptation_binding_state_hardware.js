@@ -306,13 +306,14 @@ let adaptation_binding_state_hardware_main = function adaptation_binding_state_h
 		if (sourceType == "initialState" || sourceType == "state" || sourceType == "transition") {
 			window.location = "http://localhost:8080/variamosweb#/models/Luz%20controlada/Application-Luzcontrolada-1/adaptation_state";
 		}
-		else
+		else{
 			if (sourceType == "analogSensor" || sourceType == "digitalSensor" || sourceType == "analogActuator" || sourceType == "digitalActuator") {
 				window.location = "http://localhost:8080/variamosweb#/models/Luz%20controlada/Application-Luzcontrolada-1/adaptation_hardware";
 			}
 			else if ((sourceType == "controlAction")) {
 				window.location = "http://localhost:8080/variamosweb#/models/Luz%20controlada/Application-Luzcontrolada-1/adaptation_hardware";
 			}
+		}
 	}
 
 }
