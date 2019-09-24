@@ -251,19 +251,6 @@ export default{
         this.undoManager.clear();
       }
     },
-    /**
-     * if there is any change in the mxgraph, update the xml in the store
-     * @fires module:store~actions:updatexml
-     */ 
-    mxModel:{
-      handler(val) {
-        let encoder = new mxCodec();
-        let result = encoder.encode(this.graph.getModel());
-        let xml = mxUtils.getPrettyXml(result);
-        this.$store.dispatch('updatexml', xml);
-      },
-      deep:true
-    },
     // when the selected elements cache is changed, update localstorage
     getcache_selected: {
 			handler(val) {

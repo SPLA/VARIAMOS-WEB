@@ -12,7 +12,7 @@
 							:data="item">
 						</context-menu>
 						<a :style="{paddingLeft: (20 * item.data.level) + 'px'}">
-							<i v-if="item.data.nodeType!==2 && item.data.level === 1"
+							<i v-if="item.data.nodeType!==3 && item.data.level === 1"
 								class="fa"
 								aria-hidden="true"
 								:class="[item.data.open?'fa-angle-double-down':'fa-angle-double-right']"
@@ -20,11 +20,19 @@
 								:style="{position: 'absolute',left: (20 * item.data.level - 17) + 'px',top: '6px'}"
 								data-test="projectFolder">
 							</i>
-							<i v-if="item.data.nodeType!==2 && item.data.level !== 1"
+							<i v-if="item.data.nodeType!==3 && item.data.level !== 1"
 								class="fa"
 								aria-hidden="true"
 								:class="[item.data.open?'fa-angle-down':'fa-angle-right']"
-								@dblclick="dblClick($index)"
+								@click="expand_menu($index)"
+								:style="{position: 'absolute',left: (20 * item.data.level - 17) + 'px',top: '6px'}"
+								data-test="modelFolder">
+							</i>
+							<i v-if="item.data.nodeType===3"
+								class="fa"
+								aria-hidden="true"
+								:class="['fa-angle-right']"
+								@click="expand_menu($index)"
 								:style="{position: 'absolute',left: (20 * item.data.level - 17) + 'px',top: '6px'}"
 								data-test="modelFolder">
 							</i>
@@ -38,7 +46,7 @@
 									style="color:gray;font-size: 16px;padding-right:4px">
 								</i>
 								<i v-if="item.data.nodeType === 3"
-									:class="item.data.open?'far fa-image':'fas fa-image'" aria-hidden="true"
+									:class="'far fa-image'" aria-hidden="true"
 									style="color:gray;font-size: 16px;padding-right:4px">
 								</i>
 								<span class="name"
@@ -58,7 +66,7 @@
 <script>
 import contextMenu from './contextMenu.vue'
 import Bus from '../assets/js/common/bus.js'
-import { getcontextmenulist } from '../assets/js/common/global_info'
+import { getcontextmenulist, getModelInfo } from '../assets/js/common/global_info'
 
 export default {
 	name: 'cotalogue',
@@ -150,12 +158,36 @@ export default {
 			}
 			return true;
 		},
+		checkoldfolder(index) {
+			let data = this.getdata;
+			let cache = [];
+			let treecache = [];
+			for(let i = 0; i < getModelInfo()['gmodels'].length; i++)
+			{
+				if(getModelInfo()[getModelInfo()['gmodels'][getModelInfo()['gmodels'].length-i-1]].projFolders.includes(data[index].data.nodeName.split(' -')[0]))
+					cache.unshift(getModelInfo()['gmodels'][getModelInfo()['gmodels'].length-i-1]);
+			}
+			for(let i = 0 ; i < data.length; i++)
+			{
+				if(data[index].data.nodeId === data[i].data.parentId)
+					treecache.push(data[i].data.nodeName);
+			}
+			if(cache.toString()!==treecache.toString())
+			{
+				this.$store.dispatch('updatefolder', index);
+			}
+		},
 		/**
 		 * open or close the tree elements
 		 * @param {number} index	- the index of the tree data array
 		 */
 		expand_menu(index) {
 			let data = this.getdata;
+			// update the tree based when global_info is updated
+			if(data[index].data.level !== 1)
+			{
+				this.checkoldfolder(index);
+			}
 			// get the opend project name and opened folder name
 			let projectname = '';
 			let foldername = data[index].data.nodeName.replace(/\s+/g,"");
@@ -184,7 +216,7 @@ export default {
 					let nodeName = "";
 					for(let i = 0; i < data.length; i++)
 					{
-						if(data[i].data.parentId === parentId){
+						if(data[i].data.parentId === parentId && data[i].data.nodeType !== 1){
 							nodeName = data[i].data.nodeName;
 							break;
 						}
