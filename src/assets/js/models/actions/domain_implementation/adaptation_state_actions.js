@@ -46,7 +46,8 @@ var adaptation_state_actions = function adaptation_state_actions(graph,selected_
  
           serializeMachineJson(graph, dicElements);  
           serializeHardwareJson(graph, dicElements); 
-          serializeBindingJson(graph, dicElements); 
+          serializeBindingJson(graph, dicElements);  
+          serializeControlson(graph, dicElements); 
 
           for (var groupName in dicElements.items) { 
             model[groupName]=[];
@@ -86,15 +87,17 @@ var adaptation_state_actions = function adaptation_state_actions(graph,selected_
       serializeBindingTimers(graph, dicElements);   
       serializeBindingActivities(graph, dicElements);   
       serializeBindingReadActions(graph, dicElements);   
-      serializeBindingWriteActions(graph, dicElements);   
+      serializeBindingWriteActions(graph, dicElements);  
+      serializeBindingControlActions(graph, dicElements);    
       serializeBindingPredicates(graph, dicElements);   
       serializeBindingLogicalOperators(graph, dicElements);  
 
       serializeBindingRelationshipsState_Activity(graph, dicElements);  
       serializeBindingRelationshipsActivity_WriteAction(graph, dicElements);  
-      serializeBindingRelationshipsWriteAction_Port(graph, dicElements); 
+      serializeBindingRelationshipsWriteAction_Port(graph, dicElements);  
+      serializeBindingRelationshipsControlAction_Port(graph, dicElements); 
 
-      serializeBindingRelationshipsLogicalOperator_Trasition(graph, dicElements);  
+      serializeBindingRelationshipsLogicalOperator_Transition(graph, dicElements);  
       serializeBindingRelationshipsLogicalOperator_LogicalOperator(graph, dicElements); 
       serializeBindingRelationshipsPredicate_LogicalOperator(graph, dicElements); 
       serializeBindingRelationshipsPredicate_ReadActions(graph, dicElements); 
@@ -212,7 +215,18 @@ var adaptation_state_actions = function adaptation_state_actions(graph,selected_
       var vertice = vertices[i];
       var type = vertice.getAttribute("type"); 
       var label = vertice.getAttribute("label"); 
-      if(type=="digitalActuator" || type=="analogActuator" ||  type=="digitalSensor" ||  type=="analogSensor"){ 
+      if(type=="digitalActuator"){ 
+        var actuator = {
+            id: "",
+            label: label,
+            type: type,
+            pin: vertice.getAttribute("pin"),
+            initialValue: vertice.getAttribute("initialValue"),
+            pwm: vertice.getAttribute("pwm")
+          };
+        dicElements.add("hardware","port", label, actuator);   
+      } 
+      else if(type=="analogActuator" ||  type=="digitalSensor" ||  type=="analogSensor"){ 
         var actuator = {
             id: "",
             label: label,
@@ -371,6 +385,26 @@ var adaptation_state_actions = function adaptation_state_actions(graph,selected_
     }
   } 
 
+  function serializeBindingControlActions(graph, dicElements){ 
+    var graphModel = graph.getModel();
+    var mainCell = graphModel.getCell("adaptation_binding_state_hardware");
+    var vertices = graphModel.getChildVertices(mainCell);
+    var edges = graphModel.getChildEdges(mainCell);  
+
+    for (var i = 0; i < vertices.length; i++) { 
+      var vertice = vertices[i];
+      var type = vertice.getAttribute("type"); 
+      var label = vertice.getAttribute("label"); 
+      if(type=="controlAction"){ 
+        var item = {
+            id: "",
+            label: label
+          };
+        dicElements.add("binding","controlAction", label, item);   
+      } 
+    }
+  } 
+
   
 
   function serializeBindingRelationshipsState_Activity(graph, dicElements){ 
@@ -432,7 +466,7 @@ var adaptation_state_actions = function adaptation_state_actions(graph,selected_
         var target = edges[i].target; 
         var sourceType=source.getAttribute("type");
         var targetType=target.getAttribute("type");
-        var relName=source.getAttribute("label") + "_" + target.getAttribute("label"); 
+        var relName=source.getAttribute("label") + "_writeActions"; 
 
         if(sourceType=="activity" && targetType=="writeAction"){
           var activity=source.getAttribute("label"); 
@@ -533,12 +567,83 @@ var adaptation_state_actions = function adaptation_state_actions(graph,selected_
     } 
   }
 
-  function serializeBindingRelationshipsLogicalOperator_Trasition(graph, dicElements){ 
+  function serializeBindingRelationshipsControlAction_Port(graph, dicElements){ 
     var graphModel = graph.getModel();
     var mainCell = graphModel.getCell("adaptation_binding_state_hardware");
     var vertices = graphModel.getChildVertices(mainCell);
     var edges = graphModel.getChildEdges(mainCell);  
-    var dicKey ="relationship_logicalOperator_trasition";
+    var dicKey="relationship_controlAction_port";
+    dicElements.createType("binding", dicKey); 
+
+    for (var i = 0; i < edges.length; i++) {
+        var source = edges[i].source;
+        var target = edges[i].target; 
+        var sourceType=source.getAttribute("type");
+        var targetType=target.getAttribute("type");
+        var relName=target.getAttribute("label") + "_Port" ; 
+
+        if(targetType=="controlAction"){
+          var controlAction=target.getAttribute("label"); 
+          var item=dicElements.items["binding"][dicKey][relName];
+          if(!item){
+            item = {
+              id:"",
+              controlAction: dicElements.getId("binding","controlAction",controlAction),
+              readPort: null,
+              writePort: null,
+              timer:null,
+              varTimerLimit:null
+            }; 
+            dicElements.add("binding",dicKey,relName, item);  
+          }  
+          if(sourceType=="digitalActuator" || sourceType=="analogActuator" || sourceType=="digitalSensor" || sourceType=="analogSensor"){
+            item.readPort= dicElements.getId("hardware","port",source.getAttribute("label")) ;  
+          } 
+          else if(sourceType=="timer"){
+            item.timer= dicElements.getId("binding","timer",source.getAttribute("label")) ;  
+          } 
+          else if(sourceType=="digitalVariable" || sourceType=="analogVariable"){ 
+            item.varTimerLimit= dicElements.getId("binding","variable",source.getAttribute("label")) ;  
+          }
+          dicElements.add("binding",dicKey,relName, item); 
+        }     
+    } 
+
+    for (var i = 0; i < edges.length; i++) {
+      var source = edges[i].source;
+      var target = edges[i].target; 
+      var sourceType=source.getAttribute("type");
+      var targetType=target.getAttribute("type");
+      var relName=source.getAttribute("label") + "_Port" ;  
+
+      if(sourceType=="controlAction"){
+        var controlAction=source.getAttribute("label"); 
+        var item=dicElements.items["binding"][dicKey][relName];
+        if(!item){
+          item = {
+            id:"",
+            controlAction: dicElements.getId("binding","controlAction",controlAction),
+            readPort: null,
+            writePort: null,
+            timer:null,
+            varTimerLimit:null
+          }; 
+          dicElements.add("binding",dicKey,relName, item);  
+        }   
+        if(targetType=="digitalActuator" || targetType=="analogActuator"){
+          item.writePort= dicElements.getId("hardware","port",target.getAttribute("label")) ;  
+        }  
+        dicElements.items["binding"][dicKey][relName]=item; 
+      }     
+    } 
+  }
+
+  function serializeBindingRelationshipsLogicalOperator_Transition(graph, dicElements){ 
+    var graphModel = graph.getModel();
+    var mainCell = graphModel.getCell("adaptation_binding_state_hardware");
+    var vertices = graphModel.getChildVertices(mainCell);
+    var edges = graphModel.getChildEdges(mainCell);  
+    var dicKey ="relationship_logicalOperator_transition";
     dicElements.createType("binding", dicKey); 
 
     for (var i = 0; i < edges.length; i++) {
@@ -611,7 +716,7 @@ var adaptation_state_actions = function adaptation_state_actions(graph,selected_
         var target = edges[i].target; 
         var sourceType=source.getAttribute("type");
         var targetType=target.getAttribute("type");
-        var relName=source.getAttribute("label") + "_" + target.getAttribute("label"); 
+        var relName=target.getAttribute("label") + "_predicates"; 
 
         if(sourceType=="predicate" && targetType=="logicalOperator"){
           var logicalOperator=target.getAttribute("label"); 
@@ -646,7 +751,7 @@ var adaptation_state_actions = function adaptation_state_actions(graph,selected_
         var target = edges[i].target; 
         var sourceType=source.getAttribute("type");
         var targetType=target.getAttribute("type");
-        var relName=target.getAttribute("label") + "_" + source.getAttribute("label");  
+        var relName=target.getAttribute("label") + "_readActions";  
 
         if(sourceType=="readAction" && targetType=="predicate"){
           var predicate=target.getAttribute("label"); 
@@ -655,9 +760,12 @@ var adaptation_state_actions = function adaptation_state_actions(graph,selected_
             item = {
               id:"",
               predicate: dicElements.getId("binding","predicate",predicate),
-              readAction: dicElements.getId("binding","readAction",source.getAttribute("label"))
+              readActionPrimary: dicElements.getId("binding","readAction",source.getAttribute("label")),
+              readActionSecondary:null
             };  
             dicElements.add("binding",dicKey,relName, item);
+          }else{
+            item.readActionSecondary=dicElements.getId("binding","readAction",source.getAttribute("label"));
           }      
           dicElements.items["binding"][dicKey][relName]=item;   
         }  
@@ -706,6 +814,189 @@ var adaptation_state_actions = function adaptation_state_actions(graph,selected_
           }      
         }     
     } 
+  }
+
+  function serializeControlson(graph, dicElements){  
+    serializeControlSetpoint(graph, dicElements);   
+    serializeControlSummingpoint(graph, dicElements);   
+    serializeControlController(graph, dicElements);   
+    serializeControlAction(graph, dicElements);   
+    serializeControlFilter(graph, dicElements);   
+    serializeControlTransducer(graph, dicElements);   
+    serializeControlBranchpoint(graph, dicElements);  
+   }
+
+   function serializeControlSetpoint(graph, dicElements){ 
+    var graphModel = graph.getModel();
+    var mainCell = graphModel.getCell("control");
+    var vertices = graphModel.getChildVertices(mainCell);
+    var edges = graphModel.getChildEdges(mainCell);  
+
+    for (var i = 0; i < vertices.length; i++) { 
+      var vertice = vertices[i];
+      var type = vertice.getAttribute("type"); 
+      var label = vertice.getAttribute("label"); 
+      if(type=="set_point"){ 
+        var item = {
+            id: "",
+            label: label,
+            type: type,
+            valueSetpoint: vertice.getAttribute("SetPoint"),
+            time:vertice.getAttribute("Time"),
+          };
+        dicElements.add("control","set_point", label, item);   
+      } 
+    }
+  } 
+
+  function serializeControlSummingpoint(graph, dicElements){ 
+    var graphModel = graph.getModel();
+    var mainCell = graphModel.getCell("control");
+    var vertices = graphModel.getChildVertices(mainCell);
+    var edges = graphModel.getChildEdges(mainCell);  
+
+    for (var i = 0; i < vertices.length; i++) { 
+      var vertice = vertices[i];
+      var type = vertice.getAttribute("type"); 
+      var label = vertice.getAttribute("label"); 
+      if(type=="summing_point"){ 
+        var item = {
+            id: "",
+            label: label,
+            type: type,
+            valueSummingpoint: vertice.getAttribute("Direction"),
+          };
+        dicElements.add("control","summing_point", label, item);   
+      } 
+    }
+  }
+
+  function serializeControlController(graph, dicElements){ 
+    var graphModel = graph.getModel();
+    var mainCell = graphModel.getCell("control");
+    var vertices = graphModel.getChildVertices(mainCell);
+    var edges = graphModel.getChildEdges(mainCell);  
+
+    for (var i = 0; i < vertices.length; i++) { 
+      var vertice = vertices[i];
+      var type = vertice.getAttribute("type"); 
+      var label = vertice.getAttribute("label"); 
+      if(type=="controller"){ 
+        var item = {
+            id: "",
+            label: label,
+            type: type,
+            proportional: vertice.getAttribute("Proportional"),
+            integral: vertice.getAttribute("Integral"),
+            derivate: vertice.getAttribute("Derivate"),
+          };
+        dicElements.add("control","controller", label, item);   
+      } 
+    }
+  }
+  function serializeControlSummingpoint(graph, dicElements){ 
+    var graphModel = graph.getModel();
+    var mainCell = graphModel.getCell("control");
+    var vertices = graphModel.getChildVertices(mainCell);
+    var edges = graphModel.getChildEdges(mainCell);  
+
+    for (var i = 0; i < vertices.length; i++) { 
+      var vertice = vertices[i];
+      var type = vertice.getAttribute("type"); 
+      var label = vertice.getAttribute("label"); 
+      if(type=="measured_output"){ 
+        var item = {
+            id: "",
+            label: label,
+            type: type,
+            valueSummingpoint: vertice.getAttribute("CurrentOutput"),
+          };
+        dicElements.add("control","measured_output", label, item);   
+      } 
+    }
+  }
+
+  function serializeControlAction(graph, dicElements){ 
+    var graphModel = graph.getModel();
+    var mainCell = graphModel.getCell("control");
+    var vertices = graphModel.getChildVertices(mainCell);
+    var edges = graphModel.getChildEdges(mainCell);  
+
+    for (var i = 0; i < vertices.length; i++) { 
+      var vertice = vertices[i];
+      var type = vertice.getAttribute("type"); 
+      var label = vertice.getAttribute("label"); 
+      if(type=="controlAction"){ 
+        var item = {
+            id: "",
+            label: label,
+            type: type,
+          };
+        dicElements.add("control","controlAction", label, item);   
+      } 
+    }
+  }
+  function serializeControlFilter(graph, dicElements){ 
+    var graphModel = graph.getModel();
+    var mainCell = graphModel.getCell("control");
+    var vertices = graphModel.getChildVertices(mainCell);
+    var edges = graphModel.getChildEdges(mainCell);  
+
+    for (var i = 0; i < vertices.length; i++) { 
+      var vertice = vertices[i];
+      var type = vertice.getAttribute("type"); 
+      var label = vertice.getAttribute("label"); 
+      if(type=="filter"){ 
+        var item = {
+            id: "",
+            label: label,
+            type: type,
+          };
+        dicElements.add("control","filter", label, item);   
+      } 
+    }
+  }
+  function serializeControlTransducer(graph, dicElements){ 
+    var graphModel = graph.getModel();
+    var mainCell = graphModel.getCell("control");
+    var vertices = graphModel.getChildVertices(mainCell);
+    var edges = graphModel.getChildEdges(mainCell);  
+
+    for (var i = 0; i < vertices.length; i++) { 
+      var vertice = vertices[i];
+      var type = vertice.getAttribute("type"); 
+      var label = vertice.getAttribute("label"); 
+      if(type=="transducer"){ 
+        var item = {
+            id: "",
+            label: label,
+            type: type,
+            valuetransducer: vertice.getAttribute("InitialPosition")
+          };
+        dicElements.add("control","transducer", label, item);   
+      } 
+    }
+  }
+
+  function serializeControlBranchpoint(graph, dicElements){ 
+    var graphModel = graph.getModel();
+    var mainCell = graphModel.getCell("control");
+    var vertices = graphModel.getChildVertices(mainCell);
+    var edges = graphModel.getChildEdges(mainCell);  
+
+    for (var i = 0; i < vertices.length; i++) { 
+      var vertice = vertices[i];
+      var type = vertice.getAttribute("type"); 
+      var label = vertice.getAttribute("label"); 
+      if(type=="branchpoint"){ 
+        var item = {
+            id: "",
+            label: label,
+            type: type,
+          };
+        dicElements.add("control","branchpoint", label, item);   
+      } 
+    }
   }
 
   

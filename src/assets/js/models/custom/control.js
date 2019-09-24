@@ -18,23 +18,23 @@ let  control_main = function control_main(graph)
             'Measured output must have no outcoming edges',
             null));
         graph.multiplicities.push(new mxMultiplicity(
-            false, 'set_point', null, null, 0, 0, 'target_system',
+            false, 'set_point', null, null, 0, 0, 'controlAction',
             'Setpoint must have no incoming edges ',
             null));
             // Target needs exactly one incoming connection from Source
 				graph.multiplicities.push(new mxMultiplicity(
-                    false, 'target_system', null, null, 1, 1, ['controller', 'summing_point'],
+                    false, 'controlAction', null, null, 1, 1, ['controller', 'summing_point'],
                     'Target Must Have 1 incoming connection ',
                     'Target Must Connect From controller or summing point'));
         graph.multiplicities.push(new mxMultiplicity(
-            false, 'branchpoint', null, null, 1, 1, ['target_system'],
+            false, 'branchpoint', null, null, 1, 1, ['controlAction'],
             'Branchpoint Must Have 1 Target system',
             'Branchpoint Must Connect From Target system'));
-        graph.multiplicities.push(new mxMultiplicity(
-            true, 'target_system', null, null, 1, 1, ['branchpoint'],
+       /* graph.multiplicities.push(new mxMultiplicity(
+            true, 'controlAction', null, null, 1, 1, ['branchpoint'],
             'Target system Must Have 1  branchpoint',
             'Target system Must Connect to branchpoint'));
-            
+            */
             graph.multiplicities.push(new mxMultiplicity(
             true, 'set_point', null, null, 1, 1, ['summing_point'],
             'Setpoint system Must Have 1  summing_point',

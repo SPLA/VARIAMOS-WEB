@@ -31,17 +31,17 @@ var adaptation_hardware_main = function adaptation_hardware_main(graph)
 		var concrete = {src:projectPath+"images/models/feature/rectangle.png", wd:100, hg:35, type:"concrete", style:"", pname:"Concrete adaptation_hardware"};
 		var bundle = {src:projectPath+"images/models/feature/bundle.png", wd:35, hg:35, type:"bundle", style:"shape=ellipse", pname:"Bundle"};
 		
-		var board = {src:projectPath+"images/models/feature/rectangle3.png", wd:100, hg:35, type:"board", style:"shape=board", pname:"Board"};
-		var digitalActuator = {src:projectPath+"images/models/feature/bundle.png", wd:100, hg:35, type:"digitalActuator", style:"shape=digitalActuator", pname:"Digital actuator"};
-		var digitalSensor = {src:projectPath+"images/models/feature/bundle.png", wd:100, hg:35, type:"digitalSensor", style:"shape=digitalSensor", pname:"Digital sensor"};
-		var analogActuator = {src:projectPath+"images/models/feature/bundle.png", wd:100, hg:35, type:"analogActuator", style:"shape=analogActuator", pname:"Analog actuator"};
-		var analogSensor = {src:projectPath+"images/models/feature/bundle.png", wd:100, hg:35, type:"analogSensor", style:"shape=analogSensor", pname:"Analog sensor"};
+		var board = {src:projectPath+"images/models/adaptation_hardware/board.png", wd:100, hg:35, type:"board", style:"shape=board", pname:"Board"};
+		var digitalActuator = {src:projectPath+"images/models/adaptation_hardware/digitalActuator.png", wd:100, hg:35, type:"digitalActuator", style:"shape=digitalActuator", pname:"Digital actuator"};
+		var digitalSensor = {src:projectPath+"images/models/adaptation_hardware/digitalSensor.png", wd:100, hg:35, type:"digitalSensor", style:"shape=digitalSensor", pname:"Digital sensor"};
+		var analogActuator = {src:projectPath+"images/models/adaptation_hardware/analogActuator.png", wd:100, hg:35, type:"analogActuator", style:"shape=analogActuator", pname:"Analog actuator"};
+		var analogSensor = {src:projectPath+"images/models/adaptation_hardware/analogSensor.png", wd:100, hg:35, type:"analogSensor", style:"shape=analogSensor", pname:"Analog sensor"};
 		    
 		var elements=[];
 		elements[0]=board;
 		elements[1]=digitalActuator; 
-		elements[2]=digitalSensor; 
-		elements[3]=analogActuator; 
+		elements[2]=analogActuator; 
+		elements[3]=digitalSensor; 
 		elements[4]=analogSensor;
 		
 		return elements;
@@ -64,6 +64,9 @@ var adaptation_hardware_main = function adaptation_hardware_main(graph)
 			},{
 				"name":"initialValue",
 				"def_value":"LOW"
+			},{
+				"name":"pwm",
+				"def_value":"false"
 			}] 
 		};
 		attributes[2]={
@@ -124,9 +127,12 @@ var adaptation_hardware_main = function adaptation_hardware_main(graph)
 				}
 			],
 			"digitalActuator":[{
-				"attribute":"pin",
-				"input_type":"select",
-				"input_values":["D2","D4","D7","D8","D12","D13"]
+					"attribute":"pin",
+					"input_type":"select",
+					"input_values":["D2","D4","D7","D8","D12","D13"]
+				},{
+					"attribute":"pwm",
+					"input_type":"checkbox"
 				}
 			],
 			"digitalSensor":[{
