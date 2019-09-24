@@ -3,7 +3,7 @@ let control_verification = function control_verification()
   //custom verification menu options and functions
   let data=[];
   data[0]={
-      "label":"Check unique  target system",
+      "label":"Check unique  action control",
       "func":check_unique_ids
   }
 
@@ -18,7 +18,7 @@ let control_verification = function control_verification()
 
     //navigates through the feature model childs
     for (let i = 0; i < childs.length; i++) {
-        if (childs[i].getAttribute("type") == "target_system") {
+        if (childs[i].getAttribute("type") == "actionControl") {
             let label = childs[i].getAttribute("label");
             if (names.indexOf(label) > -1) {
                 result+="Duplicated feature ID - " + label + "\n";

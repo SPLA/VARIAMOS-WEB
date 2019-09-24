@@ -368,6 +368,24 @@
 		<fillstroke/>
 	</foreground>
 </shape>
+
+<shape name="controlAction" aspect="variable">
+	<background>
+		<path>
+			<move x="75" y="0"/> 
+			<line x="100" y="50"/>  
+			<line x="75" y="100"/> 
+			<line x="25" y="100"/> 
+			<line x="0" y="50"/> 
+			<line x="25" y="0"/>  
+			<line x="75" y="0"/> 
+			<close/>
+		</path>		
+	</background>
+	<foreground>
+		<fillstroke/>
+	</foreground>
+</shape>
  
 <shape name="writeAction" aspect="variable">
 	<background>
@@ -475,32 +493,53 @@
 	</foreground>
 </shape>
 
-<shape name="analogSensor" aspect="variable">
+<shape name="board" aspect="variable">
 	<background>
 		<path>
-			<move x="50" y="00"/>  
-			<arc rx="1" ry="3" x-axis-rotation="0" large-arc-flag="0" sweep-flag="0" x="50" y="100"/>
-			<arc rx="1" ry="3" x-axis-rotation="0" large-arc-flag="0" sweep-flag="0" x="50" y="0"/>
-			<close/> 
-			<move x="42" y="80"/>  
-			<line x="48" y="20"/>  
-			<move x="48" y="20"/>  
-			<line x="55" y="80"/> 
-			<move x="55" y="80"/>   
-			<line x="60" y="20"/>   
-		</path>		
+			<move x="25" y="00"/>
+			<line x="100" y="00"/>  
+			<line x="100" y="100"/> 
+			<line x="0" y="100"/> 
+			<line x="0" y="25"/> 
+			<line x="25" y="0"/> 
+			<close/>  
+		</path>	
 	</background>
 	<foreground>
 		<fillstroke/>
 	</foreground>
 </shape>
 
+<shape name="analogSensor" aspect="variable"> 
+	<background>
+		<path>
+			<move x="0" y="00"/>
+			<line x="100" y="00"/>  
+			<line x="100" y="100"/> 
+			<line x="0" y="100"/> 
+			<line x="0" y="00"/> 
+			<close/> 
+			<move x="42" y="80"/>  
+			<line x="48" y="20"/>  
+			<move x="48" y="20"/>  
+			<line x="55" y="80"/> 
+			<move x="55" y="80"/>   
+			<line x="60" y="20"/>    
+		</path>	
+	</background>
+	<foreground>
+	<fillstroke/>
+	</foreground>
+</shape>
+
 <shape name="digitalSensor" aspect="variable">
 	<background>
 		<path>
-			<move x="50" y="00"/>  
-			<arc rx="1" ry="3" x-axis-rotation="0" large-arc-flag="0" sweep-flag="0" x="50" y="100"/>
-			<arc rx="1" ry="3" x-axis-rotation="0" large-arc-flag="0" sweep-flag="0" x="50" y="0"/>
+			<move x="0" y="00"/>
+			<line x="100" y="00"/>  
+			<line x="100" y="100"/> 
+			<line x="0" y="100"/> 
+			<line x="0" y="00"/> 
 			<close/> 
 			<move x="42" y="80"/>  
 			<line x="47" y="80"/>
@@ -512,7 +551,7 @@
 			<line x="52" y="80"/> 
 			<move x="52" y="80"/>  
 			<line x="57" y="80"/> 
-		</path>		
+		</path>			
 	</background>
 	<foreground>
 		<fillstroke/>
@@ -522,11 +561,11 @@
 <shape name="digitalActuator" aspect="variable">
 	<background>
 		<path>
-			<move x="25" y="00"/>
-			<line x="75" y="00"/>  
-			<line x="75" y="100"/> 
-			<line x="25" y="100"/> 
-			<line x="25" y="00"/> 
+			<move x="0" y="00"/>
+			<line x="100" y="00"/>  
+			<line x="100" y="100"/> 
+			<line x="0" y="100"/> 
+			<line x="0" y="00"/> 
 			<close/> 
 			<move x="42" y="80"/>  
 			<line x="47" y="80"/>
@@ -548,11 +587,11 @@
 <shape name="analogActuator" aspect="variable">
 	<background>
 		<path>
-			<move x="25" y="00"/>
-			<line x="75" y="00"/>  
-			<line x="75" y="100"/> 
-			<line x="25" y="100"/> 
-			<line x="25" y="00"/> 
+			<move x="0" y="00"/>
+			<line x="100" y="00"/>  
+			<line x="100" y="100"/> 
+			<line x="0" y="100"/> 
+			<line x="0" y="00"/> 
 			<close/> 
 			<move x="42" y="80"/>  
 			<line x="48" y="20"/>  

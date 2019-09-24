@@ -17,10 +17,10 @@ var adaptation_binding_state_hardware_main = function adaptation_binding_state_h
 
 	function adaptation_binding_state_hardware_constraints(graph) {
 		graph.multiplicities = []; //reset multiplicities
-		graph.multiplicities.push(new mxMultiplicity(
-			true, "state", null, null, 0, 0, null,
-			"Invalid connection",
-			"Only shape targets allowed"));
+		// graph.multiplicities.push(new mxMultiplicity(
+		// 	true, "state", null, null, 0, 0, null,
+		// 	"Invalid connection",
+		// 	"Only shape targets allowed"));
 		graph.multiplicities.push(new mxMultiplicity(
 			true, "bundle", null, null, 0, 1, ["root", "abstract"],
 			"Only 1 target allowed",
@@ -41,30 +41,30 @@ var adaptation_binding_state_hardware_main = function adaptation_binding_state_h
 	}
 
 	function adaptation_binding_state_hardware_elements() {
-		var activity = { src: projectPath + "images/models/feature/rectangle2.png", wd: 100, hg: 35, type: "activity", style: "shape=activity", pname: "Activity" };
-		var digitalVariable = { src: projectPath + "images/models/feature/bundle.png", wd: 100, hg: 35, type: "digitalVariable", style: "shape=digitalVariable", pname: "Digital variable" };
-		var analogVariable = { src: projectPath + "images/models/feature/bundle.png", wd: 100, hg: 35, type: "analogVariable", style: "shape=analogVariable", pname: "Analog variable" };
-		var timer = { src: projectPath + "images/models/feature/bundle.png", wd: 100, hg: 35, type: "timer", style: "shape=timer", pname: "Timer" };
-		var readAction = { src: projectPath + "images/models/feature/rectangle2.png", wd: 100, hg: 35, type: "readAction", style: "shape=readAction", pname: "Read action" };
-		var writeAction = { src: projectPath + "images/models/feature/rectangle2.png", wd: 100, hg: 35, type: "writeAction", style: "shape=writeAction", pname: "Write action" };
-		var controlAction = { src: projectPath + "images/models/feature/rectangle2.png", wd: 100, hg: 35, type: "controlAction", style: "strokeWidth=2", pname: "Control action" };
-		var delayAction = { src: projectPath + "images/models/feature/rectangle2.png", wd: 100, hg: 35, type: "delayAction", style: "strokeWidth=2", pname: "Delay action" };
-		var customAction = { src: projectPath + "images/models/feature/rectangle2.png", wd: 100, hg: 35, type: "customAction", style: "strokeWidth=2", pname: "Custom action" };
-		var logicalOperator = { src: projectPath + "images/models/feature/bundle.png", wd: 100, hg: 35, type: "logicalOperator", style: "shape=ellipse", pname: "Logical operator" };
-		var predicate = { src: projectPath + "images/models/feature/rectangle2.png", wd: 100, hg: 35, type: "predicate", style: "shape=predicate", pname: "Predicate" };
+		var activity = { src: projectPath + "images/models/adaptation_binding_state_hardware/activity.png", wd: 100, hg: 35, type: "activity", style: "shape=activity", pname: "Activity" };
+		var digitalVariable = { src: projectPath + "images/models/adaptation_binding_state_hardware/digitalVariable.png", wd: 100, hg: 35, type: "digitalVariable", style: "shape=digitalVariable", pname: "Digital variable" };
+		var analogVariable = { src: projectPath + "images/models/adaptation_binding_state_hardware/analogVariable.png", wd: 100, hg: 35, type: "analogVariable", style: "shape=analogVariable", pname: "Analog variable" };
+		var timer = { src: projectPath + "images/models/adaptation_binding_state_hardware/timer.png", wd: 100, hg: 35, type: "timer", style: "shape=timer", pname: "Timer" };
+		var readAction = { src: projectPath + "images/models/adaptation_binding_state_hardware/readAction.png", wd: 100, hg: 35, type: "readAction", style: "shape=readAction", pname: "Read action" };
+		var writeAction = { src: projectPath + "images/models/adaptation_binding_state_hardware/writeAction.png", wd: 100, hg: 35, type: "writeAction", style: "shape=writeAction", pname: "Write action" };
+		var controlAction = { src: projectPath + "images/models/adaptation_binding_state_hardware/controlAction.png", wd: 100, hg: 35, type: "controlAction", style: "shape=controlAction", pname: "Control action" };
+		var delayAction = { src: projectPath + "images/models/adaptation_binding_state_hardware/delayAction.png", wd: 100, hg: 35, type: "delayAction", style: "strokeWidth=2", pname: "Delay action" };
+		var customAction = { src: projectPath + "images/models/adaptation_binding_state_hardware/customAction.png", wd: 100, hg: 35, type: "customAction", style: "strokeWidth=2", pname: "Custom action" };
+		var logicalOperator = { src: projectPath + "images/models/adaptation_binding_state_hardware/logicalOperator.png", wd: 100, hg: 35, type: "logicalOperator", style: "shape=ellipse", pname: "Logical operator" };
+		var predicate = { src: projectPath + "images/models/adaptation_binding_state_hardware/predicate.png", wd: 100, hg: 35, type: "predicate", style: "shape=predicate", pname: "Predicate" };
 
 		var elements = [];
 		elements[0] = activity;
-		elements[1] = digitalVariable;
-		elements[2] = analogVariable;
-		elements[3] = timer;
-		elements[4] = readAction;
-		elements[5] = writeAction;
-		elements[6] = controlAction;
-		elements[7] = delayAction;
-		elements[8] = customAction;
-		elements[9] = logicalOperator;
-		elements[10] = predicate;
+		elements[1] = timer;
+		elements[2] = writeAction;
+		elements[3] = readAction;
+		elements[4] = controlAction;
+		elements[5] = digitalVariable;
+		elements[6] = analogVariable;
+		elements[7] = logicalOperator;
+		elements[8] = predicate;
+		//elements[7] = delayAction;
+		//elements[8] = customAction;
 
 		return elements;
 	}
@@ -257,7 +257,7 @@ var adaptation_binding_state_hardware_main = function adaptation_binding_state_h
 	function adaptation_binding_state_hardware_clon_cells() {
 		var clons = {};
 		clons = {
-			"concrete": "binding_adaptation_binding_state_hardware_component"
+			"controlAction":"control"
 		};
 
 		return clons;
@@ -303,7 +303,7 @@ var adaptation_binding_state_hardware_main = function adaptation_binding_state_h
 
 	function adaptation_binding_state_hardware_on_double_click(cell) {
 		var sourceType = cell.getAttribute("type");
-		//alert(sourceType)
+		alert(sourceType)
 		if (sourceType == "initialState" || sourceType == "state" || sourceType == "transition") {
 			//alert(sourceType)
 			window.location = "http://localhost:8080/variamosweb#/models/Luz%20controlada/Application-Luzcontrolada-1/adaptation_state";

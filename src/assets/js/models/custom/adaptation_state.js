@@ -31,9 +31,9 @@ var adaptation_state_main = function adaptation_state_main(graph)
 		var concrete = {src:projectPath+"images/models/feature/rectangle.png", wd:100, hg:35, type:"concrete", style:"", pname:"Concrete adaptation_state"};
 		var bundle = {src:projectPath+"images/models/feature/bundle.png", wd:35, hg:35, type:"bundle", style:"shape=ellipse", pname:"Bundle"};
 		
-		var initialState = {src:projectPath+"images/models/feature/rectangle3.png", wd:100, hg:35, type:"initialState", style:"shape=doubleEllipse", pname:"Initial state"};
-		var state = {src:projectPath+"images/models/feature/rectangle2.png", wd:100, hg:35, type:"state", style:"shape=ellipse", pname:"State"};
-		var transition = {src:projectPath+"images/models/feature/rectangle2.png", wd:100, hg:35, type:"transition", style:"shape=transition", pname:"Transition"};
+		var initialState = {src:projectPath+"images/models/adaptation_state/initialState.png", wd:100, hg:35, type:"initialState", style:"shape=doubleEllipse", pname:"Initial state"};
+		var state = {src:projectPath+"images/models/adaptation_state/state.png", wd:100, hg:35, type:"state", style:"shape=ellipse", pname:"State"};
+		var transition = {src:projectPath+"images/models/adaptation_state/transition.png", wd:100, hg:35, type:"transition", style:"shape=transition", pname:"Transition"};
 		  
 		var elements=[];
 		elements[0]=initialState;
