@@ -3,7 +3,7 @@ let control_verification = function control_verification()
   //custom verification menu options and functions
   let data=[];
   data[0]={
-      "label":"Check unique  action control",
+      "label":"Check unique  control action",
       "func":check_unique_ids
   }
 
@@ -18,10 +18,10 @@ let control_verification = function control_verification()
 
     //navigates through the feature model childs
     for (let i = 0; i < childs.length; i++) {
-        if (childs[i].getAttribute("type") == "actionControl") {
+        if (childs[i].getAttribute("type") == "controlAction") {
             let label = childs[i].getAttribute("label");
             if (names.indexOf(label) > -1) {
-                result+="Duplicated feature ID - " + label + "\n";
+                result+="Duplicated control action ID - " + label + "\n";
                 let overlay = new mxCellOverlay(new mxImage('images/MX/error.gif', 16, 16), 'Overlay tooltip', 'right', 'top');
                 graph.addCellOverlay(childs[i], overlay);
                 c_errors.push(childs[i]);

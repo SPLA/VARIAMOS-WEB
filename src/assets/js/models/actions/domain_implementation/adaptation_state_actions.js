@@ -46,7 +46,8 @@ var adaptation_state_actions = function adaptation_state_actions(graph,selected_
  
           serializeMachineJson(graph, dicElements);  
           serializeHardwareJson(graph, dicElements); 
-          serializeBindingJson(graph, dicElements); 
+          serializeBindingJson(graph, dicElements);  
+          serializeControlson(graph, dicElements); 
 
           for (var groupName in dicElements.items) { 
             model[groupName]=[];
@@ -813,6 +814,189 @@ var adaptation_state_actions = function adaptation_state_actions(graph,selected_
           }      
         }     
     } 
+  }
+
+  function serializeControlson(graph, dicElements){  
+    serializeControlSetpoint(graph, dicElements);   
+    serializeControlSummingpoint(graph, dicElements);   
+    serializeControlController(graph, dicElements);   
+    serializeControlAction(graph, dicElements);   
+    serializeControlFilter(graph, dicElements);   
+    serializeControlTransducer(graph, dicElements);   
+    serializeControlBranchpoint(graph, dicElements);  
+   }
+
+   function serializeControlSetpoint(graph, dicElements){ 
+    var graphModel = graph.getModel();
+    var mainCell = graphModel.getCell("control");
+    var vertices = graphModel.getChildVertices(mainCell);
+    var edges = graphModel.getChildEdges(mainCell);  
+
+    for (var i = 0; i < vertices.length; i++) { 
+      var vertice = vertices[i];
+      var type = vertice.getAttribute("type"); 
+      var label = vertice.getAttribute("label"); 
+      if(type=="set_point"){ 
+        var item = {
+            id: "",
+            label: label,
+            type: type,
+            valueSetpoint: vertice.getAttribute("SetPoint"),
+            time:vertice.getAttribute("Time"),
+          };
+        dicElements.add("control","set_point", label, item);   
+      } 
+    }
+  } 
+
+  function serializeControlSummingpoint(graph, dicElements){ 
+    var graphModel = graph.getModel();
+    var mainCell = graphModel.getCell("control");
+    var vertices = graphModel.getChildVertices(mainCell);
+    var edges = graphModel.getChildEdges(mainCell);  
+
+    for (var i = 0; i < vertices.length; i++) { 
+      var vertice = vertices[i];
+      var type = vertice.getAttribute("type"); 
+      var label = vertice.getAttribute("label"); 
+      if(type=="summing_point"){ 
+        var item = {
+            id: "",
+            label: label,
+            type: type,
+            valueSummingpoint: vertice.getAttribute("Direction"),
+          };
+        dicElements.add("control","summing_point", label, item);   
+      } 
+    }
+  }
+
+  function serializeControlController(graph, dicElements){ 
+    var graphModel = graph.getModel();
+    var mainCell = graphModel.getCell("control");
+    var vertices = graphModel.getChildVertices(mainCell);
+    var edges = graphModel.getChildEdges(mainCell);  
+
+    for (var i = 0; i < vertices.length; i++) { 
+      var vertice = vertices[i];
+      var type = vertice.getAttribute("type"); 
+      var label = vertice.getAttribute("label"); 
+      if(type=="controller"){ 
+        var item = {
+            id: "",
+            label: label,
+            type: type,
+            proportional: vertice.getAttribute("Proportional"),
+            integral: vertice.getAttribute("Integral"),
+            derivate: vertice.getAttribute("Derivate"),
+          };
+        dicElements.add("control","controller", label, item);   
+      } 
+    }
+  }
+  function serializeControlSummingpoint(graph, dicElements){ 
+    var graphModel = graph.getModel();
+    var mainCell = graphModel.getCell("control");
+    var vertices = graphModel.getChildVertices(mainCell);
+    var edges = graphModel.getChildEdges(mainCell);  
+
+    for (var i = 0; i < vertices.length; i++) { 
+      var vertice = vertices[i];
+      var type = vertice.getAttribute("type"); 
+      var label = vertice.getAttribute("label"); 
+      if(type=="measured_output"){ 
+        var item = {
+            id: "",
+            label: label,
+            type: type,
+            valueSummingpoint: vertice.getAttribute("CurrentOutput"),
+          };
+        dicElements.add("control","measured_output", label, item);   
+      } 
+    }
+  }
+
+  function serializeControlAction(graph, dicElements){ 
+    var graphModel = graph.getModel();
+    var mainCell = graphModel.getCell("control");
+    var vertices = graphModel.getChildVertices(mainCell);
+    var edges = graphModel.getChildEdges(mainCell);  
+
+    for (var i = 0; i < vertices.length; i++) { 
+      var vertice = vertices[i];
+      var type = vertice.getAttribute("type"); 
+      var label = vertice.getAttribute("label"); 
+      if(type=="controlAction"){ 
+        var item = {
+            id: "",
+            label: label,
+            type: type,
+          };
+        dicElements.add("control","controlAction", label, item);   
+      } 
+    }
+  }
+  function serializeControlFilter(graph, dicElements){ 
+    var graphModel = graph.getModel();
+    var mainCell = graphModel.getCell("control");
+    var vertices = graphModel.getChildVertices(mainCell);
+    var edges = graphModel.getChildEdges(mainCell);  
+
+    for (var i = 0; i < vertices.length; i++) { 
+      var vertice = vertices[i];
+      var type = vertice.getAttribute("type"); 
+      var label = vertice.getAttribute("label"); 
+      if(type=="filter"){ 
+        var item = {
+            id: "",
+            label: label,
+            type: type,
+          };
+        dicElements.add("control","filter", label, item);   
+      } 
+    }
+  }
+  function serializeControlTransducer(graph, dicElements){ 
+    var graphModel = graph.getModel();
+    var mainCell = graphModel.getCell("control");
+    var vertices = graphModel.getChildVertices(mainCell);
+    var edges = graphModel.getChildEdges(mainCell);  
+
+    for (var i = 0; i < vertices.length; i++) { 
+      var vertice = vertices[i];
+      var type = vertice.getAttribute("type"); 
+      var label = vertice.getAttribute("label"); 
+      if(type=="transducer"){ 
+        var item = {
+            id: "",
+            label: label,
+            type: type,
+            valuetransducer: vertice.getAttribute("InitialPosition")
+          };
+        dicElements.add("control","transducer", label, item);   
+      } 
+    }
+  }
+
+  function serializeControlBranchpoint(graph, dicElements){ 
+    var graphModel = graph.getModel();
+    var mainCell = graphModel.getCell("control");
+    var vertices = graphModel.getChildVertices(mainCell);
+    var edges = graphModel.getChildEdges(mainCell);  
+
+    for (var i = 0; i < vertices.length; i++) { 
+      var vertice = vertices[i];
+      var type = vertice.getAttribute("type"); 
+      var label = vertice.getAttribute("label"); 
+      if(type=="branchpoint"){ 
+        var item = {
+            id: "",
+            label: label,
+            type: type,
+          };
+        dicElements.add("control","branchpoint", label, item);   
+      } 
+    }
   }
 
   
