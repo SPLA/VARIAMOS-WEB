@@ -53,7 +53,7 @@ let main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model
 		//setup label changed
 		setup_label_changed(graph,data["m_labels"]);	
 		//setup relations
-		setupFunctions["setup_relations"](graph,data["m_relations"],data["m_relation_styles"]);
+		setupFunctions["setup_relations"](graph,data["m_relations"],data["m_relation_styles"],data["m_constraints_relations"]);
 		//setup custom features by model type
 		setup_custom_features_by_type(data["m_type"]);
 		//setup overlay

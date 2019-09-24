@@ -6,6 +6,8 @@ let component_main = function component_main(graph)
 	data["m_elements"]=component_elements(); //custom elements
 	data["m_attributes"]=component_attributes(); //custom attributes
 	data["m_clon_cells"]=component_clon_cells(); //custom clon cells
+	data["m_relation_styles"]=component_relation_styles(); //custom relation styles
+	data["m_constraints_relations"]=component_constraints_relations; //custom constraints for relations
 	return data;
 	
 	function component_constraints(graph){
@@ -15,8 +17,8 @@ let component_main = function component_main(graph)
 			"Invalid connection",
 			"Only shape targets allowed"));
 		graph.multiplicities.push(new mxMultiplicity(
-			true, "file", null, null, 0, 1, ["component"],
-			"Only 1 target allowed",
+			true, "file", null, null, 0, null, ["file","component"],
+			"Invalid connection",
 			"Only shape targets allowed"));
 	}
 
@@ -55,6 +57,43 @@ let component_main = function component_main(graph)
 		};
 
 		return clons;
+	}
+
+	function component_relation_styles(){
+		var relations=[];
+		relations.push({
+		  "source":["file"],
+		  "rel_source_target":"and",
+		  "target":["file"],
+		  "style":"dashed=1;endArrow=open;strokeColor=red;"
+		});
+
+		return relations;
+	}
+
+	function component_constraints_relations(graph, source, target){
+		if(source.getAttribute("type")=="file" && target.getAttribute("type")=="file"){
+			if(target.getAttribute("destination")==null){
+				alert("Invalid connection");
+				return false;
+			}else if(source.getAttribute("destination")!=null || source.getAttribute("filename")==null || !source.getAttribute("filename").includes(".frag")){
+				alert("Invalid connection");
+				return false;
+			}
+		}
+
+		if(target.getAttribute("type")=="component"){
+			let source_id = source.getId();
+			let out_egdes = graph.getModel().getOutgoingEdges(graph.getModel().getCell(source_id));
+			for (let j = 0; j < out_egdes.length; j++) {
+				if(out_egdes[j].target.getAttribute("type")=="component"){
+					alert("Invalid connection one file can be only linked with one component");
+					return false;
+				}
+			}
+		}
+
+		return true;
 	}
 
 }
