@@ -384,4 +384,8 @@ table{
 .pallete-div span{
   font-size: 12px;
 }
+
+.nav-item a{
+  cursor: pointer;
+}
 </style>

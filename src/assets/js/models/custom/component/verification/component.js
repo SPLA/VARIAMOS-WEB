@@ -22,7 +22,7 @@ let component_verification = function component_verification()
     let childs = graph.getModel().getChildEdges(component_root);
 
     for (let i = 0; i < childs.length; i++) {
-      if(childs[i].getValue().nodeName=="rel_file_file"){
+      if(childs[i].getValue().nodeName=="rel_fragment_file"){
         childs[i].setVisible(false);
       }
     }
@@ -34,7 +34,7 @@ let component_verification = function component_verification()
     let childs = graph.getModel().getChildEdges(component_root);
 
     for (let i = 0; i < childs.length; i++) {
-      if(childs[i].getValue().nodeName=="rel_file_file"){
+      if(childs[i].getValue().nodeName=="rel_fragment_file"){
         childs[i].setVisible(true);
       }
     }
@@ -47,21 +47,21 @@ let component_verification = function component_verification()
     if(cell==null){
       alert("Please select a valid fragment");
     }else{
-      if(!cell.getAttribute("filename").includes(".frag")){
+      if(!cell.getAttribute("type")=="fragment"){
         alert("Please select a valid fragment");
       }else{
         let component_root = graph.getModel().getCell("component");    
         let childs = graph.getModel().getChildEdges(component_root);
 
         for (let i = 0; i < childs.length; i++) {
-          if(childs[i].getValue().nodeName=="rel_file_file"){
+          if(childs[i].getValue().nodeName=="rel_fragment_file"){
             childs[i].setVisible(false);
           }
         }
 
         let childs_current = graph.getModel().getOutgoingEdges(cell);
         for (let i = 0; i < childs_current.length; i++) {
-          if(childs_current[i].getValue().nodeName=="rel_file_file"){
+          if(childs_current[i].getValue().nodeName=="rel_fragment_file"){
             childs_current[i].setVisible(true);
           }
         }
