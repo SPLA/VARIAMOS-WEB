@@ -248,9 +248,7 @@ export default{
         this.undoManager = new mxUndoManager();
         this.initialize_mx(2);
         //clear undo redo history
-        this.undoManager.clear(); 
-
-        //alert(this.$route.query.id);
+        this.undoManager.clear();
       }
     },
     /**
