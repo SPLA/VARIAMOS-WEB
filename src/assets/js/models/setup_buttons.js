@@ -169,6 +169,24 @@ let setup_buttons = function setup_buttons(graph,undoManager,reused_functions,ro
     buttonDELETE.innerHTML="";
     buttonDELETE.appendChild(mxUtils.button_with_icon(global.messages["setup_buttons_delete"], reused_functions[0],"cut"));
     /* end buttonDELETE */
+
+    /* begin buttonZIN */
+    let buttonZIN = document.getElementById('buttonZIN');
+    buttonZIN.innerHTML="";
+    buttonZIN.appendChild(mxUtils.button('+',function(evt){graph.zoomIn();}));
+    /* end buttonZIN */
+
+    /* begin buttonZOUT */
+    let buttonZOUT = document.getElementById('buttonZOUT');
+    buttonZOUT.innerHTML="";
+    buttonZOUT.appendChild(mxUtils.button('-',function(evt){graph.zoomOut();}));
+    /* end buttonZOUT */
+
+    /* begin buttonZR */
+    let buttonZR = document.getElementById('buttonZR');
+    buttonZR.innerHTML="";
+    buttonZR.appendChild(mxUtils.button('R',function(evt){graph.view.scaleAndTranslate(1, 0, 0);}));
+    /* end buttonZR */
 }
 
 export default setup_buttons

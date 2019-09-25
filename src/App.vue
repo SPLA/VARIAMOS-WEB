@@ -5,8 +5,8 @@
           <div id="main-button-col" class="main-button"> <button class="navbar-toggler" type="button">
             <span @click="custom_collapse()" class="navbar-toggler-icon"></span>
           </button></div></div>
-          <input class="form-control form-control-dark w-100 height-100" name="keyword" type="text" v-bind:placeholder="$t('app_search')" v-bind:aria-label="$t('app_search')">
-          <ul class="navbar-nav px-3">
+          <input id="search-bar" class="form-control form-control-dark w-100 height-100" name="keyword" type="text" v-bind:placeholder="$t('app_search')" v-bind:aria-label="$t('app_search')">
+          <ul id="sign-out" class="navbar-nav px-3">
             <li class="nav-item text-nowrap">
               <a class="nav-link">{{ $t("app_sign_out") }}</a>
             </li>

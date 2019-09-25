@@ -47,7 +47,10 @@
                   <b>{{ $t("models_palette") }}</b><br /><br />
                   <div id="tbContainer"></div>
                   </div>
-                  <div class="other-area"><b>{{ $t("models_navigator") }}</b>
+                  <div class="other-area"><!--<b>{{ $t("models_navigator") }}</b>-->
+                  <div class="navi-buttons">
+                    <div id="buttonZIN"></div><div id="buttonZOUT"></div><div id="buttonZR"></div>
+                  </div>
                   <div id="navigator" class="navigator"></div>
                   </div>
                 </div>
@@ -316,7 +319,7 @@ export default{
 
 .navigator{
   border: 2px solid rgba(0,0,0,.125);
-  margin-top: 10px;
+  margin-top: 5px;
 }
 
 .button-area{
@@ -387,5 +390,20 @@ table{
 
 .nav-item a{
   cursor: pointer;
+}
+
+.navi-buttons{
+  display: flex;
+  margin: 0 auto;
+  justify-content: flex-end;
+}
+
+.navi-buttons button{
+  border: 1px solid #ccc;
+  padding: 2px;
+  padding-left: 7px;
+  padding-right: 7px;
+  width: 25px;
+  margin-right: 2px;
 }
 </style>
