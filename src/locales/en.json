@@ -6,12 +6,46 @@
   "models_model": "model",
 
   "about_variamos": "About VariaMos",
+  "about_variamos_desc": "VariaMos is a modeling tool that incorporates a language to represent and simulate families of systems.",
   "about_team": "VariaMos 2.0.1 Current Team",
   "about_past_versions": "VariaMos Past Version Team",
+  
   "about_team_daniel": "Daniel Correa",
   "about_team_daniel_desc": "Received the BSc. Eng in Systems and Informatics Engineering in 2012, and the MSc. degree in Systems and Informatics Engineering in 2015 all of them from the Universidad Nacional de Colombia. Medellin, Colombia. He is currently a PhD candidate in Systems and Informatics Engineering for the Universidad Nacional de Colombia; and he is an auxiliary professor in the Computing and Decision Sciences Department, Universidad Nacional de Colombia. His research interests include: software product lines, software engineering and software frameworks.",
+
   "about_team_raul": "Raúl Mazo",
-  "about_team_raul_desc": "Is associate professor at Paris1 Panthéon Sorbonne University from September 2012, and visiting professor at Eafit University (Colombia) from September 2016. He received a BSc. in Computer Science Engineering in 2005 from the University of Antioquia (Medellin, Colombia), a MSc. of Science degree in Information Systems in 2008 and a PhD. degree in Computer Science in 2011, both from the Panthéon Sorbonne University. His research and teaching topics include: software engineering, and (dynamic) product line engineering.",
+  "about_team_raul_role": "Project Leader",
+  "about_team_raul_desc": "Since 2012, Raúl Mazo has been an Associate Professor (HDR) with the Panthéon Sorbonne University and researcher with the CRI (Centre de Recherche en Informatique) and GIDITIC (Grupo de Investigación: Desarrollo e Innovación en Tecnologías de la Información y las Comunicaciones).  His research and teaching topics are around the application of artificial intelligence techniques, optimization (by exact and approximate methods), software engineering and control to improve the design, simulation and implementation of cyber-physical, self-adaptive and software-intensive systems.  The research program developed by Raúl Mazo is fruitful and promising. It has attained great confidence and credibility (which explains the trust of important French, Mediterranean, Latin-American and European programs, such as ANR, PHC UTIQUE, Colciencias, H2020 and ITEA, to finance his works). His research results constitute a collection of more than 80 scientific contributions characterised by its innovative attractiveness, the rigor of the solutions, the performance of the software developed to support the proposed approaches and the broadness of his research activities. Raúl Mazo’s awards and honors include the Order of merit of Carolina del Principe as Distinguished Citizen (summer 2008), the 70 years of the Engineering Faculty award, for outstanding graduate of the Computer and Systems Engineering Program of the University of Antioquia (summer 2013), and the Best Paper awards of the IEEE International Conference on Research Challenges in Information Science (RCIS 2011, RCIS 2018), the 35rd International Computer Software and Applications Conference (COMPSAC 2011) and the International conference on Complex Systems Design & Management (CSD&M 2013).",
+ 
+  "about_team_yan":"Yan Wang",
+  "about_team_yan_desc":"Yan Wang is a postdoctoral researcher in the project REVAMP at CRI in the Université Paris 1 Panthéon - Sorbonne. He gets his PhD diploma of productique from University of Bordeaux in 2018. His research interests include model-based development of (dynamic) software-product lines, modeling and simulation, process mining, enterprise modeling. His e-mail address is hrbwy0451@gmail.com.",
+ 
+  "about_team_jacques":"Jacques Robin",
+  "about_team_jacques_desc":"After receiving his PhD. in Computer Science from Columbia University, New York, USA, Jacques Robin was as a researcher at Bellcore Laboratories, New Jersey, USA, associate professor at Universidade Federal de Pernambuco in Recife, Brazil, research engineering at Sorbonne Université, Paris and research laboratory head at Thales Research and Technology in Palaiseau, France. Since 2017 he is a research engineer at Université Paris 1 Panthéon-Sorbonne. He has 35 years of research and teaching experience in various subfields of artificial intelligence (expert systems, natural language processing and web search engines, data mining and machine learning, logic and constraint programming) and 20 years of research and teaching experience in software engineering (model-driven engineering, formal methods, software process engineering and product-line engineering).",
+
+  "about_team_andres":"Andres Orlando Lopez",
+  "about_team_andres_desc":"Currently, Andrés Erazo is a graduate student at EAFIT University and a graduate of Mariana University. His topics of interest are related to the implementation of innovative technologies, for the automation and optimization of processes, improving the interaction of a system with its environment, and machine learning. Andrés Erazo has participated in the Eighth Meeting of the Faculty of Engineering of Nariño and Putumayo (2016), the Third Andean Congress of Computing, Informatics and Education (2017), and the recognition of the best semester average in the tenth semester of the Systems Engineering program of the Universidad Mariana (2018).",
+
+  "about_team_carlos":"Carlos Jaramillo",
+  "about_team_carlos_desc":"Carlos Andrés Jaramillo has over 16 years of professional experience in software development projects, in which I have worked as Business Analyst, QA lead, QA operations manager, innovation manager, Scrum Master and Agile Coach in different organizations. Carlos has extensive experience and knowledge in different software development methodologies (IREB, ISTQB, IIBA, SCRUM, KANBAN, XP, LEAN, DEVOPS, SAFe), tools (Selenium Webdriver, Appium, Mantis, Testlink, SpiraTest, Jenkins, Git, Maven, SonarQube, Jira, UIpath, Jmeter, Gatling) and programing language (Java, C#, Visual Basic, Ruby) Throughout his career he has participated in more than 100 software projects, in different platforms and business sectors, like financial, telco, retail, insurance, and transport.  Since 2015, has been professor at the Eafit university in Medellin for requirements engineering, and a candidate for a master's degree from the same university. He is currently director of research and development at SQA, a software quality assurance company located in Medellín, Colombia.",
+  
+  "about_team_esteban":"Esteban Echavarría",
+  "about_team_esteban_desc":"Esteban Echavarria is a undergraduate student at EAFIT university in C.S. Engineering, his topics of interest are distributed large-scale systems and analytics, he has been working in projects related with variability models in the design of a product and in the migration of VariaMos from the desktop app, actually he is working as a Jr. Investigation Assistant in VariaMos and in Bancolombia in the 'Semillero de Talentos Bancolombia'.",
+ 
+  "about_team_angela":"Angela Villota",
+  "about_team_angela_desc":"",
+  "about_team_luis":"Luis Fernando Londoño",
+  "about_team_luis_desc":"",
+  "about_team_jean":"Jean Paul Galeano",
+  "about_team_jean_desc":"",
+  "about_team_camilo":"Camilo Correa",
+  "about_team_camilo_desc":"",
+  "about_team_john":"John Harvey Medina",
+  "about_team_john_desc":"",
+  "about_team_luisa":"Luisa Rincón",
+  "about_team_luisa_desc":"",
+
+  
   "about_team_past_copy1":"Copyright (c) 2015-2018:",
   "about_team_past_copy2":"Copyright (c) 2014-2015:",
   "about_team_past_copy3":"Copyright (c) 2009-2014:",
@@ -40,14 +74,21 @@
   "app_share": "Share",
   "app_export": "Export",
   "app_week": "This week",
+  "app_sign_out": "Sign out",
 
   "modal_save":"Save",
   "modal_success":"Success",
   "modal_error":"Error",
+  "modal_close":"Close",
   "models_save_model":"Model Saved!",
   "models_actions_derivation_response": "Derivation response",
 
-  "domain_implementation":"Domain Implementation",
+  "domain_menu":"Domain Menu",
+  "domain_menu_set_comp":"Set Component Folder",
+  "domain_menu_show_file_code":"Show Selected File Code",
+  "domain_menu_sfc_invalid":"Please select a valid component file",
+  "domain_menu_sfc_not_found":"File not found, check your model and component pool",
+
   "domain_implementation_set_params":"Set Derivation Parameters",
   "domain_implementation_execute":"Execute Derivation",
   "domain_implementation_verify":"Verify Derivation",
@@ -55,6 +96,9 @@
   "domain_implementation_pool_path":"Server Component Pool Path",
   "domain_implementation_derived_path":"Server Derived Project Path",
   "domain_implementation_path_problem":"Please setup BackEnd and Derivation parameters first",
+
+  "application_menu":"Application Menu",
+  "application_menu_set_app":"Set Application Folder",
 
   "model_actions_backend_problem":" || Back-End problem",
 
@@ -66,6 +110,21 @@
   "verification_root":"More than one root element",
   "verification_dead":"Dead elements",
   "verification_false":"False optional elements",
-  "verification_path_problem":"Please setup BackEnd parameters first"
+  "verification_path_problem":"Please setup BackEnd parameters first",
 
+  "filemanagement_addproject_button": "Add a new project",
+  "filemanagement_addproject_title": "New project",
+  "filemanagement_addproject_label": "New project name:",
+  "filemanagement_addproject_context": "Please enter a new project name",
+  "filemanagement_changename_title": "Rename",
+  "filemanagement_changename_label": "New name:",
+  "filemanagement_changename_context": "Please enter a new name",
+  "filemanagement_newapplication_title": "New application",
+  "filemanagement_newapplication_father": "Father:",
+  "filemanagement_newapplication_label": "Application name:",
+  "filemanagement_newapplication_context": "Please enter a new application name",
+  "filemanagement_newadaptation_title": "New adaptation",
+  "filemanagement_newadaptation_father": "Father:",
+  "filemanagement_newadaptation_label": "Adaptation name:",
+  "filemanagement_newadaptation_context": "Please enter a new adaptation name"
 }

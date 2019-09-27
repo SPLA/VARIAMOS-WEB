@@ -10,8 +10,8 @@ import '@/assets/js/chart/Chart.min.js'
 
 export default {
   mounted: function(){
-    var ctx = document.getElementById("myChart");
-    var myChart = new Chart(ctx, {
+    let ctx = document.getElementById("myChart");
+    let myChart = new Chart(ctx, {
     type: 'line',
     data: {
         labels: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],

@@ -1,16 +1,5 @@
 <shapes>
 <!-- begin component model -->
-<shape name="package" aspect="variable">
-	<background>
-		<rect x="0" y="20" w="100" h="80"/>
-		<fillstroke/>
-		<rect x="0" y="0" w="45" h="20"/>
-		<fillstroke/>
-   </background>
-	<foreground>
-		<fillstroke/>
-	</foreground>
-</shape>
 
 <shape name="component" aspect="variable">
 	<background>
@@ -61,5 +50,582 @@
 		<fillstroke/>
 	</foreground>
 </shape>
+
+
+<!-- end component model -->
+
+<!-- begin secure tropos/i* -->
+
+<!-- i* -->
+
+<shape name="capitald" aspect="fixed">
+	<background>
+		<path>
+			<move x="0" y="0"/>
+			<quad x1="100" y1="50" x2="0" y2="100"/>
+			<close/>
+		</path>
+	</background>
+	<foreground>
+		<fillstroke/>
+	</foreground>
+</shape>
+
+<shape name="actor" aspect="fixed" strokewidth="3">
+	<background >
+		<strokecolor color="#000000"/>
+		<fillcolor color="#CDFECD"/>
+		<ellipse x="0" y="0" w="100" h="100" />
+		<fillstroke/>
+	</background>
+</shape>
+
+<shape name="agent" aspect="fixed" strokewidth="3">
+	<background >
+		<strokecolor color="#000000"/>
+		<fillcolor color="#CDFECD"/>
+		<ellipse x="0" y="0" w="100" h="100" />
+		<fillstroke/>
+	</background>
+	<foreground>
+		<path>
+			<move x="15" y="15"/>
+			<line x="85" y="15"/>
+			<stroke/>
+		</path>
+	</foreground>
+</shape>
+
+<shape name="role" aspect="fixed" strokewidth="3">
+	<background>
+		<strokecolor color="#000000"/>
+		<fillcolor color="#CDFECD"/>
+		<ellipse x="0" y="0" w="100" h="100" />
+		<fillstroke/>
+	</background>
+	<foreground>
+		<path>
+			<move x="15" y="85"/>
+			<quad x1="50" y1="95" x2="85" y2="85"/>
+			<stroke/>
+		</path>
+	</foreground>
+</shape>
+
+<shape name="goal" aspect="fixed" strokewidth="3" w="125" h="50">
+	<background>
+		<strokecolor color="#000000"/>
+		<fillcolor color="#CDFECD"/>
+		<roundrect x="0" y="0" w="125" h="50" arcsize="55"/>
+		<fillstroke/>
+	</background>
+</shape>
+
+<shape name="task" aspect="fixed" strokewidth="3" w="125" h="50">
+	<background>
+		<path>
+			<move x="25" y="0"/>
+			<line x="100" y="0"/>
+			<line x="125" y="25"/>
+			<line x="100" y="50"/>
+			<line x="25" y="50"/>
+			<line x="0" y="25"/>
+			<close/>
+		</path>
+	</background>
+	<foreground>
+		<strokecolor color="#000000"/>
+		<fillcolor color="#CDFECD"/>
+		<fillstroke/>
+	</foreground>
+</shape>
+
+<shape name="resource" aspect="fixed" strokewidth="3" w="125" h="50">
+	<background>
+		<strokecolor color="#000000"/>
+		<fillcolor color="#CDFECD"/>
+		<rect x="0" y="0" w="125" h="50"/>
+		<fillstroke/>
+	</background>
+</shape>
+
+<shape name="quality" aspect="fixed" strokewidth="3" w="125" h="50">
+	<background>
+		<linejoin join="bezel"/>
+		<path>
+			<move x="0" y="25"/>
+			<quad x1="0" y1="0" x2="31.25" y2="0"/>
+			<curve x1="78.125" y1="10" x2="62.5" y2="5" x3="93.75" y3="0"/>
+			<quad x1="125" y1="0" x2="125" y2="25"/>
+			<quad x1="125" y1="50" x2="93.75" y2="50"/>
+			<curve x1="46.875" y1="50" x2="62.5" y2="45" x3="31.25" y3="50"/>
+			<quad x1="0" y1="50" x2="0" y2="25"/>
+		</path>
+	</background>
+	<foreground>
+		<strokecolor color="#000000"/>
+		<fillcolor color="#CDFECD"/>
+		<fillstroke/>
+	</foreground>
+</shape>
+
+<!-- /i* -->
+
+<!-- secure tropos -->
+<shape name="satisfies" aspect="fixed" strokewidth="3">
+	<foreground>
+		<path>
+			<move x="0" y="0"/>
+			<line x="50" y="50"/>
+			<line x="0" y="100"/>
+			<move x="50" y="0"/>
+			<line x="100" y="50"/>
+			<line x="50" y="100"/>
+			<stroke/>
+		</path>
+	</foreground>
+</shape>
+
+<shape name="diamond" aspect="fixed">
+	<background>
+		<path>
+			<move x="0" y="0"/>
+			<line x="100" y="50"/>
+			<line x="0" y="100"/>
+			<close/>
+		</path>
+	</background>
+	<foreground>
+		<strokecolor color="#000000"/>
+		<fillcolor color="#000000"/>
+		<fillstroke/>
+	</foreground>
+</shape>
+
+<shape name="secconstraint" aspect="fixed" strokewidth="3" w="100" h="100">
+	<background>
+		<path>
+			<move x="0" y="29.3"/>
+			<line x="29.3" y="0"/>
+			<line x="70.7" y="0"/>
+			<line x="100" y="29.3"/>
+			<line x="100" y="70.7"/>
+			<line x="70.7" y="100"/>
+			<line x="29.3" y="100"/>
+			<line x="0" y="70.7"/>
+			<close/>
+		</path>
+	</background>
+	<foreground>
+		<strokecolor color="#000000"/>
+		<fillcolor color="#CDFECD"/>
+		<fillstroke/>
+	</foreground>
+</shape>
+
+<shape name="secobjective" aspect="fixed" strokewidth="3" w="100" h="100">
+	<background>
+		<path>
+			<move x="0" y="25"/>
+			<line x="50" y="0"/>
+			<line x="100" y="25"/>
+			<line x="100" y="75"/>
+			<line x="50" y="100"/>
+			<line x="0" y="75"/>
+			<close/>
+		</path>
+	</background>
+	<foreground>
+		<strokecolor color="#000000"/>
+		<fillcolor color="#CDFECD"/>
+		<fillstroke/>
+	</foreground>
+</shape>
+
+<shape name="secmechanism" aspect="fixed" strokewidth="3" w="125" h="50">
+	<background>
+		<path>
+			<move x="25" y="0"/>
+			<line x="100" y="0"/>
+			<line x="125" y="25"/>
+			<line x="100" y="50"/>
+			<line x="25" y="50"/>
+			<line x="0" y="25"/>
+			<close/>
+		</path>
+	</background>
+	<foreground>
+		<strokecolor color="#000000"/>
+		<fillcolor color="#CDFECD"/>
+		<fillstroke/>
+		<path>
+			<move x="20" y="5"/>
+			<line x="105" y="5"/>
+			<move x="20" y="45"/>
+			<line x="105" y="45"/>
+			<stroke/>
+		</path>
+	</foreground>
+</shape>
+
+<shape name="threat" aspect="fixed" strokewidth="3" w="100" h="100">
+	<background>
+		<path>
+			<move x="50" y="0"/>
+			<line x="100" y="50"/>
+			<line x="80.9" y="100"/>
+			<line x="19.1" y="100"/>
+			<line x="0" y="50"/>
+			<close/>
+		</path>
+	</background>
+	<foreground>
+		<strokecolor color="#000000"/>
+		<fillcolor color="#CDFECD"/>
+		<fillstroke/>
+	</foreground>
+</shape>
+
+<shape name="attack" aspect="fixed" strokewidth="3" w="100" h="100">
+	<background>
+		<path>
+			<move x="50" y="0"/>
+			<line x="91.15" y="25"/>
+			<line x="100" y="65"/>
+			<line x="72.85" y="100"/>
+			<line x="27.15" y="100"/>
+			<line x="0" y="65"/>
+			<line x="8.85" y="25"/>
+			<close/>
+		</path>
+	</background>
+	<foreground>
+		<strokecolor color="#000000"/>
+		<fillcolor color="#CDFECD"/>
+		<fillstroke/>
+	</foreground>
+</shape>
+
+<shape name="vulnerability" aspect="fixed" strokewidth="3" w="125" h="50">
+	<background >
+		<strokecolor color="#000000"/>
+		<fillcolor color="#CDFECD"/>
+		<ellipse x="0" y="0" w="125" h="50" />
+		<fillstroke/>
+	</background>
+</shape>
+<!-- /secure tropos -->
+
+<!-- end secure tropos/i* -->
+
+<!-- begin adaptation states model -->
+<shape name="transition" aspect="variable">
+	<background>
+		<path>
+			<move x="0" y="0"/> 
+			<line x="90" y="0"/> 
+			<line x="100" y="50"/> 
+			<line x="90" y="100"/> 
+			<line x="0" y="100"/> 
+			<line x="10" y="50"/> 
+			<line x="0" y="0"/> 
+			<close/>
+		</path>		
+	</background>
+	<foreground>
+		<fillstroke/>
+	</foreground>
+</shape>
+
+
+<shape name="activity" aspect="variable">
+	<background>
+		<path>
+			<move x="0" y="0"/> 
+			<line x="100" y="0"/>  
+			<line x="100" y="100"/>  
+			<line x="0" y="100"/> 
+			<line x="0" y="0"/>   
+			<close/>
+			<move x="10" y="0"/>
+			<line x="10" y="100"/> 
+			<close/>
+			<move x="90" y="0"/>
+			<line x="90" y="100"/> 
+			<close/>
+		</path>		
+	</background>
+	<foreground>
+		<fillstroke/>
+	</foreground>
+</shape>
+ 
+<shape name="writeAction" aspect="variable">
+	<background>
+		<path>
+			<move x="20" y="0"/> 
+			<line x="100" y="0"/>  
+			<line x="80" y="100"/>  
+			<line x="0" y="100"/> 
+			<line x="20" y="0"/>   
+			<close/> 
+		</path>		
+	</background>
+	<foreground>
+		<fillstroke/>
+	</foreground>
+</shape>
+
+
+<shape name="readAction" aspect="variable">
+	<background>
+		<path>
+			<move x="0" y="50"/> 
+			<line x="100" y="0"/>  
+			<line x="100" y="100"/>  
+			<line x="0" y="100"/> 
+			<line x="0" y="50"/>   
+			<close/> 
+		</path>		
+	</background>
+	<foreground>
+		<fillstroke/>
+	</foreground>
+</shape>
+
+<shape name="predicate" aspect="variable">
+	<background>
+		<path>
+			<move x="50" y="0"/> 
+			<line x="100" y="50"/>  
+			<line x="50" y="100"/> 
+			<line x="0" y="50"/> 
+			<line x="50" y="0"/> 
+			<close/>
+		</path>		
+	</background>
+	<foreground>
+		<fillstroke/>
+	</foreground>
+</shape>
+
+<shape name="digitalVariable" aspect="variable">
+	<background>
+		<path>
+			<move x="50" y="0"/>  
+			<line x="75" y="100"/> 
+			<line x="25" y="100"/> 
+			<line x="50" y="0"/> 
+			<close/> 
+			<move x="35" y="90"/>  
+			<line x="45" y="90"/>  
+			<line x="45" y="70"/>   
+			<line x="55" y="70"/>  
+			<line x="55" y="90"/> 
+			<line x="65" y="90"/>  
+		</path>		
+	</background>
+	<foreground>
+		<fillstroke/>
+	</foreground>
+</shape>
+
+<shape name="analogVariable" aspect="variable">
+	<background>
+		<path>
+			<move x="50" y="0"/>  
+			<line x="75" y="100"/> 
+			<line x="25" y="100"/> 
+			<line x="50" y="0"/> 
+			<close/>
+			<move x="35" y="90"/>  
+			<line x="45" y="70"/>  
+			<line x="55" y="90"/>   
+			<move x="55" y="90"/>   
+			<line x="65" y="70"/>  
+		</path>		
+	</background>
+	<foreground>
+		<fillstroke/>
+	</foreground>
+</shape>
+
+<shape name="timer" aspect="variable">
+	<background>
+		<path>
+			<move x="25" y="0"/>  
+			<line x="75" y="0"/> 
+			<line x="25" y="100"/> 
+			<line x="75" y="100"/> 
+			<line x="25" y="0"/>  
+			<close/>
+		</path>		
+	</background>
+	<foreground>
+		<fillstroke/>
+	</foreground>
+</shape>
+
+<shape name="analogSensor" aspect="variable">
+	<background>
+		<path>
+			<move x="50" y="00"/>  
+			<arc rx="1" ry="3" x-axis-rotation="0" large-arc-flag="0" sweep-flag="0" x="50" y="100"/>
+			<arc rx="1" ry="3" x-axis-rotation="0" large-arc-flag="0" sweep-flag="0" x="50" y="0"/>
+			<close/> 
+			<move x="42" y="80"/>  
+			<line x="48" y="20"/>  
+			<move x="48" y="20"/>  
+			<line x="55" y="80"/> 
+			<move x="55" y="80"/>   
+			<line x="60" y="20"/>   
+		</path>		
+	</background>
+	<foreground>
+		<fillstroke/>
+	</foreground>
+</shape>
+
+<shape name="digitalSensor" aspect="variable">
+	<background>
+		<path>
+			<move x="50" y="00"/>  
+			<arc rx="1" ry="3" x-axis-rotation="0" large-arc-flag="0" sweep-flag="0" x="50" y="100"/>
+			<arc rx="1" ry="3" x-axis-rotation="0" large-arc-flag="0" sweep-flag="0" x="50" y="0"/>
+			<close/> 
+			<move x="42" y="80"/>  
+			<line x="47" y="80"/>
+			<move x="47" y="80"/>  
+			<line x="47" y="20"/>  
+			<move x="47" y="20"/>  
+			<line x="52" y="20"/> 
+			<move x="52" y="20"/>  
+			<line x="52" y="80"/> 
+			<move x="52" y="80"/>  
+			<line x="57" y="80"/> 
+		</path>		
+	</background>
+	<foreground>
+		<fillstroke/>
+	</foreground>
+</shape>
+
+<shape name="digitalActuator" aspect="variable">
+	<background>
+		<path>
+			<move x="25" y="00"/>
+			<line x="75" y="00"/>  
+			<line x="75" y="100"/> 
+			<line x="25" y="100"/> 
+			<line x="25" y="00"/> 
+			<close/> 
+			<move x="42" y="80"/>  
+			<line x="47" y="80"/>
+			<move x="47" y="80"/>  
+			<line x="47" y="20"/>  
+			<move x="47" y="20"/>  
+			<line x="52" y="20"/> 
+			<move x="52" y="20"/>  
+			<line x="52" y="80"/> 
+			<move x="52" y="80"/>  
+			<line x="57" y="80"/> 
+		</path>		
+	</background>
+	<foreground>
+		<fillstroke/>
+	</foreground>
+</shape>
+
+<shape name="analogActuator" aspect="variable">
+	<background>
+		<path>
+			<move x="25" y="00"/>
+			<line x="75" y="00"/>  
+			<line x="75" y="100"/> 
+			<line x="25" y="100"/> 
+			<line x="25" y="00"/> 
+			<close/> 
+			<move x="42" y="80"/>  
+			<line x="48" y="20"/>  
+			<move x="48" y="20"/>  
+			<line x="55" y="80"/> 
+			<move x="55" y="80"/>   
+			<line x="60" y="20"/>    
+		</path>		
+	</background>
+	<foreground>
+		<fillstroke/>
+	</foreground>
+</shape>
+
+<!-- end adaptation states model -->
+
+<shape name="link" aspect="fixed" strokewidth="inherit">
+	<background>
+	</background>
+	<foreground>
+		<image src="../../images/models/adap_architecture/icons/link.png" x="-25" y="-25" w="150" h="150" />
+	</foreground>
+</shape>
+
+<shape name="Aggregation" aspect="fixed" strokewidth="inherit">
+	<background>
+	</background>
+	<foreground>
+		<image src="../../images/models/adap_architecture/icons/Aggregation.png" x="-25" y="-25" w="150" h="150" />
+	</foreground>
+</shape>
+
+<shape name="Signal" aspect="fixed" strokewidth="inherit">
+	<background>
+	</background>
+	<foreground>
+		<image src="../../images/models/adap_architecture/icons/Signal.png" x="-25" y="-25" w="150" h="150" />
+	</foreground>
+</shape>
+
+<shape name="Resource_link" aspect="fixed" strokewidth="inherit">
+	<background>
+	</background>
+	<foreground>
+		<image src="../../images/models/adap_architecture/icons/Resource link.png" x="-25" y="-25" w="150" h="150" />
+	</foreground>
+</shape>
+
+<shape name="Actuator_link" aspect="fixed" strokewidth="inherit">
+	<background>
+	</background>
+	<foreground>
+		<image src="../../images/models/adap_architecture/icons/Actuator link.png" x="-25" y="-25" w="150" h="150" />
+	</foreground>
+</shape>
+
+
+<shape name="DataIn" aspect="fixed" strokewidth="inherit">
+	<background>
+	</background>
+	<foreground>
+		<image src="../../images/models/adap_architecture/icons/Sensor Link.png" x="-25" y="-25" w="150" h="150" />
+	</foreground>
+</shape>
+
+<shape name="Wirless_comunication" aspect="fixed" strokewidth="inherit">
+	<background>
+	</background>
+	<foreground>
+		<image src="../../images/models/adap_architecture/icons/Wirless comunicarion.png" x="-25" y="-25" w="150" h="150" />
+	</foreground>
+</shape>
+
+<shape name="Wired_comunication" aspect="fixed" strokewidth="inherit">
+	<background>
+	</background>
+	<foreground>
+		<image src="../../images/models/adap_architecture/icons/Wired Comunication.png" x="-25" y="-25" w="150" h="150" />
+	</foreground>
+</shape>
+
+
+
 <!-- end component model -->
 </shapes>
