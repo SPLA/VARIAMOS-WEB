@@ -86,6 +86,7 @@
   "domain_menu":"Domain Menu",
   "domain_menu_set_comp":"Set Component Folder",
   "domain_menu_show_file_code":"Show Selected File Code",
+  "domain_menu_create_component_model":"Create component model from pool",
   "domain_menu_sfc_invalid":"Please select a valid component file",
   "domain_menu_sfc_not_found":"File not found, check your model and component pool",
 
