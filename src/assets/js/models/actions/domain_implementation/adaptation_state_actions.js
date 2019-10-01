@@ -820,186 +820,529 @@ var adaptation_state_actions = function adaptation_state_actions(graph,selected_
     serializeControlSetpoint(graph, dicElements);   
     serializeControlSummingpoint(graph, dicElements);   
     serializeControlController(graph, dicElements);   
-    serializeControlAction(graph, dicElements);   
+    serializeControlOutput  (graph, dicElements);
     serializeControlFilter(graph, dicElements);   
     serializeControlTransducer(graph, dicElements);   
-    serializeControlBranchpoint(graph, dicElements);  
+    serializeControlBranchpoint(graph, dicElements);
+    serializeBindingRelationshipsController_ControlAction(graph, dicElements);
+    serializeBindingRelationshipsSumming_Controller(graph, dicElements);
+    serializeBindingRelationshipsControllerSumming(graph, dicElements);
+    serializeBindingRelationshipsFilterSumming(graph, dicElements);
+    serializeBindingRelationshipsTransducerSumming(graph, dicElements);
+    serializeBindingRelationshipsBranchpointSumming(graph, dicElements);
+    serializeBindingRelationshipsSetpointSumming(graph, dicElements);
+    serializeBindingRelationshipstransducerFilter(graph, dicElements);
+    serializeBindingRelationshipsBranchpointFilter(graph, dicElements);
+    serializeBindingRelationshipsBranchpointTransducer(graph, dicElements);
+    serializeBindingRelationshipsBranchpointMeasuredOutput(graph, dicElements);
+    serializeBindingRelationshipsControlActionBranchpoint(graph, dicElements);
+
+
+   }
+
+   function serializeBindingRelationshipsController_ControlAction(graph, dicElements){ 
+     var graphModel = graph.getModel();
+     var mainCell = graphModel.getCell("control");
+     var vertices = graphModel.getChildVertices(mainCell);
+     var edges = graphModel.getChildEdges(mainCell);  
+     var dicKey ="relationship_controller_control_action";
+     dicElements.createType("control", dicKey); 
+ 
+     for (var i = 0; i < edges.length; i++) {
+         var source = edges[i].source;
+         var target = edges[i].target; 
+         var sourceType=source.getAttribute("type");
+         var targetType=target.getAttribute("type");
+         var relName=source.getAttribute("label") + "_" + target.getAttribute("label"); 
+         if(sourceType=="controller" && targetType=="controlAction"){
+           var activity=source.getAttribute("label"); 
+           var item=dicElements.items["control"][dicKey][relName];
+           if(!item){
+             item = {
+               id:"", 
+               controller: dicElements.getId("control","controller",source.getAttribute("label")),
+               controlAction: dicElements.getId("binding","controlAction",target.getAttribute("label"))
+             }; 
+             dicElements.add("control",dicKey,relName, item);  
+           }  
+           dicElements.items["control"][dicKey][relName]=item; 
+         } 
+     } 
+   } 
+   function serializeBindingRelationshipsSumming_Controller(graph, dicElements){ 
+     var graphModel = graph.getModel();
+     var mainCell = graphModel.getCell("control");
+     var vertices = graphModel.getChildVertices(mainCell);
+     var edges = graphModel.getChildEdges(mainCell);  
+     var dicKey ="relationship_summing_point_controller";
+     dicElements.createType("control", dicKey); 
+ 
+     for (var i = 0; i < edges.length; i++) {
+         var source = edges[i].source;
+         var target = edges[i].target; 
+         var sourceType=source.getAttribute("type");
+         var targetType=target.getAttribute("type");
+         var relName=source.getAttribute("label") + "_" + target.getAttribute("label"); 
+         if(sourceType=="summing_point" && targetType=="controller"){
+           var activity=source.getAttribute("label"); 
+           var item=dicElements.items["control"][dicKey][relName];
+           if(!item){
+             item = {
+               id:"", 
+               SummingPoint: dicElements.getId("control","summing_point",source.getAttribute("label")),
+               controller: dicElements.getId("control","controller",target.getAttribute("label"))
+             }; 
+             dicElements.add("control",dicKey,relName, item);  
+           }  
+           dicElements.items["control"][dicKey][relName]=item; 
+         } 
+     } 
+   }
+   
+   function serializeBindingRelationshipsControllerSumming(graph, dicElements){ 
+     var graphModel = graph.getModel();
+     var mainCell = graphModel.getCell("control");
+     var vertices = graphModel.getChildVertices(mainCell);
+     var edges = graphModel.getChildEdges(mainCell);  
+     var dicKey ="relationship_controller_summing_point";
+     dicElements.createType("control", dicKey); 
+ 
+     for (var i = 0; i < edges.length; i++) {
+         var source = edges[i].source;
+         var target = edges[i].target; 
+         var sourceType=source.getAttribute("type");
+         var targetType=target.getAttribute("type");
+         var relName=source.getAttribute("label") + "_" + target.getAttribute("label"); 
+         if(sourceType=="controller" && targetType=="summing_point"){
+           var activity=source.getAttribute("label"); 
+           var item=dicElements.items["control"][dicKey][relName];
+           if(!item){
+             item = {
+               id:"", 
+               Controller: dicElements.getId("control","summing_point",source.getAttribute("label")),
+               SummingPoint: dicElements.getId("control","controller",target.getAttribute("label"))
+             }; 
+             dicElements.add("control",dicKey,relName, item);  
+           }  
+           dicElements.items["control"][dicKey][relName]=item; 
+         } 
+     } 
+   }
+   function serializeBindingRelationshipsFilterSumming(graph, dicElements){ 
+     var graphModel = graph.getModel();
+     var mainCell = graphModel.getCell("control");
+     var vertices = graphModel.getChildVertices(mainCell);
+     var edges = graphModel.getChildEdges(mainCell);  
+     var dicKey ="relationship_filter_summing_Point";
+     dicElements.createType("control", dicKey); 
+ 
+     for (var i = 0; i < edges.length; i++) {
+         var source = edges[i].source;
+         var target = edges[i].target; 
+         var sourceType=source.getAttribute("type");
+         var targetType=target.getAttribute("type");
+         var relName=source.getAttribute("label") + "_" + target.getAttribute("label"); 
+         if(sourceType=="filter" && targetType=="summing_point"){
+           var activity=source.getAttribute("label"); 
+           var item=dicElements.items["control"][dicKey][relName];
+           if(!item){
+             item = {
+               id:"", 
+               Filter: dicElements.getId("control","filter",source.getAttribute("label")),
+               SummingPoint: dicElements.getId("control","summing_point",target.getAttribute("label"))
+             }; 
+             dicElements.add("control",dicKey,relName, item);  
+           }  
+           dicElements.items["control"][dicKey][relName]=item; 
+         } 
+     } 
+   }
+   function serializeBindingRelationshipsTransducerSumming(graph, dicElements){ 
+     var graphModel = graph.getModel();
+     var mainCell = graphModel.getCell("control");
+     var vertices = graphModel.getChildVertices(mainCell);
+     var edges = graphModel.getChildEdges(mainCell);  
+     var dicKey ="relationship_transducer_summing_point";
+     dicElements.createType("control", dicKey); 
+ 
+     for (var i = 0; i < edges.length; i++) {
+         var source = edges[i].source;
+         var target = edges[i].target; 
+         var sourceType=source.getAttribute("type");
+         var targetType=target.getAttribute("type");
+         var relName=source.getAttribute("label") + "_" + target.getAttribute("label"); 
+         if(sourceType=="transducer" && targetType=="summing_point"){
+           var activity=source.getAttribute("label"); 
+           var item=dicElements.items["control"][dicKey][relName];
+           if(!item){
+             item = {
+               id:"", 
+               Tranducer: dicElements.getId("control","transducer",source.getAttribute("label")),
+               SummingPoint: dicElements.getId("control","summing_point",target.getAttribute("label"))
+             }; 
+             dicElements.add("control",dicKey,relName, item);  
+           }  
+           dicElements.items["control"][dicKey][relName]=item; 
+         } 
+     } 
+   }
+   function serializeBindingRelationshipsBranchpointSumming(graph, dicElements){ 
+     var graphModel = graph.getModel();
+     var mainCell = graphModel.getCell("control");
+     var vertices = graphModel.getChildVertices(mainCell);
+     var edges = graphModel.getChildEdges(mainCell);  
+     var dicKey ="relationship_branchpoint_summing_point";
+     dicElements.createType("control", dicKey); 
+ 
+     for (var i = 0; i < edges.length; i++) {
+         var source = edges[i].source;
+         var target = edges[i].target; 
+         var sourceType=source.getAttribute("type");
+         var targetType=target.getAttribute("type");
+         var relName=source.getAttribute("label") + "_" + target.getAttribute("label"); 
+         if(sourceType=="branchpoint" && targetType=="summing_point"){
+           var activity=source.getAttribute("label"); 
+           var item=dicElements.items["control"][dicKey][relName];
+           if(!item){
+             item = {
+               id:"", 
+               Branchpoint: dicElements.getId("control","branchpoint",source.getAttribute("label")),
+               SummingPoint: dicElements.getId("control","summing_point",target.getAttribute("label"))
+             }; 
+             dicElements.add("control",dicKey,relName, item);  
+           }  
+           dicElements.items["control"][dicKey][relName]=item; 
+         } 
+     } 
+   }
+   function serializeBindingRelationshipsSetpointSumming(graph, dicElements){ 
+     var graphModel = graph.getModel();
+     var mainCell = graphModel.getCell("control");
+     var vertices = graphModel.getChildVertices(mainCell);
+     var edges = graphModel.getChildEdges(mainCell);  
+     var dicKey ="relationship_setpoint_summing_point";
+     dicElements.createType("control", dicKey); 
+ 
+     for (var i = 0; i < edges.length; i++) {
+         var source = edges[i].source;
+         var target = edges[i].target; 
+         var sourceType=source.getAttribute("type");
+         var targetType=target.getAttribute("type");
+         var relName=source.getAttribute("label") + "_" + target.getAttribute("label"); 
+         if(sourceType=="set_point" && targetType=="summing_point"){
+           var activity=source.getAttribute("label"); 
+           var item=dicElements.items["control"][dicKey][relName];
+           if(!item){
+             item = {
+               id:"", 
+               Setpoint: dicElements.getId("control","set_point",source.getAttribute("label")),
+               SummingPoint: dicElements.getId("control","summing_point",target.getAttribute("label"))
+             }; 
+             dicElements.add("control",dicKey,relName, item);  
+           }  
+           dicElements.items["control"][dicKey][relName]=item; 
+         } 
+     } 
+   }
+   function serializeBindingRelationshipstransducerFilter(graph, dicElements){ 
+     var graphModel = graph.getModel();
+     var mainCell = graphModel.getCell("control");
+     var vertices = graphModel.getChildVertices(mainCell);
+     var edges = graphModel.getChildEdges(mainCell);  
+     var dicKey ="relationship_transducer_filter";
+     dicElements.createType("control", dicKey); 
+ 
+     for (var i = 0; i < edges.length; i++) {
+         var source = edges[i].source;
+         var target = edges[i].target; 
+         var sourceType=source.getAttribute("type");
+         var targetType=target.getAttribute("type");
+         var relName=source.getAttribute("label") + "_" + target.getAttribute("label"); 
+         if(sourceType=="transducer" && targetType=="filter"){
+           var activity=source.getAttribute("label"); 
+           var item=dicElements.items["control"][dicKey][relName];
+           if(!item){
+             item = {
+               id:"", 
+               Transducer: dicElements.getId("control","transducer",source.getAttribute("label")),
+               Filter: dicElements.getId("control","filter",target.getAttribute("label"))
+             }; 
+             dicElements.add("control",dicKey,relName, item);  
+           }  
+           dicElements.items["control"][dicKey][relName]=item; 
+         } 
+     } 
+   }
+   function serializeBindingRelationshipsBranchpointFilter(graph, dicElements){ 
+     var graphModel = graph.getModel();
+     var mainCell = graphModel.getCell("control");
+     var vertices = graphModel.getChildVertices(mainCell);
+     var edges = graphModel.getChildEdges(mainCell);  
+     var dicKey ="relationship_branchpoint_filter";
+     dicElements.createType("control", dicKey); 
+ 
+     for (var i = 0; i < edges.length; i++) {
+         var source = edges[i].source;
+         var target = edges[i].target; 
+         var sourceType=source.getAttribute("type");
+         var targetType=target.getAttribute("type");
+         var relName=source.getAttribute("label") + "_" + target.getAttribute("label"); 
+         if(sourceType=="branchpoint" && targetType=="filter"){
+           var activity=source.getAttribute("label"); 
+           var item=dicElements.items["control"][dicKey][relName];
+           if(!item){
+             item = {
+               id:"", 
+               Branchpoint: dicElements.getId("control","branchpoint",source.getAttribute("label")),
+               Filter: dicElements.getId("control","filter",target.getAttribute("label"))
+             }; 
+             dicElements.add("control",dicKey,relName, item);  
+           }  
+           dicElements.items["control"][dicKey][relName]=item; 
+         } 
+     } 
+   }
+   function serializeBindingRelationshipsBranchpointTransducer(graph, dicElements){ 
+     var graphModel = graph.getModel();
+     var mainCell = graphModel.getCell("control");
+     var vertices = graphModel.getChildVertices(mainCell);
+     var edges = graphModel.getChildEdges(mainCell);  
+     var dicKey ="relationship_branchpoint_transducer";
+     dicElements.createType("control", dicKey); 
+ 
+     for (var i = 0; i < edges.length; i++) {
+         var source = edges[i].source;
+         var target = edges[i].target; 
+         var sourceType=source.getAttribute("type");
+         var targetType=target.getAttribute("type");
+         var relName=source.getAttribute("label") + "_" + target.getAttribute("label"); 
+         if(sourceType=="branchpoint" && targetType=="transducer"){
+           var activity=source.getAttribute("label"); 
+           var item=dicElements.items["control"][dicKey][relName];
+           if(!item){
+             item = {
+               id:"", 
+               Branchpoint: dicElements.getId("control","branchpoint",source.getAttribute("label")),
+               Transducer: dicElements.getId("control","transducer",target.getAttribute("label"))
+             }; 
+             dicElements.add("control",dicKey,relName, item);  
+           }  
+           dicElements.items["control"][dicKey][relName]=item; 
+         } 
+     } 
+   }
+   function serializeBindingRelationshipsBranchpointMeasuredOutput(graph, dicElements){ 
+     var graphModel = graph.getModel();
+     var mainCell = graphModel.getCell("control");
+     var vertices = graphModel.getChildVertices(mainCell);
+     var edges = graphModel.getChildEdges(mainCell);  
+     var dicKey ="relationship_branchpoint_measured_output";
+     dicElements.createType("control", dicKey); 
+ 
+     for (var i = 0; i < edges.length; i++) {
+         var source = edges[i].source;
+         var target = edges[i].target; 
+         var sourceType=source.getAttribute("type");
+         var targetType=target.getAttribute("type");
+         var relName=source.getAttribute("label") + "_" + target.getAttribute("label"); 
+         if(sourceType=="branchpoint" && targetType=="measured_output"){
+           var activity=source.getAttribute("label"); 
+           var item=dicElements.items["control"][dicKey][relName];
+           if(!item){
+             item = {
+               id:"", 
+               Branchpoint: dicElements.getId("control","branchpoint",source.getAttribute("label")),
+               Measured_Output: dicElements.getId("control","measured_output",target.getAttribute("label"))
+             }; 
+             dicElements.add("control",dicKey,relName, item);  
+           }  
+           dicElements.items["control"][dicKey][relName]=item; 
+         } 
+     } 
+   }
+   function serializeBindingRelationshipsControlActionBranchpoint(graph, dicElements){ 
+     var graphModel = graph.getModel();
+     var mainCell = graphModel.getCell("control");
+     var vertices = graphModel.getChildVertices(mainCell);
+     var edges = graphModel.getChildEdges(mainCell);  
+     var dicKey ="relationship_controlAction_branchPoint";
+     dicElements.createType("control", dicKey); 
+ 
+     for (var i = 0; i < edges.length; i++) {
+         var source = edges[i].source;
+         var target = edges[i].target; 
+         var sourceType=source.getAttribute("type");
+         var targetType=target.getAttribute("type");
+         var relName=source.getAttribute("label") + "_" + target.getAttribute("label"); 
+         if(sourceType=="controlAction" && targetType=="branchpoint"){
+           var activity=source.getAttribute("label"); 
+           var item=dicElements.items["control"][dicKey][relName];
+           if(!item){
+             item = {
+               id:"", 
+               ControlAction: dicElements.getId("binding","controlAction",source.getAttribute("label")),
+               Branchpoint: dicElements.getId("control","branchpoint",target.getAttribute("label"))
+             }; 
+             dicElements.add("control",dicKey,relName, item);  
+           }  
+           dicElements.items["control"][dicKey][relName]=item; 
+         } 
+     } 
    }
 
    function serializeControlSetpoint(graph, dicElements){ 
-    var graphModel = graph.getModel();
-    var mainCell = graphModel.getCell("control");
-    var vertices = graphModel.getChildVertices(mainCell);
-    var edges = graphModel.getChildEdges(mainCell);  
+     var graphModel = graph.getModel();
+     var mainCell = graphModel.getCell("control");
+     var vertices = graphModel.getChildVertices(mainCell);
+     var edges = graphModel.getChildEdges(mainCell);  
+ 
+     for (var i = 0; i < vertices.length; i++) { 
+       var vertice = vertices[i];
+       var type = vertice.getAttribute("type"); 
+       var label = vertice.getAttribute("label"); 
+       if(type=="set_point"){ 
+         var item = {
+             id: "",
+             label: label,
+             type: type,
+             valueSetpoint: vertice.getAttribute("SetPoint"),
+             time:vertice.getAttribute("Time"),
+           };
+         dicElements.add("control","set_point", label, item);   
+       } 
+     }
+   } 
 
-    for (var i = 0; i < vertices.length; i++) { 
-      var vertice = vertices[i];
-      var type = vertice.getAttribute("type"); 
-      var label = vertice.getAttribute("label"); 
-      if(type=="set_point"){ 
-        var item = {
-            id: "",
-            label: label,
-            type: type,
-            valueSetpoint: vertice.getAttribute("SetPoint"),
-            time:vertice.getAttribute("Time"),
-          };
-        dicElements.add("control","set_point", label, item);   
-      } 
-    }
-  } 
+   function serializeControlSummingpoint(graph, dicElements){ 
+     var graphModel = graph.getModel();
+     var mainCell = graphModel.getCell("control");
+     var vertices = graphModel.getChildVertices(mainCell);
+     var edges = graphModel.getChildEdges(mainCell);  
+ 
+     for (var i = 0; i < vertices.length; i++) { 
+       var vertice = vertices[i];
+       var type = vertice.getAttribute("type"); 
+       var label = vertice.getAttribute("label"); 
+       if(type=="summing_point"){ 
+         var item = {
+             id: "",
+             label: label,
+             type: type,
+             valueSummingpoint: vertice.getAttribute("Direction"),
+           };
+         dicElements.add("control","summing_point", label, item);   
+       } 
+     }
+   }
 
-  function serializeControlSummingpoint(graph, dicElements){ 
-    var graphModel = graph.getModel();
-    var mainCell = graphModel.getCell("control");
-    var vertices = graphModel.getChildVertices(mainCell);
-    var edges = graphModel.getChildEdges(mainCell);  
+   function serializeControlController(graph, dicElements){ 
+     var graphModel = graph.getModel();
+     var mainCell = graphModel.getCell("control");
+     var vertices = graphModel.getChildVertices(mainCell);
+     var edges = graphModel.getChildEdges(mainCell);  
+ 
+     for (var i = 0; i < vertices.length; i++) { 
+       var vertice = vertices[i];
+       var type = vertice.getAttribute("type"); 
+       var label = vertice.getAttribute("label"); 
+       if(type=="controller"){ 
+         var item = {
+             id: "",
+             label: label,
+             type: type,
+             proportional: vertice.getAttribute("Proportional"),
+             integral: vertice.getAttribute("Integral"),
+             derivate: vertice.getAttribute("Derivate"),
+           };
+         dicElements.add("control","controller", label, item);   
+       } 
+     }
+   }
+   function serializeControlOutput(graph, dicElements){ 
+     var graphModel = graph.getModel();
+     var mainCell = graphModel.getCell("control");
+     var vertices = graphModel.getChildVertices(mainCell);
+     var edges = graphModel.getChildEdges(mainCell);  
+ 
+     for (var i = 0; i < vertices.length; i++) { 
+       var vertice = vertices[i];
+       var type = vertice.getAttribute("type"); 
+       var label = vertice.getAttribute("label"); 
+       if(type=="measured_output"){ 
+         var item = {
+             id: "",
+             label: label,
+             type: type,
+             outputvalue: vertice.getAttribute("CurrentOutput"),
+           };
+         dicElements.add("control","measured_output", label, item);   
+       } 
+     }
+   }
+   function serializeControlFilter(graph, dicElements){ 
+     var graphModel = graph.getModel();
+     var mainCell = graphModel.getCell("control");
+     var vertices = graphModel.getChildVertices(mainCell);
+     var edges = graphModel.getChildEdges(mainCell);  
+ 
+     for (var i = 0; i < vertices.length; i++) { 
+       var vertice = vertices[i];
+       var type = vertice.getAttribute("type"); 
+       var label = vertice.getAttribute("label"); 
+       if(type=="filter"){ 
+         var item = {
+             id: "",
+             label: label,
+             type: type,
+           };
+         dicElements.add("control","filter", label, item);   
+       } 
+     }
+   }
+   function serializeControlTransducer(graph, dicElements){ 
+     var graphModel = graph.getModel();
+     var mainCell = graphModel.getCell("control");
+     var vertices = graphModel.getChildVertices(mainCell);
+     var edges = graphModel.getChildEdges(mainCell);  
+ 
+     for (var i = 0; i < vertices.length; i++) { 
+       var vertice = vertices[i];
+       var type = vertice.getAttribute("type"); 
+       var label = vertice.getAttribute("label"); 
+       if(type=="transducer"){ 
+         var item = {
+             id: "",
+             label: label,
+             type: type,
+             valuetransducer: vertice.getAttribute("InitialPosition")
+           };
+         dicElements.add("control","transducer", label, item);   
+       } 
+     }
+   }
 
-    for (var i = 0; i < vertices.length; i++) { 
-      var vertice = vertices[i];
-      var type = vertice.getAttribute("type"); 
-      var label = vertice.getAttribute("label"); 
-      if(type=="summing_point"){ 
-        var item = {
-            id: "",
-            label: label,
-            type: type,
-            valueSummingpoint: vertice.getAttribute("Direction"),
-          };
-        dicElements.add("control","summing_point", label, item);   
-      } 
-    }
-  }
+   function serializeControlBranchpoint(graph, dicElements){ 
+     var graphModel = graph.getModel();
+     var mainCell = graphModel.getCell("control");
+     var vertices = graphModel.getChildVertices(mainCell);
+     var edges = graphModel.getChildEdges(mainCell);  
+ 
+     for (var i = 0; i < vertices.length; i++) { 
+       var vertice = vertices[i];
+       var type = vertice.getAttribute("type"); 
+       var label = vertice.getAttribute("label"); 
+       if(type=="branchpoint"){ 
+         var item = {
+             id: "",
+             label: label,
+             type: type,
+           };
+         dicElements.add("control","branchpoint", label, item);   
+       } 
+     }
+   }
 
-  function serializeControlController(graph, dicElements){ 
-    var graphModel = graph.getModel();
-    var mainCell = graphModel.getCell("control");
-    var vertices = graphModel.getChildVertices(mainCell);
-    var edges = graphModel.getChildEdges(mainCell);  
-
-    for (var i = 0; i < vertices.length; i++) { 
-      var vertice = vertices[i];
-      var type = vertice.getAttribute("type"); 
-      var label = vertice.getAttribute("label"); 
-      if(type=="controller"){ 
-        var item = {
-            id: "",
-            label: label,
-            type: type,
-            proportional: vertice.getAttribute("Proportional"),
-            integral: vertice.getAttribute("Integral"),
-            derivate: vertice.getAttribute("Derivate"),
-          };
-        dicElements.add("control","controller", label, item);   
-      } 
-    }
-  }
-  function serializeControlSummingpoint(graph, dicElements){ 
-    var graphModel = graph.getModel();
-    var mainCell = graphModel.getCell("control");
-    var vertices = graphModel.getChildVertices(mainCell);
-    var edges = graphModel.getChildEdges(mainCell);  
-
-    for (var i = 0; i < vertices.length; i++) { 
-      var vertice = vertices[i];
-      var type = vertice.getAttribute("type"); 
-      var label = vertice.getAttribute("label"); 
-      if(type=="measured_output"){ 
-        var item = {
-            id: "",
-            label: label,
-            type: type,
-            valueSummingpoint: vertice.getAttribute("CurrentOutput"),
-          };
-        dicElements.add("control","measured_output", label, item);   
-      } 
-    }
-  }
-
-  function serializeControlAction(graph, dicElements){ 
-    var graphModel = graph.getModel();
-    var mainCell = graphModel.getCell("control");
-    var vertices = graphModel.getChildVertices(mainCell);
-    var edges = graphModel.getChildEdges(mainCell);  
-
-    for (var i = 0; i < vertices.length; i++) { 
-      var vertice = vertices[i];
-      var type = vertice.getAttribute("type"); 
-      var label = vertice.getAttribute("label"); 
-      if(type=="controlAction"){ 
-        var item = {
-            id: "",
-            label: label,
-            type: type,
-          };
-        dicElements.add("control","controlAction", label, item);   
-      } 
-    }
-  }
-  function serializeControlFilter(graph, dicElements){ 
-    var graphModel = graph.getModel();
-    var mainCell = graphModel.getCell("control");
-    var vertices = graphModel.getChildVertices(mainCell);
-    var edges = graphModel.getChildEdges(mainCell);  
-
-    for (var i = 0; i < vertices.length; i++) { 
-      var vertice = vertices[i];
-      var type = vertice.getAttribute("type"); 
-      var label = vertice.getAttribute("label"); 
-      if(type=="filter"){ 
-        var item = {
-            id: "",
-            label: label,
-            type: type,
-          };
-        dicElements.add("control","filter", label, item);   
-      } 
-    }
-  }
-  function serializeControlTransducer(graph, dicElements){ 
-    var graphModel = graph.getModel();
-    var mainCell = graphModel.getCell("control");
-    var vertices = graphModel.getChildVertices(mainCell);
-    var edges = graphModel.getChildEdges(mainCell);  
-
-    for (var i = 0; i < vertices.length; i++) { 
-      var vertice = vertices[i];
-      var type = vertice.getAttribute("type"); 
-      var label = vertice.getAttribute("label"); 
-      if(type=="transducer"){ 
-        var item = {
-            id: "",
-            label: label,
-            type: type,
-            valuetransducer: vertice.getAttribute("InitialPosition")
-          };
-        dicElements.add("control","transducer", label, item);   
-      } 
-    }
-  }
-
-  function serializeControlBranchpoint(graph, dicElements){ 
-    var graphModel = graph.getModel();
-    var mainCell = graphModel.getCell("control");
-    var vertices = graphModel.getChildVertices(mainCell);
-    var edges = graphModel.getChildEdges(mainCell);  
-
-    for (var i = 0; i < vertices.length; i++) { 
-      var vertice = vertices[i];
-      var type = vertice.getAttribute("type"); 
-      var label = vertice.getAttribute("label"); 
-      if(type=="branchpoint"){ 
-        var item = {
-            id: "",
-            label: label,
-            type: type,
-          };
-        dicElements.add("control","branchpoint", label, item);   
-      } 
-    }
-  }
-
-  
+ 
 
 } 
 

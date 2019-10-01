@@ -39,12 +39,18 @@ let setup_events = function setup_events(graph) {
         // }
         // hidControlAction.value = controlAction;
 
-        let url = "http://localhost:8080/variamosweb#/models/Luz%20controlada/Application-Luzcontrolada-1/control?controlAction=control_led_1";
-        url = document.URL;
+        // let url = "http://localhost:8080/variamosweb#/models/Luz%20controlada/Application-Luzcontrolada-1/control?controlAction=control_led_1";
+        // url = document.URL;
+        // url = url.replace("adaptation_binding_state_hardware", "control");
+        // url = url + "?controlAction="+controlAction.getAttribute("label"); 
+        // //alert(url);
+        // window.location = url;
+
+        localStorage['adaptation_binding_state_hardware_controlAction']=controlAction.getAttribute("label");
+        //alert(localStorage['adaptation_binding_state_hardware_controlAction']);
+        let url = document.URL;
         url = url.replace("adaptation_binding_state_hardware", "control");
-        url = url + "?controlAction="+controlAction.getAttribute("label"); 
-        //alert(url);
-        window.location = url;
+        window.location = url; 
     }
 }
 

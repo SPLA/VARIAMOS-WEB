@@ -302,21 +302,21 @@ var adaptation_binding_state_hardware_main = function adaptation_binding_state_h
 	}
 
 	function adaptation_binding_state_hardware_on_double_click(cell) {
-		var sourceType = cell.getAttribute("type");
-		alert(sourceType)
-		if (sourceType == "initialState" || sourceType == "state" || sourceType == "transition") {
-			//alert(sourceType)
-			window.location = "http://localhost:8080/variamosweb#/models/Luz%20controlada/Application-Luzcontrolada-1/adaptation_state";
-		}
-		else
-			if (sourceType == "analogSensor" || sourceType == "digitalSensor" || sourceType == "analogActuator" || sourceType == "digitalActuator") {
-				//alert(sourceType)
-				window.location = "http://localhost:8080/variamosweb#/models/Luz%20controlada/Application-Luzcontrolada-1/adaptation_hardware";
-			}
-			else if ((sourceType == "controlAction")) {
-				//alert(sourceType)
-				window.location = "http://localhost:8080/variamosweb#/models/Luz%20controlada/Application-Luzcontrolada-1/adaptation_hardware";
-			}
+		// var sourceType = cell.getAttribute("type");
+		// alert(sourceType)
+		// if (sourceType == "initialState" || sourceType == "state" || sourceType == "transition") {
+		// 	//alert(sourceType)
+		// 	window.location = "http://localhost:8080/variamosweb#/models/Luz%20controlada/Application-Luzcontrolada-1/adaptation_state";
+		// }
+		// else
+		// 	if (sourceType == "analogSensor" || sourceType == "digitalSensor" || sourceType == "analogActuator" || sourceType == "digitalActuator") {
+		// 		//alert(sourceType)
+		// 		window.location = "http://localhost:8080/variamosweb#/models/Luz%20controlada/Application-Luzcontrolada-1/adaptation_hardware";
+		// 	}
+		// 	else if ((sourceType == "controlAction")) {
+		// 		//alert(sourceType)
+		// 		window.location = "http://localhost:8080/variamosweb#/models/Luz%20controlada/Application-Luzcontrolada-1/adaptation_hardware";
+		// 	}
 	}
 
 }
