@@ -1,4 +1,4 @@
-let setup_relations = function setup_relations(graph,relations,relation_styles){
+let setup_relations = function setup_relations(graph,relations,relation_styles,constraints_relations){
     graph.connectionHandler.insertEdge = function(parent, id, value, source, target, style)
     {
         let doc = mxUtils.createXmlDocument();
@@ -12,6 +12,14 @@ let setup_relations = function setup_relations(graph,relations,relation_styles){
                     alert(global.messages["setup_relations_bidirectional"]);
                     return null;
                 }
+            }
+        }
+
+        //custom constraints for relations
+        if(constraints_relations){
+            let valid_connection = constraints_relations(graph, source, target);
+            if(!valid_connection){
+                return null;
             }
         }
 

@@ -3360,9 +3360,9 @@ var mxUtils =
 		
 		var button = doc.createElement('button');
 		button.className = "btn-model-area btn btn-sm btn-outline-secondary";
-		var icon = document.createElement('i');
+		/*var icon = document.createElement('i');
 		icon.className = "fas "+ "fa-user";
-		button.appendChild(icon);
+		button.appendChild(icon);*/
 		mxUtils.write(button, label);
 
 		mxEvent.addListener(button, 'click', function(evt)

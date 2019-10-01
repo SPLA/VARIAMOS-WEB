@@ -1,7 +1,7 @@
-let  control_main = function control_main(graph)
+let control_main = function control_main(graph)
 {
     control_constraints(graph);
-    let  data=[];
+    let data=[];
     data["m_type"]="normal"; //custom type
 	data["m_elements"]=control_elements(); //custom elements
 	data["m_attributes"]=control_attributes(); //custom attributes
@@ -43,16 +43,16 @@ let  control_main = function control_main(graph)
     }
 
     function control_elements(){
-        let  controller = {src:projectPath+"images/models/control/controller.png", wd:100, hg:40, style:"shape=rectangle", type:"controller", pname:"Controller"};
-        let  target_system = {src:projectPath+"images/models/control/target_system.png", wd:100, hg:40, style:"shape=rectangle", type:"target_system", pname:"Target system"};
-        let  transducer = {src:projectPath+"images/models/control/transducer.png", wd:100, hg:40, style:"shape=rectangle", type:"transducer", pname:"Transducer"};
-        let  summing_point   = {src:projectPath+"images/models/control/summing_point.PNG", wd:100, hg:40, style:"shape=ellipse", type:"summing_point", pname:"Summing point"};
-        let  reference_input   = {src:projectPath+"images/models/control/reference_input.png", wd:100, hg:40, style:"shape=reference_input", type:"set_point", pname:"Set point "};
-        let  measured_output   = {src:projectPath+"images/models/control/measured-output.png", wd:100, hg:40, style:"shape=measured_ouput", type:"measured_output", pname:"Measured output "};
-        let  branchpoint   = {src:projectPath+"images/models/control/bifurcation.png", wd:100, hg:40, style:"shape=rhombus", type:"branchpoint", pname:"Branchpoint"};
-        let  filter = {src:projectPath+"images/models/control/controller.png", wd:100, hg:40, style:"shape=rectangle", type:"filter", pname:"filter"};
+        let controller = {src:projectPath+"images/models/control/controller.png", wd:100, hg:40, style:"shape=rectangle", type:"controller", pname:"Controller"};
+        let target_system = {src:projectPath+"images/models/control/target_system.png", wd:100, hg:40, style:"shape=rectangle", type:"target_system", pname:"Target system"};
+        let transducer = {src:projectPath+"images/models/control/transducer.png", wd:100, hg:40, style:"shape=rectangle", type:"transducer", pname:"Transducer"};
+        let summing_point   = {src:projectPath+"images/models/control/summing_point.PNG", wd:100, hg:40, style:"shape=ellipse", type:"summing_point", pname:"Summing point"};
+        let reference_input   = {src:projectPath+"images/models/control/reference_input.png", wd:100, hg:40, style:"shape=reference_input", type:"set_point", pname:"Set point "};
+        let measured_output   = {src:projectPath+"images/models/control/measured-output.png", wd:100, hg:40, style:"shape=measured_ouput", type:"measured_output", pname:"Measured output "};
+        let branchpoint   = {src:projectPath+"images/models/control/bifurcation.png", wd:100, hg:40, style:"shape=rhombus", type:"branchpoint", pname:"Branchpoint"};
+        let filter = {src:projectPath+"images/models/control/controller.png", wd:100, hg:40, style:"shape=rectangle", type:"filter", pname:"filter"};
         
-        let  elements=[];
+        let elements=[];
         elements[0]=controller;
         elements[1]=summing_point;
         elements[2]=target_system;
@@ -66,7 +66,7 @@ let  control_main = function control_main(graph)
     }
 
     function control_attributes(){
-        let  attributes=[];
+        let attributes=[];
         attributes[0]={
             "types":["controller"],
             "custom_attributes":[{
@@ -122,16 +122,12 @@ let  control_main = function control_main(graph)
                 "def_value":"0",
             }]
         };
-     
-
         
-    
         return attributes;
     }
 
     function control_relations(){
-		let  relations=[];
-		
+		let relations=[];	
 		return relations;
     }
     

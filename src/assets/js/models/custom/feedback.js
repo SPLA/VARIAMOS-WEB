@@ -1,13 +1,12 @@
-var feedback_main = function feedback_main(graph)
+let feedback_main = function feedback_main(graph)
 {
     feedback_constraints(graph);
-    var data=[];
+    let data=[];
     data["m_type"]="normal"; //custom type
 	data["m_elements"]=feedback_elements(); //custom elements
 	data["m_attributes"]=feedback_attributes(); //custom attributes
 	data["m_relations"]=feedback_relations(); //custom relations
     data["m_properties_styles"]=feedback_properties_styles(); //custom properties styles
-  
 	return data;
     
     function feedback_constraints(graph){
@@ -24,16 +23,15 @@ var feedback_main = function feedback_main(graph)
     }
 
     function feedback_elements(){
-        var controller = {src:projectPath+"images/models/feedback/controller.png", wd:100, hg:40, style:"shape=rectangle", type:"controlador", pname:"Controller"};
-        var target_system = {src:projectPath+"images/models/feedback/target_system.png", wd:100, hg:40, style:"shape=rectangle", type:"planta", pname:"Target system"};
-        var transducer = {src:projectPath+"images/models/feedback/transducer.png", wd:100, hg:40, style:"shape=rectangle", type:"sensor", pname:"Transducer"};
-        var summing_point   = {src:projectPath+"images/models/feedback/summing_point.PNG", wd:100, hg:40, style:"shape=ellipse", type:"summing_point", pname:"Summing point"};
-        var reference_input   = {src:projectPath+"images/models/feedback/reference_input.png", wd:100, hg:40, style:"shape=reference_input", type:"temperature", pname:"Reference input "};
-        var measured_output   = {src:projectPath+"images/models/feedback/measured-output.png", wd:100, hg:40, style:"shape=measured_ouput", type:"measured_output", pname:"Measured output "};
-        var branchpoint   = {src:projectPath+"images/models/feedback/bifurcation.png", wd:100, hg:40, style:"shape=rhombus", type:"branchpoint", pname:"Branchpoint"};
+        let controller = {src:projectPath+"images/models/feedback/controller.png", wd:100, hg:40, style:"shape=rectangle", type:"controlador", pname:"Controller"};
+        let target_system = {src:projectPath+"images/models/feedback/target_system.png", wd:100, hg:40, style:"shape=rectangle", type:"planta", pname:"Target system"};
+        let transducer = {src:projectPath+"images/models/feedback/transducer.png", wd:100, hg:40, style:"shape=rectangle", type:"sensor", pname:"Transducer"};
+        let summing_point   = {src:projectPath+"images/models/feedback/summing_point.PNG", wd:100, hg:40, style:"shape=ellipse", type:"summing_point", pname:"Summing point"};
+        let reference_input   = {src:projectPath+"images/models/feedback/reference_input.png", wd:100, hg:40, style:"shape=reference_input", type:"temperature", pname:"Reference input "};
+        let measured_output   = {src:projectPath+"images/models/feedback/measured-output.png", wd:100, hg:40, style:"shape=measured_ouput", type:"measured_output", pname:"Measured output "};
+        let branchpoint   = {src:projectPath+"images/models/feedback/bifurcation.png", wd:100, hg:40, style:"shape=rhombus", type:"branchpoint", pname:"Branchpoint"};
        
-        
-        var elements=[];
+        let elements=[];
         elements[0]=controller;
         elements[1]=summing_point;
         elements[2]=target_system;
@@ -41,14 +39,12 @@ var feedback_main = function feedback_main(graph)
         elements[4]=reference_input;
         elements[5]=measured_output;
         elements[6]=branchpoint;
-        
 
-        
         return elements;
     }
 
     function feedback_attributes(){
-        var attributes=[];
+        let attributes=[];
         attributes[0]={
             "types":["file"],
             "custom_attributes":[{
@@ -104,7 +100,6 @@ var feedback_main = function feedback_main(graph)
                 "def_value":"0"
             }]
         };
-
         attributes[5]={
             "types":["summing_point"],
             "custom_attributes":[{
@@ -112,7 +107,6 @@ var feedback_main = function feedback_main(graph)
                 "def_value":"++"
             }]
         };
-
         attributes[6]={
             "types":["measured_output"],
             "custom_attributes":[{
@@ -120,14 +114,12 @@ var feedback_main = function feedback_main(graph)
                 "def_value":"0"
             }]
         };
-
-        
     
         return attributes;
     }
 
     function feedback_relations(){
-		var relations=[];
+		let relations=[];
 		relations[0]={
 			"source":["controller","transducer","target-system","summing_point","reference_input","branchpoint"],
 			"rel_source_target":"and",
@@ -135,23 +127,14 @@ var feedback_main = function feedback_main(graph)
 			"attributes":[{
 				"name":"relType",
                 "def_value":"",
-                
-                
-
-                
 			}]
 		}
-	
 		return relations;
     }
     
     function feedback_properties_styles(){
-
-       
-
-		var styles={};
+		let styles={};
 		styles={
-			
 			"relation":[{
 					"attribute":"relType",
                     "input_type":"select",
@@ -159,7 +142,6 @@ var feedback_main = function feedback_main(graph)
 					"input_values":["Control error","Control input","excludes"]
 				}
 			],
-			
 		}
 
 		return styles;
