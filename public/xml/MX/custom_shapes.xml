@@ -525,6 +525,25 @@
 	</foreground>
 </shape>
 
+<shape name="stringVariable" aspect="variable">
+	<background>
+		<path>
+			<move x="50" y="0"/>  
+			<line x="75" y="100"/> 
+			<line x="25" y="100"/> 
+			<line x="50" y="0"/> 
+			<close/>
+			<move x="45" y="70"/>   
+			<line x="55" y="70"/>  
+			<move x="50" y="70"/>   
+			<line x="50" y="90"/>  
+		</path>		
+	</background>
+	<foreground>
+		<fillstroke/>
+	</foreground>
+</shape>
+
 <shape name="timer" aspect="variable">
 	<background>
 		<path>
@@ -566,17 +585,13 @@
 			<line x="100" y="100"/> 
 			<line x="0" y="100"/> 
 			<line x="0" y="00"/> 
-			<close/> 
-			<move x="42" y="80"/>  
-			<line x="48" y="20"/>  
-			<move x="48" y="20"/>  
-			<line x="55" y="80"/> 
-			<move x="55" y="80"/>   
-			<line x="60" y="20"/>    
-		</path>	
+			<close/>  
+			<fillstroke/>
+		</path>		
 	</background>
-	<foreground>
-	<fillstroke/>
+	<foreground> 
+		<image src="http://localhost:8080/variamosweb/images/models/adaptation_hardware/sensor.png" x="1" y="3" w="15" h="35" />
+		<image src="http://localhost:8080/variamosweb/images/models/adaptation_hardware/analog.png" x="84" y="3" w="15" h="35" />	
 	</foreground>
 </shape>
 
@@ -588,21 +603,13 @@
 			<line x="100" y="100"/> 
 			<line x="0" y="100"/> 
 			<line x="0" y="00"/> 
-			<close/> 
-			<move x="42" y="80"/>  
-			<line x="47" y="80"/>
-			<move x="47" y="80"/>  
-			<line x="47" y="20"/>  
-			<move x="47" y="20"/>  
-			<line x="52" y="20"/> 
-			<move x="52" y="20"/>  
-			<line x="52" y="80"/> 
-			<move x="52" y="80"/>  
-			<line x="57" y="80"/> 
-		</path>			
+			<close/>  
+			<fillstroke/>
+		</path>		
 	</background>
-	<foreground>
-		<fillstroke/>
+	<foreground> 
+		<image src="http://localhost:8080/variamosweb/images/models/adaptation_hardware/sensor.png" x="1" y="3" w="15" h="35" />
+		<image src="http://localhost:8080/variamosweb/images/models/adaptation_hardware/digital.png" x="84" y="3" w="15" h="35" />	
 	</foreground>
 </shape>
 
@@ -614,25 +621,17 @@
 			<line x="100" y="100"/> 
 			<line x="0" y="100"/> 
 			<line x="0" y="00"/> 
-			<close/> 
-			<move x="42" y="80"/>  
-			<line x="47" y="80"/>
-			<move x="47" y="80"/>  
-			<line x="47" y="20"/>  
-			<move x="47" y="20"/>  
-			<line x="52" y="20"/> 
-			<move x="52" y="20"/>  
-			<line x="52" y="80"/> 
-			<move x="52" y="80"/>  
-			<line x="57" y="80"/> 
+			<close/>  
+			<fillstroke/>
 		</path>		
 	</background>
-	<foreground>
-		<fillstroke/>
+	<foreground> 
+		<image src="http://localhost:8080/variamosweb/images/models/adaptation_hardware/actuator.png" x="1" y="3" w="15" h="35" />
+		<image src="http://localhost:8080/variamosweb/images/models/adaptation_hardware/digital.png" x="84" y="3" w="15" h="35" />	
 	</foreground>
 </shape>
 
-<shape name="analogActuator" aspect="variable">
+<shape name="analogActuator" aspect="variable"> 
 	<background>
 		<path>
 			<move x="0" y="00"/>
@@ -640,17 +639,13 @@
 			<line x="100" y="100"/> 
 			<line x="0" y="100"/> 
 			<line x="0" y="00"/> 
-			<close/> 
-			<move x="42" y="80"/>  
-			<line x="48" y="20"/>  
-			<move x="48" y="20"/>  
-			<line x="55" y="80"/> 
-			<move x="55" y="80"/>   
-			<line x="60" y="20"/>    
+			<close/>  
+			<fillstroke/>
 		</path>		
 	</background>
-	<foreground>
-		<fillstroke/>
+	<foreground> 
+		<image src="http://localhost:8080/variamosweb/images/models/adaptation_hardware/actuator.png" x="1" y="3" w="15" h="35" />
+		<image src="http://localhost:8080/variamosweb/images/models/adaptation_hardware/analog.png" x="84" y="3" w="15" h="35" />	
 	</foreground>
 </shape>
 <!-- end adaptation states model -->

@@ -22,11 +22,32 @@ let setup_events = function setup_events(graph){
       }
   }); 
 
-  let url = document.URL;  
-  var captured = /controlAction=([^&]+)/.exec(url)[1]; // Value is in [1] ('384' in our case)
-  var controlAction = captured ? captured : 'myDefaultValue'; 
+  var controlAction = findControlAction(graph)
 
   hide_control_elements(graph, controlAction);
+
+  function findControlAction(graph){
+    //se busca el control action en la url
+    // let url = document.URL;  
+    // var captured = /controlAction=([^&]+)/.exec(url)[1]; // Value is in [1] ('384' in our case)
+    // var controlAction = captured ? captured : 'myDefaultValue'; 
+ 
+    //se busca el controlaction en el local storage y si no existe se muestra el primero
+    var controlActionLS = localStorage['adaptation_binding_state_hardware_controlAction']; 
+    var controlAction = "asdf";
+    let feedback_root = graph.getModel().getCell("control");
+    let childs = graph.getModel().getChildVertices(feedback_root); 
+    for (let i = 0; i < childs.length; i++)
+    {
+      if (childs[i].getAttribute("type") == "controlAction") {
+        controlAction=childs[i].getAttribute("label");
+        if (childs[i].getAttribute("label") == controlActionLS) {
+          break;
+        }
+      }
+    } 
+    return controlAction;
+  };
 
   function hide_control_elements(graph, controlActionLabel){
       //alert('escondiendo elementos ' + controlActionLabel);
