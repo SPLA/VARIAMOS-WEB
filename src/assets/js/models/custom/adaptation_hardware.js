@@ -54,19 +54,22 @@ let adaptation_hardware_main = function adaptation_hardware_main(graph)
 		attributes[1]={
 			"types":["digitalActuator"],
 			"custom_attributes":[{
+				"name":"subType",
+				"def_value":"Simple"
+			},{
 				"name":"pin",
 				"def_value":"D2"
 			},{
 				"name":"initialValue",
 				"def_value":"LOW"
-			},{
-				"name":"pwm",
-				"def_value":"false"
 			}] 
 		};
 		attributes[2]={
 			"types":["digitalSensor"],
 			"custom_attributes":[{
+				"name":"subType",
+				"def_value":"Simple"
+			},{
 				"name":"pin",
 				"def_value":"D12"
 			},{
@@ -77,6 +80,9 @@ let adaptation_hardware_main = function adaptation_hardware_main(graph)
 		attributes[3]={
 			"types":["analogActuator"],
 			"custom_attributes":[{
+				"name":"subType",
+				"def_value":"Simple"
+			},{
 				"name":"pin",
 				"def_value":"A0"
 			},{
@@ -87,6 +93,9 @@ let adaptation_hardware_main = function adaptation_hardware_main(graph)
 		attributes[4]={
 			"types":["analogSensor"],
 			"custom_attributes":[{
+				"name":"subType",
+				"def_value":"Simple"
+			},{
 				"name":"pin",
 				"def_value":"A4"
 			},{
@@ -122,7 +131,11 @@ let adaptation_hardware_main = function adaptation_hardware_main(graph)
 				}
 			],
 			"digitalActuator":[{
-					"attribute":"pin",
+					"attribute":"subType",
+					"input_type":"select",
+					"input_values":["Simple","Pwm","LiquidCrystal"]
+				},{
+					"attribute":"pinX",
 					"input_type":"select",
 					"input_values":["D2","D4","D7","D8","D12","D13"]
 				},{
@@ -130,20 +143,32 @@ let adaptation_hardware_main = function adaptation_hardware_main(graph)
 					"input_type":"checkbox"
 				}
 			],
-			"digitalSensor":[{
-				"attribute":"pin",
-				"input_type":"select",
-				"input_values":["D2","D4","D7","D8","D12","D13"]
-				}
-			],
 			"analogActuator":[{
-				"attribute":"pin",
+					"attribute":"subType",
+					"input_type":"select",
+					"input_values":["Simple"]
+				},{
+				"attribute":"pinX",
 				"input_type":"select",
 				"input_values":["A0","A1","A2","A3","A4","A5","A6"]
 				}
 			],
+			"digitalSensor":[{
+					"attribute":"subType",
+					"input_type":"select",
+					"input_values":["Simple","Keypad"]
+				},{
+				"attribute":"pinX",
+				"input_type":"select",
+				"input_values":["D2","D4","D7","D8","D12","D13"]
+				}
+			],
 			"analogSensor":[{
-				"attribute":"pin",
+					"attribute":"subType",
+					"input_type":"select",
+					"input_values":["Simple"]
+				},{
+				"attribute":"pinX",
 				"input_type":"select",
 				"input_values":["A0","A1","A2","A3","A4","A5","A6"]
 				}

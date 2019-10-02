@@ -525,6 +525,25 @@
 	</foreground>
 </shape>
 
+<shape name="stringVariable" aspect="variable">
+	<background>
+		<path>
+			<move x="50" y="0"/>  
+			<line x="75" y="100"/> 
+			<line x="25" y="100"/> 
+			<line x="50" y="0"/> 
+			<close/>
+			<move x="45" y="70"/>   
+			<line x="55" y="70"/>  
+			<move x="50" y="70"/>   
+			<line x="50" y="90"/>  
+		</path>		
+	</background>
+	<foreground>
+		<fillstroke/>
+	</foreground>
+</shape>
+
 <shape name="timer" aspect="variable">
 	<background>
 		<path>

@@ -40,7 +40,7 @@ var adaptation_state_actions = function adaptation_state_actions(graph,selected_
 
     function serializeJson(graph){
           var model={};  
-          model["name"]="SemaforoConBotone1";
+          model["name"]="Mi proyecto";
 
           var dicElements=new Dictionary();
  
@@ -215,24 +215,15 @@ var adaptation_state_actions = function adaptation_state_actions(graph,selected_
       var vertice = vertices[i];
       var type = vertice.getAttribute("type"); 
       var label = vertice.getAttribute("label"); 
-      if(type=="digitalActuator"){ 
+      if(type=="digitalActuator" || type=="analogActuator" ||  type=="digitalSensor" ||  type=="analogSensor"){ 
+        var pins=("" + vertice.getAttribute("pin")).replace(/ /g, "").replace(/,/g, ',').split(","); 
         var actuator = {
             id: "",
             label: label,
             type: type,
-            pin: vertice.getAttribute("pin"),
+            pin: pins,
             initialValue: vertice.getAttribute("initialValue"),
-            pwm: vertice.getAttribute("pwm")
-          };
-        dicElements.add("hardware","port", label, actuator);   
-      } 
-      else if(type=="analogActuator" ||  type=="digitalSensor" ||  type=="analogSensor"){ 
-        var actuator = {
-            id: "",
-            label: label,
-            type: type,
-            pin: vertice.getAttribute("pin"),
-            initialValue: vertice.getAttribute("initialValue")
+            subType: vertice.getAttribute("subType")
           };
         dicElements.add("hardware","port", label, actuator);   
       } 
@@ -249,7 +240,7 @@ var adaptation_state_actions = function adaptation_state_actions(graph,selected_
       var vertice = vertices[i];
       var type = vertice.getAttribute("type"); 
       var label = vertice.getAttribute("label"); 
-      if(type=="digitalVariable" || type=="analogVariable"){ 
+      if(type=="digitalVariable" || type=="analogVariable" || type=="stringVariable"){ 
         var item = {
             id: "",
             label: label,
@@ -512,7 +503,7 @@ var adaptation_state_actions = function adaptation_state_actions(graph,selected_
           else if(sourceType=="timer"){
             port= dicElements.getId("binding","timer",source.getAttribute("label")) ;  
           } 
-          else if(sourceType=="digitalVariable" || sourceType=="analogVariable"){ 
+          else if(sourceType=="digitalVariable" || sourceType=="analogVariable" || sourceType=="stringVariable"){ 
             port= dicElements.getId("binding","variable",source.getAttribute("label")) ;  
           }
           if(port){
@@ -546,7 +537,7 @@ var adaptation_state_actions = function adaptation_state_actions(graph,selected_
         else if(targetType=="timer"){
           port= dicElements.getId("binding","timer",target.getAttribute("label")) ;  
         } 
-        else if(targetType=="digitalVariable" || targetType=="analogVariable"){ 
+        else if(targetType=="digitalVariable" || targetType=="analogVariable" || targetType=="stringVariable"){ 
           port= dicElements.getId("binding","variable",target.getAttribute("label")) ;  
         }
         if(port){
@@ -602,7 +593,7 @@ var adaptation_state_actions = function adaptation_state_actions(graph,selected_
           else if(sourceType=="timer"){
             item.timer= dicElements.getId("binding","timer",source.getAttribute("label")) ;  
           } 
-          else if(sourceType=="digitalVariable" || sourceType=="analogVariable"){ 
+          else if(sourceType=="digitalVariable" || sourceType=="analogVariable" || sourceType=="stringVariable"){ 
             item.varTimerLimit= dicElements.getId("binding","variable",source.getAttribute("label")) ;  
           }
           dicElements.add("binding",dicKey,relName, item); 
@@ -798,7 +789,7 @@ var adaptation_state_actions = function adaptation_state_actions(graph,selected_
           else if(sourceType=="timer"){
             port= dicElements.getId("binding","timer",source.getAttribute("label")) ;  
           } 
-          else if(sourceType=="digitalVariable" || sourceType=="analogVariable"){ 
+          else if(sourceType=="digitalVariable" || sourceType=="analogVariable" || sourceType=="stringVariable"){ 
             port= dicElements.getId("binding","variable",source.getAttribute("label")) ;  
           }
           if(port){

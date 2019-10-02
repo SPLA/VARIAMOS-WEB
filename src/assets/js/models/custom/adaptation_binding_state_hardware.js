@@ -44,6 +44,7 @@ let adaptation_binding_state_hardware_main = function adaptation_binding_state_h
 		let activity = { src: projectPath + "images/models/adaptation_binding_state_hardware/activity.png", wd: 100, hg: 35, type: "activity", style: "shape=activity", pname: "Activity" };
 		let digitalVariable = { src: projectPath + "images/models/adaptation_binding_state_hardware/digitalVariable.png", wd: 100, hg: 35, type: "digitalVariable", style: "shape=digitalVariable", pname: "Digital variable" };
 		let analogVariable = { src: projectPath + "images/models/adaptation_binding_state_hardware/analogVariable.png", wd: 100, hg: 35, type: "analogVariable", style: "shape=analogVariable", pname: "Analog variable" };
+		let stringVariable = { src: projectPath + "images/models/adaptation_binding_state_hardware/stringVariable.png", wd: 100, hg: 35, type: "stringVariable", style: "shape=stringVariable", pname: "String variable" };
 		let timer = { src: projectPath + "images/models/adaptation_binding_state_hardware/timer.png", wd: 100, hg: 35, type: "timer", style: "shape=timer", pname: "Timer" };
 		let readAction = { src: projectPath + "images/models/adaptation_binding_state_hardware/readAction.png", wd: 100, hg: 35, type: "readAction", style: "shape=readAction", pname: "Read action" };
 		let writeAction = { src: projectPath + "images/models/adaptation_binding_state_hardware/writeAction.png", wd: 100, hg: 35, type: "writeAction", style: "shape=writeAction", pname: "Write action" };
@@ -61,8 +62,9 @@ let adaptation_binding_state_hardware_main = function adaptation_binding_state_h
 		elements[4] = controlAction;
 		elements[5] = digitalVariable;
 		elements[6] = analogVariable;
-		elements[7] = logicalOperator;
-		elements[8] = predicate;
+		elements[7] = stringVariable;
+		elements[8] = logicalOperator;
+		elements[9] = predicate;
 		//elements[7] = delayAction;
 		//elements[8] = customAction;
 
@@ -133,6 +135,13 @@ let adaptation_binding_state_hardware_main = function adaptation_binding_state_h
 			"custom_attributes": [{
 				"name": "value",
 				"def_value": "0"
+			}]
+		};
+		attributes[9] = {
+			"types": ["stringVariable"],
+			"custom_attributes": [{
+				"name": "value",
+				"def_value": ""
 			}]
 		};
 		return attributes;
