@@ -35,14 +35,14 @@
 
               <div class="row main_area">
 
-                <div class="col-sm-9 left-area">
+                <div id="left-draw" class="col-sm-9 left-area">
                   <div id="graphContainer" class="model-area"></div>
                   <div class="properties-area" style="font-size:13px"><b>{{ $t("models_element_properties") }}</b><br />
                     <div id="properties"></div>
                   </div>
                 </div>
 
-                <div class="col-sm-3 right-area" style="font-size:13px">
+                <div id="right-draw" class="col-sm-3 right-area" style="font-size:13px">
                   <div class="pallete-area">
                   <b>{{ $t("models_palette") }}</b><br /><br />
                   <div id="tbContainer"></div>
