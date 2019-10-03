@@ -590,8 +590,8 @@
 		</path>		
 	</background>
 	<foreground> 
-		<image src="http://localhost:8080/variamosweb/images/models/adaptation_hardware/sensor.png" x="1" y="3" w="15" h="35" />
-		<image src="http://localhost:8080/variamosweb/images/models/adaptation_hardware/analog.png" x="84" y="3" w="15" h="35" />	
+		<image src="https://variamos.com/variamosweb/images/models/adaptation_hardware/sensor.png" x="1" y="3" w="15" h="35" />
+		<image src="https://variamos.com/variamosweb/images/models/adaptation_hardware/analog.png" x="84" y="3" w="15" h="35" />	
 	</foreground>
 </shape>
 
@@ -608,8 +608,8 @@
 		</path>		
 	</background>
 	<foreground> 
-		<image src="http://localhost:8080/variamosweb/images/models/adaptation_hardware/sensor.png" x="1" y="3" w="15" h="35" />
-		<image src="http://localhost:8080/variamosweb/images/models/adaptation_hardware/digital.png" x="84" y="3" w="15" h="35" />	
+		<image src="https://variamos.com/variamosweb/images/models/adaptation_hardware/sensor.png" x="1" y="3" w="15" h="35" />
+		<image src="https://variamos.com/variamosweb/images/models/adaptation_hardware/digital.png" x="84" y="3" w="15" h="35" />	
 	</foreground>
 </shape>
 
@@ -626,8 +626,8 @@
 		</path>		
 	</background>
 	<foreground> 
-		<image src="http://localhost:8080/variamosweb/images/models/adaptation_hardware/actuator.png" x="1" y="3" w="15" h="35" />
-		<image src="http://localhost:8080/variamosweb/images/models/adaptation_hardware/digital.png" x="84" y="3" w="15" h="35" />	
+		<image src="https://variamos.com/variamosweb/images/models/adaptation_hardware/actuator.png" x="1" y="3" w="15" h="35" />
+		<image src="https://variamos.com/variamosweb/images/models/adaptation_hardware/digital.png" x="84" y="3" w="15" h="35" />	
 	</foreground>
 </shape>
 
@@ -644,8 +644,8 @@
 		</path>		
 	</background>
 	<foreground> 
-		<image src="http://localhost:8080/variamosweb/images/models/adaptation_hardware/actuator.png" x="1" y="3" w="15" h="35" />
-		<image src="http://localhost:8080/variamosweb/images/models/adaptation_hardware/analog.png" x="84" y="3" w="15" h="35" />	
+		<image src="https://variamos.com/variamosweb/images/models/adaptation_hardware/actuator.png" x="1" y="3" w="15" h="35" />
+		<image src="https://variamos.com/variamosweb/images/models/adaptation_hardware/analog.png" x="84" y="3" w="15" h="35" />	
 	</foreground>
 </shape>
 <!-- end adaptation states model -->
