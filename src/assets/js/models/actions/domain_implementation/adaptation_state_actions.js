@@ -68,8 +68,7 @@ var adaptation_state_actions = function adaptation_state_actions(graph,selected_
           //   model.machine.push(item);
           // }    
  
-          var modelJson=JSON.stringify(model);
-          return modelJson; 
+          return model;
     } 
     
     function serializeMachineJson(graph, dicElements){ 

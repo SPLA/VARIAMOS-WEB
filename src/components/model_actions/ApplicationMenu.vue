@@ -1347,30 +1347,55 @@ export default {
     },
      adaptation_state_source_code_generation() {
       try {
-        let serverUrl =
-          localStorage["domain_implementation_main_path"] +
-          "AdaptationStateImplementation/generateSourceCode";
+        ///let serverUrl = localStorage["domain_implementation_main_path"] + "AdaptationStateImplementation/generateSourceCode";
+        let serverUrl = localStorage["domain_implementation_main_path"];
         //alert(serverUrl);
-        let directory = localStorage["domain_implementation_pool_path"];
+        let directory = "MiProyecto"; // localStorage["domain_implementation_pool_path"];
         //alert(directory);
-        let modelJson = adaptation_state_actions(
-          this.current_graph,
-          "serializeJson"
-        );
-        //alert(modelJson);
-        downloadFile("BindingStateHardwareModel.json", modelJson);
-        axios
-          .post(serverUrl, {
-            data: modelJson,
-            p_pool: directory
-          })
-          .then(response => {
-            downloadFile("Arduino.ino", response.data);
-          })
-          .catch(e => {
-            this.previous_dest = "";
-            document.getElementById("Start/Next").disabled = false;
-          });
+        let modelJson = adaptation_state_actions( this.current_graph, "serializeJson"); 
+        var strModelJson=JSON.stringify(modelJson);  
+        //alert(strModelJson);
+        downloadFile("BindingStateHardwareModel.json", strModelJson);
+
+        var createCORSRequest = function(method, url) {
+          var xhr = new XMLHttpRequest();
+          if ("withCredentials" in xhr) {
+            // Most browsers.
+            xhr.open(method, url, true);
+          } else if (typeof XDomainRequest != "undefined") {
+            // IE8 & IE9
+            xhr = new XDomainRequest();
+            xhr.open(method, url);
+          } else {
+            // CORS not supported.
+            xhr = null;
+          }
+          return xhr;
+        };
+
+        var url = serverUrl;
+        var method = 'POST';
+        var xhr = createCORSRequest(method, url);
+
+        xhr.onload = function() {
+          // Success code goes here.
+          //alert('bien');
+        };
+
+        xhr.onerror = function() {
+          // Error code goes here.
+         // alert('Ha ocurrido un error en la solicitud.');
+        };
+
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState == 4 && xhr.status == 200) {
+            //alert("Respuesta: " + xhr.responseText);
+            downloadFile("Arduino.ino", xhr.responseText);
+          }
+        }
+
+        xhr.send(strModelJson); 
+
       } catch (ex) {
         alert(ex);
       }
