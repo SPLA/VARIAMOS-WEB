@@ -177,13 +177,20 @@ let setup_buttons = function setup_buttons(graph,undoManager,reused_functions,ro
     buttonDELETE.appendChild(mxUtils.button_with_icon(global.messages["setup_buttons_delete"], reused_functions[0],"cut"));
     /* end buttonDELETE */
 
-    /*
-    button print all in one page
-    buttonPONE.appendChild(mxUtils.button('1 page',function(evt){
-        var scale = mxUtils.getScaleForPageCount(1, graph);
-	    var preview = new mxPrintPreview(graph, scale);
-        preview.open();}));
-    */
+    /* begin buttonPONE print as IMG */
+    /*let buttonPONE = document.getElementById('buttonPONE');
+    buttonPONE.innerHTML="";
+    buttonPONE.appendChild(mxUtils.button_with_icon('Img',function(evt){
+        mxUtils.show(graph, null, 10, 10);
+    },"print"));*/
+    /* end buttonPONE */
+
+    let buttonPONE = document.getElementById('buttonPONE');
+    buttonPONE.innerHTML="";
+    buttonPONE.appendChild(mxUtils.button_with_icon('Img',function(evt){
+        const svg = document.getElementById('graphContainer').firstElementChild;
+        saveSvgAsPng(svg, "diagram.png");
+    },"print"));
 
     /* begin buttonZIN */
     let buttonZIN = document.getElementById('buttonZIN');

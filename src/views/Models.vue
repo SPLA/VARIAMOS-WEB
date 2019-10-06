@@ -25,6 +25,7 @@
                     <div class="button-unique" id="buttonUNDO"></div>
                     <div class="button-unique" id="buttonREDO"></div>
                     <div class="button-unique" id="buttonSHOW"></div>
+                    <div class="button-unique" id="buttonPONE"></div>
                     <div class="button-unique" id="buttonDELETE"></div>
                     <div class="button-unique" id="buttonRESET"></div>
                     <div class="button-unique" id="buttonRESETALL"></div>
@@ -71,6 +72,7 @@
 </template>
 
 <script>
+import '@/assets/js/common/saveSvgAsPng.js'
 import main from '@/assets/js/models/model_main.js'
 import model_load from '@/assets/js/models/model_load.js'
 import Bus from '../assets/js/common/bus.js'
