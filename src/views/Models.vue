@@ -72,7 +72,6 @@
 </template>
 
 <script>
-import '@/assets/js/common/saveSvgAsPng.js'
 import main from '@/assets/js/models/model_main.js'
 import model_load from '@/assets/js/models/model_load.js'
 import Bus from '../assets/js/common/bus.js'

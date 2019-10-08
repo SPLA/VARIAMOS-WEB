@@ -10,7 +10,11 @@ const messages={
     "setup_buttons_export":"Export",
     "setup_buttons_undo":"Undo",
     "setup_buttons_redo":"Redo",
-    "setup_buttons_show":"Print",
+    "setup_buttons_show":"PDF",
+    "setup_buttons_img":"Img",
+    "setup_buttons_zin":"+",
+    "setup_buttons_zout":"-",
+    "setup_buttons_zr":"R",
     "setup_buttons_delete":"Delete",
 
     "setup_keys_remove_cloned":"It is not allowed to remove 'Cloned' elements directly",
