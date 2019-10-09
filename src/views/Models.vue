@@ -12,8 +12,8 @@
                       {{ $t("models_area") }} - {{ $route.params.type }} {{ $t("models_model") }}</a></li>
                       <!-- model actions -->
                       <BackEnd /> 
-                      <DomainMenu :current_graph="graph" />
-                      <ApplicationMenu :current_graph="graph" /> 
+                      <DomainMenu :current_graph="graph" :model_type="modelType" />
+                      <ApplicationMenu :current_graph="graph" :model_type="modelType" /> 
                       <Verification :current_graph="graph" /> 
                     </ul>
                   </div>
