@@ -38,9 +38,7 @@ let control_verification = function control_verification()
       }else{
         alert("No errors found");
       }
-  }
-
-
+    } 
 }
 
 export default control_verification
