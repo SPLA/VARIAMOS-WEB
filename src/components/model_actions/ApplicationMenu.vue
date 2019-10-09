@@ -1070,6 +1070,7 @@ export default {
             let Doutput;
             let Foutput;
             let derivate;
+            let integral;
             this.error =error;
             this.setpoint = setpoint;
            
@@ -1081,10 +1082,14 @@ export default {
                 this.lastOutput = Poutput + Foutput;
                 this.firstRun = false;
             }
-            Doutput = Doutput = -this.D * ((actual - this.lastActual) / this.DT);
-            this.lastActual = actual;
+            derivate=(error-this.lastActual)/this.DT
+            Doutput=this.D*derivate
+            this.lastActual = error;
+
+            integral = this.errorSum * this.DT;
+            Ioutput  = this.I * integral;
         
-            Ioutput = this.I * (this.errorSum);
+          
             if (this.maxIOutput !== 0)
               {
                   Ioutput = this.limit(Ioutput, -this.maxIOutput, this.maxIOutput);
@@ -1092,12 +1097,12 @@ export default {
               output = Foutput + Poutput + Ioutput + Doutput;
               if (this.minOutput !== this.maxOutput && !this.delimited(output, this.minOutput, this.maxOutput)) 
               {
-                  this.errorSum = error* this.DT;
+                  this.errorSum = error;
               }
                 else if (this.outputRampRate !== 0 && !this.delimited(output, this.lastOutput - this.outputRampRate,
                 this.lastOutput + this.outputRampRate))
                 {
-                    this.errorSum = error* this.DT;
+                    this.errorSum = error;
                 }
                 else if (this.maxIOutput !== 0)
                 {
@@ -1105,7 +1110,7 @@ export default {
                 }
               else 
               {
-                this.errorSum += (error * this.DT);
+                this.errorSum += error;
               }
               if (this.outputRampRate !== 0)
               {
@@ -1155,6 +1160,14 @@ export default {
                   this.D = (0 - this.D);
                 
               }
+              MiniPID.prototype.recursiveFilter = function (x)
+              {
+                let alpha=0.125
+                let y=0;
+                y = alpha * x + (1 - alpha) * y
+                return y;
+                
+              }
               MiniPID.prototype.checkSigns = function()
               {
                 if (this.reversed)
@@ -1181,11 +1194,13 @@ export default {
        {
           let miniPID;
           let miniPID2;
-          miniPID = new MiniPID(proportional_inner, integral_inner, derivate_inner, setpoint_time);
+          let k = 1.0 / 20.0
+          miniPID = new MiniPID((k*proportional_inner),(k* integral_inner), derivate_inner, setpoint_time);
           let actual=0
           let output = 50;
           let actual2;
           let error=0;
+          let y;
           result_outputs.push(actual);
           let times_sum=0; 
           let time_float=parseFloat(setpoint_time);
@@ -1197,8 +1212,17 @@ export default {
           }
           if(id_set2 == false)
           {
-          for (let i = 0; i < 150; i++) {
+          for (let i = 0; i < 5000; i++) {
+                    if (i > 1000)
+                    {
+                      setpoint_value=125
+                    }
+            
+        
              output = miniPID.getOutput(actual, setpoint_value,error)
+            
+              y =miniPID.recursiveFilter(output)
+             console.log(output)
             if(summing_value_inner == "+/-")
             {
               error = setpoint_value - actual;
@@ -1211,7 +1235,10 @@ export default {
             else{
               error = setpoint_value-actual
             }
-            actual = actual + output;
+            
+
+            
+            actual =actual+y
             result_outputs.push(actual); 
             times_sum=i*time_float.toFixed(2);
             times_sum=times_sum.toFixed(2)
