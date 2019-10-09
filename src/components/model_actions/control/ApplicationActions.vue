@@ -29,9 +29,7 @@ export default {
   },
   methods: {
     component() {
-      // let url = document.URL;
-      // var captured = /controlAction=([^&]+)/.exec(url)[1]; // Value is in [1] ('384' in our case)
-      //var controlAction = captured ? captured : 'myDefaultValue';
+   
 
       var controlAction =
         localStorage["adaptation_binding_state_hardware_controlAction"];
@@ -39,8 +37,6 @@ export default {
       this.generate_graph(controlAction);
     },
     generate_graph(controlActionLabel) {
-      //GENERATE_TRANSFER_CONTROL_GRAPH
-      //alert(controlActionLabel);
       let c_header = modalH3(this.$t("generate_graph_title"));
       let value_label = controlActionLabel;
       let blank = "";
@@ -396,6 +392,7 @@ export default {
               let Doutput;
               let Foutput;
               let derivate;
+              let integral;
               this.error = error;
               this.setpoint = setpoint;
 
@@ -407,11 +404,13 @@ export default {
                 this.lastOutput = Poutput + Foutput;
                 this.firstRun = false;
               }
-              Doutput = Doutput =
-                -this.D * ((actual - this.lastActual) / this.DT);
-              this.lastActual = actual;
+                derivate=(error-this.lastActual)/this.DT
+            Doutput=this.D*derivate;
+            this.lastActual = error;
+            integral = this.errorSum * this.DT;
+            Ioutput  = this.I * integral;
 
-              Ioutput = this.I * this.errorSum;
+            
               if (this.maxIOutput !== 0) {
                 Ioutput = this.limit(
                   Ioutput,
@@ -424,7 +423,7 @@ export default {
                 this.minOutput !== this.maxOutput &&
                 !this.delimited(output, this.minOutput, this.maxOutput)
               ) {
-                this.errorSum = error * this.DT;
+                this.errorSum = error ;
               } else if (
                 this.outputRampRate !== 0 &&
                 !this.delimited(
@@ -433,7 +432,7 @@ export default {
                   this.lastOutput + this.outputRampRate
                 )
               ) {
-                this.errorSum = error * this.DT;
+                this.errorSum = error ;
               } else if (this.maxIOutput !== 0) {
                 this.errorSum = this.limit(
                   this.errorSum + error,
@@ -441,7 +440,7 @@ export default {
                   this.maxError
                 );
               } else {
-                this.errorSum += error * this.DT;
+                this.errorSum += error;
               }
               if (this.outputRampRate !== 0) {
                 output = this.limit(
@@ -488,6 +487,15 @@ export default {
               this.I = 0 - this.I;
               this.D = 0 - this.D;
             };
+             
+              MiniPID.prototype.recursiveFilter = function (x)
+              {
+                let alpha=0.125;
+                let y=0;
+                y = alpha * x + (1 - alpha) * y;
+                return y;
+                
+              }
             MiniPID.prototype.checkSigns = function() {
               if (this.reversed) {
                 if (this.P > 0) this.P *= -1;
@@ -509,9 +517,10 @@ export default {
           function main() {
             let miniPID;
             let miniPID2;
+            let k = 1.0 / 20.0;
             miniPID = new MiniPID(
-              proportional_inner,
-              integral_inner,
+              k*proportional_inner,
+              k*integral_inner,
               derivate_inner,
               setpoint_time
             );
@@ -519,6 +528,7 @@ export default {
             let output = 50;
             let actual2;
             let error = 0;
+            let y;
             result_outputs.push(actual);
             let times_sum = 0;
             let time_float = parseFloat(setpoint_time);
@@ -528,8 +538,13 @@ export default {
               miniPID.reversedf();
             }
             if (id_set2 == false) {
-              for (let i = 0; i < 150; i++) {
+               for (let i = 0; i < 5000; i++) {
+                    if (i > 1000)
+                    {
+                      setpoint_value=125;
+                    }
                 output = miniPID.getOutput(actual, setpoint_value, error);
+                y =miniPID.recursiveFilter(output);
                 if (summing_value_inner == "+/-") {
                   error = setpoint_value - actual;
                 } else if (summing_value_inner == "+/+") {
@@ -537,7 +552,7 @@ export default {
                 } else {
                   error = setpoint_value - actual;
                 }
-                actual = actual + output;
+                actual = actual + y;
                 result_outputs.push(actual);
                 times_sum = i * time_float.toFixed(2);
                 times_sum = times_sum.toFixed(2);
