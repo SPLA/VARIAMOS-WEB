@@ -1,7 +1,7 @@
-var adaptation_hardware_main = function adaptation_hardware_main(graph)
+let adaptation_hardware_main = function adaptation_hardware_main(graph)
 {
 	adaptation_hardware_constraints(graph);
-	var data={};
+	let data={};
 	data["m_type"]="normal"; //custom type
 	data["m_elements"]=adaptation_hardware_elements(); //custom elements
 	data["m_attributes"]=adaptation_hardware_attributes(); //custom attributes
@@ -26,29 +26,24 @@ var adaptation_hardware_main = function adaptation_hardware_main(graph)
 	}
 
 	function adaptation_hardware_elements(){
-		var root = {src:projectPath+"images/models/feature/rectangle3.png", wd:100, hg:35, type:"root", style:"strokeWidth=3", pname:"Root adaptation_hardware"};
-		var abstract = {src:projectPath+"images/models/feature/rectangle2.png", wd:100, hg:35, type:"abstract", style:"strokeWidth=2", pname:"Abstract adaptation_hardware"};
-		var concrete = {src:projectPath+"images/models/feature/rectangle.png", wd:100, hg:35, type:"concrete", style:"", pname:"Concrete adaptation_hardware"};
-		var bundle = {src:projectPath+"images/models/feature/bundle.png", wd:35, hg:35, type:"bundle", style:"shape=ellipse", pname:"Bundle"};
-		
-		var board = {src:projectPath+"images/models/feature/rectangle3.png", wd:100, hg:35, type:"board", style:"shape=board", pname:"Board"};
-		var digitalActuator = {src:projectPath+"images/models/feature/bundle.png", wd:100, hg:35, type:"digitalActuator", style:"shape=digitalActuator", pname:"Digital actuator"};
-		var digitalSensor = {src:projectPath+"images/models/feature/bundle.png", wd:100, hg:35, type:"digitalSensor", style:"shape=digitalSensor", pname:"Digital sensor"};
-		var analogActuator = {src:projectPath+"images/models/feature/bundle.png", wd:100, hg:35, type:"analogActuator", style:"shape=analogActuator", pname:"Analog actuator"};
-		var analogSensor = {src:projectPath+"images/models/feature/bundle.png", wd:100, hg:35, type:"analogSensor", style:"shape=analogSensor", pname:"Analog sensor"};
+		let board = {src:projectPath+"images/models/adaptation_hardware/board.png", wd:100, hg:35, type:"board", style:"shape=board", pname:"Board"};
+		let digitalActuator = {src:projectPath+"images/models/adaptation_hardware/digitalActuator.png", wd:100, hg:35, type:"digitalActuator", style:"shape=digitalActuator", pname:"Digital actuator"};
+		let digitalSensor = {src:projectPath+"images/models/adaptation_hardware/digitalSensor.png", wd:100, hg:35, type:"digitalSensor", style:"shape=digitalSensor", pname:"Digital sensor"};
+		let analogActuator = {src:projectPath+"images/models/adaptation_hardware/analogActuator.png", wd:100, hg:35, type:"analogActuator", style:"shape=analogActuator", pname:"Analog actuator"};
+		let analogSensor = {src:projectPath+"images/models/adaptation_hardware/analogSensor.png", wd:100, hg:35, type:"analogSensor", style:"shape=analogSensor", pname:"Analog sensor"};
 		    
-		var elements=[];
+		let elements=[];
 		elements[0]=board;
 		elements[1]=digitalActuator; 
-		elements[2]=digitalSensor; 
-		elements[3]=analogActuator; 
+		elements[2]=analogActuator; 
+		elements[3]=digitalSensor; 
 		elements[4]=analogSensor;
 		
 		return elements;
 	}
 
 	function adaptation_hardware_attributes(){
-		var attributes=[];
+		let attributes=[];
 		attributes[0]={
 			"types":["board"],
 			"custom_attributes":[{
@@ -59,6 +54,9 @@ var adaptation_hardware_main = function adaptation_hardware_main(graph)
 		attributes[1]={
 			"types":["digitalActuator"],
 			"custom_attributes":[{
+				"name":"subType",
+				"def_value":"Simple"
+			},{
 				"name":"pin",
 				"def_value":"D2"
 			},{
@@ -69,6 +67,9 @@ var adaptation_hardware_main = function adaptation_hardware_main(graph)
 		attributes[2]={
 			"types":["digitalSensor"],
 			"custom_attributes":[{
+				"name":"subType",
+				"def_value":"Simple"
+			},{
 				"name":"pin",
 				"def_value":"D12"
 			},{
@@ -79,6 +80,9 @@ var adaptation_hardware_main = function adaptation_hardware_main(graph)
 		attributes[3]={
 			"types":["analogActuator"],
 			"custom_attributes":[{
+				"name":"subType",
+				"def_value":"Simple"
+			},{
 				"name":"pin",
 				"def_value":"A0"
 			},{
@@ -89,6 +93,9 @@ var adaptation_hardware_main = function adaptation_hardware_main(graph)
 		attributes[4]={
 			"types":["analogSensor"],
 			"custom_attributes":[{
+				"name":"subType",
+				"def_value":"Simple"
+			},{
 				"name":"pin",
 				"def_value":"A4"
 			},{
@@ -100,7 +107,7 @@ var adaptation_hardware_main = function adaptation_hardware_main(graph)
 	}
 
 	function adaptation_hardware_relations(){
-		var relations=[];
+		let relations=[];
 		relations[0]={
 			"source":["abstract","concrete"],
 			"rel_source_target":"and",
@@ -115,7 +122,7 @@ var adaptation_hardware_main = function adaptation_hardware_main(graph)
 	}
 
 	function adaptation_hardware_properties_styles(){
-		var styles={};
+		let styles={};
 		styles={
 			"board":[{
 					"attribute":"boardType",
@@ -124,25 +131,44 @@ var adaptation_hardware_main = function adaptation_hardware_main(graph)
 				}
 			],
 			"digitalActuator":[{
-				"attribute":"pin",
-				"input_type":"select",
-				"input_values":["D2","D4","D7","D8","D12","D13"]
-				}
-			],
-			"digitalSensor":[{
-				"attribute":"pin",
-				"input_type":"select",
-				"input_values":["D2","D4","D7","D8","D12","D13"]
+					"attribute":"subType",
+					"input_type":"select",
+					"input_values":["Simple","Pwm","LiquidCrystal"]
+				},{
+					"attribute":"pinX",
+					"input_type":"select",
+					"input_values":["D2","D4","D7","D8","D12","D13"]
+				},{
+					"attribute":"pwm",
+					"input_type":"checkbox"
 				}
 			],
 			"analogActuator":[{
-				"attribute":"pin",
+					"attribute":"subType",
+					"input_type":"select",
+					"input_values":["Simple"]
+				},{
+				"attribute":"pinX",
 				"input_type":"select",
 				"input_values":["A0","A1","A2","A3","A4","A5","A6"]
 				}
 			],
+			"digitalSensor":[{
+					"attribute":"subType",
+					"input_type":"select",
+					"input_values":["Simple","Keypad"]
+				},{
+				"attribute":"pinX",
+				"input_type":"select",
+				"input_values":["D2","D4","D7","D8","D12","D13"]
+				}
+			],
 			"analogSensor":[{
-				"attribute":"pin",
+					"attribute":"subType",
+					"input_type":"select",
+					"input_values":["Simple"]
+				},{
+				"attribute":"pinX",
 				"input_type":"select",
 				"input_values":["A0","A1","A2","A3","A4","A5","A6"]
 				}
@@ -153,19 +179,19 @@ var adaptation_hardware_main = function adaptation_hardware_main(graph)
 	}
 
 	function adaptation_hardware_custom_methods(pos){
-		var methods=[]
+		let methods=[]
 		methods[0]=function(){
 			document.getElementById("tr-lowRange").style.display="none";
 			document.getElementById("tr-highRange").style.display="none";
-			var val = document.getElementById("tr-bundleType").getElementsByTagName('select')[0].value;
+			let val = document.getElementById("tr-bundleType").getElementsByTagName('select')[0].value;
 			if(val=="RANGE"){
 				document.getElementById("tr-lowRange").style.display="";
 				document.getElementById("tr-highRange").style.display="";
 			}
 		};
 		methods[1]=function(){
-			var lowRange = document.getElementById("input-lowRange").value;
-			var highRange = document.getElementById("input-highRange").value;
+			let lowRange = document.getElementById("input-lowRange").value;
+			let highRange = document.getElementById("input-highRange").value;
 			if(lowRange>highRange){
 				alert(global.messages["adaptation_hardware_custom_range_check"]);
 				return false;
@@ -173,10 +199,10 @@ var adaptation_hardware_main = function adaptation_hardware_main(graph)
 			return true;
 		};
 		methods[2]=function(graph){
-			var adaptation_hardware_root = graph.getModel().getCell("adaptation_hardware");    
-			var adaptation_hardware_vertices = graph.getModel().getChildVertices(adaptation_hardware_root);
+			let adaptation_hardware_root = graph.getModel().getCell("adaptation_hardware");    
+			let adaptation_hardware_vertices = graph.getModel().getChildVertices(adaptation_hardware_root);
 
-			for (var i = 0; i < adaptation_hardware_vertices.length; i++) {
+			for (let i = 0; i < adaptation_hardware_vertices.length; i++) {
 				if(adaptation_hardware_vertices[i].getAttribute("type")=="root"){
 					alert(global.messages["adaptation_hardware_custom_root_check"]);
 					return false;
@@ -186,7 +212,7 @@ var adaptation_hardware_main = function adaptation_hardware_main(graph)
 		};
 		methods[3]=function(){
 			// Creates a new overlay with an image and a tooltip and makes it "transparent" to events
-			var overlay = new mxCellOverlay(new mxImage('images/MX/check.png', 16, 16), 'Overlay tooltip');	
+			let overlay = new mxCellOverlay(new mxImage('images/MX/check.png', 16, 16), 'Overlay tooltip');	
 			if(this.checked){
 				graph.addCellOverlay(graph.getModel().getCell(this.name), overlay);
 			}else{
@@ -198,7 +224,7 @@ var adaptation_hardware_main = function adaptation_hardware_main(graph)
 	}
 
 	function adaptation_hardware_labels(){
-		var labels={};
+		let labels={};
 		labels={
 			"bundle":"bundleType"
 		};
@@ -207,7 +233,7 @@ var adaptation_hardware_main = function adaptation_hardware_main(graph)
 	}
 
 	function adaptation_hardware_constraints_in_creation(){
-		var constraints_ic={};
+		let constraints_ic={};
 		constraints_ic={
 			"root":adaptation_hardware_custom_methods(2)
 		};
@@ -216,7 +242,7 @@ var adaptation_hardware_main = function adaptation_hardware_main(graph)
 	}
 
 	function adaptation_hardware_clon_cells(){
-		var clons={};
+		let clons={};
 		clons={
 			"digitalActuator":"adaptation_binding_state_hardware", 
 			"digitalSensor":"adaptation_binding_state_hardware",
@@ -228,16 +254,16 @@ var adaptation_hardware_main = function adaptation_hardware_main(graph)
 	}
 
 	function adaptation_hardware_overlay(){
-		var func1=function(){
-			var adaptation_hardware_root = graph.getModel().getCell("adaptation_hardware");
-			var adaptation_hardware_elements = graph.getModel().getChildEdges(adaptation_hardware_root);
-			for (var i = 0; i < adaptation_hardware_elements.length; i++) {
-				var source = adaptation_hardware_elements[i].source;
-				var type = source.getAttribute("type");
+		let func1=function(){
+			let adaptation_hardware_root = graph.getModel().getCell("adaptation_hardware");
+			let adaptation_hardware_elements = graph.getModel().getChildEdges(adaptation_hardware_root);
+			for (let i = 0; i < adaptation_hardware_elements.length; i++) {
+				let source = adaptation_hardware_elements[i].source;
+				let type = source.getAttribute("type");
 				if(type=="concrete"){
-					var sel = source.getAttribute("selected");
+					let sel = source.getAttribute("selected");
 					if(sel=="true"){
-						var overlay = new mxCellOverlay(new mxImage('images/MX/check.png', 16, 16), 'Overlay tooltip');
+						let overlay = new mxCellOverlay(new mxImage('images/MX/check.png', 16, 16), 'Overlay tooltip');
 						graph.addCellOverlay(source,overlay);
 					}
 				}

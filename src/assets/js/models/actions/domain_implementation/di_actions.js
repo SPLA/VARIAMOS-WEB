@@ -25,10 +25,7 @@ let di_actions = function di_actions(graph,selected_method)
                 let inco_egdes = graph.getModel().getIncomingEdges(graph.getModel().getCell(id));
                 for (let j = 0; j < inco_egdes.length; j++) {
                     let file_source = inco_egdes[j].source;
-                    let data = {};
-                    data["filename"]=file_source.getAttribute("filename");
-
-                    if(data["filename"]=="customization.json"){
+                    if(file_source.getAttribute("type")=="custom"){
                         customizations.push(label);
                     }
                 }
@@ -55,10 +52,9 @@ let di_actions = function di_actions(graph,selected_method)
                 let inco_egdes = graph.getModel().getIncomingEdges(graph.getModel().getCell(id));
                 for (let j = 0; j < inco_egdes.length; j++) {
                     let file_source = inco_egdes[j].source;
-                    let data = {};
-                    data["destination"]=file_source.getAttribute("destination");
-
-                    if(data["destination"]!=null){
+                    if(file_source.getAttribute("type")=="file"){
+                        let data = {};
+                        data["destination"]=file_source.getAttribute("destination");
                         destinations.push(data["destination"]);
                     }
                 }
@@ -84,12 +80,16 @@ let di_actions = function di_actions(graph,selected_method)
                 let inco_egdes = graph.getModel().getIncomingEdges(graph.getModel().getCell(id));
                 for (let j = 0; j < inco_egdes.length; j++) {
                     let file_source = inco_egdes[j].source;
-                    let data = {};
-                    data["component_folder"]=label;
-                    data["ID"]=file_source.getAttribute("label");
-                    data["filename"]=file_source.getAttribute("filename");
-                    data["destination"]=file_source.getAttribute("destination");
-                    if(data["filename"]!="customization.json"){
+                    if(file_source.getAttribute("type")!="custom"){
+                        let data = {};
+                        data["component_folder"]=label;
+                        data["ID"]=file_source.getAttribute("label");
+                        data["filename"]=file_source.getAttribute("filename");
+                        if(file_source.getAttribute("type")=="file"){
+                            data["destination"]=file_source.getAttribute("destination");
+                        }else{
+                            data["destination"]=="";
+                        }
                         files.push(data);
                     }
                 }

@@ -350,9 +350,11 @@ export default {
      
       // setupModal(c_header, c_body, c_footer);
 
-      let url = document.URL;  
-      var captured = /controlAction=([^&]+)/.exec(url)[1]; // Value is in [1] ('384' in our case)
-      var controlAction = captured ? captured : 'myDefaultValue';
+      // let url = document.URL;  
+      // var captured = /controlAction=([^&]+)/.exec(url)[1]; // Value is in [1] ('384' in our case)
+      // var controlAction = captured ? captured : 'myDefaultValue';
+
+      var controlAction = localStorage['adaptation_binding_state_hardware_controlAction'];
 
       this.generate_graph(controlAction);
       

@@ -132,7 +132,7 @@ let feature_main = function feature_main(graph)
 	}
 
 	function feature_custom_methods(pos){
-		let methods=[]
+		let methods=[];
 		methods[0]=function(){
 			document.getElementById("tr-lowRange").style.display="none";
 			document.getElementById("tr-highRange").style.display="none";

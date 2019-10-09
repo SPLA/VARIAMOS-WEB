@@ -5,19 +5,18 @@
           <div id="main-button-col" class="main-button"> <button class="navbar-toggler" type="button">
             <span @click="custom_collapse()" class="navbar-toggler-icon"></span>
           </button></div></div>
-          <input class="form-control form-control-dark w-100 height-100" name="keyword" type="text" v-bind:placeholder="$t('app_search')" v-bind:aria-label="$t('app_search')">
-          <ul class="navbar-nav px-3">
+          <input id="search-bar" class="form-control form-control-dark w-100 height-100" name="keyword" type="text" v-bind:placeholder="$t('app_search')" v-bind:aria-label="$t('app_search')">
+          <!--<ul id="sign-out" class="navbar-nav px-3">
             <li class="nav-item text-nowrap">
               <a class="nav-link">{{ $t("app_sign_out") }}</a>
             </li>
-          </ul>
+          </ul>-->
         </nav>
         <div class="container-fluid">
             <div class="row">
               <Menu id="sidebar" class="col-md-2 bg-light sidebar">
                 <div class="sidebar-sticky">
                       <Filetree></Filetree>
-                      <Divider />
                   <ul class="nav flex-column" style="display:none;">
                     <li class="nav-item">
                       <router-link class="nav-link" to="/">
@@ -129,6 +128,8 @@ export default {
     custom_collapse(){
       let sidebar = document.getElementById("sidebar");
       let maintext = document.getElementById("main-text");
+      let ldraw = document.getElementById("left-draw");
+      let rdraw = document.getElementById("right-draw");
       let element = document.getElementById("top-menu");
       let elementb = document.getElementById("main-button-col");
       let elementc = document.getElementById("main-sketch");
@@ -140,6 +141,7 @@ export default {
         elementb.classList.remove("center-button");
         elementc.classList.remove("col-md-12"); elementc.classList.remove("col-lg-12");
         elementc.classList.add("col-md-9"); elementc.classList.add("col-lg-10");
+        //rdraw.classList.remove("col-xl-2"); ldraw.classList.remove("col-xl-10");
       }else{
         sidebar.style.display="none";
         maintext.style.display="none";
@@ -148,6 +150,7 @@ export default {
         elementb.classList.add("center-button");
         elementc.classList.remove("col-md-9"); elementc.classList.remove("col-lg-9");
         elementc.classList.add("col-md-12"); elementc.classList.add("col-lg-12");
+        //rdraw.classList.add("col-xl-2"); ldraw.classList.add("col-xl-10");
       }
     }
   }

@@ -1,9 +1,9 @@
-var istar_main = function istar_main(graph)
+let istar_main = function istar_main(graph)
 {
   istar_constraints();
   istar_custom_markers();
   istar_custom_events();
-	var data={};
+	let data={};
 	data["m_type"]="normal"; //custom type
 	data["m_elements"]=istar_elements(); //custom elements
   data["m_attributes"]=istar_attributes(); //custom attributes
@@ -76,28 +76,28 @@ var istar_main = function istar_main(graph)
     //Though still somewhat mysterious, this has been adapted from https://jgraph.github.io/mxgraph/javascript/examples/markers.html
     //so that it creates a straight line through the arrow.
     mxMarker.addMarker('dash', function(canvas, shape, type, pe, unitX, unitY, size, source, sw, filled){
-      var nx = unitX * (size + sw + 10);
-      var ny = unitY * (size + sw + 10);
+      let nx = unitX * (size + sw + 10);
+      let ny = unitY * (size + sw + 10);
 
       return function() {
         canvas.begin();
-        var x1 = pe.x - nx / 2 - ny / 2;
-        var y1 = pe.y - ny / 2 + nx / 2;
+        let x1 = pe.x - nx / 2 - ny / 2;
+        let y1 = pe.y - ny / 2 + nx / 2;
         canvas.moveTo(x1, y1);
-        var x2 = pe.x + ny / 2 -  nx / 2;
-        var y2 = pe.y - ny / 2 - nx / 2;
+        let x2 = pe.x + ny / 2 -  nx / 2;
+        let y2 = pe.y - ny / 2 - nx / 2;
         canvas.lineTo(x2, y2);
         canvas.stroke();
       }
     })
 
     mxMarker.addMarker('capitald1', function(canvas, shape, type, pe, unitX, unitY, size, source, sw, filled){
-      var nx = unitX * (size + sw + 10);
-      var ny = unitY * (size + sw + 10);
-      var init = {x:shape.bounds.x, y:shape.bounds.y};
-      var midX = (init.x + pe.x)/2;
-      var midY = (init.y + pe.y)/2;
-      var count = 0;
+      let nx = unitX * (size + sw + 10);
+      let ny = unitY * (size + sw + 10);
+      let init = {x:shape.bounds.x, y:shape.bounds.y};
+      let midX = (init.x + pe.x)/2;
+      let midY = (init.y + pe.y)/2;
+      let count = 0;
 
       return function() {
         console.log("---CALLSTART----")
@@ -116,11 +116,11 @@ var istar_main = function istar_main(graph)
         console.log('++count :', ++count);
         console.log("---CALLEND----")
         canvas.begin();
-        var x1 = (pe.x - nx / 2 - ny / 2);
-        var y1 = (pe.y - ny / 2 + nx / 2);
+        let x1 = (pe.x - nx / 2 - ny / 2);
+        let y1 = (pe.y - ny / 2 + nx / 2);
         canvas.moveTo(x1, y1);
-        var x2 = (pe.x + ny / 2 - nx / 2);
-        var y2 = (pe.y - ny / 2 - nx / 2);
+        let x2 = (pe.x + ny / 2 - nx / 2);
+        let y2 = (pe.y - ny / 2 - nx / 2);
         canvas.lineTo(x2,y2);
         canvas.moveTo(x2,y2);
         canvas.lineTo(midX,midY);
@@ -137,13 +137,13 @@ var istar_main = function istar_main(graph)
   };
 
 	function istar_elements(){
-    var actor = {src:projectPath+"images/models/istar/Actor.png", wd:100, hg:100, style:"shape=actor;perimeter=ellipsePerimeter;html=1;whiteSpace=wrap;overflow=visible;fontColor=black;", type:"actor", pname:"Actor"};
-    var agent = {src:projectPath+"images/models/istar/Agent.png", wd:100, hg:100, style:"shape=agent;perimeter=ellipsePerimeter;html=1;whiteSpace=wrap;overflow=visible;fontColor=black;", type:"agent", pname:"Agent"};
-    var role = {src:projectPath+"images/models/istar/Role.png", wd:100, hg:100, style:"shape=role;perimeter=ellipsePerimeter;html=1;whiteSpace=wrap;overflow=visible;fontColor=black;", type:"role", pname:"Role"};
-    var goal = {src:projectPath+"images/models/istar/Goal.png", wd:125, hg:50, style:"shape=goal;html=1;whiteSpace=wrap;overflow=visible;fontColor=black;", type:"goal", pname:"Goal"};
-    var quality = {src:projectPath+"images/models/istar/Quality.png", wd:125, hg:50, style:"shape=quality;html=1;whiteSpace=wrap;overflow=visible;fontColor=black;", type:"quality", pname:"Quality"};
-		var task = {src:projectPath+"images/models/istar/Task.png", wd:125, hg:50, style:"shape=task;html=1;whiteSpace=wrap;;overflow=visible;fontColor=black;", type:"task", pname:"Task"};
-    var resource = {src:projectPath+"images/models/istar/Resource.png", wd:125, hg:50, style:"shape=resource;html=1;whiteSpace=wrap;overflow=visible;fontColor=black;", type:"resource", pname:"Resource"};
+    let actor = {src:projectPath+"images/models/istar/Actor.png", wd:100, hg:100, style:"shape=actor;perimeter=ellipsePerimeter;html=1;whiteSpace=wrap;overflow=visible;fontColor=black;", type:"actor", pname:"Actor"};
+    let agent = {src:projectPath+"images/models/istar/Agent.png", wd:100, hg:100, style:"shape=agent;perimeter=ellipsePerimeter;html=1;whiteSpace=wrap;overflow=visible;fontColor=black;", type:"agent", pname:"Agent"};
+    let role = {src:projectPath+"images/models/istar/Role.png", wd:100, hg:100, style:"shape=role;perimeter=ellipsePerimeter;html=1;whiteSpace=wrap;overflow=visible;fontColor=black;", type:"role", pname:"Role"};
+    let goal = {src:projectPath+"images/models/istar/Goal.png", wd:125, hg:50, style:"shape=goal;html=1;whiteSpace=wrap;overflow=visible;fontColor=black;", type:"goal", pname:"Goal"};
+    let quality = {src:projectPath+"images/models/istar/Quality.png", wd:125, hg:50, style:"shape=quality;html=1;whiteSpace=wrap;overflow=visible;fontColor=black;", type:"quality", pname:"Quality"};
+		let task = {src:projectPath+"images/models/istar/Task.png", wd:125, hg:50, style:"shape=task;html=1;whiteSpace=wrap;;overflow=visible;fontColor=black;", type:"task", pname:"Task"};
+    let resource = {src:projectPath+"images/models/istar/Resource.png", wd:125, hg:50, style:"shape=resource;html=1;whiteSpace=wrap;overflow=visible;fontColor=black;", type:"resource", pname:"Resource"};
     
     /*
     const securityConstraint = {src:projectPath+"images/models/component/file.png", wd:100, hg:100, style:"shape=secconstraint;html=1;whiteSpace=wrap;overflow=visible;fontColor=black;", type:"secconstraint", pname:"Security Constraint"};
@@ -154,7 +154,7 @@ var istar_main = function istar_main(graph)
     const vulnerability = {src:projectPath+"images/models/component/file.png", wd:125, hg:50, style:"shape=vulnerability;html=1;whiteSpace=wrap;overflow=visible;fontColor=black;", type:"vulnerability", pname:"Vulnerability"};
     */
 
-		var elements=[];
+		let elements=[];
 		elements.push(actor);
     elements.push(agent);
     elements.push(role);
@@ -177,7 +177,7 @@ var istar_main = function istar_main(graph)
 	}
 
 	function istar_attributes(){
-    var attributes=[];
+    let attributes=[];
 		attributes.push({
 			"types":["actor","role","agent"],
 			"custom_attributes":[{
@@ -196,7 +196,7 @@ var istar_main = function istar_main(graph)
   }
 
   function istar_relations(){
-    var relations=[];
+    let relations=[];
     relations.push({
       "source":["actor","agent","role"],
       "rel_source_target":"and",
@@ -255,7 +255,7 @@ var istar_main = function istar_main(graph)
   }
 
   function istar_relation_styles(){
-    var relations=[];
+    let relations=[];
     relations.push({
       "source":["actor","agent","role"],
       "rel_source_target":"and",
@@ -515,7 +515,7 @@ var istar_main = function istar_main(graph)
   }
 
   function istar_custom_methods(pos){
-		var methods=[]
+		let methods=[]
 		methods.push(function(_prototype, cell){
       if(cell !== null){
         alert("you may not add actor within another\'s boundary")
@@ -529,7 +529,7 @@ var istar_main = function istar_main(graph)
 	}
 
   function istar_constraints_in_creation(){
-		var constraints_ic={};
+		let constraints_ic={};
 		constraints_ic={
       "actor":istar_custom_methods(0),
       "agent":istar_custom_methods(0),

@@ -1,7 +1,7 @@
-let  control_main = function control_main(graph)
+let control_main = function control_main(graph)
 {
     control_constraints(graph);
-    let  data=[];
+    let data=[];
     data["m_type"]="normal"; //custom type
 	data["m_elements"]=control_elements(); //custom elements
 	data["m_attributes"]=control_attributes(); //custom attributes
@@ -21,21 +21,21 @@ let  control_main = function control_main(graph)
             false, 'set_point', null, null, 0, 0, 'controlAction',
             'Setpoint must have no incoming edges ',
             null));
-            
-		graph.multiplicities.push(new mxMultiplicity(
-            false, 'controlAction', null, null, 1, 1, ['controller', 'summing_point'],
-            'ControlAction Must Have 1 incoming connection ',
-            'ControlAction Must Connect From controller or summing point'));
+            // Target needs exactly one incoming connection from Source
+				graph.multiplicities.push(new mxMultiplicity(
+                    false, 'controlAction', null, null, 1, 1, ['controller', 'summing_point'],
+                    'Target Must Have 1 incoming connection ',
+                    'Target Must Connect From controller or summing point'));
         graph.multiplicities.push(new mxMultiplicity(
             false, 'branchpoint', null, null, 1, 1, ['controlAction'],
             'Branchpoint Must Have 1 Target system',
             'Branchpoint Must Connect From Target system'));
-        graph.multiplicities.push(new mxMultiplicity(
+       /* graph.multiplicities.push(new mxMultiplicity(
             true, 'controlAction', null, null, 1, 1, ['branchpoint'],
-            'ControlAction Must Have 1  branchpoint',
-            'ControlAction system Must Connect to branchpoint'));
-            
-        graph.multiplicities.push(new mxMultiplicity(
+            'Target system Must Have 1  branchpoint',
+            'Target system Must Connect to branchpoint'));
+            */
+            graph.multiplicities.push(new mxMultiplicity(
             true, 'set_point', null, null, 1, 1, ['summing_point'],
             'Setpoint system Must Have 1  summing_point',
             'Setpoint system Must Connect to summing_point'));     
@@ -51,7 +51,7 @@ let  control_main = function control_main(graph)
         let  branchpoint   = {src:projectPath+"images/models/control/bifurcation.png", wd:100, hg:40, style:"shape=rhombus", type:"branchpoint", pname:"Branchpoint"};
         let  filter = {src:projectPath+"images/models/control/filter.png", wd:100, hg:40, style:"shape=filter", type:"filter", pname:"filter"};
         
-        let  elements=[];
+        let elements=[];
         elements[0]=controller;
         elements[1]=summing_point;
         elements[2]=transducer;
@@ -64,7 +64,7 @@ let  control_main = function control_main(graph)
     }
 
     function control_attributes(){
-        let  attributes=[];
+        let attributes=[];
         attributes[0]={
             "types":["controller"],
             "custom_attributes":[{
@@ -117,16 +117,12 @@ let  control_main = function control_main(graph)
                 "def_value":"0",
             }]
         };
-     
-
         
-    
         return attributes;
     }
 
     function control_relations(){
-		let  relations=[];
-		
+		let relations=[];	
 		return relations;
     }
     
