@@ -47,7 +47,10 @@
                   <b>{{ $t("models_palette") }}</b><br /><br />
                   <div id="tbContainer"></div>
                   </div>
-                  <div class="other-area"><b>{{ $t("models_navigator") }}</b>
+                  <div class="other-area"><!--<b>{{ $t("models_navigator") }}</b>-->
+                  <div class="navi-buttons">
+                    <div id="buttonZIN"></div><div id="buttonZOUT"></div><div id="buttonZR"></div>
+                  </div>
                   <div id="navigator" class="navigator"></div>
                   </div>
                 </div>
@@ -73,11 +76,13 @@ import model_load from '@/assets/js/models/model_load.js'
 import Bus from '../assets/js/common/bus.js'
 import { getModelInfo } from '../assets/js/common/global_info'
 import { setupModal, modalH3, modalSimpleText } from '../assets/js/common/util'
+
 /* import actions */
 import DomainMenu from '../components/model_actions/DomainMenu'
 import ApplicationMenu from '../components/model_actions/ApplicationMenu'
 import Verification from '../components/model_actions/Verification'
 import BackEnd from '../components/model_actions/BackEnd'
+
 export default{
   data: function(){
     return {
@@ -118,6 +123,7 @@ export default{
     //load saved model into the graph if exists, and return layers
     this.layers=model_load(this.graph,this.models,this.modelCode);
     this.modelType=this.$route.params.type; //based on URL Route
+
     // display custom menu options for domain-menu
     let domain_childs = document.querySelectorAll('#domain-menu a');
     this.hide_menu_options(domain_childs);
@@ -127,6 +133,7 @@ export default{
     // display custom menu options for application-menu
     domain_childs = document.querySelectorAll('#application-menu a');
     this.hide_menu_options(domain_childs);
+
     //dynamic load of setup functions
     let all_setups = ["setup_relations","setup_buttons","setup_keys","setup_properties","setup_elements","setup_events"];
     for(let i=0;i<all_setups.length;i++){
@@ -140,6 +147,7 @@ export default{
         this.setupFunctions[all_setups[i]]=st_fun.default;
       }
     }
+
     //Import the current model file
     let modelToImport = require('@/assets/js/models/custom/'+this.modelType+'.js');
     this.currentModel = modelToImport.default;
@@ -147,9 +155,11 @@ export default{
     this.keyHandler = new mxKeyHandler(this.graph);
     this.undoManager = new mxUndoManager();
     this.mxModel = this.graph.getModel();
+
     this.initialize_mx(1);
     //clear undo redo history
     this.undoManager.clear();
+
     if(localStorage['cache_selected'+temp])
       this.$store.dispatch('updatecacheselected', JSON.parse(localStorage['cache_selected'+temp]));
   },
@@ -211,6 +221,7 @@ export default{
         document.getElementById('tbContainer').innerHTML="";
         document.getElementById('navigator').innerHTML="";
         this.modelType=this.$route.params.type;
+
         // display custom menu options for domain-menu
         let domain_childs = document.querySelectorAll('#domain-menu a');
         this.hide_menu_options(domain_childs);
@@ -220,6 +231,7 @@ export default{
         // display custom menu options for application-menu
         domain_childs = document.querySelectorAll('#application-menu a');
         this.hide_menu_options(domain_childs);
+
         //dynamic load of setup functions
         let all_setups = ["setup_relations","setup_buttons","setup_keys","setup_properties","setup_elements","setup_events"];
         for(let i=0;i<all_setups.length;i++){
@@ -241,19 +253,6 @@ export default{
         //clear undo redo history
         this.undoManager.clear();
       }
-    },
-    /**
-     * if there is any change in the mxgraph, update the xml in the store
-     * @fires module:store~actions:updatexml
-     */ 
-    mxModel:{
-      handler(val) {
-        let encoder = new mxCodec();
-        let result = encoder.encode(this.graph.getModel());
-        let xml = mxUtils.getPrettyXml(result);
-        this.$store.dispatch('updatexml', xml);
-      },
-      deep:true
     },
     // when the selected elements cache is changed, update localstorage
     getcache_selected: {
@@ -277,78 +276,96 @@ export default{
     border-left: 0px !important;
   }
 }
+
 .button-header{
   border-radius: calc(.25rem - 1px) calc(.25rem - 1px) 0 0;
   border-bottom: 2px solid rgba(0,0,0,.125);
 }
+
 .nav_domain{
   padding: 2px;
 }
+
 .nav-text{
   color: rgba(0,0,0,.7)!important;
 }
+
 .button-unique{
   display: -webkit-box;
   float: left;
 }
+
 .button_hidden{
   visibility:hidden;
 }
+
 .main_area{
   margin-right: 0px;
   margin-left: 0px;
   margin-top: -6px;
 }
+
 .left-area{
   padding-right: 0px;
   padding-left: 0px;
 }
+
 .right-area{
   padding-right: 0px;
   padding-left: 0px;
   border-top: 1px solid rgba(0,0,0,.125);
   border-left: 1px solid rgba(0,0,0,.125);
 }
+
 .navigator{
   border: 2px solid rgba(0,0,0,.125);
-  margin-top: 10px;
+  margin-top: 5px;
 }
+
 .button-area{
   display: inline-block;
   border-bottom: 1px solid rgba(0,0,0,.125);
   width: 100%;
 }
+
 .card-header {
   text-align: left;
 }
+
 .card-body {
   padding: 0px;
   background-color: white;
 }
+
 .properties-area, .other-area{
   border-top: 1px solid rgba(0,0,0,.125);
 	padding: 15px;
 }
+
 .model-area{
   overflow-block: scroll;
   overflow-x: auto;
   overflow-y: auto;
-  height:350px;
+  height:55vh;
   background:url("../assets/images/grid.gif");
   cursor:default;
   padding-right: 0px; 
   padding-left: 0px;
 }
+
 .pallete-area{
   padding: 15px;
 }
+
 .pad20{
 	padding-top:20px;
 }
+
 table{
 	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
   font-size: 14px;
 }
+
 .properties-table td{
 	padding: 5px;
 }
@@ -360,12 +377,33 @@ table{
   flex-wrap: wrap;
   justify-content: center;
 }
+
 .pallete-div {
   display: block;
   max-width: 70px;
   margin: 3px;
 }
+
 .pallete-div span{
   font-size: 12px;
+}
+
+.nav-item a{
+  cursor: pointer;
+}
+
+.navi-buttons{
+  display: flex;
+  margin: 0 auto;
+  justify-content: flex-end;
+}
+
+.navi-buttons button{
+  border: 1px solid #ccc;
+  padding: 2px;
+  padding-left: 7px;
+  padding-right: 7px;
+  width: 25px;
+  margin-right: 2px;
 }
 </style>

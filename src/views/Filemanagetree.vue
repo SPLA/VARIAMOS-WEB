@@ -1,115 +1,148 @@
 <template>
 	<div>
+		<!-- button -->
 		<div class="button_tree_element">
-			<div class="button-unique" >
-				<button class="btn-model-area btn btn-sm btn-outline-secondary" type="primary" @click="newProject.isshow=!newProject.isshow" data-test="newprojectbutton">
-					<div style="padding:1px; font-size:12px;">
-						<i class="fas fa-plus"></i>
-						{{$t("filemanagement_addproject_button")}}
-					</div>
-				</button>
-				<Modal
-					v-model="newProject.isshow"
-					:loading="newProject.loading"
-					:title="$t('filemanagement_addproject_title')"
-					class-name="vertical-center-modal"
-					width="600"
-					ok-text="OK"
-					cancel-text="Cancel"
-					@on-ok="createproject"
-					@on-cancel="newProject.isshow=false,newProject.formval.projectName=''"
-					data-test="newprojectmodal">
-					<div class="form-horizontal">
-						<div class="form-group">
-							<label class="col-md-3 control-label"><em>*</em> {{$t("filemanagement_addproject_label")}}</label>
-							<div class="col-md-9">
+            <div class="button-unique" >
+                <button class="btn-model-area btn btn-sm btn-outline-secondary" type="primary" @click="openmodal('#newProject')" data-test="newprojectbutton">
+                    <div style="padding:1px; font-size:12px;">
+                        <i class="fas fa-plus"></i>
+                        {{$t("filemanagement_addproject_button")}}
+                    </div>
+                </button>
+            </div>
+        </div>
+		<!-- modal -->
+		<div class="modal fade" id="newProject" tabindex="-1" role="dialog" aria-labelledby="newProjectLabel" aria-hidden="true" style="position:fixed">
+  			<div class="modal-dialog" role="document">
+    			<div class="modal-content">
+      				<div class="modal-header">
+        				<h5 class="modal-title">{{$t("filemanagement_addproject_button")}}</h5>
+        				<button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="closemodal">
+          					<span aria-hidden="true">&times;</span>
+        				</button>
+      				</div>
+      				<div class="modal-body">
+        				<form>
+							<div class="form-group">
+								<label class="col-form-label"><em>*</em> {{$t("filemanagement_addproject_label")}}</label>
 								<input type="text" class="form-control" maxlength="70" v-model="newProject.formval.projectName" :placeholder="$t('filemanagement_addproject_context')" data-test="newprojectmodalinput"/>
 							</div>
-						</div>
+						</form>
 					</div>
-				</Modal>
-			</div>
+     				 <div class="modal-footer">
+        				<button type="button" class="btn btn-primary" @click="createproject">OK</button>
+      				</div>
+    			</div>
+  			</div>
 		</div>
-		<div v-if="getdata" style="margin-right:10px; margin-bottom:10px;">
-			<cotalogue ref="cotalogue"></cotalogue>
+		<div class="modal fade" id="newName" tabindex="-1" role="dialog" aria-labelledby="newNameLabel" aria-hidden="true" style="position:fixed">
+  			<div class="modal-dialog" role="document">
+    			<div class="modal-content">
+      				<div class="modal-header">
+        				<h5 class="modal-title">{{$t('filemanagement_changename_title')}}</h5>
+        				<button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="closemodal">
+          					<span aria-hidden="true">&times;</span>
+        				</button>
+      				</div>
+      				<div class="modal-body">
+        				<form>
+							<div class="form-group">
+								<label class="col-form-label"><em>*</em>{{$t("filemanagement_changename_label")}}</label>
+								<input type="text" class="form-control" maxlength="70" v-model="newName.formval.changedName" :placeholder="$t('filemanagement_changename_context')" />
+							</div>
+						</form>
+					</div>
+     				 <div class="modal-footer">
+        				<button type="button" class="btn btn-primary" @click="rename">OK</button>
+      				</div>
+    			</div>
+  			</div>
 		</div>
-		<Modal
-			v-model="newName.isshow"
-			:loading="newName.loading"
-			:title="$t('filemanagement_changename_title')"
-			class-name="vertical-center-modal"
-			width="600"
-			ok-text="OK"
-			cancel-text="Cancel"
-			@on-ok="rename"
-			@on-cancel="newName.isshow=false,newName.formval.changedName='',newName.formval.id=null">
-			<div class="form-horizontal">
-				<div class="form-group">
-					<label class="col-md-3 control-label"><em>*</em>{{$t("filemanagement_changename_label")}}</label>
-					<div class="col-md-9">
-						<input type="text" class="form-control" maxlength="70" v-model="newName.formval.changedName" :placeholder="$t('filemanagement_changename_context')" />
+		<div class="modal fade" id="newApplication" tabindex="-1" role="dialog" aria-labelledby="newApplicationLabel" aria-hidden="true" style="position:fixed">
+  			<div class="modal-dialog" role="document">
+    			<div class="modal-content">
+      				<div class="modal-header">
+        				<h5 class="modal-title">{{$t('filemanagement_newapplication_title')}}</h5>
+        				<button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="closemodal">
+          					<span aria-hidden="true">&times;</span>
+        				</button>
+      				</div>
+      				<div class="modal-body">
+        				<form>
+							<div class="form-group">
+								<label class="col-form-label">{{$t("filemanagement_newapplication_father")}}</label>
+								<input type="text" class="form-control" disabled v-model="newApplication.parentFolder" />
+							</div>
+							<div class="form-group">
+								<label class="col-form-label"><em>*</em>{{$t("filemanagement_newapplication_label")}}</label>
+								<input type="text" class="form-control" maxlength="70" v-model="newApplication.applicationName" :placeholder="$t('filemanagement_newapplication_context')" />
+							</div>
+						</form>
 					</div>
-				</div>
-			</div>
-		</Modal>
-		<Modal
-			v-model="newApplication.isshow"
-			:loading="newApplication.loading"
-			:title="$t('filemanagement_newapplication_title')"
-			class-name="vertical-center-modal"
-			width="600"
-			ok-text="OK"
-			cancel-text="Cancel"
-			@on-ok="createApplication"
-			@on-cancel="newApplication.isshow=false,newApplication.applicationName='',newApplication.id=null">
-			<div class="form-horizontal">
-				<div class="form-group">
-					<label class="col-md-2 control-label">{{$t("filemanagement_newapplication_father")}}</label>
-					<div class="col-md-9">
-						<input type="text" class="form-control" disabled v-model="newApplication.parentFolder" />
+     				 <div class="modal-footer">
+        				<button type="button" class="btn btn-primary" @click="createApplication" >OK</button>
+      				</div>
+    			</div>
+  			</div>
+		</div>
+		<div class="modal fade" id="newAdaptation" tabindex="-1" role="dialog" aria-labelledby="newAdaptationLabel" aria-hidden="true" style="position:fixed">
+  			<div class="modal-dialog" role="document">
+    			<div class="modal-content">
+      				<div class="modal-header">
+        				<h5 class="modal-title">{{$t('filemanagement_newadaptation_title')}}</h5>
+        				<button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="closemodal">
+          					<span aria-hidden="true">&times;</span>
+        				</button>
+      				</div>
+      				<div class="modal-body">
+        				<form>
+							<div class="form-group">
+								<label class="col-form-label">{{$t('filemanagement_newadaptation_father')}}</label>
+								<input type="text" class="form-control" disabled v-model="newAdaptation.parentFolder" />
+							</div>
+							<div class="form-group">
+								<label class="col-form-label"><em>*</em>{{$t('filemanagement_newadaptation_label')}}</label>
+								<input type="text" class="form-control" maxlength="70" v-model="newAdaptation.adapatationName" :placeholder="$t('filemanagement_newadaptation_context')" />
+							</div>
+						</form>
 					</div>
-				</div>
-				<div class="form-group">
-					<label class="col-md-3 control-label"><em>*</em>{{$t("filemanagement_newapplication_label")}}</label>
-					<div class="col-md-9">
-						<input type="text" class="form-control" maxlength="70" v-model="newApplication.applicationName" :placeholder="$t('filemanagement_newapplication_context')" />
+     				 <div class="modal-footer">
+        				<button type="button" class="btn btn-primary" @click="createAdaptation" >OK</button>
+      				</div>
+    			</div>
+  			</div>
+		</div>
+		<div class="modal fade" id="errormodal" tabindex="-1" role="dialog" aria-labelledby="errormodalLabel" aria-hidden="true" style="position:fixed">
+  			<div class="modal-dialog" role="document">
+    			<div class="modal-content">
+      				<div class="modal-header">
+        				<h5 class="modal-title">Warning</h5>
+        				<button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="closemodal">
+          					<span aria-hidden="true">&times;</span>
+        				</button>
+      				</div>
+      				<div class="modal-body">
+        				<form>
+							<div class="form-group">
+								<label class="col-form-label">{{errormessage}}</label>
+							</div>
+						</form>
 					</div>
-				</div>
-			</div>
-		</Modal>
-		<Modal
-			v-model="newAdaptation.isshow"
-			:loading="newAdaptation.loading"
-			:title="$t('filemanagement_newadaptation_title')"
-			class-name="vertical-center-modal"
-			width="600"
-			ok-text="OK"
-			cancel-text="Cancel"
-			@on-ok="createAdaptation"
-			@on-cancel="newAdaptation.isshow=false,newAdaptation.adapatationName='',newAdaptation.id=null">
-			<div class="form-horizontal">
-				<div class="form-group">
-					<label class="col-md-2 control-label">{{$t('filemanagement_newadaptation_father')}}</label>
-					<div class="col-md-9">
-						<input type="text" class="form-control" disabled v-model="newAdaptation.parentFolder" />
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="col-md-3 control-label"><em>*</em>{{$t('filemanagement_newadaptation_label')}}</label>
-					<div class="col-md-9">
-						<input type="text" class="form-control" maxlength="70" v-model="newAdaptation.adapatationName" :placeholder="$t('filemanagement_newadaptation_context')" />
-					</div>
-				</div>
-			</div>
-		</Modal>
-					
-                    
+    			</div>
+  			</div>
+		</div>
+		<!-- Tree -->
+        <div v-if="getdata" style="margin-right:10px; margin-bottom:10px;">
+            <cotalogue ref="cotalogue"></cotalogue>
+        </div>
     </div>
 </template>
 
 <script>
 import Bus from '../assets/js/common/bus.js'
 import cotalogue from '../components/cotalogue'
+import $ from 'jquery'
+
 export default{
     components:{
 		cotalogue
@@ -122,8 +155,6 @@ export default{
 			 * @property	{string} type			- check between application and adaptation
 			*/
 			newName: {
-				isshow: false,
-				loading: true,
 				index: null,
 				formval: {
 					changedName: '',
@@ -137,8 +168,6 @@ export default{
 			 * @property	{string} projectName	- the name of the new project
 			 */
 			newProject: {
-				isshow: false,
-				loading: true,
 				formval: {
 					projectName: '',
 				}
@@ -149,8 +178,6 @@ export default{
 			 * @property	{string} parentFolder		- the name of the parent folder
 			 */
 			newApplication: {
-				isshow: false,
-				loading: true,
 				index: null,
 				id:null,
 				parentId: null,
@@ -163,14 +190,13 @@ export default{
 			 * @property	{string} parentFolder	- the name of the parent folder
 			 */
 			newAdaptation: {
-				isshow: false,
-				loading: true,
 				index: null,
 				id:null,
 				parentId: null,
 				adapatationName:'',
 				parentFolder: ''
-			}
+			},
+			errormessage: ''
         }
     },
 	mounted () {
@@ -201,31 +227,27 @@ export default{
 			 let data = JSON.parse(localStorage.getItem('Filetree|model_component_index'));
 			 this.$store.dispatch('updatemodelcomponent', data);
 		}
-		this.$Message.config({
-    		top: 100,
-    		duration: 2
-		});
 		/**
 		 * open a modal to create a new application folder
 		 * @listens module:contextMenu~event:createapplication
 		 */
 		Bus.$on('createapplication', data => {
-			this.newApplication.isshow = true;
 			this.newApplication.index = this.getIndexById(data.data.nodeId);
 			this.newApplication.applicationName = '';
 			this.newApplication.parentFolder = data.data.nodeName;
 			this.newApplication.parentId = data.data.nodeId;
+			this.openmodal('#newApplication');
 		});
 		/**
 		 * open a modal to create a new adaptation folder
 		 * @listens module:contextMenu~event:createadaption
 		 */
 		Bus.$on('createadaption', data => {
-			this.newAdaptation.isshow = true;
 			this.newAdaptation.index = this.getIndexById(data.data.nodeId);
 			this.newAdaptation.adapatationName = '';
 			this.newAdaptation.parentFolder = data.data.nodeName;
 			this.newAdaptation.parentId = data.data.nodeId;
+			this.openmodal('#newAdaptation');
 		});
 		/**
 		 * delete the folder and its children, remove this folder from localstorage
@@ -262,14 +284,33 @@ export default{
 		 * @listens module:contextMenu~event:newname
 		 */
 		Bus.$on('newname', data => {
-			this.newName.isshow = true;
 			this.newName.index = this.getIndexById(data.data.nodeId);
 			this.newName.formval.changedName = '';
 			this.newName.formval.type = data.data.nodeName.split('-')[0];
 			this.newName.formval.projectId = data.data.projectId;
+			this.openmodal('#newName');
 		});
 	},
     methods:{
+		/**
+		 * put modal to body and open it
+		 */
+		openmodal(modalname) {
+			$(modalname).appendTo('body');
+			$(modalname).modal('show');
+		},
+		/**
+		 * clear the cache when closing modal
+		 */
+		closemodal() {
+			this.newProject.formval.projectName='';
+			this.newName.formval.changedName='';
+			this.newName.formval.id=null;
+			this.newApplication.applicationName='';
+			this.newApplication.id=null;
+			this.newAdaptation.adapatationName='';
+			this.newAdaptation.id=null;
+		},
 		/**
 		 * get the index in the tree data array
 		 * @param	{number} nodeId	- the id of the current node
@@ -307,25 +348,18 @@ export default{
 				return data_diagram.data.nodeName === pro.formval.projectName && data_diagram.data.parentId == -1;
 			}))!=='undefined')
 			{
-				this.newProject.loading = false;
-				this.$nextTick(() => {
-					this.newProject.loading = true;
-					this.$Message.warning('Duplicated name!');
-				});
+				this.openmodal('#errormodal');
+				this.errormessage = this.$t("filemanagement_addproject_error1");
 			}
 			// check the empty project name
 			else if(this.newProject.formval.projectName.length === 0){
-				this.newProject.loading = false;
-				this.$nextTick(() => {
-					this.newProject.loading = true;
-					this.$Message.warning('Empty is not allowed!');
-				});
+				this.openmodal('#errormodal');
+				this.errormessage = this.$t("filemanagement_addproject_error2");
 			}
 			// check the other opened project
 			else if(this.checkopenproject()){
-				this.newProject.loading = false;
-				this.newProject.isshow = false;
-				this.$Message.warning('Please close the opened project!');
+				this.openmodal('#errormodal');
+				this.errormessage = this.$t("filemanagement_addproject_error3");
 			}
 			/**
 			 * create the new project in the tree data
@@ -333,8 +367,7 @@ export default{
 			 */
 			else {
 				this.$store.dispatch('createproject', this.newProject.formval.projectName);
-				this.newProject.loading = false;
-				this.newProject.isshow = false;
+				$('#newProject').modal('hide');
 			}
 		},
 		/**
@@ -349,25 +382,20 @@ export default{
 			if(!data[this.newApplication.index].data.open){
 				this.$refs.cotalogue.expand_menu(this.newApplication.index);
 			}
+
 			let app = this.newApplication;
 			// check the duplicated application name
 			if(typeof (data.find(function(data_diagram){
 				return data_diagram.data.nodeName.split('- ')[2] === app.applicationName && data_diagram.data.parentId === app.parentId;
 			}))!=='undefined')
 			{
-				this.newApplication.loading = false;
-				this.$nextTick(() => {
-					this.newApplication.loading = true;
-					this.$Message.warning('Duplicated name!');
-				});
+          		this.openmodal('#errormodal');
+				this.errormessage = this.$t("filemanagement_newapplication_error1");
 			}
 			// check the empty application name
 			else if(this.newApplication.applicationName.length === 0){
-				this.newApplication.loading = false;
-				this.$nextTick(() => {
-					this.newApplication.loading = true;
-					this.$Message.warning('Empty is not allowed!');
-				});
+				this.openmodal('#errormodal');
+				this.errormessage = this.$t("filemanagement_newapplication_error2");
 			}
 			else {
 				/**
@@ -385,8 +413,7 @@ export default{
 				 * @fires module:store~actions:createapplication
 				 */
 				this.$store.dispatch('createapplication', this.newApplication);
-				this.newApplication.loading = false;
-				this.newApplication.isshow = false;
+				$('#newApplication').modal('hide');
 			}
 		},
 		/**
@@ -406,20 +433,14 @@ export default{
 				return data_diagram.data.nodeName.split('- ')[3] === adp.adapatationName && data_diagram.data.parentId == adp.parentId;
 			}))!=='undefined')
 			{
-				this.newAdaptation.loading = false;
-				this.$nextTick(() => {
-					this.newAdaptation.loading = true;
-					this.$Message.warning('Duplicated name!');
-				});
+				this.openmodal('#errormodal');
+				this.errormessage = this.$t("filemanagement_newadaptation_error1");
 			}
 			// check the empty adaptation folder
 			else if(this.newAdaptation.adapatationName.length === 0)
 			{
-				this.newAdaptation.loading = false;
-				this.$nextTick(() => {
-					this.newAdaptation.loading = true;
-					this.$Message.warning('Empty is not allowed!');
-				});
+				this.openmodal('#errormodal');
+				this.errormessage = this.$t("filemanagement_newadaptation_error2");
 			}
 			else {
 				/**
@@ -437,8 +458,7 @@ export default{
 				 * @fires module:store~actions:createadaptation
 				 */
 				this.$store.dispatch('createadaptation', this.newAdaptation);
-				this.newAdaptation.loading = false;
-				this.newAdaptation.isshow = false;
+				$('#newAdaptation').modal('hide');
 			}
 		},
 		// change name
@@ -448,8 +468,6 @@ export default{
 				return
 			// modal accepts empty input
 			else if(this.newName.formval.changedName.length === 0){
-				this.newName.isshow = false;
-				this.newName.loading = false;
 				this.newName.formval.changedName='';
 				this.newName.formval.id=null;
 				return;
@@ -461,16 +479,18 @@ export default{
 			else if(nn.formval.type === 'Adaptation ')
 				nn.formval.changedName = data[nn.index].data.nodeName.split('-')[0] + '-' + data[nn.index].data.nodeName.split('-')[1] + '-' + data[nn.index].data.nodeName.split('-')[2] + '- ' + nn.formval.changedName;
 			// check the duplicated name
+			if(nn.formval.changedName === data[nn.index].data.nodeName)
+			{
+				$('#newName').modal('hide');
+				return;
+			}
 			if(typeof (data.find(function(data_diagram){
 				return data_diagram.data.nodeName === nn.formval.changedName && data_diagram.data.projectId == nn.formval.projectId
-				&& data_diagram.data.nodeType === 3;
+				&& data_diagram.data.level === data[nn.index].data.level;
 			}))!=='undefined')
 			{
-				this.newName.loading = false;
-				this.$nextTick(() => {
-					this.newName.loading = true;
-					this.$Message.warning('Duplicated name!');
-				});
+				this.openmodal('#errormodal');
+				this.errormessage = this.$t("filemanagement_changename_error");
 			}
 			else{
 				// check localstorage, if exists, replace it
@@ -496,8 +516,7 @@ export default{
 				 * @fires module:store~actions:changename
 				 */
 				this.$store.dispatch('changename', this.newName);
-				this.newName.isshow = false;
-				this.newName.loading = false;
+				$('#newName').modal('hide');
 				// change the router path to the new one
 				let projectname = '';
 				for(let i = 0; i < data.length; i++)
@@ -561,16 +580,20 @@ export default{
   display: inline-block;
   width: 100%;
   border-bottom: 1px solid #ccc;
+  margin-top: 15px;
 }
+
 .button-unique{
     float: left;
 }
+
 .btn-model-area{
     border-bottom: 0px !important;
     border-top: 0px !important;
     border-left: 0px !important;
     border-right: 0px !important;
 }
+
 .vertical-center-modal {
 		display: flex;
 		align-items: center;

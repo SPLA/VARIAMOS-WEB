@@ -31,6 +31,7 @@
 import model from './Models.vue'
 import Bus from '../assets/js/common/bus.js'
 import { getModelInfo } from '../assets/js/common/global_info'
+
 export default{
     components:{
         model
@@ -142,9 +143,11 @@ export default{
   margin: 0;
   padding: 0;
 }
+
 .p20{
     padding-bottom: 20px;
 }
+
 .container {  
     /* min-width: 1100px; */
     margin: 10px auto;
@@ -152,16 +155,19 @@ export default{
     font-size: 0.9em;
     /* color: #888; */
 }
+
 /* Style the tabs */
 .tabs {
     overflow: hidden;
     margin-left: 20px;
     margin-bottom: -2px; 
 }
+
 .tabs ul {
     list-style-type: none;
     margin-left: 20px;
 }
+
 .tabs a{
     float: left;
     cursor: pointer;
@@ -177,11 +183,13 @@ export default{
 .tabs a:last-child { 
     border-right: 1px solid #ccc;
 }
+
 /* Change background color of tabs on hover */
 .tabs a:hover {
     background-color: #aaa;
     color: #fff;
 }
+
 /* Styling for active tab */
 .tabs a.active {
     background-color: #fff;
@@ -189,6 +197,7 @@ export default{
     border-bottom: 2px solid #fff;
     cursor: default;
 }
+
 /* Style the tab content */
 .tabcontent {
     padding: 10px;
@@ -197,4 +206,6 @@ export default{
   box-shadow: 3px 3px 6px #e1e1e1;
   visibility: visible;
 }
+
+
 </style>

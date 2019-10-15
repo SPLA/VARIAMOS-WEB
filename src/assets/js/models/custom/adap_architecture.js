@@ -1,10 +1,11 @@
-var adap_architecture_main = function adap_architecture_main(graph)
+let adap_architecture_main = function adap_architecture_main(graph)
 {
 	let counter = 0;
 	let oldwith = 100;
 	let oldheigh = 40;
+
 	adap_architecture_constraints(graph);
-	var data=[];
+	let data=[];
 	data['m_type']="normal" //custom type
 	data["m_elements"]=adap_architecture_elements(); //custom elements
 	data["m_attributes"]=adap_architecture_attributes(); //custom attributes
@@ -60,19 +61,19 @@ var adap_architecture_main = function adap_architecture_main(graph)
 
 	function adap_architecture_elements(){
 		
-		var paths = projectPath+"images/models/adap_architecture/";
-		var layer = {src:paths+"layer.png", wd:100, hg:40, style:"", type:"layer", pname:"layer"};
-		var module = {src:paths+"modul.png", wd:100, hg:40, style:"", type:"module", pname:"module"};
-		var packag = {src:paths+"packag.png", wd:100, hg:40, style:"", type:"package", pname:"package"};
-		var device = {src:paths+"device.png", wd:100, hg:40, style:"", type:"device", pname:"device"};
-		var software = {src:paths+"software.png", wd:100, hg:40, style:"", type:"software", pname:"software"};
-		var sensor = {src:paths+"sensor.png", wd:100, hg:40, style:"", type:"sensor", pname:"sensor"};
-		var actuator = {src:paths+"actuator.png", wd:100, hg:40, style:"", type:"actuator", pname:"actuator"};
-		var network = {src:paths+"network.png", wd:100, hg:40, style:"", type:"network", pname:"network"};
-		var computer = {src:paths+"computer.png", wd:100, hg:40, style:"", type:"computer", pname:"computer"};
-		var resource = {src:paths+"resource.png", wd:100, hg:40, style:"", type:"resource", pname:"resource"};
+		let paths = projectPath+"images/models/adap_architecture/";
+		let layer = {src:paths+"layer.png", wd:100, hg:40, style:"", type:"layer", pname:"layer"};
+		let module = {src:paths+"modul.png", wd:100, hg:40, style:"", type:"module", pname:"module"};
+		let packag = {src:paths+"packag.png", wd:100, hg:40, style:"", type:"package", pname:"package"};
+		let device = {src:paths+"device.png", wd:100, hg:40, style:"", type:"device", pname:"device"};
+		let software = {src:paths+"software.png", wd:100, hg:40, style:"", type:"software", pname:"software"};
+		let sensor = {src:paths+"sensor.png", wd:100, hg:40, style:"", type:"sensor", pname:"sensor"};
+		let actuator = {src:paths+"actuator.png", wd:100, hg:40, style:"", type:"actuator", pname:"actuator"};
+		let network = {src:paths+"network.png", wd:100, hg:40, style:"", type:"network", pname:"network"};
+		let computer = {src:paths+"computer.png", wd:100, hg:40, style:"", type:"computer", pname:"computer"};
+		let resource = {src:paths+"resource.png", wd:100, hg:40, style:"", type:"resource", pname:"resource"};
 		
-		var elements=[];
+		let elements=[];
 
 		elements[0]=layer;
 		elements[1]=module;
@@ -90,7 +91,7 @@ var adap_architecture_main = function adap_architecture_main(graph)
 	}
 
 	function adap_architecture_attributes(){
-		var attributes=[];
+		let attributes=[];
 		attributes[0]={
 			"types":["device"],
 			"custom_attributes":[
@@ -172,7 +173,7 @@ var adap_architecture_main = function adap_architecture_main(graph)
 	}
 
 	function adap_architecture_relations(){
-		var relations=[];
+		let relations=[];
 		relations[0]={
 			"source":["layer"],
 			"rel_source_target":"and",
@@ -358,7 +359,7 @@ var adap_architecture_main = function adap_architecture_main(graph)
 	}
 
 	function adap_architecture_properties_styles(){
-		var styles={};
+		let styles={};
 		styles={
 			"layer":[
 				{
@@ -551,10 +552,10 @@ var adap_architecture_main = function adap_architecture_main(graph)
 
 
 	function adap_architecture_custom_methods(pos){
-		var methods=[]
+		let methods=[]
 		methods[0]=function(){
-			var select = document.getElementById('select-moduleType');
-			var overlay_rigth = null;
+			let select = document.getElementById('select-moduleType');
+			let overlay_rigth = null;
 			switch (select.value) {
 				case "Parallel":
 					graph.removeCellOverlay(graph.getModel().getCell(this.name));
@@ -579,7 +580,7 @@ var adap_architecture_main = function adap_architecture_main(graph)
 				overlay_rigth.offset = new mxPoint(-10,10);
 
 				//borde acomodable
-				var overlay_frame = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/module-frame.png', 16, 16), 'Overlay tooltip');
+				let overlay_frame = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/module-frame.png', 16, 16), 'Overlay tooltip');
 
 				//Coloco la borde a la izquierda
 				overlay_frame.align = mxConstants.ALIGN_LEFT;
@@ -599,8 +600,8 @@ var adap_architecture_main = function adap_architecture_main(graph)
 			  
 		};
 		methods[1]=function(){
-			var select = document.getElementById('select-deviceType');
-			var overlay_rigth = null;
+			let select = document.getElementById('select-deviceType');
+			let overlay_rigth = null;
 			switch (select.value) {
 				case "Cloud Computer":
 					graph.removeCellOverlay(graph.getModel().getCell(this.name));
@@ -634,7 +635,7 @@ var adap_architecture_main = function adap_architecture_main(graph)
 				overlay_rigth.offset = new mxPoint(-10,10);
 
 				//borde acomodable
-				var overlay_frame = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/DEVICES.png', 16, 16), 'Overlay tooltip');
+				let overlay_frame = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/DEVICES.png', 16, 16), 'Overlay tooltip');
 
 				//Coloco la borde a la izquierda
 				overlay_frame.align = mxConstants.ALIGN_LEFT;
@@ -656,10 +657,10 @@ var adap_architecture_main = function adap_architecture_main(graph)
 		
 
 		methods[2]=function(){
-			var select = document.getElementById('select-softwareType');
+			let select = document.getElementById('select-softwareType');
 			console.log(select.value)
-			var selectOption= select.value;
-			var overlay_rigth =  null;
+			let selectOption= select.value;
+			let overlay_rigth =  null;
 			switch (selectOption) {
 				case "OPSystem":
 					graph.removeCellOverlay(graph.getModel().getCell(this.name));
@@ -707,7 +708,7 @@ var adap_architecture_main = function adap_architecture_main(graph)
 				overlay_rigth.verticalAlign = mxConstants.ALIGN_TOP;	
 				overlay_rigth.offset = new mxPoint(-10,10);
 
-				var overlay_left = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/software.png', 16, 16), 'Overlay tooltip');
+				let overlay_left = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/software.png', 16, 16), 'Overlay tooltip');
 				overlay_left.align = mxConstants.ALIGN_LEFT;
 				overlay_left.verticalAlign = mxConstants.ALIGN_TOP;	
 				overlay_left.offset = new mxPoint(10,10);
@@ -721,8 +722,8 @@ var adap_architecture_main = function adap_architecture_main(graph)
 			
 		};
 		methods[3]=function(){
-			var select = document.getElementById('select-sensorType');
-			var overlay_rigth = null;
+			let select = document.getElementById('select-sensorType');
+			let overlay_rigth = null;
 			switch (select.value) {
 				case "Digital":
 					graph.removeCellOverlay(graph.getModel().getCell(this.name));
@@ -744,7 +745,7 @@ var adap_architecture_main = function adap_architecture_main(graph)
 				overlay_rigth.offset = new mxPoint(-10,10);
 
 				//borde acomodable
-				var overlay_frame = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/Sensor.png', 16, 16), 'Overlay tooltip');
+				let overlay_frame = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/Sensor.png', 16, 16), 'Overlay tooltip');
 
 				//Coloco la borde a la izquierda
 				overlay_frame.align = mxConstants.ALIGN_LEFT;
@@ -761,8 +762,8 @@ var adap_architecture_main = function adap_architecture_main(graph)
 				graph.addCellOverlay(graph.getModel().getCell(this.name), overlay_frame);	  
 		};
 		methods[4]=function(){
-			var select = document.getElementById('select-resourceType');
-			var overlay_rigth = null;
+			let select = document.getElementById('select-resourceType');
+			let overlay_rigth = null;
 			switch (select.value) {
 				case "Cyber":
 					graph.removeCellOverlay(graph.getModel().getCell(this.name));
@@ -784,7 +785,7 @@ var adap_architecture_main = function adap_architecture_main(graph)
 				overlay_rigth.offset = new mxPoint(-10,10);
 
 				//borde acomodable
-				var overlay_frame = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/resource.png', 16, 16), 'Overlay tooltip');
+				let overlay_frame = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/resource.png', 16, 16), 'Overlay tooltip');
 
 				//Coloco la borde a la izquierda
 				overlay_frame.align = mxConstants.ALIGN_LEFT;
@@ -803,8 +804,8 @@ var adap_architecture_main = function adap_architecture_main(graph)
 		};
 
 		methods[5]=function(){
-			var select = document.getElementById('select-redType');
-			var overlay_rigth = null;
+			let select = document.getElementById('select-redType');
+			let overlay_rigth = null;
 			switch (select.value) {
 				case "Internet":
 					graph.removeCellOverlay(graph.getModel().getCell(this.name));
@@ -834,7 +835,7 @@ var adap_architecture_main = function adap_architecture_main(graph)
 				overlay_rigth.offset = new mxPoint(-10,10);
 
 				//borde acomodable
-				var overlay_frame = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/network.png', 16, 16), 'Overlay tooltip');
+				let overlay_frame = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/network.png', 16, 16), 'Overlay tooltip');
 
 				//Coloco la borde a la izquierda
 				overlay_frame.align = mxConstants.ALIGN_LEFT;
@@ -853,8 +854,8 @@ var adap_architecture_main = function adap_architecture_main(graph)
 		};
 
 		methods[6]=function(){
-			var select = document.getElementById('select-computerType');
-			var overlay_rigth = null;
+			let select = document.getElementById('select-computerType');
+			let overlay_rigth = null;
 			switch (select.value) {
 				case "Cloud Computer":
 					graph.removeCellOverlay(graph.getModel().getCell(this.name));
@@ -888,7 +889,7 @@ var adap_architecture_main = function adap_architecture_main(graph)
 				overlay_rigth.offset = new mxPoint(-10,10);
 
 				//borde acomodable
-				var overlay_frame = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/computer.png', 16, 16), 'Overlay tooltip');
+				let overlay_frame = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/computer.png', 16, 16), 'Overlay tooltip');
 
 				//Coloco la borde a la izquierda
 				overlay_frame.align = mxConstants.ALIGN_LEFT;
@@ -909,7 +910,7 @@ var adap_architecture_main = function adap_architecture_main(graph)
 	}
 
 	function adap_architecture_relations_styles(){
-		var relations = [];
+		let relations = [];
 		relations[0]={
 			"source":["layer"],
 			"rel_source_target":"and",
@@ -979,7 +980,7 @@ var adap_architecture_main = function adap_architecture_main(graph)
 		//this.name points to the id of the cell that contains the element.  
 		const currentCell = graph.getModel().getCell(this.name);
 
-		var used = true;
+		let used = true;
 
 		//console.log(currentCell);
 		const parent = currentCell.getParent();

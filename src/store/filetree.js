@@ -6,7 +6,6 @@ import {insertmodel} from '../assets/js/common/global_info'
  * @property	{string} activetab				- the current active tab or diagram
  * @property	{string} model_component		- the name of the opened folder in the data array
  * @property	{number} model_component_index	- the index of the opened folder in the data array
- * @property	{string} xml					- the xml file from the current model
  * @property	{array}  cache_selected			- the cache of selected elements from the feature and component models
  */
 const state = {
@@ -14,7 +13,6 @@ const state = {
     activetab: '',
     model_component: '',
     model_component_index: -1,
-	xml: '',
 	cache_selected: []
 }
 
@@ -38,9 +36,6 @@ export const getters = {
             temp = state.data[i].data.nodeId > temp ? state.data[i].data.nodeId : temp;
         return temp + 1;
     },
-    getxml: state => {
-        return state.xml;
-	},
 	getcacheselected: state => {
 		return state.cache_selected;
 	}
@@ -58,6 +53,9 @@ export const actions = {
     },
     createadaptation ({commit, getters}, adp) {
         commit('createnewadaptation', {adp, getters});
+	},
+	updatefolder ({commit}, index) {
+        commit('updatefolder', index);
     },
     deletefolder ({commit}, index) {
         commit('deletetree', index);
@@ -83,9 +81,6 @@ export const actions = {
     setselect({commit}, index) {
         commit('setitemselect', index);
     },
-    updatexml({commit}, xml) {
-        commit('updatexml', xml);
-	},
 	updatecacheselected({commit}, cache) {
 		commit('updatecacheselected', cache);
 	},
@@ -98,9 +93,6 @@ export const actions = {
 }
 
 export const mutations = {
-    updatexml(state, xml) {
-        state.xml = xml;
-	},
 	updatecacheselected(state, cache) {
         state.cache_selected = cache;
 	},
@@ -248,7 +240,18 @@ export const mutations = {
 		});
 		state.data[adp.index].numberOfChildren++;
 		state.data = insertmodel(state.data, adp.index + 1, getters.getnewnodeid);
-    },
+	},
+	updatefolder (state, index){
+		for(let i = index + 1; i < state.data.length; i++)
+		{
+			if(state.data[i].data.level < state.data[index].data.level || state.data[i].data.level === state.data[index].data.level || state.data[i].data.nodeType !== 3)
+			{
+				state.data.splice(index + 1, i - index - 1);
+				break;
+			}	
+		}
+		state.data = insertmodel(state.data, index, getters.getnewnodeid);
+	},
     deletetree (state, index) {
         for(let i = index + 1; i < state.data.length; i++)
 		{
@@ -279,7 +282,6 @@ export const mutations = {
         state.activetab = '';
         state.model_component = '';
 		state.model_component_index = -1;
-		state.xml = '';
 		state.cache_selected = [];
     },
     setmodelcomponent(state, index) {

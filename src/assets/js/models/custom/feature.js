@@ -71,9 +71,9 @@ let feature_main = function feature_main(graph)
 	function feature_relations(){
 		let relations=[];
 		relations[0]={
-			"source":["abstract","concrete"],
+			"source":["abstract","concrete","relations"],
 			"rel_source_target":"and",
-			"target":["abstract","concrete","root"],
+			"target":["abstract","concrete","root","relations"],
 			"attributes":[{
 				"name":"relType",
 				"def_value":"mandatory"
@@ -132,7 +132,7 @@ let feature_main = function feature_main(graph)
 	}
 
 	function feature_custom_methods(pos){
-		let methods=[]
+		let methods=[];
 		methods[0]=function(){
 			document.getElementById("tr-lowRange").style.display="none";
 			document.getElementById("tr-highRange").style.display="none";

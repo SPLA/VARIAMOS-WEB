@@ -5,8 +5,8 @@
           <div id="main-button-col" class="main-button"> <button class="navbar-toggler" type="button">
             <span @click="custom_collapse()" class="navbar-toggler-icon"></span>
           </button></div></div>
-          <input class="form-control form-control-dark w-100 height-100" name="keyword" type="text" v-bind:placeholder="$t('app_search')" v-bind:aria-label="$t('app_search')">
-          <ul class="navbar-nav px-3">
+          <input id="search-bar" class="form-control form-control-dark w-100 height-100" name="keyword" type="text" v-bind:placeholder="$t('app_search')" v-bind:aria-label="$t('app_search')">
+          <ul id="sign-out" class="navbar-nav px-3">
             <li class="nav-item text-nowrap">
               <a class="nav-link">{{ $t("app_sign_out") }}</a>
             </li>
@@ -17,7 +17,6 @@
               <Menu id="sidebar" class="col-md-2 bg-light sidebar">
                 <div class="sidebar-sticky">
                       <Filetree></Filetree>
-                      <Divider />
                   <ul class="nav flex-column" style="display:none;">
                     <li class="nav-item">
                       <router-link class="nav-link" to="/">
@@ -112,6 +111,7 @@
 
 <script>
 import Filetree from './views/Filemanagetree.vue'
+
 export default {
   components:{
     Filetree
@@ -161,38 +161,48 @@ export default {
       max-width: 83%;
   }*/
 }
+
 .link-white, .link-white:hover{
     color: #fff;
 }
+
 .navbar-toggler {
     padding: 0px !important;
     font-size: 1 !important;
 }
+
 .center-button{
   text-align: center;
   float: none !important;
 }
+
 .main-text{
   display: inline;
   line-height: 32px;
 }
+
 .main-button{
   line-height: 32px;
   float: right;
 }
+
 .navbar-brand {
     padding-top: .5rem !important;
     padding-bottom: .5rem !important;
 }
+
 .height-100 {
     height: 100% !important;
 }
+
 .dropdown-item.active, .dropdown-item:active {
    background-color: gainsboro !important;
 }
+
 .submenu{
   padding-left: 25px !important;
 }
+
 #mainview {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -201,6 +211,7 @@ export default {
   color: #2c3e50;
   margin-top: 7px;
 }
+
 .modal {
   position: fixed;
   top: 0;
@@ -234,4 +245,5 @@ export default {
   -webkit-transform: scale(1.1);
   transform: scale(1.1);
 }
+
 </style>

@@ -17,6 +17,7 @@
 <script>
 import axios from "axios";
 import { setupModal, modalH3, modalSimpleText, modalButton } from '../../assets/js/common/util'
+
 export default {
   data: function(){
     return {
@@ -82,7 +83,6 @@ export default {
           let c_header = modalH3("Test response");
           let c_body = modalSimpleText(response.data);
           setupModal(c_header,c_body);
-          mxUtils.popup(response.data, true);
         })
         .catch(e => {
           this.errors.push(e); 

@@ -1,5 +1,16 @@
 <shapes>
 <!-- begin component model -->
+<shape name="package" aspect="variable">
+	<background>
+		<rect x="0" y="20" w="100" h="80"/>
+		<fillstroke/>
+		<rect x="0" y="0" w="45" h="20"/>
+		<fillstroke/>
+   </background>
+	<foreground>
+		<fillstroke/>
+	</foreground>
+</shape>
 
 <shape name="component" aspect="variable">
 	<background>
@@ -29,7 +40,6 @@
 	</foreground>
 </shape>
 
-
 <shape name="file" aspect="variable">
 	<background>
 		<path>
@@ -51,6 +61,53 @@
 	</foreground>
 </shape>
 
+<shape name="fragment" aspect="variable">
+	<background>
+		<path>
+			<move x="0" y="0"/>
+			<line x="70" y="0"/>
+			<quad x1="70" y1="0" x2="100" y2="30"/>
+			<line x="100" y="60"/>
+			<quad x1="100" y1="60" x2="80" y2="70"/>
+			<quad x1="80" y1="70" x2="100" y2="80"/>
+			<line x="100" y="100"/>
+			<line x="0" y="100"/>
+			<line x="0" y="50"/>
+			<quad x1="0" y1="50" x2="20" y2="40"/>
+			<quad x1="20" y1="40" x2="0" y2="30"/>
+			<line x="0" y="0"/>
+			<close/>
+			<move x="70" y="0"/>
+			<line x="70" y="30"/>
+			<line x="100" y="30"/>
+			<close/>
+		</path>		
+	</background>
+	<foreground>
+		<fillstroke/>
+	</foreground>
+</shape>
+
+<shape name="custom" aspect="variable" strokewidth="4">
+	<background>
+		<path>
+			<move x="0" y="0"/>
+			<line x="70" y="0"/>
+			<quad x1="70" y1="0" x2="100" y2="30"/>
+			<line x="100" y="100"/>
+			<line x="0" y="100"/>
+			<line x="0" y="0"/>
+			<close/>
+			<move x="70" y="0"/>
+			<line x="70" y="30"/>
+			<line x="100" y="30"/>
+			<close/>
+		</path>		
+	</background>
+	<foreground>
+		<fillstroke/>
+	</foreground>
+</shape>
 
 <!-- end component model -->
 
@@ -359,6 +416,24 @@
 		<fillstroke/>
 	</foreground>
 </shape>
+
+<shape name="controlAction" aspect="variable">
+	<background>
+		<path>
+			<move x="75" y="0"/> 
+			<line x="100" y="50"/>  
+			<line x="75" y="100"/> 
+			<line x="25" y="100"/> 
+			<line x="0" y="50"/> 
+			<line x="25" y="0"/>  
+			<line x="75" y="0"/> 
+			<close/>
+		</path>		
+	</background>
+	<foreground>
+		<fillstroke/>
+	</foreground>
+</shape>
  
 <shape name="writeAction" aspect="variable">
 	<background>
@@ -450,6 +525,25 @@
 	</foreground>
 </shape>
 
+<shape name="stringVariable" aspect="variable">
+	<background>
+		<path>
+			<move x="50" y="0"/>  
+			<line x="75" y="100"/> 
+			<line x="25" y="100"/> 
+			<line x="50" y="0"/> 
+			<close/>
+			<move x="45" y="70"/>   
+			<line x="55" y="70"/>  
+			<move x="50" y="70"/>   
+			<line x="50" y="90"/>  
+		</path>		
+	</background>
+	<foreground>
+		<fillstroke/>
+	</foreground>
+</shape>
+
 <shape name="timer" aspect="variable">
 	<background>
 		<path>
@@ -466,91 +560,114 @@
 	</foreground>
 </shape>
 
-<shape name="analogSensor" aspect="variable">
+<shape name="board" aspect="variable">
 	<background>
 		<path>
-			<move x="50" y="00"/>  
-			<arc rx="1" ry="3" x-axis-rotation="0" large-arc-flag="0" sweep-flag="0" x="50" y="100"/>
-			<arc rx="1" ry="3" x-axis-rotation="0" large-arc-flag="0" sweep-flag="0" x="50" y="0"/>
-			<close/> 
-			<move x="42" y="80"/>  
-			<line x="48" y="20"/>  
-			<move x="48" y="20"/>  
-			<line x="55" y="80"/> 
-			<move x="55" y="80"/>   
-			<line x="60" y="20"/>   
-		</path>		
+			<move x="25" y="00"/>
+			<line x="100" y="00"/>  
+			<line x="100" y="100"/> 
+			<line x="0" y="100"/> 
+			<line x="0" y="25"/> 
+			<line x="25" y="0"/> 
+			<close/>  
+		</path>	
 	</background>
 	<foreground>
 		<fillstroke/>
+	</foreground>
+</shape>
+
+<shape name="analogSensor" aspect="variable"> 
+	<background>
+		<path>
+			<move x="0" y="00"/>
+			<line x="100" y="00"/>  
+			<line x="100" y="100"/> 
+			<line x="0" y="100"/> 
+			<line x="0" y="00"/> 
+			<close/>  
+			<fillstroke/>
+		</path>		
+	</background>
+	<foreground> 
+		<image src="http://localhost:8080/variamosweb/images/models/adaptation_hardware/sensor.png" x="1" y="3" w="15" h="35" />
+		<image src="http://localhost:8080/variamosweb/images/models/adaptation_hardware/analog.png" x="84" y="3" w="15" h="35" />	
 	</foreground>
 </shape>
 
 <shape name="digitalSensor" aspect="variable">
 	<background>
 		<path>
-			<move x="50" y="00"/>  
-			<arc rx="1" ry="3" x-axis-rotation="0" large-arc-flag="0" sweep-flag="0" x="50" y="100"/>
-			<arc rx="1" ry="3" x-axis-rotation="0" large-arc-flag="0" sweep-flag="0" x="50" y="0"/>
-			<close/> 
-			<move x="42" y="80"/>  
-			<line x="47" y="80"/>
-			<move x="47" y="80"/>  
-			<line x="47" y="20"/>  
-			<move x="47" y="20"/>  
-			<line x="52" y="20"/> 
-			<move x="52" y="20"/>  
-			<line x="52" y="80"/> 
-			<move x="52" y="80"/>  
-			<line x="57" y="80"/> 
+			<move x="0" y="00"/>
+			<line x="100" y="00"/>  
+			<line x="100" y="100"/> 
+			<line x="0" y="100"/> 
+			<line x="0" y="00"/> 
+			<close/>  
+			<fillstroke/>
 		</path>		
 	</background>
-	<foreground>
-		<fillstroke/>
+	<foreground> 
+		<image src="http://localhost:8080/variamosweb/images/models/adaptation_hardware/sensor.png" x="1" y="3" w="15" h="35" />
+		<image src="http://localhost:8080/variamosweb/images/models/adaptation_hardware/digital.png" x="84" y="3" w="15" h="35" />	
 	</foreground>
 </shape>
 
 <shape name="digitalActuator" aspect="variable">
 	<background>
 		<path>
-			<move x="25" y="00"/>
-			<line x="75" y="00"/>  
-			<line x="75" y="100"/> 
-			<line x="25" y="100"/> 
-			<line x="25" y="00"/> 
-			<close/> 
-			<move x="42" y="80"/>  
-			<line x="47" y="80"/>
-			<move x="47" y="80"/>  
-			<line x="47" y="20"/>  
-			<move x="47" y="20"/>  
-			<line x="52" y="20"/> 
-			<move x="52" y="20"/>  
-			<line x="52" y="80"/> 
-			<move x="52" y="80"/>  
-			<line x="57" y="80"/> 
+			<move x="0" y="00"/>
+			<line x="100" y="00"/>  
+			<line x="100" y="100"/> 
+			<line x="0" y="100"/> 
+			<line x="0" y="00"/> 
+			<close/>  
+			<fillstroke/>
 		</path>		
 	</background>
-	<foreground>
-		<fillstroke/>
+	<foreground> 
+		<image src="http://localhost:8080/variamosweb/images/models/adaptation_hardware/actuator.png" x="1" y="3" w="15" h="35" />
+		<image src="http://localhost:8080/variamosweb/images/models/adaptation_hardware/digital.png" x="84" y="3" w="15" h="35" />	
 	</foreground>
 </shape>
 
-<shape name="analogActuator" aspect="variable">
+<shape name="analogActuator" aspect="variable"> 
 	<background>
 		<path>
-			<move x="25" y="00"/>
-			<line x="75" y="00"/>  
-			<line x="75" y="100"/> 
-			<line x="25" y="100"/> 
-			<line x="25" y="00"/> 
-			<close/> 
-			<move x="42" y="80"/>  
-			<line x="48" y="20"/>  
-			<move x="48" y="20"/>  
-			<line x="55" y="80"/> 
-			<move x="55" y="80"/>   
-			<line x="60" y="20"/>    
+			<move x="0" y="00"/>
+			<line x="100" y="00"/>  
+			<line x="100" y="100"/> 
+			<line x="0" y="100"/> 
+			<line x="0" y="00"/> 
+			<close/>  
+			<fillstroke/>
+		</path>		
+	</background>
+	<foreground> 
+		<image src="http://localhost:8080/variamosweb/images/models/adaptation_hardware/actuator.png" x="1" y="3" w="15" h="35" />
+		<image src="http://localhost:8080/variamosweb/images/models/adaptation_hardware/analog.png" x="84" y="3" w="15" h="35" />	
+	</foreground>
+</shape>
+<!-- end adaptation states model -->
+
+<!-- begin control states model -->
+
+<shape name="setpoint" aspect="variable">
+	<background>
+		<path>
+			<move x="0" y="0"/>
+			<line x="100" y="0"/>
+			<line x="100" y="100"/>
+			<line x="0" y="100"/>
+		
+			<close/>
+			<move x="100" y="10"/>  
+			<line x="85" y="10"/>
+			<move x="85" y="10"/>
+			<line x="85" y="25"/> 
+			<line x="70" y="25"/>   
+		
+	
 		</path>		
 	</background>
 	<foreground>
@@ -558,7 +675,91 @@
 	</foreground>
 </shape>
 
-<!-- end adaptation states model -->
+<shape name="measured_output" aspect="variable">
+	<background>
+		<path>
+			<move x="0" y="0"/>
+			<line x="100" y="0"/>
+			<line x="100" y="100"/>
+			<line x="0" y="100"/>
+		
+			<close/>
+			<move x="85" y="10"/>  
+			<line x="15" y="10"/>
+			<move x="15" y="10"/>
+			<line x="15" y="25"/>
+			<move x="15" y="25"/>
+			<line x="85" y="25"/>
+			<move x="85" y="25"/>
+			<line x="85" y="10"/>
+	
+		</path>		
+	</background>
+	<foreground>
+		<fillstroke/>
+	</foreground>
+</shape>
+
+<shape name="transducer" aspect="variable">
+	<background>
+		<path>
+			<move x="0" y="0"/>
+			<line x="100" y="0"/>
+			<line x="100" y="100"/>
+			<line x="0" y="100"/>
+		
+			<close/>
+			<move x="75" y="30"/>  
+			<line x="80" y="10"/>
+			<move x="80" y="10"/>
+			<line x="85" y="30"/>
+			<move x="85" y="30"/>
+			<line x="90" y="10"/>
+			<move x="90" y="10"/>
+			<close/>
+
+			
+		
+	
+		</path>		
+	</background>
+	<foreground>
+		<fillstroke/>
+	</foreground>
+</shape>
+
+
+<shape name="filter" aspect="variable">
+	<background>
+		<path>
+			<move x="0" y="0"/>
+			<line x="100" y="0"/>
+			<line x="100" y="100"/>
+			<line x="0" y="100"/>
+		
+			<close/>
+			<move x="80" y="10"/>  
+			<line x="96" y="10"/>
+			<move x="96" y="10"/>
+			<line x="90" y="25"/>
+			<move x="90" y="25"/>
+			<line x="90" y="38"/>
+			<line x="86" y="43"/>
+			<line x="86" y="25"/>
+			<line x="80" y="10"/>
+
+			
+		
+		
+		
+	
+		</path>		
+	</background>
+	<foreground>
+		<fillstroke/>
+	</foreground>
+</shape>
+
 
 <shape name="link" aspect="fixed" strokewidth="inherit">
 	<background>
@@ -624,8 +825,5 @@
 		<image src="../../images/models/adap_architecture/icons/Wired Comunication.png" x="-25" y="-25" w="150" h="150" />
 	</foreground>
 </shape>
-
-
-
-<!-- end component model -->
+<!-- end control model -->
 </shapes>
