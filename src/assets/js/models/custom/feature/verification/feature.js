@@ -16,7 +16,11 @@ let feature_verification = function feature_verification()
   data[2]={
       "label":"Check dead feature",
       "func":Check_dead
-  }
+  };
+  data[3]={
+    "label":"Check false optional",
+    "func":Check_optional
+  };
 
   return data;
 
@@ -177,6 +181,84 @@ let feature_verification = function feature_verification()
           }
           var c_header = modalH3("Verification result");
           var c_body = modalSimpleText("There are dead features.");
+          setupModal(c_header,c_body);
+
+          let feature_root = graph.getModel().getCell("feature");    
+          let childs = graph.getModel().getChildVertices(feature_root);
+          for (let i = 0; i < childs.length; i++) {
+            console.log(childs[i].getAttribute("label"));
+            if(response_data.includes(childs[i].getAttribute("label")))
+            {
+              let overlay = new mxCellOverlay(new mxImage('images/MX/error.gif', 16, 16), 'Overlay tooltip', 'right', 'top');
+              graph.addCellOverlay(childs[i], overlay);
+              c_errors.push(childs[i]);
+              c_overlays.push(overlay);
+            }
+          }
+        }
+      })
+      .catch(e => {
+        errors.push(e); 
+        let c_header = modalH3(I18n.t("modal_error"),"error");
+        let c_body = modalSimpleText(e + I18n.t("model_actions_backend_problem"));
+        setupModal(c_header,c_body);
+      });
+    }else{
+      let c_header = modalH3(I18n.t("modal_error"),"error");
+      let c_body = modalSimpleText(I18n.t("verification_path_problem"));
+      setupModal(c_header,c_body);
+    }
+  }
+
+  function Check_optional(graph, c_errors, c_overlays, model_component, activetab){
+    if(check_input_minizinc(graph,c_errors,c_overlays, model_component, activetab))
+      return;
+    if (localStorage["domain_implementation_main_path"]) {
+      let errors=[];
+
+      var encoder = new mxCodec();
+      var result = encoder.encode(graph.getModel());
+      var xml = mxUtils.getPrettyXml(result);
+      var model_root = graph.getModel().getCell(activetab);
+      var childs = graph.getModel().getChildVertices(model_root);
+      var selection_parameter = {};
+      var optionals= {};
+      for(let i = 0; i < childs.length; i++)
+      {
+        if(childs[i].getAttribute("type") !== "bundle")
+        {
+          selection_parameter[childs[i].getAttribute("label")] = false;
+        }
+      }
+      for(let i = 0; i < model_root.children.length; i++)
+      {
+        if(model_root.children[i].getAttribute("type") === "relation" && model_root.children[i].getAttribute("relType") === "optional")
+        {
+          optionals[model_root.children[i].source.getAttribute("label")] = false;
+        }
+      }
+
+      axios.post(localStorage["domain_implementation_main_path"]+'Verification/check_optional', {
+        data: xml, name: model_component, param: selection_parameter, optional: optionals
+      })
+      .then(response => {
+        if(response.data.length === 0)
+        {
+          var c_header = modalH3("Verification result");
+          var c_body = modalSimpleText("There is no false optional feature.");
+          setupModal(c_header,c_body);
+        }
+        else
+        {
+          let response_data = [];
+          let num = 0;
+          for (var key in response.data)
+          {
+            response_data[num] = response.data[key];
+            num++;
+          }
+          var c_header = modalH3("Verification result");
+          var c_body = modalSimpleText("There are false optional features.");
           setupModal(c_header,c_body);
 
           let feature_root = graph.getModel().getCell("feature");    
