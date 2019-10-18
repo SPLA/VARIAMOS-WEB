@@ -164,10 +164,10 @@ let feature_verification = function feature_verification()
         data: xml, name: model_component, param: selection_parameter
       })
       .then(response => {
-        if(response.data.length === 0)
+        if(Object.keys(response.data).length === 0)
         {
           var c_header = modalH3("Verification result");
-          var c_body = modalSimpleText("There is no dead features.");
+          var c_body = modalSimpleText("There is no dead feature.");
           setupModal(c_header,c_body);
         }
         else
@@ -242,7 +242,7 @@ let feature_verification = function feature_verification()
         data: xml, name: model_component, param: selection_parameter, optional: optionals
       })
       .then(response => {
-        if(response.data.length === 0)
+        if(Object.keys(response.data).length === 0)
         {
           var c_header = modalH3("Verification result");
           var c_body = modalSimpleText("There is no false optional feature.");
@@ -264,7 +264,6 @@ let feature_verification = function feature_verification()
           let feature_root = graph.getModel().getCell("feature");    
           let childs = graph.getModel().getChildVertices(feature_root);
           for (let i = 0; i < childs.length; i++) {
-            console.log(childs[i].getAttribute("label"));
             if(response_data.includes(childs[i].getAttribute("label")))
             {
               let overlay = new mxCellOverlay(new mxImage('images/MX/error.gif', 16, 16), 'Overlay tooltip', 'right', 'top');
