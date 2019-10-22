@@ -3,25 +3,39 @@
  * @property    {array} projFolders             - each folder should have how many models when the folder or project is generated
  */
 export function getModelInfo(){
-    var info =[];
+    let info =[];
     //list of graphical models
-    info["gmodels"]=["feature","component","binding_feature_component"];
+    info["gmodels"]=["feature","component","binding_feature_component","istar", "adap_architecture", "adaptation_state","adaptation_hardware","adaptation_binding_state_hardware","control"];
     //define feature model main info
-    info["feature"]={projFolders:["Domain","Application","Adaptation"]};
+    info["feature"]={projFolders:["Domain"]};
     //define component model main info
     info["component"]={projFolders:["Domain"]};
     //define binding model main info
     info["binding_feature_component"]={projFolders:["Domain"]};
+    //define adaptative context main info
+    info["adap_architecture"]={projFolders:["Domain"]};
+    //define istar model main info
+    info["istar"]={projFolders:["Domain"]};
+    //define adaptation_state model main info
+    info["adaptation_state"]={projFolders:["Application"]};
+    //define adaptation_hardware model main info
+    info["adaptation_hardware"]={projFolders:["Application"]};
+    //define adaptation_binding_state_hardware model main info
+    info["adaptation_binding_state_hardware"]={projFolders:["Application"]};
+    //define control model main info
+    info["control"]={projFolders:["Application"]};
     return info;
 }
 
 // insert models according to main model info
 export function insertmodel(data, index, temp) {
-    let modeltype = 3;
     for(let i = 0; i < getModelInfo()['gmodels'].length; i++)
 	{
 		if(getModelInfo()[getModelInfo()['gmodels'][getModelInfo()['gmodels'].length-i-1]].projFolders.includes(data[index].data.nodeName.split(' -')[0]))
 		{
+            /**
+             * @deprecated modeltype element tree is removed
+             */
 			data.splice(index + 1, 0 , {
 				children: [],
 				data: {
@@ -33,7 +47,7 @@ export function insertmodel(data, index, temp) {
 					nodeType: 3,
 					parentId: data[index].data.nodeId,
 					projectId: data[index].data.projectId,
-					modeltype: modeltype,
+					modeltype: i+1,
 	        		contextmenuIndex: 'empty'
 				},
 				numberOfChildren: 0
@@ -41,14 +55,13 @@ export function insertmodel(data, index, temp) {
             data[index].numberOfChildren++;
             temp++;
         }
-        modeltype--;
     }
     return data;
 }
 
 // define the list of right click functions, icons and names
 export function getcontextmenulist(){
-    var info =[];
+    let info =[];
     info['delete_project'] = {
         fnHandler: 'deleteproject',
         icoName: 'fa fa-times',

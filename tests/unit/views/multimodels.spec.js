@@ -6,10 +6,6 @@ import {
   getters
 } from "../../../src/store/filetree";
 import Vuex from 'vuex';
-//import VueRouter from 'vue-router'
-//import VueI18n from 'vue-i18n'
-//import i18n from '../../../src/i18n'
-//import flushPromises from 'flush-promises';
 import MultiModels from '../../../src/views/Multi-models'
 import model from '../../../src/views/Models'
 import {
@@ -59,12 +55,8 @@ describe('Multi-Models', () => {
    * @returns A wrapper for the component.
    */
   const wrapperFactory = (empty, projectName = '', folderName = '', typeName = '') => {
-    const actions = {
-
-    }
     const filetree = {
       state: stateFactory(empty),
-      actions,
       getters: localgetters
     }
     const store = new Vuex.Store({
@@ -73,6 +65,7 @@ describe('Multi-Models', () => {
       }
     })
     mockDispatch = sinon.stub(store, 'dispatch')
+    routPushStub = sinon.stub()
     /**
      * We use shallowMount to avoid mounting the underlying
      * component structure so as to not overload the required
@@ -81,7 +74,6 @@ describe('Multi-Models', () => {
     return shallowMount(MultiModels, {
       localVue,
       store,
-      //router,
       mocks: {
         $route: {
           params: {
@@ -94,39 +86,24 @@ describe('Multi-Models', () => {
           push: routPushStub
         },
       },
-      //i18n
     })
   }
 
-  beforeEach(function () {
+  before( () => {
     localgetters = {
       getactivetab: sinon.spy(getters, 'getactivetab'),
       getdata: sinon.spy(getters, 'getdata'),
       getmodelcomponent: sinon.spy(getters, 'getmodelcomponent'),
       getmodelcomponentindex: sinon.spy(getters, 'getmodelcomponentindex')
     }
-    routPushStub = sinon.stub();
-  })
-
-  afterEach(function () {
-    sinon.restore();
   })
 
   it('model is shown with complete state', async () => {
-    //const spy = sinon.spy(router, 'push')
-    //const spy2 = sinon.spy(MultiModels.methods, 'checktabs')
     const emptyState = false
     const wrapper = wrapperFactory(emptyState)
     const componentModel = wrapper.find(model)
     await wrapper.vm.$nextTick()
     expect(componentModel.exists()).to.be.ok
-    /*console.log(spy.callCount)
-    console.log(spy2.callCount)
-    console.log(wrapper.vm.$route.params)
-    console.log(routPushStub.called)
-    console.log(wrapper.vm.$store.state.filetree.model_component)
-    console.log(wrapper.vm.$store.state.filetree.model_component_index)
-    */
   })
 
   it('model is not shown with empty state', () => {

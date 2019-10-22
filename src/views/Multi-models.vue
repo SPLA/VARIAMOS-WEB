@@ -1,5 +1,5 @@
 <template>
-    <div id="tabs" class="container">
+    <div id="tabs" class="p20">
         <div class="tabs">
 			<div v-for="(item, $index) in getModels()" :key="item" >
 				<a id="atabs" v-if="checktabs(item,$index)" @click="clickactivetab($index)" v-bind:class="[ getactivetab === item ? 'active' : '' ]">
@@ -120,6 +120,18 @@ export default{
                 localStorage.clear();
             },100);
         });
+        //update activetab
+        if(this.$route["params"]["type"] != "default"){
+            this.$store.dispatch('updateactivetab', this.$route["params"]["type"]);
+        }
+    },
+    watch:{
+        $route (to, from){
+            //update activetab
+            if(to["params"]["type"] != "default"){
+                this.$store.dispatch('updateactivetab', to["params"]["type"]);
+            }
+        }
     }
 }
 </script>
@@ -130,6 +142,10 @@ export default{
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+}
+
+.p20{
+    padding-bottom: 20px;
 }
 
 .container {  
@@ -162,6 +178,7 @@ export default{
     background-color: #f1f1f1;
     border-radius: 10px 10px 0 0;
     font-weight: bold;
+    font-size: 12px;
 }
 .tabs a:last-child { 
     border-right: 1px solid #ccc;

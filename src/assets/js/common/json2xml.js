@@ -6,16 +6,16 @@
 	Web:     http://goessner.net/ 
 */
 function json2xml(o, tab) {
-   var toXml = function(v, name, ind) {
-      var xml = "";
+   let toXml = function(v, name, ind) {
+      let xml = "";
       if (v instanceof Array) {
-         for (var i=0, n=v.length; i<n; i++)
+         for (let i=0, n=v.length; i<n; i++)
             xml += ind + toXml(v[i], name, ind+"\t") + "\n";
       }
       else if (typeof(v) == "object") {
-         var hasChild = false;
+         let hasChild = false;
          xml += ind + "<" + name;
-         for (var m in v) {
+         for (let m in v) {
             if (m.charAt(0) == "@")
                xml += " " + m.substr(1) + "=\"" + v[m].toString() + "\"";
             else
@@ -23,7 +23,7 @@ function json2xml(o, tab) {
          }
          xml += hasChild ? ">" : "/>";
          if (hasChild) {
-            for (var m in v) {
+            for (let m in v) {
                if (m == "#text")
                   xml += v[m];
                else if (m == "#cdata")
@@ -39,7 +39,7 @@ function json2xml(o, tab) {
       }
       return xml;
    }, xml="";
-   for (var m in o)
+   for (let m in o)
       xml += toXml(o[m], m, "");
    return tab ? xml.replace(/\t/g, tab) : xml.replace(/\t|\n/g, "");
 }

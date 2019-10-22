@@ -47,7 +47,10 @@
                   <b>{{ $t("models_palette") }}</b><br /><br />
                   <div id="tbContainer"></div>
                   </div>
-                  <div class="other-area"><b>{{ $t("models_navigator") }}</b>
+                  <div class="other-area"><!--<b>{{ $t("models_navigator") }}</b>-->
+                  <div class="navi-buttons">
+                    <div id="buttonZIN"></div><div id="buttonZOUT"></div><div id="buttonZR"></div>
+                  </div>
                   <div id="navigator" class="navigator"></div>
                   </div>
                 </div>
@@ -68,11 +71,6 @@
 </template>
 
 <script>
-import setup_relations from '@/assets/js/models/setup_relations.js'
-import setup_elements from '@/assets/js/models/setup_elements.js'
-import setup_buttons from '@/assets/js/models/setup_buttons.js'
-import setup_keys from '@/assets/js/models/setup_keys.js'
-import setup_properties from '@/assets/js/models/setup_properties.js'
 import main from '@/assets/js/models/model_main.js'
 import model_load from '@/assets/js/models/model_load.js'
 import Bus from '../assets/js/common/bus.js'
@@ -98,7 +96,7 @@ export default{
       models:[], //available models
       currentModel:"",
       mxModel: new Object(), //mxGraphModel
-      modelType:"" 
+      modelType:"", 
     }
   },
   components: {
@@ -116,13 +114,6 @@ export default{
       this.graph.setEnabled(false);
     });
     this.models = getModelInfo()["gmodels"]; //represent the available models
-    this.setupFunctions = {
-      "setup_relations":setup_relations,
-      "setup_buttons":setup_buttons,
-      "setup_keys":setup_keys,
-      "setup_properties":setup_properties,
-      "setup_elements":setup_elements
-    }
     //preload the saved model if exists
     let temp = this.getmodel_component;
     if (localStorage[temp]) {
@@ -133,8 +124,32 @@ export default{
     this.layers=model_load(this.graph,this.models,this.modelCode);
     this.modelType=this.$route.params.type; //based on URL Route
 
-    //Import only the current need model file
-    var modelToImport = require('@/assets/js/models/custom/'+this.modelType+'.js');
+    // display custom menu options for domain-menu
+    let domain_childs = document.querySelectorAll('#domain-menu a');
+    this.hide_menu_options(domain_childs);
+    // display custom menu options for verification-menu
+    domain_childs = document.querySelectorAll('#verification-menu a');
+    this.hide_menu_options(domain_childs);
+    // display custom menu options for application-menu
+    domain_childs = document.querySelectorAll('#application-menu a');
+    this.hide_menu_options(domain_childs);
+
+    //dynamic load of setup functions
+    let all_setups = ["setup_relations","setup_buttons","setup_keys","setup_properties","setup_elements","setup_events"];
+    for(let i=0;i<all_setups.length;i++){
+      try{
+        //try to load setup functions from custom model folder
+        let st_fun = require(`@/assets/js/models/custom/${this.modelType}/${all_setups[i]}.js`);
+        this.setupFunctions[all_setups[i]]=st_fun.default;
+      }catch (ex) {
+        //load setup functions from models folder
+        let st_fun = require(`@/assets/js/models/${all_setups[i]}.js`);
+        this.setupFunctions[all_setups[i]]=st_fun.default;
+      }
+    }
+
+    //Import the current model file
+    let modelToImport = require('@/assets/js/models/custom/'+this.modelType+'.js');
     this.currentModel = modelToImport.default;
     this.toolbar = new mxToolbar(document.getElementById('tbContainer'));
     this.keyHandler = new mxKeyHandler(this.graph);
@@ -154,17 +169,29 @@ export default{
       let temp = this.getmodel_component;
       localStorage[temp] = document.getElementById('model_code').value;
       if(document.getElementById('model_code').value!=""){
-        var c_header = modalH3(this.$t("modal_success"),"success");
-        var c_body = modalSimpleText(this.$t("models_save_model"));
+        let c_header = modalH3(this.$t("modal_success"),"success");
+        let c_body = modalSimpleText(this.$t("models_save_model"));
         setupModal(c_header,c_body);
       }
     },
     initialize_mx(counter){
       //counter equals 1 load the entire mxGraph
-      var graphContainer = document.getElementById('graphContainer');
+      let graphContainer = document.getElementById('graphContainer');
       main(this.graph,this.layers,this.mxModel,this.toolbar,this.keyHandler,graphContainer,this.modelType,this.currentModel,counter,this.setupFunctions,this.undoManager, this.$route.params, this.$store);
-      var outline = new mxOutline(this.graph, document.getElementById('navigator'));
+      let outline = new mxOutline(this.graph, document.getElementById('navigator'));
 		  outline.refresh();
+    },
+    hide_menu_options(domain_childs){
+        for (let i = 0; i < domain_childs.length; i++) {
+        if(domain_childs[i].dataset.menudisplay!=null){
+          let listdis = domain_childs[i].dataset.menudisplay;
+          if(listdis.includes(this.modelType)){
+            domain_childs[i].style.display="";
+          }else{
+            domain_childs[i].style.display="none";
+          }
+        }
+      }
     }
   },
   beforeRouteLeave(to, from, next){
@@ -195,27 +222,37 @@ export default{
         document.getElementById('navigator').innerHTML="";
         this.modelType=this.$route.params.type;
 
+        // display custom menu options for domain-menu
+        let domain_childs = document.querySelectorAll('#domain-menu a');
+        this.hide_menu_options(domain_childs);
+        // display custom menu options for verification-menu
+        domain_childs = document.querySelectorAll('#verification-menu a');
+        this.hide_menu_options(domain_childs);
+        // display custom menu options for application-menu
+        domain_childs = document.querySelectorAll('#application-menu a');
+        this.hide_menu_options(domain_childs);
+
+        //dynamic load of setup functions
+        let all_setups = ["setup_relations","setup_buttons","setup_keys","setup_properties","setup_elements","setup_events"];
+        for(let i=0;i<all_setups.length;i++){
+          try{
+            //try to load setup functions from custom model folder
+            let st_fun = require(`@/assets/js/models/custom/${this.modelType}/${all_setups[i]}.js`);
+            this.setupFunctions[all_setups[i]]=st_fun.default;
+          }catch (ex) {
+            //load setup functions from models folder
+            let st_fun = require(`@/assets/js/models/${all_setups[i]}.js`);
+            this.setupFunctions[all_setups[i]]=st_fun.default;
+          }
+        }
         //Import only the current need model file
-        var modelToImport = require('@/assets/js/models/custom/'+this.modelType+'.js');
+        let modelToImport = require('@/assets/js/models/custom/'+this.modelType+'.js');
         this.currentModel = modelToImport.default;
         this.undoManager = new mxUndoManager();
         this.initialize_mx(2);
         //clear undo redo history
         this.undoManager.clear();
       }
-    },
-    /**
-     * if there is any change in the mxgraph, update the xml in the store
-     * @fires module:store~actions:updatexml
-     */ 
-    mxModel:{
-      handler(val) {
-        var encoder = new mxCodec();
-        var result = encoder.encode(this.graph.getModel());
-        var xml = mxUtils.getPrettyXml(result);
-        this.$store.dispatch('updatexml', xml);
-      },
-      deep:true
     },
     // when the selected elements cache is changed, update localstorage
     getcache_selected: {
@@ -282,7 +319,7 @@ export default{
 
 .navigator{
   border: 2px solid rgba(0,0,0,.125);
-  margin-top: 10px;
+  margin-top: 5px;
 }
 
 .button-area{
@@ -309,7 +346,7 @@ export default{
   overflow-block: scroll;
   overflow-x: auto;
   overflow-y: auto;
-  height:350px;
+  height:55vh;
   background:url("../assets/images/grid.gif");
   cursor:default;
   padding-right: 0px; 
@@ -331,5 +368,42 @@ table{
 
 .properties-table td{
 	padding: 5px;
+}
+</style>
+
+<style>
+#tbContainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.pallete-div {
+  display: block;
+  max-width: 70px;
+  margin: 3px;
+}
+
+.pallete-div span{
+  font-size: 12px;
+}
+
+.nav-item a{
+  cursor: pointer;
+}
+
+.navi-buttons{
+  display: flex;
+  margin: 0 auto;
+  justify-content: flex-end;
+}
+
+.navi-buttons button{
+  border: 1px solid #ccc;
+  padding: 2px;
+  padding-left: 7px;
+  padding-right: 7px;
+  width: 25px;
+  margin-right: 2px;
 }
 </style>

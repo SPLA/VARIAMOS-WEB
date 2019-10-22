@@ -1,9 +1,12 @@
 <template>
   <div id="app">
     <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
-          <router-link  to="/" class="navbar-brand col-sm-4 col-md-2 mr-0">{{ $t("app_variamos") }}</router-link>
-          <input class="form-control form-control-dark w-100 height-100" name="keyword" type="text" v-bind:placeholder="$t('app_search')" v-bind:aria-label="$t('app_search')">
-          <ul class="navbar-nav px-3">
+          <div id="top-menu" class="navbar-brand col-sm-4 col-md-2 mr-0"><div id="main-text" class="main-text"><router-link class="link-white" to="/">{{ $t("app_variamos") }}</router-link></div>
+          <div id="main-button-col" class="main-button"> <button class="navbar-toggler" type="button">
+            <span @click="custom_collapse()" class="navbar-toggler-icon"></span>
+          </button></div></div>
+          <input id="search-bar" class="form-control form-control-dark w-100 height-100" name="keyword" type="text" v-bind:placeholder="$t('app_search')" v-bind:aria-label="$t('app_search')">
+          <ul id="sign-out" class="navbar-nav px-3">
             <li class="nav-item text-nowrap">
               <a class="nav-link">{{ $t("app_sign_out") }}</a>
             </li>
@@ -11,10 +14,9 @@
         </nav>
         <div class="container-fluid">
             <div class="row">
-              <Menu class="col-md-2 d-none d-md-block bg-light sidebar">
+              <Menu id="sidebar" class="col-md-2 bg-light sidebar">
                 <div class="sidebar-sticky">
                       <Filetree></Filetree>
-                      <Divider />
                   <ul class="nav flex-column" style="display:none;">
                     <li class="nav-item">
                       <router-link class="nav-link" to="/">
@@ -65,9 +67,9 @@
                 </div>
               </Menu>
 
-              <main role="main" class="top-main col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+              <main role="main" id="main-sketch" class="top-main col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
 
-                <div class="container">
+                <div>
                   <div id="mainview">
                     <keep-alive>
                       <router-view></router-view>
@@ -122,6 +124,30 @@ export default {
   methods: {
     hide_modal(){
       document.getElementById('main_modal').style.display="none";
+    },
+    custom_collapse(){
+      let sidebar = document.getElementById("sidebar");
+      let maintext = document.getElementById("main-text");
+      let element = document.getElementById("top-menu");
+      let elementb = document.getElementById("main-button-col");
+      let elementc = document.getElementById("main-sketch");
+      if(element.classList.contains("col-sm-1")){
+        sidebar.style.display="";
+        maintext.style.display="";
+        element.classList.remove("col-sm-1"); element.classList.remove("col-md-1");
+        element.classList.add("col-sm-4"); element.classList.add("col-md-2");
+        elementb.classList.remove("center-button");
+        elementc.classList.remove("col-md-12"); elementc.classList.remove("col-lg-12");
+        elementc.classList.add("col-md-9"); elementc.classList.add("col-lg-10");
+      }else{
+        sidebar.style.display="none";
+        maintext.style.display="none";
+        element.classList.remove("col-sm-4"); element.classList.remove("col-md-2");
+        element.classList.add("col-sm-1"); element.classList.add("col-md-1");
+        elementb.classList.add("center-button");
+        elementc.classList.remove("col-md-9"); elementc.classList.remove("col-lg-9");
+        elementc.classList.add("col-md-12"); elementc.classList.add("col-lg-12");
+      }
     }
   }
 }
@@ -129,11 +155,40 @@ export default {
 
 <style>
 @media (min-width: 768px){
-  .top-main{
+  /*.top-main{
       -ms-flex: 0 0 83%;
       flex: 0 0 83%;
       max-width: 83%;
-  }
+  }*/
+}
+
+.link-white, .link-white:hover{
+    color: #fff;
+}
+
+.navbar-toggler {
+    padding: 0px !important;
+    font-size: 1 !important;
+}
+
+.center-button{
+  text-align: center;
+  float: none !important;
+}
+
+.main-text{
+  display: inline;
+  line-height: 32px;
+}
+
+.main-button{
+  line-height: 32px;
+  float: right;
+}
+
+.navbar-brand {
+    padding-top: .5rem !important;
+    padding-bottom: .5rem !important;
 }
 
 .height-100 {

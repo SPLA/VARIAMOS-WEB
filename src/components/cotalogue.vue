@@ -12,7 +12,7 @@
 							:data="item">
 						</context-menu>
 						<a :style="{paddingLeft: (20 * item.data.level) + 'px'}">
-							<i v-if="item.data.nodeType!==2 && item.data.level === 1"
+							<i v-if="item.data.nodeType!==3 && item.data.level === 1"
 								class="fa"
 								aria-hidden="true"
 								:class="[item.data.open?'fa-angle-double-down':'fa-angle-double-right']"
@@ -20,23 +20,21 @@
 								:style="{position: 'absolute',left: (20 * item.data.level - 17) + 'px',top: '6px'}"
 								data-test="projectFolder">
 							</i>
-							<i v-if="item.data.nodeType!==2 && item.data.level !== 1"
+							<i v-if="item.data.nodeType!==3 && item.data.level !== 1"
 								class="fa"
 								aria-hidden="true"
 								:class="[item.data.open?'fa-angle-down':'fa-angle-right']"
-								
+								@click="expand_menu($index)"
 								:style="{position: 'absolute',left: (20 * item.data.level - 17) + 'px',top: '6px'}"
 								data-test="modelFolder">
 							</i>
-							<i v-if="item.data.nodeType===2"
+							<i v-if="item.data.nodeType===3"
+								class="fa"
 								aria-hidden="true"
-								class="fa fa-circle"
-								:title="['Feature','Relation','Bundle'][item.data.status]"
-								:style="{position: 'absolute',
-										left: (20 * item.data.level - 14) + 'px',
-										top: '9px',
-										color: ['#0f0','#ddd','#f00'][item.data.status],
-										fontSize: '10px'}">
+								:class="['fa-angle-right']"
+								@click="expand_menu($index)"
+								:style="{position: 'absolute',left: (20 * item.data.level - 17) + 'px',top: '6px'}"
+								data-test="modelFolder">
 							</i>
 							<span class="name-container"
 								:class="'vue-contextmenuName-menu' + item.data.nodeType + item.data.nodeId"
@@ -48,7 +46,7 @@
 									style="color:gray;font-size: 16px;padding-right:4px">
 								</i>
 								<i v-if="item.data.nodeType === 3"
-									:class="item.data.open?'far fa-image':'fas fa-image'" aria-hidden="true"
+									:class="'far fa-image'" aria-hidden="true"
 									style="color:gray;font-size: 16px;padding-right:4px">
 								</i>
 								<span class="name"
@@ -68,7 +66,7 @@
 <script>
 import contextMenu from './contextMenu.vue'
 import Bus from '../assets/js/common/bus.js'
-import { getcontextmenulist } from '../assets/js/common/global_info'
+import { getcontextmenulist, getModelInfo } from '../assets/js/common/global_info'
 
 export default {
 	name: 'cotalogue',
@@ -98,7 +96,8 @@ export default {
 					// accepts old version of delete project
 					3:[getcontextmenulist()['delete_project']],
 					'empty':[],
-					'application_folder':[getcontextmenulist()['create_adp'],getcontextmenulist()['rename'],getcontextmenulist()['delete_folder']],
+					//'application_folder':[getcontextmenulist()['create_adp'],getcontextmenulist()['rename'],getcontextmenulist()['delete_folder']],
+					'application_folder':[getcontextmenulist()['rename'],getcontextmenulist()['delete_folder']],
 					'adaptation_folder':[getcontextmenulist()['rename'],getcontextmenulist()['delete_folder']]}
 			}
 		}
@@ -159,12 +158,36 @@ export default {
 			}
 			return true;
 		},
+		checkoldfolder(index) {
+			let data = this.getdata;
+			let cache = [];
+			let treecache = [];
+			for(let i = 0; i < getModelInfo()['gmodels'].length; i++)
+			{
+				if(getModelInfo()[getModelInfo()['gmodels'][getModelInfo()['gmodels'].length-i-1]].projFolders.includes(data[index].data.nodeName.split(' -')[0]))
+					cache.unshift(getModelInfo()['gmodels'][getModelInfo()['gmodels'].length-i-1]);
+			}
+			for(let i = 0 ; i < data.length; i++)
+			{
+				if(data[index].data.nodeId === data[i].data.parentId)
+					treecache.push(data[i].data.nodeName);
+			}
+			if(cache.toString()!==treecache.toString())
+			{
+				this.$store.dispatch('updatefolder', index);
+			}
+		},
 		/**
 		 * open or close the tree elements
 		 * @param {number} index	- the index of the tree data array
 		 */
 		expand_menu(index) {
 			let data = this.getdata;
+			// update the tree based when global_info is updated
+			if(data[index].data.level !== 1)
+			{
+				this.checkoldfolder(index);
+			}
 			// get the opend project name and opened folder name
 			let projectname = '';
 			let foldername = data[index].data.nodeName.replace(/\s+/g,"");
@@ -189,9 +212,22 @@ export default {
 					 * @fires module:store~actions:updatemodelcomponent
 					 * @fires module:store~actions:updateactivetab
 					 */
-				    this.$router.push("/models/"+projectname+"/"+foldername+"/feature");
-					this.$store.dispatch('updatemodelcomponent', index);
-					this.$store.dispatch('updateactivetab', 'feature');
+					let parentId = data[index].data.nodeId;
+					let nodeName = "";
+					for(let i = 0; i < data.length; i++)
+					{
+						if(data[i].data.parentId === parentId && data[i].data.nodeType !== 1){
+							nodeName = data[i].data.nodeName;
+							break;
+						}
+					}
+					if(nodeName == ""){
+						this.$router.push("/models/"+projectname+"/default/default");
+					}else{
+						this.$router.push("/models/"+projectname+"/"+foldername+"/"+nodeName);
+						this.$store.dispatch('updatemodelcomponent', index);
+						this.$store.dispatch('updateactivetab', nodeName);
+					}
 				}
 				// if we are closing one folder
 				else if(data[index].data.nodeType === 1 && data[index].data.open)
@@ -288,7 +324,8 @@ export default {
 			// if application folder is not open, change its context menu
 			else if(data[index].data.contextmenuIndex === 'application_folder' && !data[index].data.open)
 			{
-				this.contextMenuData.menulists['application_folder'] = [getcontextmenulist()['create_adp'], getcontextmenulist()['rename'], getcontextmenulist()['delete_folder']];
+				//this.contextMenuData.menulists['application_folder'] = [getcontextmenulist()['create_adp'], getcontextmenulist()['rename'], getcontextmenulist()['delete_folder']];
+				this.contextMenuData.menulists['application_folder'] = [getcontextmenulist()['rename'], getcontextmenulist()['delete_folder']];
 			}
 		},
 		// double click folder and project will trigger expand menu
@@ -299,13 +336,13 @@ export default {
 		},
 		// get the right click event and the current location
 		showMenu(index,event){
-			var _this = this;
+			let _this = this;
 			// trigger clickme function
 			_this.clickme(index);
 			event.preventDefault();
 			_this.className = event.target.closest('.name-container').classList[1];
-			var x = event.clientX;
-			var y = event.clientY;
+			let x = event.clientX;
+			let y = event.clientY;
 			// Get the current location and change the property axios
 			_this.contextMenuData.axios = {
 				x, y

@@ -45,13 +45,13 @@ export default {
     watch: {
         // watch the change of the property axios of the object contextMenuData 
         'contextMenuData.axios' (val) {
-            var x = val.x;
-            var y = val.y;
-            var _this = this;
-            var menuName = 'vue-contextmenuName-' + _this.contextMenuData.menuName + '' + _this.data.data.nodeType + '' + _this.data.data.nodeId;
+            let x = val.x;
+            let y = val.y;
+            let _this = this;
+            let menuName = 'vue-contextmenuName-' + _this.contextMenuData.menuName + '' + _this.data.data.nodeType + '' + _this.data.data.nodeId;
                 // if the clicked item matches the context menu, the context menu show up
                 if(menuName === _this.targetClass){
-                    var menu = document.getElementById(menuName);
+                    let menu = document.getElementById(menuName);
                     menu.style.display = 'block';
                     menu.style.left = x + 'px';
                     menu.style.top = y + 'px';
