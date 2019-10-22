@@ -2,7 +2,8 @@
 To check available models go to Public/js/global_info.js
 */
 let model_load = function model_load(graph,models,m_code){
-    let layers = {};
+    let layers = {}; 
+
     if(m_code){
         //load saved model
         let doc = mxUtils.parseXml(m_code);
@@ -13,7 +14,7 @@ let model_load = function model_load(graph,models,m_code){
 
         let maxVal = root.getChildCount();
         for (let i = 0; i < models.length; i++) {
-            
+
             if(i<maxVal){
                 let current_cell = root.getChildAt(i);
                 let c_id = current_cell.getId();

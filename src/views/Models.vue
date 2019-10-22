@@ -12,8 +12,8 @@
                       {{ $t("models_area") }} - {{ $route.params.type }} {{ $t("models_model") }}</a></li>
                       <!-- model actions -->
                       <BackEnd /> 
-                      <DomainMenu :current_graph="graph" />
-                      <ApplicationMenu :current_graph="graph" /> 
+                      <DomainMenu :current_graph="graph" :model_type="modelType" />
+                      <ApplicationMenu :current_graph="graph" :model_type="modelType" /> 
                       <Verification :current_graph="graph" /> 
                     </ul>
                   </div>
@@ -25,6 +25,7 @@
                     <div class="button-unique" id="buttonUNDO"></div>
                     <div class="button-unique" id="buttonREDO"></div>
                     <div class="button-unique" id="buttonSHOW"></div>
+                    <div class="button-unique" id="buttonPONE"></div>
                     <div class="button-unique" id="buttonDELETE"></div>
                     <div class="button-unique" id="buttonRESET"></div>
                     <div class="button-unique" id="buttonRESETALL"></div>
@@ -35,14 +36,14 @@
 
               <div class="row main_area">
 
-                <div class="col-sm-9 left-area">
+                <div id="left-draw" class="col-sm-9 left-area">
                   <div id="graphContainer" class="model-area"></div>
                   <div class="properties-area" style="font-size:13px"><b>{{ $t("models_element_properties") }}</b><br />
                     <div id="properties"></div>
                   </div>
                 </div>
 
-                <div class="col-sm-3 right-area" style="font-size:13px">
+                <div id="right-draw" class="col-sm-3 right-area" style="font-size:13px">
                   <div class="pallete-area">
                   <b>{{ $t("models_palette") }}</b><br /><br />
                   <div id="tbContainer"></div>

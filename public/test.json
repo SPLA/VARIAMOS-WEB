@@ -1,0 +1,262 @@
+{
+    "name": "SemaforoConBotone1",
+    "machine": [
+        {
+            "state": {
+                "id": "id_1",
+                "type": "initialState",
+                "label": "apagado"
+            }
+        },
+        {
+            "state": {
+                "id": "id_2",
+                "type": "state",
+                "label": "encendido"
+            }
+        },
+        {
+            "transition": {
+                "id": "id_3",
+                "label": "apagado_encendido",
+                "source": "id_1",
+                "target": "id_2"
+            }
+        }
+    ],
+    "hardware": [
+        {
+            "board": {
+                "id": "id_4",
+                "label": "board",
+                "type": "ArduinoUNO"
+            }
+        },
+        {
+            "port": {
+                "id": "id_5",
+                "label": "led",
+                "type": "analogActuator",
+                "pin": "A0",
+                "initialValue": "0"
+            }
+        },
+        {
+            "port": {
+                "id": "id_6",
+                "label": "sensor_luz",
+                "type": "analogSensor",
+                "pin": "A4",
+                "initialValue": "0"
+            }
+        }
+    ],
+    "binding": [
+        {
+            "variable": {
+                "id": "id_7",
+                "label": "var_apagado_led",
+                "type": "analogVariable",
+                "value": "0"
+            }
+        },
+        {
+            "variable": {
+                "id": "id_8",
+                "label": "var_encendido_led",
+                "type": "analogVariable",
+                "value": "1023"
+            }
+        },
+        {
+            "variable": {
+                "id": "id_9",
+                "label": "var_tiempo_encendido",
+                "type": "analogVariable",
+                "value": "1000"
+            }
+        },
+        {
+            "variable": {
+                "id": "id_10",
+                "label": "tiempo_control_led",
+                "type": "analogVariable",
+                "value": "500"
+            }
+        },
+        {
+            "timer": {
+                "id": "id_11",
+                "label": "timer_encendido",
+                "initialValue": "0"
+            }
+        },
+        {
+            "timer": {
+                "id": "id_12",
+                "label": "timer_controlador_led",
+                "initialValue": "0"
+            }
+        },
+        {
+            "activity": {
+                "id": "id_13",
+                "label": "actividad_apagado"
+            }
+        },
+        {
+            "activity": {
+                "id": "id_14",
+                "label": "actividad_encendido"
+            }
+        },
+        {
+            "readAction": {
+                "id": "id_15",
+                "label": "leer_timer_encendido"
+            }
+        },
+        {
+            "readAction": {
+                "id": "id_16",
+                "label": "leer_var_timer_encendido"
+            }
+        },
+        {
+            "writeAction": {
+                "id": "id_17",
+                "label": "apagar_led"
+            }
+        },
+        {
+            "writeAction": {
+                "id": "id_18",
+                "label": "prender_led"
+            }
+        },
+        {
+            "predicate": {
+                "id": "id_19",
+                "label": "predicado_encendido",
+                "operator": ">="
+            }
+        },
+        {
+            "logicalOperator": {
+                "id": "id_20",
+                "label": "op1",
+                "value": "SINGLE"
+            }
+        },
+        {
+            "relationship_state_activity": {
+                "id": "id_21",
+                "state": "id_1",
+                "beginPhase": [
+                    {
+                        "activity": "id_13"
+                    }
+                ],
+                "whilePhase": [],
+                "endPhase": []
+            }
+        },
+        {
+            "relationship_state_activity": {
+                "id": "id_22",
+                "state": "id_2",
+                "beginPhase": [
+                    {
+                        "activity": "id_14"
+                    }
+                ],
+                "whilePhase": [],
+                "endPhase": []
+            }
+        },
+        {
+            "relationship_activity_writeAction": {
+                "id": "id_23",
+                "activity": "id_13",
+                "writeActions": [
+                    {
+                        "writeAction": "id_17"
+                    }
+                ]
+            }
+        },
+        {
+            "relationship_activity_writeAction": {
+                "id": "id_24",
+                "activity": "id_14",
+                "writeActions": [
+                    {
+                        "writeAction": "id_18"
+                    }
+                ]
+            }
+        },
+        {
+            "relationship_writeAction_port": {
+                "id": "id_25",
+                "writeAction": "id_17",
+                "readPort": "id_7",
+                "writePort": "id_5"
+            }
+        },
+        {
+            "relationship_writeAction_port": {
+                "id": "id_26",
+                "writeAction": "id_18",
+                "readPort": "id_8",
+                "writePort": "id_5"
+            }
+        },
+        {
+            "relationship_logicalOperator_trasition": {
+                "id": "id_27",
+                "logicalOperator": "id_20",
+                "transition": "id_3"
+            }
+        },
+        {
+            "relationship_logicalOperator_predicate": {
+                "id": "id_28",
+                "logicalOperator": "id_20",
+                "predicates": [
+                    {
+                        "predicate": "id_19"
+                    }
+                ]
+            }
+        },
+        {
+            "relationship_predicate_readActions": {
+                "id": "id_29",
+                "predicate": "id_19",
+                "readAction": "id_15"
+            }
+        },
+        {
+            "relationship_predicate_readActions": {
+                "id": "id_30",
+                "predicate": "id_19",
+                "readAction": "id_16"
+            }
+        },
+        {
+            "relationship_readAction_port": {
+                "id": "id_31",
+                "readAction": "id_15",
+                "readPort": "id_11"
+            }
+        },
+        {
+            "relationship_readAction_port": {
+                "id": "id_32",
+                "readAction": "id_16",
+                "readPort": "id_9"
+            }
+        }
+    ]
+}

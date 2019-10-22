@@ -1,3 +1,5 @@
+
+import * as svgpng from 'save-svg-as-png';
 let setup_buttons = function setup_buttons(graph,undoManager,reused_functions,route_pare,store){
     /* begin buttonxml */
     // Adds an option to view the XML of the graph
@@ -17,7 +19,8 @@ let setup_buttons = function setup_buttons(graph,undoManager,reused_functions,ro
     buttonRESET.innerHTML="";
     buttonRESET.appendChild(mxUtils.button_with_icon(global.messages["setup_buttons_reset"], function()
     {
-        var conf =  confirm("Are you sure you want to delete the current model?");
+
+        let conf =  confirm("Are you sure you want to delete the current model?");
         if(conf){
             let removed_cells = graph.removeCells(graph.getChildVertices(graph.getDefaultParent()));
 
@@ -49,7 +52,8 @@ let setup_buttons = function setup_buttons(graph,undoManager,reused_functions,ro
     buttonRESETALL.innerHTML="";
     buttonRESETALL.appendChild(mxUtils.button_with_icon(global.messages["setup_buttons_reset_all"], function()
     {
-        var conf =  confirm("Are you sure you want to delete all models?");
+        let conf =  confirm("Are you sure you want to delete all models?");
+
         if(conf){
             model_code.value="";
             let event = new Event('change');
@@ -177,30 +181,39 @@ let setup_buttons = function setup_buttons(graph,undoManager,reused_functions,ro
     buttonDELETE.appendChild(mxUtils.button_with_icon(global.messages["setup_buttons_delete"], reused_functions[0],"cut"));
     /* end buttonDELETE */
 
-    /*
-    button print all in one page
-    buttonPONE.appendChild(mxUtils.button('1 page',function(evt){
-        var scale = mxUtils.getScaleForPageCount(1, graph);
-	    var preview = new mxPrintPreview(graph, scale);
-        preview.open();}));
-    */
+
+    /* begin buttonPONE print as IMG */
+    let buttonPONE = document.getElementById('buttonPONE');
+    buttonPONE.innerHTML="";
+    buttonPONE.appendChild(mxUtils.button_with_icon(global.messages["setup_buttons_img"],function(evt){
+        const svg = document.getElementById('graphContainer').firstElementChild;
+        svgpng.saveSvgAsPng(svg, "diagram.png");
+    },"print"));
+    /* end buttonPONE */
+
 
     /* begin buttonZIN */
     let buttonZIN = document.getElementById('buttonZIN');
     buttonZIN.innerHTML="";
-    buttonZIN.appendChild(mxUtils.button('+',function(evt){graph.zoomIn();}));
+
+    buttonZIN.appendChild(mxUtils.button(global.messages["setup_buttons_zin"],function(evt){graph.zoomIn();}));
+
     /* end buttonZIN */
 
     /* begin buttonZOUT */
     let buttonZOUT = document.getElementById('buttonZOUT');
     buttonZOUT.innerHTML="";
-    buttonZOUT.appendChild(mxUtils.button('-',function(evt){graph.zoomOut();}));
+
+    buttonZOUT.appendChild(mxUtils.button(global.messages["setup_buttons_zout"],function(evt){graph.zoomOut();}));
+
     /* end buttonZOUT */
 
     /* begin buttonZR */
     let buttonZR = document.getElementById('buttonZR');
     buttonZR.innerHTML="";
-    buttonZR.appendChild(mxUtils.button('R',function(evt){graph.view.scaleAndTranslate(1, 0, 0);}));
+
+    buttonZR.appendChild(mxUtils.button(global.messages["setup_buttons_zr"],function(evt){graph.view.scaleAndTranslate(1, 0, 0);}));
+
     /* end buttonZR */
 }
 
