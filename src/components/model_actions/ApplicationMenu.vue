@@ -1,4 +1,3 @@
-
 <template>
   <li class="nav-item dropdown">
     <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -11,7 +10,6 @@
       <a data-menudisplay="['feature','component','binding_feature_component']" @click="verify_derivation()" class="dropdown-item">{{ $t("domain_implementation_verify") }}</a>
       <a data-menudisplay="['adaptation_state','adaptation_hardware','adaptation_binding_state_hardware']" @click="adaptation_state_source_code_generation()" class="dropdown-item">Source code generation</a>
       <component :is="dynamicComponent" :current_graph="current_graph"></component>
-
     </div>
 
   </li>
@@ -22,9 +20,7 @@ import axios from "axios";
 import di_actions from '@/assets/js/models/actions/domain_implementation/di_actions.js';
 import "@/assets/js/chart/Chart.min.js";
 import { setupModal, modalH3, modalSimpleText, modalInputTexts, modalCustomization, modalButton, downloadFile } from '../../assets/js/common/util.js';
-
 import adaptation_state_actions from '@/assets/js/models/actions/domain_implementation/adaptation_state_actions.js';
-
 export default {
   data: function() {
     return {
@@ -150,7 +146,6 @@ export default {
       if (localStorage["domain_implementation_main_path"] && localStorage["domain_implementation_pool_path"] && localStorage["domain_implementation_derived_path"]) {
         this.errors=[];
         this.customization_data=di_actions(this.current_graph,"customize");
-
         if(this.customization_data.length==0){
           let c_header = modalH3(this.$t("modal_error"),"error");
           let c_body = modalSimpleText("No components to customize");
@@ -236,10 +231,8 @@ export default {
               model_datax[5]=this.previous_plan;
               model_datax[6]=customized_content;
             }
-
             this.model_data = JSON.stringify(model_datax);
             document.getElementById("Start/Next").disabled = true;
-
             axios
               .post(
                 localStorage["domain_implementation_main_path"] +
@@ -350,9 +343,7 @@ export default {
       //collect the information of the components and files to be customized
       let component_root = this.current_graph.getModel().getCell("component");    
       let component_relations = this.current_graph.getModel().getChildEdges(component_root);
-
       let destination = "";
-
       for (let i = 0; i < component_relations.length; i++) {
         let source = component_relations[i].source.getAttribute("label");
         if (source == id) {
@@ -360,13 +351,11 @@ export default {
           break;
         }
       }
-
       return "";
     },
     hide_control_elements(controlAction){//controlAction es el nombre en string
       let names_control_action = [];
       let target;// 
-
       let target_system_id; // target system id
       let proportional;// proportional value of the target system element
       let derivate;// derivate value of the target system element
@@ -420,10 +409,7 @@ export default {
       // list elements
       let list_elements=[];
       let id_final;
-
-
       let feedback_root = this.current_graph.getModel().getCell("control");
-
       let childs = this.current_graph.getModel().getChildVertices(feedback_root);
       //navigates through the feature model childsld
       for (let i = 0; i < childs.length; i++)
@@ -433,8 +419,6 @@ export default {
           names_control_action.push(target_sys)
         }
       }
-
-
       for (let i = 0; i < names_control_action.length; i++) 
       {
          if ( "control_led"== names_control_action[i]  )
@@ -452,7 +436,6 @@ export default {
                     }                 
                   }   
             }
-
             target_system_relations = this.current_graph.getModel().getIncomingEdges
             (this.current_graph.getModel().getCell(target_system_id));
             for (let i = 0; i < target_system_relations.length; i++)
@@ -559,7 +542,6 @@ export default {
               {
                 id_initial_summing = source.getId(); 
                  list_elements.push(id_initial_summing);
-
               }
               
             }
@@ -639,7 +621,6 @@ export default {
               if(source.getAttribute("type")=="branchpoint")
               {
                 id_branch= source.getId();
-
                  list_elements.push(id_branch); 
               }
               
@@ -674,13 +655,9 @@ export default {
             this.current_graph.getModel().setVisible(childs2[i], true)
           }
           }
-
         }
-
       }
-
     },
-
     adaptation_state_source_code_generation() {
       try {
         let serverUrl =
