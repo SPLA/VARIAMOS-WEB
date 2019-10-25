@@ -134,6 +134,8 @@ let setup_properties = function setup_properties(graph,properties_styles){
 				if(input.checked){
 					newValue = "true";
 				}
+			}else if(input.id === 'input-highRange' && input.value < 0){
+				newValue = '*';
 			}else{
 				newValue = input.value || '';
 			}

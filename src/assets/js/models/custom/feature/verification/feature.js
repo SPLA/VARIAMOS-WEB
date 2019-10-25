@@ -1,5 +1,5 @@
 import axios from "axios";
-import { setupModal, modalH3, modalSimpleText, modalButton } from '../../../../common/util'
+import { setupModal, modalH3, modalSimpleText } from '../../../../common/util'
 import I18n from '../../../../../../i18n.js'
 let feature_verification = function feature_verification()
 {
@@ -10,15 +10,19 @@ let feature_verification = function feature_verification()
       "func":check_unique_ids
   };
   data[1]={
-      "label":"Check void false model",
-      "func":Check_void_false
+      "label":"Check void product line",
+      "func":Check_void
   };
   data[2]={
+    "label":"Check false product line",
+    "func":Check_false
+  };
+  data[3]={
       "label":"Check dead feature",
       "func":Check_dead
   };
-  data[3]={
-    "label":"Check false optional",
+  data[4]={
+    "label":"Check false optional feature",
     "func":Check_optional
   };
 
@@ -61,6 +65,7 @@ let feature_verification = function feature_verification()
     //navigates through the feature model childs
     for (let i = 0; i < childs.length; i++) {
       let label = childs[i].getAttribute("label");
+      // check duplicated name
       if (names.indexOf(label) > -1) {
           result+="Duplicated feature ID - " + label + "\n";
           let overlay = new mxCellOverlay(new mxImage('images/MX/error.gif', 16, 16), 'Overlay tooltip', 'right', 'top');
@@ -72,17 +77,10 @@ let feature_verification = function feature_verification()
           if(childs[i].getAttribute("type") !== "bundle")
             names.push(label);
         }
-        if(childs[i].getAttribute("type") === "root" && childs[i].getAttribute("label") !== "root")
-        {
-          result+="Root feature name should be 'root' " + "\n";
-          let overlay = new mxCellOverlay(new mxImage('images/MX/error.gif', 16, 16), 'Overlay tooltip', 'right', 'top');
-          graph.addCellOverlay(childs[i], overlay);
-          c_errors.push(childs[i]);
-          c_overlays.push(overlay);
-        }
+        // check space in the name
         if(childs[i].getAttribute("label").indexOf(' ') > -1)
         {
-          result+="Label" + childs[i].getAttribute("label") + "should not have space " + "\n";
+          result+="Label \"" + childs[i].getAttribute("label") + "\" should not have space " + "\n";
           let overlay = new mxCellOverlay(new mxImage('images/MX/error.gif', 16, 16), 'Overlay tooltip', 'right', 'top');
           graph.addCellOverlay(childs[i], overlay);
           c_errors.push(childs[i]);
@@ -97,8 +95,8 @@ let feature_verification = function feature_verification()
       }
       return result;
   }
-  //Check the model has solutions or not
-  function Check_void_false(graph, c_errors, c_overlays, model_component, activetab){
+  
+  function Check_void(graph, c_errors, c_overlays, model_component, activetab){
     if(check_input_minizinc(graph,c_errors,c_overlays, model_component, activetab))
       return;
     if (localStorage["domain_implementation_main_path"]) {
@@ -118,12 +116,12 @@ let feature_verification = function feature_verification()
         }
       }
 
-      axios.post(localStorage["domain_implementation_main_path"]+'Verification/check_void_false', {
+      axios.post(localStorage["domain_implementation_main_path"]+'Verification/check_void', {
         data: xml, name: model_component, param: selection_parameter
       })
       .then(response => {
         var c_header = modalH3("Verification result");
-        var c_body = modalSimpleText("Void or false model:\n " + JSON.stringify(response.data));
+        var c_body = modalSimpleText("Void product line:\n " + JSON.stringify(response.data));
         setupModal(c_header,c_body);
         // mxUtils.popup(response.data["hlvl"], true);
       })
@@ -139,7 +137,49 @@ let feature_verification = function feature_verification()
       setupModal(c_header,c_body);
     }
   }
-  //Check all the features are considered in the solutions
+
+  function Check_false(graph, c_errors, c_overlays, model_component, activetab){
+    if(check_input_minizinc(graph,c_errors,c_overlays, model_component, activetab))
+      return;
+    if (localStorage["domain_implementation_main_path"]) {
+      let errors=[];
+
+      var encoder = new mxCodec();
+      var result = encoder.encode(graph.getModel());
+      var xml = mxUtils.getPrettyXml(result);
+      var model_root = graph.getModel().getCell(activetab);
+      var childs = graph.getModel().getChildVertices(model_root);
+      var selection_parameter = {};
+      for(let i = 0; i < childs.length; i++)
+      {
+        if(childs[i].getAttribute("type") !== "bundle")
+        {
+          selection_parameter[childs[i].getAttribute("label")] = false;
+        }
+      }
+
+      axios.post(localStorage["domain_implementation_main_path"]+'Verification/check_false', {
+        data: xml, name: model_component, param: selection_parameter
+      })
+      .then(response => {
+        var c_header = modalH3("Verification result");
+        var c_body = modalSimpleText("False product line:\n " + JSON.stringify(response.data));
+        setupModal(c_header,c_body);
+        // mxUtils.popup(response.data["hlvl"], true);
+      })
+      .catch(e => {
+        errors.push(e); 
+        let c_header = modalH3(I18n.t("modal_error"),"error");
+        let c_body = modalSimpleText(e + I18n.t("model_actions_backend_problem"));
+        setupModal(c_header,c_body);
+      });
+    }else{
+      let c_header = modalH3(I18n.t("modal_error"),"error");
+      let c_body = modalSimpleText(I18n.t("verification_path_problem"));
+      setupModal(c_header,c_body);
+    }
+  }
+
   function Check_dead(graph, c_errors, c_overlays, model_component, activetab){
     if(check_input_minizinc(graph,c_errors,c_overlays, model_component, activetab))
       return;
