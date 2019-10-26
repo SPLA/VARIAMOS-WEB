@@ -104,7 +104,9 @@ let feature_verification = function feature_verification()
       return result;
   }
   
+  // check the void product line
   function Check_void(graph, c_errors, c_overlays, model_component, activetab){
+    // check duplicated name and space in name
     if(check_input_minizinc(graph,c_errors,c_overlays, model_component, activetab))
       return;
     if (localStorage["domain_implementation_main_path"]) {
@@ -116,6 +118,9 @@ let feature_verification = function feature_verification()
       var model_root = graph.getModel().getCell(activetab);
       var childs = graph.getModel().getChildVertices(model_root);
       var selection_parameter = {};
+      /**
+       * @todo keep for the selections of features
+       */
       for(let i = 0; i < childs.length; i++)
       {
         if(childs[i].getAttribute("type") !== "bundle")
@@ -131,7 +136,6 @@ let feature_verification = function feature_verification()
         var c_header = modalH3("Verification result");
         var c_body = modalSimpleText("Void product line:\n " + JSON.stringify(response.data));
         setupModal(c_header,c_body);
-        // mxUtils.popup(response.data["hlvl"], true);
       })
       .catch(e => {
         errors.push(e); 
@@ -146,6 +150,7 @@ let feature_verification = function feature_verification()
     }
   }
 
+  // check false product line
   function Check_false(graph, c_errors, c_overlays, model_component, activetab){
     if(check_input_minizinc(graph,c_errors,c_overlays, model_component, activetab))
       return;
@@ -158,6 +163,9 @@ let feature_verification = function feature_verification()
       var model_root = graph.getModel().getCell(activetab);
       var childs = graph.getModel().getChildVertices(model_root);
       var selection_parameter = {};
+      /**
+       * @todo keep for the selections of features
+       */
       for(let i = 0; i < childs.length; i++)
       {
         if(childs[i].getAttribute("type") !== "bundle")
@@ -173,7 +181,6 @@ let feature_verification = function feature_verification()
         var c_header = modalH3("Verification result");
         var c_body = modalSimpleText("False product line:\n " + JSON.stringify(response.data));
         setupModal(c_header,c_body);
-        // mxUtils.popup(response.data["hlvl"], true);
       })
       .catch(e => {
         errors.push(e); 
@@ -188,6 +195,7 @@ let feature_verification = function feature_verification()
     }
   }
 
+  // Check dead feature
   function Check_dead(graph, c_errors, c_overlays, model_component, activetab){
     if(check_input_minizinc(graph,c_errors,c_overlays, model_component, activetab))
       return;
@@ -200,6 +208,9 @@ let feature_verification = function feature_verification()
       var model_root = graph.getModel().getCell(activetab);
       var childs = graph.getModel().getChildVertices(model_root);
       var selection_parameter = {};
+      /**
+       * @todo keep for the selections of features
+       */
       for(let i = 0; i < childs.length; i++)
       {
         if(childs[i].getAttribute("type") !== "bundle")
@@ -231,10 +242,10 @@ let feature_verification = function feature_verification()
           var c_body = modalSimpleText("There are dead features.");
           setupModal(c_header,c_body);
 
+          // set overlay on the dead features
           let feature_root = graph.getModel().getCell("feature");    
           let childs = graph.getModel().getChildVertices(feature_root);
           for (let i = 0; i < childs.length; i++) {
-            console.log(childs[i].getAttribute("label"));
             if(response_data.includes(childs[i].getAttribute("label")))
             {
               let overlay = new mxCellOverlay(new mxImage('images/MX/error.gif', 16, 16), 'Overlay tooltip', 'right', 'top');
@@ -258,6 +269,7 @@ let feature_verification = function feature_verification()
     }
   }
 
+  // Check false optional
   function Check_optional(graph, c_errors, c_overlays, model_component, activetab){
     if(check_input_minizinc(graph,c_errors,c_overlays, model_component, activetab))
       return;
@@ -271,6 +283,9 @@ let feature_verification = function feature_verification()
       var childs = graph.getModel().getChildVertices(model_root);
       var selection_parameter = {};
       var optionals= {};
+      /**
+       * @todo keep for the selections of features
+       */
       for(let i = 0; i < childs.length; i++)
       {
         if(childs[i].getAttribute("type") !== "bundle")
@@ -278,6 +293,7 @@ let feature_verification = function feature_verification()
           selection_parameter[childs[i].getAttribute("label")] = false;
         }
       }
+      // get all the optional features
       for(let i = 0; i < model_root.children.length; i++)
       {
         if(model_root.children[i].getAttribute("type") === "relation" && model_root.children[i].getAttribute("relType") === "optional")
@@ -309,6 +325,7 @@ let feature_verification = function feature_verification()
           var c_body = modalSimpleText("There are false optional features.");
           setupModal(c_header,c_body);
 
+          // set overlay to the false optional features
           let feature_root = graph.getModel().getCell("feature");    
           let childs = graph.getModel().getChildVertices(feature_root);
           for (let i = 0; i < childs.length; i++) {
@@ -335,6 +352,7 @@ let feature_verification = function feature_verification()
     }
   }
 
+  // check cardinality in multiplicity conflicts
   function Check_multi_conflicts(graph, c_errors, c_overlays, model_component, activetab){
     if(check_input_minizinc(graph,c_errors,c_overlays, model_component, activetab))
       return;
@@ -347,6 +365,9 @@ let feature_verification = function feature_verification()
       var model_root = graph.getModel().getCell(activetab);
       var childs = graph.getModel().getChildVertices(model_root);
       var selection_parameter = {};
+      /**
+       * @todo keep for the selections of features
+       */
       for(let i = 0; i < childs.length; i++)
       {
         if(childs[i].getAttribute("type") !== "bundle")
@@ -354,6 +375,8 @@ let feature_verification = function feature_verification()
           selection_parameter[childs[i].getAttribute("label")] = false;
         }
       }
+
+      // check if feature model has solutions without cardinality
       let check_xml = xml.split("bundleType=\"RANGE\"").join("bundleType=\"AND\"");
       axios.post(localStorage["domain_implementation_main_path"]+'Verification/check_multi_conflict', {
         data: xml, name: model_component, param: selection_parameter, check_xml: check_xml
@@ -362,7 +385,7 @@ let feature_verification = function feature_verification()
         var c_header = modalH3("Verification result");
         var c_body = modalSimpleText(JSON.stringify(response.data));
         setupModal(c_header,c_body);
-        // mxUtils.popup(response.data["hlvl"], true);
+        // set overlay on all the range bundle
         if(JSON.stringify(response.data).includes('There are some multiplicity conflicts.'))
         {
           let feature_root = graph.getModel().getCell("feature");    
@@ -396,6 +419,7 @@ let feature_verification = function feature_verification()
     }
   }
 
+  // show the HLVL code
   function Check_HLVL(graph, c_errors, c_overlays, model_component, activetab){
     if(check_input_minizinc(graph,c_errors,c_overlays, model_component, activetab))
       return;
@@ -408,6 +432,9 @@ let feature_verification = function feature_verification()
       var model_root = graph.getModel().getCell(activetab);
       var childs = graph.getModel().getChildVertices(model_root);
       var selection_parameter = {};
+      /**
+       * @todo keep for the selections of features
+       */
       for(let i = 0; i < childs.length; i++)
       {
         if(childs[i].getAttribute("type") !== "bundle")
