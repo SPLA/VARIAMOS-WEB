@@ -302,6 +302,8 @@ let feature_verification = function feature_verification()
         }
       }
 
+      // remove cardinality
+      xml = xml.split("bundleType=\"RANGE\"").join("bundleType=\"AND\"");
       axios.post(localStorage["domain_implementation_main_path"]+'Verification/check_optional', {
         data: xml, name: model_component, param: selection_parameter, optional: optionals
       })
