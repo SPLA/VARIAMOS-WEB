@@ -25,6 +25,14 @@ let feature_verification = function feature_verification()
     "label":"Check false optional feature",
     "func":Check_optional
   };
+  data[5]={
+    "label":"Check multiplicity conflicts",
+    "func":Check_multi_conflicts
+  };
+  data[6]={
+    "label":"Show HLVL",
+    "func":Check_HLVL
+  };
 
   return data;
 
@@ -313,6 +321,106 @@ let feature_verification = function feature_verification()
             }
           }
         }
+      })
+      .catch(e => {
+        errors.push(e); 
+        let c_header = modalH3(I18n.t("modal_error"),"error");
+        let c_body = modalSimpleText(e + I18n.t("model_actions_backend_problem"));
+        setupModal(c_header,c_body);
+      });
+    }else{
+      let c_header = modalH3(I18n.t("modal_error"),"error");
+      let c_body = modalSimpleText(I18n.t("verification_path_problem"));
+      setupModal(c_header,c_body);
+    }
+  }
+
+  function Check_multi_conflicts(graph, c_errors, c_overlays, model_component, activetab){
+    if(check_input_minizinc(graph,c_errors,c_overlays, model_component, activetab))
+      return;
+    if (localStorage["domain_implementation_main_path"]) {
+      let errors=[];
+
+      var encoder = new mxCodec();
+      var result = encoder.encode(graph.getModel());
+      var xml = mxUtils.getPrettyXml(result);
+      var model_root = graph.getModel().getCell(activetab);
+      var childs = graph.getModel().getChildVertices(model_root);
+      var selection_parameter = {};
+      for(let i = 0; i < childs.length; i++)
+      {
+        if(childs[i].getAttribute("type") !== "bundle")
+        {
+          selection_parameter[childs[i].getAttribute("label")] = false;
+        }
+      }
+      let check_xml = xml.split("bundleType=\"RANGE\"").join("bundleType=\"AND\"");
+      axios.post(localStorage["domain_implementation_main_path"]+'Verification/check_multi_conflict', {
+        data: xml, name: model_component, param: selection_parameter, check_xml: check_xml
+      })
+      .then(response => { 
+        var c_header = modalH3("Verification result");
+        var c_body = modalSimpleText(JSON.stringify(response.data));
+        setupModal(c_header,c_body);
+        // mxUtils.popup(response.data["hlvl"], true);
+        if(JSON.stringify(response.data).includes('There are some multiplicity conflicts.'))
+        {
+          let feature_root = graph.getModel().getCell("feature");    
+          let childs = graph.getModel().getChildVertices(feature_root);
+          for (let i = 0; i < childs.length; i++) {
+            if(childs[i].getAttribute("type") === "bundle")
+            {
+              var encoder = new mxCodec();
+              var result = encoder.encode(childs[i]);
+              if(mxUtils.getPrettyXml(result).includes("bundleType=\"RANGE\""))
+              {
+                let overlay = new mxCellOverlay(new mxImage('images/MX/error.gif', 16, 16), 'Overlay tooltip', 'right', 'top');
+                graph.addCellOverlay(childs[i], overlay);
+                c_errors.push(childs[i]);
+                c_overlays.push(overlay);
+              }
+            }
+          }
+        }
+      })
+      .catch(e => {
+        errors.push(e); 
+        let c_header = modalH3(I18n.t("modal_error"),"error");
+        let c_body = modalSimpleText(e + I18n.t("model_actions_backend_problem"));
+        setupModal(c_header,c_body);
+      });
+    }else{
+      let c_header = modalH3(I18n.t("modal_error"),"error");
+      let c_body = modalSimpleText(I18n.t("verification_path_problem"));
+      setupModal(c_header,c_body);
+    }
+  }
+
+  function Check_HLVL(graph, c_errors, c_overlays, model_component, activetab){
+    if(check_input_minizinc(graph,c_errors,c_overlays, model_component, activetab))
+      return;
+    if (localStorage["domain_implementation_main_path"]) {
+      let errors=[];
+
+      var encoder = new mxCodec();
+      var result = encoder.encode(graph.getModel());
+      var xml = mxUtils.getPrettyXml(result);
+      var model_root = graph.getModel().getCell(activetab);
+      var childs = graph.getModel().getChildVertices(model_root);
+      var selection_parameter = {};
+      for(let i = 0; i < childs.length; i++)
+      {
+        if(childs[i].getAttribute("type") !== "bundle")
+        {
+          selection_parameter[childs[i].getAttribute("label")] = false;
+        }
+      }
+
+      axios.post(localStorage["domain_implementation_main_path"]+'Verification/check_HLVL', {
+        data: xml, name: model_component, param: selection_parameter
+      })
+      .then(response => {
+        mxUtils.popup(response.data, true);
       })
       .catch(e => {
         errors.push(e); 
