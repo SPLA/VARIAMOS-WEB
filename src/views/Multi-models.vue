@@ -1,10 +1,10 @@
 <template>
     <div id="tabs" class="p20">
         <div class="tabs">
-			<div v-for="(item, $index) in getModels()" :key="item" >
-				<a id="atabs" v-if="checktabs(item,$index)" @click="clickactivetab($index)" v-bind:class="[ getactivetab === item ? 'active' : '' ]">
-					{{item}}
-				</a>
+            <div v-for="(item, $index) in getModels()" :key="item['id']" >
+                <a id="atabs" v-if="checktabs(item['id'],$index)" @click="clickactivetab($index)" v-bind:class="[ getactivetab === item['id'] ? 'active' : '' ]">
+                    {{item["label"]}}
+                </a>
 			</div>
         </div>
 
@@ -60,7 +60,15 @@ export default{
         },
         // return the available models
         getModels(){
-            return getModelInfo()["gmodels"];
+            let models = getModelInfo()["gmodels"];
+            let data = {};
+            for(let i=0; i<models.length; i++){
+                data[i] ={
+                    "id":models[i],
+                    "label":getModelInfo()[models[i]]["label"]
+                };
+            }
+            return data;
         },
         /**
          * click the tab and navigate to the corresponding path and model
