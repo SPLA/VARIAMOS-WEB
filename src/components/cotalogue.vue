@@ -264,10 +264,12 @@ export default {
 			this.$store.dispatch('setselect', index);
 			for(let i = 0; i < data.length; i++)
 			{
-				if(data[i].data.nodeId === data[index].data.projectId)
+				if(data[i].data.nodeId === data[index].data.projectId){
 					projectname = data[i].data.nodeName;
-				if(data[i].data.nodeId === data[index].data.parentId)
+				}
+				if(data[i].data.nodeId === data[index].data.parentId){
 					foldername = data[i].data.nodeName.replace(/\s+/g,"");
+				}
 			}		
 			// check if project is open but all the folders are closed
 			let checkpoint = true;
@@ -277,10 +279,11 @@ export default {
 					checkpoint = false;
 			}
 			// set default router path for the situation of all closed folders
-			if(checkpoint && data[index].data.level === 1)
+			if(checkpoint && data[index].data.level === 1){
 				this.$router.push("/models/"+data[index].data.nodeName+"/default/default");
-			else if(checkpoint && data[index].data.level !== 1)
-				this.$router.push("/models/"+data[index].data.nodeName.split('-')[1].replace(/\s+/g,"")+"/default/default");
+			}else if(checkpoint && data[index].data.level !== 1){
+				this.$router.push("/models/"+data[index].data.nodeName.split('-')[1].replace(/\s+/g,"")+"/default/default").catch(err => {});
+			}
 
 			// when clicking the diagram, navigate to the correponding router path
 			if(data[index].data.nodeType === 3){
