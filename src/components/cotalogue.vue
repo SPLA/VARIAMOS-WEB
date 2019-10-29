@@ -49,7 +49,13 @@
 									:class="'far fa-image'" aria-hidden="true"
 									style="color:gray;font-size: 16px;padding-right:4px">
 								</i>
-								<span class="name"
+								<span v-if="item.data.nodeType === 3 && item.data.nodeLabel" class="name"
+									:title="item.data.nodeName"
+									:style="{display:item.data.nodeType===2?'initial':'inline-block',
+											userSelect: 'none'}">
+									{{item.data.nodeLabel}}
+								</span>
+								<span v-else class="name"
 									:title="item.data.nodeName"
 									:style="{display:item.data.nodeType===2?'initial':'inline-block',
 											userSelect: 'none'}">
@@ -116,6 +122,10 @@ export default {
 		 * @param {number} index	- the index of the tree data array
 		 * @returns {boolean}
 		 */
+		test(id){
+			console.log(id);
+			alert(id);
+		},
 		checkchildnode(index) {
 			let data = this.getdata;
 			// if one project is open, the other projects are not displayed
@@ -224,7 +234,7 @@ export default {
 					if(nodeName == ""){
 						this.$router.push("/models/"+projectname+"/default/default");
 					}else{
-						this.$router.push("/models/"+projectname+"/"+foldername+"/"+nodeName);
+						this.$router.push("/models/"+projectname+"/"+foldername+"/"+nodeName).catch(err => {});
 						this.$store.dispatch('updatemodelcomponent', index);
 						this.$store.dispatch('updateactivetab', nodeName);
 					}
@@ -264,10 +274,12 @@ export default {
 			this.$store.dispatch('setselect', index);
 			for(let i = 0; i < data.length; i++)
 			{
-				if(data[i].data.nodeId === data[index].data.projectId)
+				if(data[i].data.nodeId === data[index].data.projectId){
 					projectname = data[i].data.nodeName;
-				if(data[i].data.nodeId === data[index].data.parentId)
+				}
+				if(data[i].data.nodeId === data[index].data.parentId){
 					foldername = data[i].data.nodeName.replace(/\s+/g,"");
+				}
 			}		
 			// check if project is open but all the folders are closed
 			let checkpoint = true;
@@ -277,14 +289,15 @@ export default {
 					checkpoint = false;
 			}
 			// set default router path for the situation of all closed folders
-			if(checkpoint && data[index].data.level === 1)
+			if(checkpoint && data[index].data.level === 1){
 				this.$router.push("/models/"+data[index].data.nodeName+"/default/default");
-			else if(checkpoint && data[index].data.level !== 1)
-				this.$router.push("/models/"+data[index].data.nodeName.split('-')[1].replace(/\s+/g,"")+"/default/default");
+			}else if(checkpoint && data[index].data.level !== 1){
+				this.$router.push("/models/"+data[index].data.nodeName.split('-')[1].replace(/\s+/g,"")+"/default/default").catch(err => {});
+			}
 
 			// when clicking the diagram, navigate to the correponding router path
 			if(data[index].data.nodeType === 3){
-				this.$router.push("/models/"+projectname+"/"+foldername+"/"+data[index].data.nodeName);
+				this.$router.push("/models/"+projectname+"/"+foldername+"/"+data[index].data.nodeName).catch(err => {});
             	this.$store.dispatch('updateactivetab', data[index].data.nodeName);
 			}
 

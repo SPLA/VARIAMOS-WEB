@@ -1,0 +1,113 @@
+<shapes>
+<!-- begin component model -->
+<shape name="package" aspect="variable">
+	<background>
+		<rect x="0" y="20" w="100" h="80"/>
+		<fillstroke/>
+		<rect x="0" y="0" w="45" h="20"/>
+		<fillstroke/>
+   </background>
+	<foreground>
+		<fillstroke/>
+	</foreground>
+</shape>
+
+<shape name="component" aspect="variable">
+	<background>
+		<path>
+			<move x="15" y="0"/>
+			<line x="100" y="0"/>
+			<line x="100" y="100"/>
+			<line x="15" y="100"/>
+			<line x="15" y="0"/>
+			<close/>
+			<move x="0" y="25"/>
+			<line x="30" y="25"/>
+			<line x="30" y="40"/>
+			<line x="0" y="40"/>
+			<line x="0" y="25"/>
+			<close/>
+			<move x="0" y="60"/>
+			<line x="30" y="60"/>
+			<line x="30" y="75"/>
+			<line x="0" y="75"/>
+			<line x="0" y="60"/>
+			<close/>
+		</path>		
+	</background>
+	<foreground>
+		<fillstroke/>
+	</foreground>
+</shape>
+
+<shape name="file" aspect="variable">
+	<background>
+		<path>
+			<move x="0" y="0"/>
+			<line x="70" y="0"/>
+			<quad x1="70" y1="0" x2="100" y2="30"/>
+			<line x="100" y="100"/>
+			<line x="0" y="100"/>
+			<line x="0" y="0"/>
+			<close/>
+			<move x="70" y="0"/>
+			<line x="70" y="30"/>
+			<line x="100" y="30"/>
+			<close/>
+		</path>		
+	</background>
+	<foreground>
+		<fillstroke/>
+	</foreground>
+</shape>
+
+<shape name="fragment" aspect="variable">
+	<background>
+		<path>
+			<move x="0" y="0"/>
+			<line x="70" y="0"/>
+			<quad x1="70" y1="0" x2="100" y2="30"/>
+			<line x="100" y="60"/>
+			<quad x1="100" y1="60" x2="80" y2="70"/>
+			<quad x1="80" y1="70" x2="100" y2="80"/>
+			<line x="100" y="100"/>
+			<line x="0" y="100"/>
+			<line x="0" y="50"/>
+			<quad x1="0" y1="50" x2="20" y2="40"/>
+			<quad x1="20" y1="40" x2="0" y2="30"/>
+			<line x="0" y="0"/>
+			<close/>
+			<move x="70" y="0"/>
+			<line x="70" y="30"/>
+			<line x="100" y="30"/>
+			<close/>
+		</path>		
+	</background>
+	<foreground>
+		<fillstroke/>
+	</foreground>
+</shape>
+
+<shape name="custom" aspect="variable" strokewidth="4">
+	<background>
+		<path>
+			<move x="0" y="0"/>
+			<line x="70" y="0"/>
+			<quad x1="70" y1="0" x2="100" y2="30"/>
+			<line x="100" y="100"/>
+			<line x="0" y="100"/>
+			<line x="0" y="0"/>
+			<close/>
+			<move x="70" y="0"/>
+			<line x="70" y="30"/>
+			<line x="100" y="30"/>
+			<close/>
+		</path>		
+	</background>
+	<foreground>
+		<fillstroke/>
+	</foreground>
+</shape>
+
+<!-- end component model -->
+</shapes>

@@ -1,0 +1,92 @@
+<shapes>
+
+<shape name="board" aspect="variable">
+	<background>
+		<path>
+			<move x="25" y="00"/>
+			<line x="100" y="00"/>  
+			<line x="100" y="100"/> 
+			<line x="0" y="100"/> 
+			<line x="0" y="25"/> 
+			<line x="25" y="0"/> 
+			<close/>  
+		</path>	
+	</background>
+	<foreground>
+		<fillstroke/>
+	</foreground>
+</shape>
+
+<shape name="analogSensor" aspect="variable"> 
+	<background>
+		<path>
+			<move x="0" y="00"/>
+			<line x="100" y="00"/>  
+			<line x="100" y="100"/> 
+			<line x="0" y="100"/> 
+			<line x="0" y="00"/> 
+			<close/>  
+			<fillstroke/>
+		</path>		
+	</background>
+	<foreground> 
+		<image src="./images/models/adaptation_hardware/sensor.png" x="1" y="3" w="15" h="35" />
+		<image src="./images/models/adaptation_hardware/analog.png" x="84" y="3" w="15" h="35" />	
+	</foreground>
+</shape>
+
+<shape name="digitalSensor" aspect="variable">
+	<background>
+		<path>
+			<move x="0" y="00"/>
+			<line x="100" y="00"/>  
+			<line x="100" y="100"/> 
+			<line x="0" y="100"/> 
+			<line x="0" y="00"/> 
+			<close/>  
+			<fillstroke/>
+		</path>		
+	</background>
+	<foreground> 
+		<image src="./images/models/adaptation_hardware/sensor.png" x="1" y="3" w="15" h="35" />
+		<image src="./images/models/adaptation_hardware/digital.png" x="84" y="3" w="15" h="35" />	
+	</foreground>
+</shape>
+
+<shape name="digitalActuator" aspect="variable">
+	<background>
+		<path>
+			<move x="0" y="00"/>
+			<line x="100" y="00"/>  
+			<line x="100" y="100"/> 
+			<line x="0" y="100"/> 
+			<line x="0" y="00"/> 
+			<close/>  
+			<fillstroke/>
+		</path>		
+	</background>
+	<foreground> 
+		<image src="./images/models/adaptation_hardware/actuator.png" x="1" y="3" w="15" h="35" />
+		<image src="./images/models/adaptation_hardware/digital.png" x="84" y="3" w="15" h="35" />	
+	</foreground>
+</shape>
+
+<shape name="analogActuator" aspect="variable"> 
+	<background>
+		<path>
+			<move x="0" y="00"/>
+			<line x="100" y="00"/>  
+			<line x="100" y="100"/> 
+			<line x="0" y="100"/> 
+			<line x="0" y="00"/> 
+			<close/>  
+			<fillstroke/>
+		</path>		
+	</background>
+	<foreground> 
+		<image src="./images/models/adaptation_hardware/actuator.png" x="1" y="3" w="15" h="35" />
+		<image src="./images/models/adaptation_hardware/analog.png" x="84" y="3" w="15" h="35" />	
+	</foreground>
+</shape>
+
+</shapes>
