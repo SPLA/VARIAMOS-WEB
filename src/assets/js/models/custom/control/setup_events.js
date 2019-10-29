@@ -1,4 +1,9 @@
+import { setupModal, modalH3, modalInputTexts, modalButton, modalControl } from '../../../common/util'
+
 let setup_events = function setup_events(graph){
+  let texts = ["DeltaU:","Delay"]   
+  let default_vals = ["",""];
+  let inputs=["idDeltaU","idDelay"];
   //clean previous generated events
   if(graph.eventListeners.length>22){
       graph.eventListeners.pop();graph.eventListeners.pop();
@@ -17,10 +22,237 @@ let setup_events = function setup_events(graph){
               let original_cell_id = cell.getId().substring(4);
               let original_cell = graph.getModel().getCell(original_cell_id);
               let parent = original_cell.getParent();
-              window.location.href = result_url+"/"+parent.getId();
+             /* window.location.href = result_url+"/"+parent.getId();*/
+             data_continuous();
+
           } 
+          let type = cell.getAttribute("type");
+      if (type == "measured_output") {
+            
+          }  
       }
   }); 
+    let data_continuous = function() {
+    let c_header = modalH3(("Transfer Function"));
+    let c_body = modalControl(texts,inputs,default_vals);
+    let c_footer = [];
+    c_footer.push(modalButton("Model Output", function(){
+        /*if(  document.getElementById('idDeltaU').value =="")
+        {
+          alert("invalid")
+        }
+        else
+        {
+          canvas()
+        }*/
+        canvas()
+    }));
+    c_footer.push(modalButton("Upload", function(){uploadData();}));
+    setupModal(c_header, c_body, c_footer);  
+  }
+
+  let data_csv = function() {
+    let text=localStorage["control_data"];
+    let allTextLines = text.split(/\r\n|\n/);
+    let lines = [];
+    let data
+    let data_n
+    let cont=0
+    let time=[]
+    for (let i=0; i<allTextLines.length; i++) {
+        data = allTextLines[i];
+        data = data.replace(",", ".");
+        data_n= parseFloat(data)
+        lines.push(data_n);
+        cont=i*cont;
+        time.push(i);
+    }
+    return lines 
+  }
+
+  
+
+  function canvas()
+  {
+    let pos_delay = function() {
+      let pos
+      for (let i=0; i<lines.length; i++) {
+       
+        if(lines[i]!=lines[0])
+        {  
+          first=lines[i-1]
+          pos=i-1
+          break;
+        }
+        else
+        {
+          pos=0
+        }
+    }
+      return pos
+    }
+
+    let time=[];
+    let lines=data_csv();
+    let k
+    let last=lines.slice(-2)[0];
+    let tao_value
+    let first=lines[0]
+    let tao=((last-first)*0.63)+first
+
+    let tao_aproximate = function() {
+      let cercano=0;
+      let diferencia=0;
+
+      for (let i = 0; i < lines.length; i++)
+      {
+        if ( Math.abs(tao -cercano) > Math.abs(lines[i] - tao)) {
+          cercano = lines[i];
+          diferencia=i;
+          
+        }
+
+
+      }
+      return diferencia;
+    }
+    if(document.getElementById('idDelay').checked==false)
+    {
+      first=lines[0];
+       tao_value = tao_aproximate();
+    }
+    else{
+      first=lines[pos_delay()]
+      tao_value = tao_aproximate() - pos_delay()
+    }
+
+    
+
+    
+    let continuous = function() {
+      let result=[];
+      let delta_value = document.getElementById('idDeltaU').value;
+      
+  
+      k=(last-first)/parseInt(delta_value);
+
+      for (let i = 0; i < lines.length; i++)
+      { 
+        
+          let value=(k*parseInt(delta_value)*(1-Math.exp(-i/parseInt(tao_value)))+first);
+          result.push(value);
+          time.push(i);
+        
+        
+      }
+      /*console.log(pos_delay(),tao_value,k)
+      let proportional=1.2*(tao_value/(k*pos_delay()))
+      let Ti=(2*pos_delay())
+      let Td= (0.5*pos_delay())
+
+     /* alert("K: "+proportional.toFixed(2)+"ti: "+Ti+"td: "+Td)*/
+      return result;
+    
+      };
+    
+
+    let result_continuous=continuous()
+   
+    let c_header = modalH3(("Y(s)="+k.toFixed(2)+"/("+tao_value+"-1)"));
+    let c_body=0
+    let c_footer = modalButton(("return"),function(){data_continuous();});
+    setupModal(c_header,c_body,c_footer)
+    let main_modal = document.getElementById("main_modal_body");
+    
+       let canvas = document.createElement("canvas");
+
+          canvas.id = "myChart";
+          canvas.width = 500;
+          canvas.height = 200;
+          canvas.className = "my-4 chartjs-render-monitor";
+
+           main_modal.appendChild(canvas);
+          let ctx = document.getElementById("myChart");
+          let myChart = new Chart(ctx, {
+            type: "line",
+            data: {
+              labels: time,
+              datasets: [
+                {
+                  data: lines,//setInterval(function(){ uploadData(); }, 3000),
+                  label: "Data Plant",
+                  lineTension: 0,
+                  backgroundColor: "transparent",
+                  borderColor: "#D83A18",
+                  borderWidth: 2,
+                  pointBackgroundColor: "#D83A18",
+                  pointBorderColor: "transparent",
+                  pointBackgroundColor: "transparent",
+                  pointBorderWidth: 0
+                },
+                {
+                  data: result_continuous,
+                  label: "Data Transfer Function",
+                  lineTension: 0,
+                  backgroundColor: "transparent",
+                  borderColor: "#007bff",
+                  borderWidth: 2,
+                  pointBackgroundColor: "#007bff",
+                  pointBorderColor: "transparent",
+                  pointBackgroundColor: "transparent",
+                  pointBorderWidth: 0
+                }
+              ]
+            },
+            options: {
+              scales: {
+                yAxes: [
+                  {
+                    ticks: {
+                      beginAtZero: false,
+                      suggestedMin: 40,
+                      suggestedMax: 20
+
+                    }
+                  }
+                ]
+              },
+              legend: {
+                display: true
+              }
+            }
+          });
+
+          return canvas
+
+  }
+
+  function uploadData()
+  {
+      let he = document.getElementById("hidden_elements");
+      let input=document.createElement('input');
+          input.type="file";
+          input.style.display="none";           
+          he.appendChild(input);
+        input.addEventListener('change', function(event) {
+        let fileToLoad = input.files[0];
+        let fileReader = new FileReader();
+        fileReader.onload = function(fileLoadedEvent) 
+        {
+              
+                let textload = fileLoadedEvent.target.result;
+                localStorage["control_data"]=textload; 
+                alert("Successfully stored data")
+              
+        }
+        fileReader.readAsText(fileToLoad, "UTF-8");
+        });
+   if (input)
+    {
+    input.click();
+    }
+     
+    }
 
   var controlAction = findControlAction(graph)
 
@@ -51,63 +283,39 @@ let setup_events = function setup_events(graph){
 
   function hide_control_elements(graph, controlActionLabel){
       //alert('escondiendo elementos ' + controlActionLabel);
-      let names_control_action = [];
-      let target;// 
+     let names_control_action = [];
      let target_system_id; // target system id
-     let proportional;// proportional value of the target system element
-     let derivate;// derivate value of the target system element
-     let integral;// integral value of the target system element
      let target_system_relations; // relations target system
      // controller variables
      let id_controller;// controller id
      let controller_relations; // controller relations
      let id_controller_inner;
      let controller_inner_relations;
-     let proportional_inner;// proportional value of the target system element
-     let derivate_inner;// derivate value of the target system element
-     let integral_inner;// integral value of the target system element
      // summing point variables
      let id_summing; // summing point id
      let summing_relations; // summing relations
      let id_initial_summing; // summing initial id
      let summing_relations2;
-     let summing_value;// value summing
-     let summing_value_inner; // value summing inner
      let id_summing_plant // id summing plant
      // filter variables
      let id_filter; // filter relations
      let filter_relations;
      // set point variables
-     let setpoint_value; // value setpoint
-     let setpoint_time;
-     let setpoints=[]; // array
      let id_set;// id setpoint
-     let times=[];
-     let id_set2=false;
-     // subtraction
-     let id_subtraction;
-     let subtraction_relations;
-     let subraction_value;
-   
      // branch variables
      let id_branch// id branchpoint
      let id_final_branch
      let branch_relations_targets// target relations branchpoint
-     let branch_relations_targets2// target relations branchpoint
      let branch_relations// source relations branchpoint
       let final_branch_relations// source relations branchpoint
      // output variables
      let id_output// id output
-     let currentoutput// current output
      // transducer variables
-     let value_transducer// value transducer
      let id_transducer// id transducer
      let transducer_relations// transducer relations
      // list elements
      let list_elements=[];
-     let id_final;
-
-      let feedback_root = graph.getModel().getCell("control");
+     let feedback_root = graph.getModel().getCell("control");
      let childs = graph.getModel().getChildVertices(feedback_root);
      //navigates through the feature model childsld
      for (let i = 0; i < childs.length; i++)

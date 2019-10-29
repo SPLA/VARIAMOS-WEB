@@ -19,7 +19,15 @@ export function setupModal(header_content,body_content="",footer_content="")
 
     main_modal_header.appendChild(header_content);
     if(body_content!=""){main_modal_body.appendChild(body_content);}
-    if(footer_content!=""){main_modal_footer.appendChild(footer_content);}
+    if(footer_content!=""){
+        if(Array.isArray(footer_content)){
+            footer_content.forEach(footer_element => {
+                main_modal_footer.appendChild(footer_element);
+            });
+        } else {
+            main_modal_footer.appendChild(footer_content);
+        }
+    }
 }
 
 export function modalH3(text,type="normal"){
@@ -119,6 +127,36 @@ export function downloadFile(filename, text) {
     element.click(); 
     document.body.removeChild(element);
   }
+
+  export function modalControl(texts,inputs,default_vals){
+    let table = document.createElement('table');
+    for(let i=0;i<texts.length;i++){
+        let tr = document.createElement('tr');
+        let td = document.createElement('td');
+        td.innerHTML=texts[i];
+        let input={}
+        tr.appendChild(td);
+        if(i==1){
+            input = document.createElement('input');
+            input.type="checkbox";
+            input.id=inputs[i];
+        }
+        else{
+        
+     input = document.createElement('input');
+        input.value=default_vals[i];
+        input.type="text";
+        input.id=inputs[i];
+        input.size=40;
+        input.name=inputs[i];
+        }
+        let td2 = document.createElement('td');
+        td2.appendChild(input);
+        tr.appendChild(td2);
+        table.appendChild(tr);
+    }
+    return table;
+}
 
 /* end util */
 

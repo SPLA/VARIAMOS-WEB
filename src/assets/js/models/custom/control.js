@@ -30,11 +30,6 @@ let control_main = function control_main(graph)
             false, 'branchpoint', null, null, 1, 1, ['controlAction'],
             'Branchpoint Must Have 1 Target system',
             'Branchpoint Must Connect From Target system'));
-       /* graph.multiplicities.push(new mxMultiplicity(
-            true, 'controlAction', null, null, 1, 1, ['branchpoint'],
-            'Target system Must Have 1  branchpoint',
-            'Target system Must Connect to branchpoint'));
-            */
             graph.multiplicities.push(new mxMultiplicity(
             true, 'set_point', null, null, 1, 1, ['summing_point'],
             'Setpoint system Must Have 1  summing_point',
@@ -117,6 +112,13 @@ let control_main = function control_main(graph)
                 "def_value":"0",
             }]
         };
+        attributes[5]={
+            "types":["filter"],
+            "custom_attributes":[{
+                "name":"FilterType",
+                "def_value":"Average",
+            }]
+        };
         
         return attributes;
     }
@@ -134,11 +136,18 @@ let control_main = function control_main(graph)
                     "input_type":"select",
 					"input_values":["+/-","+/+","-/+","-/-"]
 				}
-            ],	
+            ],
+            "filter":[
+				{
+					"attribute":"FilterType",
+					"input_type":"select",
+					"input_values":["Average","Recursive"],
+				}
+			]   	
         }      
 		return styles;
     }
-
+    
     function control_labels(){
 		let labels={};
 		labels={
