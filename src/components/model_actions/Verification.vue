@@ -6,7 +6,7 @@
     <div id="verification-menu" class="dropdown-menu" aria-labelledby="navbarDropdown">
       <a @click="test()" class="dropdown-item">Test sending the model</a>
       <a data-menudisplay="['adaptation_state','adaptation_hardware','adaptation_binding_state_hardware']" @click="test_web()" class="dropdown-item">Test sending the model to microservices</a>
-      <a v-for="item in menu_options" v-bind:key="item.label" v-on:click="clear_overlays(); item.func(current_graph, cell_errors, cell_overlays, getmodel_component, getactivetab);" class="dropdown-item">
+      <a v-for="item in menu_options" v-bind:key="item.label" v-on:click="clear_overlays(); item.func(current_graph, cell_errors, cell_overlays, getmodel_component);" class="dropdown-item">
         {{ item.label }}
       </a>
       <a @click="clear_overlays()" class="dropdown-item">Clear errors</a>
@@ -127,9 +127,6 @@ export default {
   computed:{
     getmodel_component (){
         return this.$store.getters.getmodelcomponent;
-    },
-    getactivetab (){
-        return this.$store.getters.getactivetab;
     },
     getcache_selected (){
         return this.$store.getters.getcacheselected;

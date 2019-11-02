@@ -37,7 +37,7 @@ let feature_verification = function feature_verification()
   return data;
 
   //check that all the features (root, abstract and concrete) contain unique IDs
-  function check_unique_ids(graph,c_errors,c_overlays, model_component, activetab){
+  function check_unique_ids(graph,c_errors,c_overlays, model_component){
     let feature_root = graph.getModel().getCell("feature");    
     let childs = graph.getModel().getChildVertices(feature_root);
     let names = [];
@@ -64,7 +64,7 @@ let feature_verification = function feature_verification()
       }
       return result;
   }
-  function check_input_minizinc(graph,c_errors,c_overlays, model_component, activetab){
+  function check_input_minizinc(graph,c_errors,c_overlays, model_component){
     let feature_root = graph.getModel().getCell("feature");    
     let childs = graph.getModel().getChildVertices(feature_root);
     let names = [];
@@ -105,19 +105,19 @@ let feature_verification = function feature_verification()
   }
   
   // check the void product line
-  function Check_void(graph, c_errors, c_overlays, model_component, activetab){
+  function Check_void(graph, c_errors, c_overlays, model_component){
     // check duplicated name and space in name
-    if(check_input_minizinc(graph,c_errors,c_overlays, model_component, activetab))
+    if(check_input_minizinc(graph,c_errors,c_overlays, model_component))
       return;
     if (localStorage["domain_implementation_main_path"]) {
       let errors=[];
 
-      var encoder = new mxCodec();
-      var result = encoder.encode(graph.getModel());
-      var xml = mxUtils.getPrettyXml(result);
-      var model_root = graph.getModel().getCell(activetab);
-      var childs = graph.getModel().getChildVertices(model_root);
-      var selection_parameter = {};
+      let encoder = new mxCodec();
+      let result = encoder.encode(graph.getModel());
+      let xml = mxUtils.getPrettyXml(result);
+      let feature_root = graph.getModel().getCell("feature");
+      let childs = graph.getModel().getChildVertices(feature_root);
+      let selection_parameter = {};
       /**
        * @todo keep for the selections of features
        */
@@ -133,8 +133,8 @@ let feature_verification = function feature_verification()
         data: xml, name: model_component, param: selection_parameter
       })
       .then(response => {
-        var c_header = modalH3("Verification result");
-        var c_body = modalSimpleText("Void product line:\n " + JSON.stringify(response.data));
+        let c_header = modalH3("Verification result");
+        let c_body = modalSimpleText("Void product line:\n " + JSON.stringify(response.data));
         setupModal(c_header,c_body);
       })
       .catch(e => {
@@ -151,18 +151,18 @@ let feature_verification = function feature_verification()
   }
 
   // check false product line
-  function Check_false(graph, c_errors, c_overlays, model_component, activetab){
-    if(check_input_minizinc(graph,c_errors,c_overlays, model_component, activetab))
+  function Check_false(graph, c_errors, c_overlays, model_component){
+    if(check_input_minizinc(graph,c_errors,c_overlays, model_component))
       return;
     if (localStorage["domain_implementation_main_path"]) {
       let errors=[];
 
-      var encoder = new mxCodec();
-      var result = encoder.encode(graph.getModel());
-      var xml = mxUtils.getPrettyXml(result);
-      var model_root = graph.getModel().getCell(activetab);
-      var childs = graph.getModel().getChildVertices(model_root);
-      var selection_parameter = {};
+      let encoder = new mxCodec();
+      let result = encoder.encode(graph.getModel());
+      let xml = mxUtils.getPrettyXml(result);
+      let feature_root = graph.getModel().getCell("feature");
+      let childs = graph.getModel().getChildVertices(feature_root);
+      let selection_parameter = {};
       /**
        * @todo keep for the selections of features
        */
@@ -178,8 +178,8 @@ let feature_verification = function feature_verification()
         data: xml, name: model_component, param: selection_parameter
       })
       .then(response => {
-        var c_header = modalH3("Verification result");
-        var c_body = modalSimpleText("False product line:\n " + JSON.stringify(response.data));
+        let c_header = modalH3("Verification result");
+        let c_body = modalSimpleText("False product line:\n " + JSON.stringify(response.data));
         setupModal(c_header,c_body);
       })
       .catch(e => {
@@ -196,18 +196,18 @@ let feature_verification = function feature_verification()
   }
 
   // Check dead feature
-  function Check_dead(graph, c_errors, c_overlays, model_component, activetab){
-    if(check_input_minizinc(graph,c_errors,c_overlays, model_component, activetab))
+  function Check_dead(graph, c_errors, c_overlays, model_component){
+    if(check_input_minizinc(graph,c_errors,c_overlays, model_component))
       return;
     if (localStorage["domain_implementation_main_path"]) {
       let errors=[];
 
-      var encoder = new mxCodec();
-      var result = encoder.encode(graph.getModel());
-      var xml = mxUtils.getPrettyXml(result);
-      var model_root = graph.getModel().getCell(activetab);
-      var childs = graph.getModel().getChildVertices(model_root);
-      var selection_parameter = {};
+      let encoder = new mxCodec();
+      let result = encoder.encode(graph.getModel());
+      let xml = mxUtils.getPrettyXml(result);
+      let feature_root = graph.getModel().getCell("feature");
+      let childs = graph.getModel().getChildVertices(feature_root);
+      let selection_parameter = {};
       /**
        * @todo keep for the selections of features
        */
@@ -225,21 +225,21 @@ let feature_verification = function feature_verification()
       .then(response => {
         if(Object.keys(response.data).length === 0)
         {
-          var c_header = modalH3("Verification result");
-          var c_body = modalSimpleText("There is no dead feature.");
+          let c_header = modalH3("Verification result");
+          let c_body = modalSimpleText("There is no dead feature.");
           setupModal(c_header,c_body);
         }
         else
         {
           let response_data = [];
           let num = 0;
-          for (var key in response.data)
+          for (let key in response.data)
           {
             response_data[num] = response.data[key];
             num++;
           }
-          var c_header = modalH3("Verification result");
-          var c_body = modalSimpleText("There are dead features.");
+          let c_header = modalH3("Verification result");
+          let c_body = modalSimpleText("There are dead features.");
           setupModal(c_header,c_body);
 
           // set overlay on the dead features
@@ -270,19 +270,19 @@ let feature_verification = function feature_verification()
   }
 
   // Check false optional
-  function Check_optional(graph, c_errors, c_overlays, model_component, activetab){
-    if(check_input_minizinc(graph,c_errors,c_overlays, model_component, activetab))
+  function Check_optional(graph, c_errors, c_overlays, model_component){
+    if(check_input_minizinc(graph,c_errors,c_overlays, model_component))
       return;
     if (localStorage["domain_implementation_main_path"]) {
       let errors=[];
 
-      var encoder = new mxCodec();
-      var result = encoder.encode(graph.getModel());
-      var xml = mxUtils.getPrettyXml(result);
-      var model_root = graph.getModel().getCell(activetab);
-      var childs = graph.getModel().getChildVertices(model_root);
-      var selection_parameter = {};
-      var optionals= {};
+      let encoder = new mxCodec();
+      let result = encoder.encode(graph.getModel());
+      let xml = mxUtils.getPrettyXml(result);
+      let feature_root = graph.getModel().getCell("feature");
+      let childs = graph.getModel().getChildVertices(feature_root);
+      let selection_parameter = {};
+      let optionals= {};
       /**
        * @todo keep for the selections of features
        */
@@ -294,11 +294,11 @@ let feature_verification = function feature_verification()
         }
       }
       // get all the optional features
-      for(let i = 0; i < model_root.children.length; i++)
+      for(let i = 0; i < feature_root.children.length; i++)
       {
-        if(model_root.children[i].getAttribute("type") === "relation" && model_root.children[i].getAttribute("relType") === "optional")
+        if(feature_root.children[i].getAttribute("type") === "relation" && feature_root.children[i].getAttribute("relType") === "optional")
         {
-          optionals[model_root.children[i].source.getAttribute("label")] = false;
+          optionals[feature_root.children[i].source.getAttribute("label")] = false;
         }
       }
 
@@ -308,21 +308,21 @@ let feature_verification = function feature_verification()
       .then(response => {
         if(Object.keys(response.data).length === 0)
         {
-          var c_header = modalH3("Verification result");
-          var c_body = modalSimpleText("There is no false optional feature.");
+          let c_header = modalH3("Verification result");
+          let c_body = modalSimpleText("There is no false optional feature.");
           setupModal(c_header,c_body);
         }
         else
         {
           let response_data = [];
           let num = 0;
-          for (var key in response.data)
+          for (let key in response.data)
           {
             response_data[num] = response.data[key];
             num++;
           }
-          var c_header = modalH3("Verification result");
-          var c_body = modalSimpleText("There are false optional features.");
+          let c_header = modalH3("Verification result");
+          let c_body = modalSimpleText("There are false optional features.");
           setupModal(c_header,c_body);
 
           // set overlay to the false optional features
@@ -353,18 +353,18 @@ let feature_verification = function feature_verification()
   }
 
   // check cardinality in multiplicity conflicts
-  function Check_multi_conflicts(graph, c_errors, c_overlays, model_component, activetab){
-    if(check_input_minizinc(graph,c_errors,c_overlays, model_component, activetab))
+  function Check_multi_conflicts(graph, c_errors, c_overlays, model_component){
+    if(check_input_minizinc(graph,c_errors,c_overlays, model_component))
       return;
     if (localStorage["domain_implementation_main_path"]) {
       let errors=[];
 
-      var encoder = new mxCodec();
-      var result = encoder.encode(graph.getModel());
-      var xml = mxUtils.getPrettyXml(result);
-      var model_root = graph.getModel().getCell(activetab);
-      var childs = graph.getModel().getChildVertices(model_root);
-      var selection_parameter = {};
+      let encoder = new mxCodec();
+      let result = encoder.encode(graph.getModel());
+      let xml = mxUtils.getPrettyXml(result);
+      let feature_root = graph.getModel().getCell("feature");
+      let childs = graph.getModel().getChildVertices(feature_root);
+      let selection_parameter = {};
       /**
        * @todo keep for the selections of features
        */
@@ -382,8 +382,8 @@ let feature_verification = function feature_verification()
         data: xml, name: model_component, param: selection_parameter, check_xml: check_xml
       })
       .then(response => { 
-        var c_header = modalH3("Verification result");
-        var c_body = modalSimpleText(JSON.stringify(response.data));
+        let c_header = modalH3("Verification result");
+        let c_body = modalSimpleText(JSON.stringify(response.data));
         setupModal(c_header,c_body);
         // set overlay on all the range bundle
         if(JSON.stringify(response.data).includes('There are some multiplicity conflicts.'))
@@ -393,8 +393,8 @@ let feature_verification = function feature_verification()
           for (let i = 0; i < childs.length; i++) {
             if(childs[i].getAttribute("type") === "bundle")
             {
-              var encoder = new mxCodec();
-              var result = encoder.encode(childs[i]);
+              let encoder = new mxCodec();
+              let result = encoder.encode(childs[i]);
               if(mxUtils.getPrettyXml(result).includes("bundleType=\"RANGE\""))
               {
                 let overlay = new mxCellOverlay(new mxImage('images/MX/error.gif', 16, 16), 'Overlay tooltip', 'right', 'top');
@@ -420,18 +420,18 @@ let feature_verification = function feature_verification()
   }
 
   // show the HLVL code
-  function Check_HLVL(graph, c_errors, c_overlays, model_component, activetab){
-    if(check_input_minizinc(graph,c_errors,c_overlays, model_component, activetab))
+  function Check_HLVL(graph, c_errors, c_overlays, model_component){
+    if(check_input_minizinc(graph,c_errors,c_overlays, model_component))
       return;
     if (localStorage["domain_implementation_main_path"]) {
       let errors=[];
 
-      var encoder = new mxCodec();
-      var result = encoder.encode(graph.getModel());
-      var xml = mxUtils.getPrettyXml(result);
-      var model_root = graph.getModel().getCell(activetab);
-      var childs = graph.getModel().getChildVertices(model_root);
-      var selection_parameter = {};
+      let encoder = new mxCodec();
+      let result = encoder.encode(graph.getModel());
+      let xml = mxUtils.getPrettyXml(result);
+      let feature_root = graph.getModel().getCell("feature");
+      let childs = graph.getModel().getChildVertices(feature_root);
+      let selection_parameter = {};
       /**
        * @todo keep for the selections of features
        */
