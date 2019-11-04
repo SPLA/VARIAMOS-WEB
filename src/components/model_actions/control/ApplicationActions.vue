@@ -54,7 +54,7 @@ export default {
         .getChildVertices(feedback_root);
       //navigates through the feature model childsld
       for (let i = 0; i < childs.length; i++) {
-        if (childs[i].getAttribute("type") == "controlAction") {
+        if (childs[i].getAttribute("type") == "plant") {
           let target_sys = childs[i].getAttribute("label");
           names.push(target_sys);
         }
@@ -123,7 +123,7 @@ export default {
           let canvas = document.createElement("canvas");
 
           for (let i = 0; i < childs.length; i++) {
-            if (childs[i].getAttribute("type") == "controlAction") {
+            if (childs[i].getAttribute("type") == "plant") {
               //only selected concrete features are analyzed
 
               if (childs[i].getAttribute("label") == value_label) {
@@ -204,7 +204,7 @@ export default {
             if (source.getAttribute("type") == "branchpoint") {
               id_final_branch = source.getId();
             }
-            if (source.getAttribute("type") == "controlAction") {
+            if (source.getAttribute("type") == "plant") {
               target_system_id = source.getId();
             }
             if (source.getAttribute("type") == "controller") {
@@ -325,7 +325,7 @@ export default {
             let source = branch_relations[i].source;
             if (
               source.getId() == target_system_id &&
-              source.getAttribute("type") == "controlAction"
+              source.getAttribute("type") == "plant"
             ) {
               id_final = source.getId();
             }

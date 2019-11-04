@@ -18,16 +18,16 @@ let control_main = function control_main(graph)
             'Measured output must have no outcoming edges',
             null));
         graph.multiplicities.push(new mxMultiplicity(
-            false, 'set_point', null, null, 0, 0, 'controlAction',
+            false, 'set_point', null, null, 0, 0, 'plant',
             'Setpoint must have no incoming edges ',
             null));
             // Target needs exactly one incoming connection from Source
 				graph.multiplicities.push(new mxMultiplicity(
-                    false, 'controlAction', null, null, 1, 1, ['controller', 'summing_point'],
+                    false, 'plant', null, null, 1, 1, ['controller', 'summing_point'],
                     'Target Must Have 1 incoming connection ',
                     'Target Must Connect From controller or summing point'));
         graph.multiplicities.push(new mxMultiplicity(
-            false, 'branchpoint', null, null, 1, 1, ['controlAction'],
+            false, 'branchpoint', null, null, 1, 1, ['plant'],
             'Branchpoint Must Have 1 Target system',
             'Branchpoint Must Connect From Target system'));
             graph.multiplicities.push(new mxMultiplicity(
@@ -43,9 +43,11 @@ let control_main = function control_main(graph)
         let  summing_point   = {src:projectPath+"images/models/control/summing_point.PNG", wd:100, hg:40, style:"shape=ellipse", type:"summing_point", pname:"Summing point"};
         let  setpoint   = {src:projectPath+"images/models/control/setpoint.png", wd:100, hg:40, style:"shape=setpoint", type:"set_point", pname:"Setpoint "};
         let  measured_output   = {src:projectPath+"images/models/control/measured-output.png", wd:100, hg:40, style:"shape=measured_output", type:"measured_output", pname:"Measured output "};
-        let  branchpoint   = {src:projectPath+"images/models/control/bifurcation.png", wd:100, hg:40, style:"shape=rhombus", type:"branchpoint", pname:"Branchpoint"};
-        let  filter = {src:projectPath+"images/models/control/filter.png", wd:100, hg:40, style:"shape=filter", type:"filter", pname:"filter"};
-        
+        let  branchpoint   = {src:projectPath+"images/models/control/bifurcation.png", wd:100, hg:40, style:"shape=rhombus", type:"Branchpoint", pname:"Branchpoint"};
+        let  filter = {src:projectPath+"images/models/control/filter.png", wd:100, hg:40, style:"shape=filter", type:"filter", pname:"Filter"};
+        let  plant = {src:projectPath+"images/models/control/controller.png", wd:100, hg:40, style:"shape=rectangle", type:"plant", pname:"Plant"};
+
+
         let elements=[];
         elements[0]=controller;
         elements[1]=summing_point;
@@ -53,7 +55,8 @@ let control_main = function control_main(graph)
         elements[3]=setpoint;
         elements[4]=measured_output;
         elements[5]=branchpoint;
-        elements[6]=filter;        
+        elements[6]=filter;   
+        elements[7]=plant;       
         
         return elements;
     }
@@ -64,16 +67,16 @@ let control_main = function control_main(graph)
             "types":["controller"],
             "custom_attributes":[{
                 "name":"Proportional",
-                "def_value":"0.25"
+                "def_value":"0"
         
             },
             {
                 "name":"Integral",
-                "def_value":"0.01"
+                "def_value":"0"
             },
             {
                 "name":"Derivate",
-                "def_value":"0.4"
+                "def_value":"0"
             }]
 
         };

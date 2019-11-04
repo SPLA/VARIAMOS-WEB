@@ -141,13 +141,17 @@ export function downloadFile(filename, text) {
             input.type="checkbox";
             input.id=inputs[i];
         }
+        else if(i==2){
+            input = document.createElement('span');
+            input.innerText=inputs[i];
+        }
         else{
         
      input = document.createElement('input');
         input.value=default_vals[i];
         input.type="text";
         input.id=inputs[i];
-        input.size=40;
+        input.size=10;
         input.name=inputs[i];
         }
         let td2 = document.createElement('td');
