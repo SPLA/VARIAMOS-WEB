@@ -1,5 +1,4 @@
 import { setupModal, modalH3, modalSimpleText, modalButton } from '../../../common/util'
-import * as Mathjax from 'mathjax';
 
 function modalControl(texts,inputs,default_vals){
   let table = document.createElement('table');
@@ -97,6 +96,10 @@ let setup_events = function setup_events(graph){
         }
       }));
     setupModal(c_header, c_body, c_footer);  
+    let formula=document.getElementById("main_modal_body");
+    var tex = "\\frac{}{2}+ \\frac{}{2} = \\frac{}{5}";
+    formula.innerHTML = "\\["+tex+"\\]";
+    MathJax.Hub.Queue(["Typeset",MathJax.Hub,formula]);
   }
   // load data from localstorage
   let data_csv = function() {
