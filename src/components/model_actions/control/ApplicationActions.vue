@@ -39,7 +39,7 @@ export default {
     generate_graph(controlActionLabel) {
       let c_header = modalH3(this.$t("generate_graph_title"));
       let value_label = controlActionLabel;
-      let blank = "";
+      let c_body = modalSimpleText("");
       let c_footer = modalButton("Return", this.component);
       let lista = [];
 
@@ -54,7 +54,7 @@ export default {
         .getChildVertices(feedback_root);
       //navigates through the feature model childsld
       for (let i = 0; i < childs.length; i++) {
-        if (childs[i].getAttribute("type") == "controlAction") {
+        if (childs[i].getAttribute("type") == "plant") {
           let target_sys = childs[i].getAttribute("label");
           names.push(target_sys);
         }
@@ -118,12 +118,12 @@ export default {
 
       for (let i = 0; i < names.length; i++) {
         if (value_label == names[i]) {
-          setupModal(c_header, blank, c_footer);
+          setupModal(c_header, c_body, c_footer);
           let main_modal = document.getElementById("main_modal_body");
           let canvas = document.createElement("canvas");
 
           for (let i = 0; i < childs.length; i++) {
-            if (childs[i].getAttribute("type") == "controlAction") {
+            if (childs[i].getAttribute("type") == "plant") {
               //only selected concrete features are analyzed
 
               if (childs[i].getAttribute("label") == value_label) {
@@ -204,7 +204,7 @@ export default {
             if (source.getAttribute("type") == "branchpoint") {
               id_final_branch = source.getId();
             }
-            if (source.getAttribute("type") == "controlAction") {
+            if (source.getAttribute("type") == "plant") {
               target_system_id = source.getId();
             }
             if (source.getAttribute("type") == "controller") {
@@ -325,7 +325,7 @@ export default {
             let source = branch_relations[i].source;
             if (
               source.getId() == target_system_id &&
-              source.getAttribute("type") == "controlAction"
+              source.getAttribute("type") == "plant"
             ) {
               id_final = source.getId();
             }
@@ -510,6 +510,25 @@ export default {
                 if (this.DF < 0) this.DF *= -1;
               }
             };
+            MiniPID.prototype.data_csv = function() {
+             let text=localStorage["control_data"];
+              let allTextLines = text.split(/\r\n|\n/);
+              let lines = [];
+              let data
+              let data_n
+              let cont=0
+              let time=[]
+              for (let i=0; i<allTextLines.length; i++) {
+                  data = allTextLines[i];
+                  data = data.replace(",", ".");
+                  data_n= parseFloat(data)
+                  lines.push(data_n);
+                  cont=i*cont;
+                  time.push(i);
+              }
+              return lines
+            };
+            
             return MiniPID;
           })();
           let control_loop = []; // list outputs
@@ -517,16 +536,16 @@ export default {
           function main() {
             let miniPID;
             let miniPID2;
-            let k = 1.0 / 20.0;
             miniPID = new MiniPID(
-              k*proportional_inner,
-              k*integral_inner,
+              proportional_inner,
+              integral_inner,
               derivate_inner,
               setpoint_time
             );
-            let actual = 0;
+            let lines =miniPID.data_csv()
+            let actual=lines[1];
             let output = 50;
-            let actual2;
+            let actual2=lines[1];
             let error = 0;
             let y;
             result_outputs.push(actual);
@@ -538,11 +557,7 @@ export default {
               miniPID.reversedf();
             }
             if (id_set2 == false) {
-               for (let i = 0; i < 5000; i++) {
-                    if (i > 1000)
-                    {
-                      setpoint_value=125;
-                    }
+               for (let i = 0; i < lines.length; i++) {
                 output = miniPID.getOutput(actual, setpoint_value, error);
                 y =miniPID.recursiveFilter(output);
                 if (summing_value_inner == "+/-") {
@@ -550,6 +565,7 @@ export default {
                 } else if (summing_value_inner == "+/+") {
                   error = setpoint_value + actual;
                 } else {
+
                   error = setpoint_value - actual;
                 }
                 actual = actual + y;
@@ -608,7 +624,8 @@ export default {
                   error = setpoint_value - result_outputs[i];
                   actual2 = result_outputs[i] - output2;
                 }
-                result_outputs2.push(actual2);
+                result_outputs2.push(
+                  actual2);
                 times_sum = i * time_float.toFixed(1);
                 times_sum = times_sum.toFixed(1);
                 times.push(times_sum);
@@ -682,7 +699,7 @@ export default {
           });
         }
       }
-    }
+    },
   }
 };
 </script>

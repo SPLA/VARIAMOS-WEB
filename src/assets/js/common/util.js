@@ -19,7 +19,15 @@ export function setupModal(header_content,body_content="",footer_content="")
 
     main_modal_header.appendChild(header_content);
     if(body_content!=""){main_modal_body.appendChild(body_content);}
-    if(footer_content!=""){main_modal_footer.appendChild(footer_content);}
+    if(footer_content!=""){
+        if(Array.isArray(footer_content)){
+            footer_content.forEach(footer_element => {
+                main_modal_footer.appendChild(footer_element);
+            });
+        } else {
+            main_modal_footer.appendChild(footer_content);
+        }
+    }
 }
 
 export function modalH3(text,type="normal"){
@@ -121,4 +129,3 @@ export function downloadFile(filename, text) {
   }
 
 /* end util */
-
