@@ -147,7 +147,7 @@ export default {
       if (localStorage["domain_implementation_main_path"] && localStorage["domain_implementation_pool_path"] && localStorage["domain_implementation_derived_path"]) {
         this.errors=[];
         this.customization_data=di_actions(this.current_graph,"customize");
-
+        
         if(this.customization_data.length==0){
           let c_header = modalH3(this.$t("modal_error"),"error");
           let c_body = modalSimpleText("No components to customize");
@@ -233,10 +233,10 @@ export default {
               model_datax[5]=this.previous_plan;
               model_datax[6]=customized_content;
             }
-
-            this.model_data = JSON.stringify(model_datax);
+           
+           this.model_data = JSON.stringify(model_datax);
             document.getElementById("Start/Next").disabled = true;
-
+            
             axios
               .post(
                 localStorage["domain_implementation_main_path"] +
@@ -343,7 +343,20 @@ export default {
             "Error uploading the file";
         });
     },
-
+    find_destination_file(id) {
+      //collect the information of the components and files to be customized
+      let component_root = this.current_graph.getModel().getCell("component");    
+      let component_relations = this.current_graph.getModel().getChildEdges(component_root);
+      let destination = "";
+      for (let i = 0; i < component_relations.length; i++) {
+        let source = component_relations[i].source.getAttribute("label");
+        if (source == id) {
+          return component_relations[i].source.getAttribute("destination");
+          break;
+        }
+      }
+      return "";
+    },
     adaptation_state_source_code_generation() {
       try {
         let serverUrl =

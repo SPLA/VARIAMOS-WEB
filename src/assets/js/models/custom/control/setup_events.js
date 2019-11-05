@@ -1,10 +1,45 @@
-import { setupModal, modalH3, modalSimpleText, modalButton, modalControl } from '../../../common/util'
+import { setupModal, modalH3, modalSimpleText, modalButton } from '../../../common/util'
 import * as Mathjax from 'mathjax';
+
+function modalControl(texts,inputs,default_vals){
+  let table = document.createElement('table');
+  for(let i=0;i<texts.length;i++){
+      let tr = document.createElement('tr');
+      let td = document.createElement('td');
+      td.innerHTML=texts[i];
+      let input={}
+      tr.appendChild(td);
+      if(i==1){
+          input = document.createElement('input');
+          input.type="checkbox";
+          input.id=inputs[i];
+      }
+      else if(i==2){
+          input = document.createElement('span');
+          input.innerText=inputs[i];
+      }
+      else{
+      
+   input = document.createElement('input');
+      input.value=default_vals[i];
+      input.type="text";
+      input.id=inputs[i];
+      input.size=10;
+      input.name=inputs[i];
+      }
+      let td2 = document.createElement('td');
+      td2.appendChild(input);
+      tr.appendChild(td2);
+      table.appendChild(tr);
+  }
+  return table;
+}
+
 
 
 let setup_events = function setup_events(graph){
   let texts = ['Input [∆𝑋] (Setpoint injection): ',"Delay[𝜃](Time it takes for the system output to increase): ",
-"Note: data must have a comma-separated csv file, where time is specified in the first column and output in the second."]   
+"Note: Data must have a comma-separated csv file, where time is specified in the first column and output in the second."]   
   let default_vals = ["","",""];
   let inputs=["idDeltaU","idDelay",""];
   //clean previous generated events

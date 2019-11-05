@@ -128,39 +128,4 @@ export function downloadFile(filename, text) {
     document.body.removeChild(element);
   }
 
-  export function modalControl(texts,inputs,default_vals){
-    let table = document.createElement('table');
-    for(let i=0;i<texts.length;i++){
-        let tr = document.createElement('tr');
-        let td = document.createElement('td');
-        td.innerHTML=texts[i];
-        let input={}
-        tr.appendChild(td);
-        if(i==1){
-            input = document.createElement('input');
-            input.type="checkbox";
-            input.id=inputs[i];
-        }
-        else if(i==2){
-            input = document.createElement('span');
-            input.innerText=inputs[i];
-        }
-        else{
-        
-     input = document.createElement('input');
-        input.value=default_vals[i];
-        input.type="text";
-        input.id=inputs[i];
-        input.size=10;
-        input.name=inputs[i];
-        }
-        let td2 = document.createElement('td');
-        td2.appendChild(input);
-        tr.appendChild(td2);
-        table.appendChild(tr);
-    }
-    return table;
-}
-
 /* end util */
-
