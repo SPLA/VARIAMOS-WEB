@@ -260,7 +260,9 @@ let setup_events = function setup_events(graph){
     main_modal.appendChild(div2);*/
     let ti=2*delay[pos_delay()]
     let td=ti/4
-  
+    let fit= (fit_graph().toFixed(2)*100)/last;
+    fit=(100-fit).toFixed(2);
+    
     
     /*div2.innerHTML = "\\[proportional:"+ k.toFixed(2)+"\\"+"   " +" integral:"+ti+" \\ "+"   " +"derivate:"+td+"\\]";
     MathJax.Hub.Queue(["Typeset",MathJax.Hub,div2]);*/
@@ -309,7 +311,7 @@ let setup_events = function setup_events(graph){
               
               title: {
                 display: true,
-                text: ['Proportional: '+ k.toFixed(2)+" "+"Integral: "+ti+" "+"Derivate: "+td+" ",'Best fits:'+(100-fit_graph().toFixed(2)-2)+"%"],
+                text: ['Proportional: '+ k.toFixed(2)+" "+"Integral: "+ti+" "+"Derivate: "+td+" ",'Best fits:'+fit+"%"],
               },
             }
           });
