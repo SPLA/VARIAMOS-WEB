@@ -296,7 +296,16 @@ let feature_verification = function feature_verification()
       // get all the optional features
       for(let i = 0; i < feature_root.children.length; i++)
       {
+        // add the optional feature into groups
         if(feature_root.children[i].getAttribute("type") === "relation" && feature_root.children[i].getAttribute("relType") === "optional")
+        {
+          optionals[feature_root.children[i].source.getAttribute("label")] = false;
+        }
+        /**
+         * add the children of bundle in the optional feature groups
+         * @todo it looks not complete according to false optional feature verification
+         */
+        if(feature_root.children[i].value.nodeName === 'rel_concrete_bundle' || feature_root.children[i].value.nodeName === 'rel_abstract_bundle')
         {
           optionals[feature_root.children[i].source.getAttribute("label")] = false;
         }
