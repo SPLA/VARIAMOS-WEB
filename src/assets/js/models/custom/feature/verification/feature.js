@@ -1,6 +1,5 @@
 import axios from "axios";
 import { setupModal, modalH3, modalSimpleText } from '../../../../common/util'
-import I18n from '../../../../../../i18n.js'
 let feature_verification = function feature_verification()
 {
   //custom verification menu options and functions
@@ -139,13 +138,13 @@ let feature_verification = function feature_verification()
       })
       .catch(e => {
         errors.push(e); 
-        let c_header = modalH3(I18n.t("modal_error"),"error");
-        let c_body = modalSimpleText(e + I18n.t("model_actions_backend_problem"));
+        let c_header = modalH3(global.messages["modal_error"],"error");
+        let c_body = modalSimpleText(e + global.messages["model_actions_backend_problem"]);
         setupModal(c_header,c_body);
       });
     }else{
-      let c_header = modalH3(I18n.t("modal_error"),"error");
-      let c_body = modalSimpleText(I18n.t("verification_path_problem"));
+      let c_header = modalH3(global.messages["modal_error"],"error");
+      let c_body = modalSimpleText(global.messages["verification_path_problem"]);
       setupModal(c_header,c_body);
     }
   }
@@ -184,13 +183,13 @@ let feature_verification = function feature_verification()
       })
       .catch(e => {
         errors.push(e); 
-        let c_header = modalH3(I18n.t("modal_error"),"error");
-        let c_body = modalSimpleText(e + I18n.t("model_actions_backend_problem"));
+        let c_header = modalH3(global.messages["modal_error"],"error");
+        let c_body = modalSimpleText(e + global.messages["model_actions_backend_problem"]);
         setupModal(c_header,c_body);
       });
     }else{
-      let c_header = modalH3(I18n.t("modal_error"),"error");
-      let c_body = modalSimpleText(I18n.t("verification_path_problem"));
+      let c_header = modalH3(global.messages["modal_error"],"error");
+      let c_body = modalSimpleText(global.messages["verification_path_problem"]);
       setupModal(c_header,c_body);
     }
   }
@@ -258,13 +257,13 @@ let feature_verification = function feature_verification()
       })
       .catch(e => {
         errors.push(e); 
-        let c_header = modalH3(I18n.t("modal_error"),"error");
-        let c_body = modalSimpleText(e + I18n.t("model_actions_backend_problem"));
+        let c_header = modalH3(global.messages["modal_error"],"error");
+        let c_body = modalSimpleText(e + global.messages["model_actions_backend_problem"]);
         setupModal(c_header,c_body);
       });
     }else{
-      let c_header = modalH3(I18n.t("modal_error"),"error");
-      let c_body = modalSimpleText(I18n.t("verification_path_problem"));
+      let c_header = modalH3(global.messages["modal_error"],"error");
+      let c_body = modalSimpleText(global.messages["verification_path_problem"]);
       setupModal(c_header,c_body);
     }
   }
@@ -350,13 +349,13 @@ let feature_verification = function feature_verification()
       })
       .catch(e => {
         errors.push(e); 
-        let c_header = modalH3(I18n.t("modal_error"),"error");
-        let c_body = modalSimpleText(e + I18n.t("model_actions_backend_problem"));
+        let c_header = modalH3(global.messages["modal_error"],"error");
+        let c_body = modalSimpleText(e + global.messages["model_actions_backend_problem"]);
         setupModal(c_header,c_body);
       });
     }else{
-      let c_header = modalH3(I18n.t("modal_error"),"error");
-      let c_body = modalSimpleText(I18n.t("verification_path_problem"));
+      let c_header = modalH3(global.messages["modal_error"],"error");
+      let c_body = modalSimpleText(global.messages["verification_path_problem"]);
       setupModal(c_header,c_body);
     }
   }
@@ -417,13 +416,13 @@ let feature_verification = function feature_verification()
       })
       .catch(e => {
         errors.push(e); 
-        let c_header = modalH3(I18n.t("modal_error"),"error");
-        let c_body = modalSimpleText(e + I18n.t("model_actions_backend_problem"));
+        let c_header = modalH3(global.messages["modal_error"],"error");
+        let c_body = modalSimpleText(e + global.messages["model_actions_backend_problem"]);
         setupModal(c_header,c_body);
       });
     }else{
-      let c_header = modalH3(I18n.t("modal_error"),"error");
-      let c_body = modalSimpleText(I18n.t("verification_path_problem"));
+      let c_header = modalH3(global.messages["modal_error"],"error");
+      let c_body = modalSimpleText(global.messages["verification_path_problem"]);
       setupModal(c_header,c_body);
     }
   }
@@ -460,13 +459,13 @@ let feature_verification = function feature_verification()
       })
       .catch(e => {
         errors.push(e); 
-        let c_header = modalH3(I18n.t("modal_error"),"error");
-        let c_body = modalSimpleText(e + I18n.t("model_actions_backend_problem"));
+        let c_header = modalH3(global.messages["modal_error"],"error");
+        let c_body = modalSimpleText(e + global.messages["model_actions_backend_problem"]);
         setupModal(c_header,c_body);
       });
     }else{
-      let c_header = modalH3(I18n.t("modal_error"),"error");
-      let c_body = modalSimpleText(I18n.t("verification_path_problem"));
+      let c_header = modalH3(global.messages["modal_error"],"error");
+      let c_body = modalSimpleText(global.messages["verification_path_problem"]);
       setupModal(c_header,c_body);
     }
   }
