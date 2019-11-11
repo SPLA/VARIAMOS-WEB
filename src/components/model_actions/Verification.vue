@@ -103,6 +103,7 @@ export default {
         let encoder = new mxCodec();
         let result = encoder.encode(this.current_graph.getModel());
         let xml = mxUtils.getPrettyXml(result);
+        /* TO FIX -> COCO */
         axios.post('http://localhost:8091/api/application/xml/1/1/configuration', xml)
         .then(response => {
           let c_header = modalH3("Test response");
@@ -127,9 +128,6 @@ export default {
   computed:{
     getmodel_component (){
         return this.$store.getters.getmodelcomponent;
-    },
-    getcache_selected (){
-        return this.$store.getters.getcacheselected;
     }
   }
 }

@@ -107,9 +107,10 @@ let setup_properties = function setup_properties(graph,properties_styles){
 	 */
 	function createTextField(graph, form, cell, attribute, custom)
 	{
-		// initialize the highrange when its value is '*'
-		if(attribute.nodeName === 'highRange' && attribute.nodeValue === '*')
+		// TO FIX -> MUST BE REMOVED FROM HERE - initialize the highrange when its value is '*'
+		if(attribute.nodeName === 'highRange' && attribute.nodeValue === '*'){
 			custom['input_text_type'] = 'text';
+		}
 		let def_display = getDisplayValue(cell,custom);
 
 		let input = form.addText(attribute.nodeName, attribute.nodeValue, "text", def_display);
@@ -138,7 +139,7 @@ let setup_properties = function setup_properties(graph,properties_styles){
 					newValue = "true";
 				}
 			}
-			// set newValue as '*' if input is high range and smaller than 0
+			// TO FIX -> MUST BE REMOVED FROM HERE set newValue as '*' if input is high range and smaller than 0
 			else if(input.id === 'input-highRange' && input.value < 0){
 				newValue = '*';
 			}else{

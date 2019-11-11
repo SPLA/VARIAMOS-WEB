@@ -1,5 +1,6 @@
 import axios from "axios";
-import { setupModal, modalH3, modalSimpleText } from '../../../../common/util'
+import { setupModal, modalH3, modalSimpleText } from '../../../../common/util';
+
 let feature_verification = function feature_verification()
 {
   //custom verification menu options and functions
@@ -10,27 +11,27 @@ let feature_verification = function feature_verification()
   };
   data[1]={
       "label":"Check void product line",
-      "func":Check_void
+      "func":check_void
   };
   data[2]={
     "label":"Check false product line",
-    "func":Check_false
+    "func":check_false
   };
   data[3]={
       "label":"Check dead feature",
-      "func":Check_dead
+      "func":check_dead
   };
   data[4]={
     "label":"Check false optional feature",
-    "func":Check_optional
+    "func":check_optional
   };
   data[5]={
     "label":"Check multiplicity conflicts",
-    "func":Check_multi_conflicts
+    "func":check_multi_conflicts
   };
   data[6]={
     "label":"Show HLVL",
-    "func":Check_HLVL
+    "func":check_HLVL
   };
 
   return data;
@@ -95,16 +96,19 @@ let feature_verification = function feature_verification()
         }
       }
 
+      /* TO FIX -> Annoying popup */
+      /*
       if(result!=""){
         alert(result);
       }else{
         alert("No errors found");
       }
+      */
       return result;
   }
   
   // check the void product line
-  function Check_void(graph, c_errors, c_overlays, model_component){
+  function check_void(graph, c_errors, c_overlays, model_component){
     // check duplicated name and space in name
     if(check_input_minizinc(graph,c_errors,c_overlays, model_component))
       return;
@@ -150,7 +154,7 @@ let feature_verification = function feature_verification()
   }
 
   // check false product line
-  function Check_false(graph, c_errors, c_overlays, model_component){
+  function check_false(graph, c_errors, c_overlays, model_component){
     if(check_input_minizinc(graph,c_errors,c_overlays, model_component))
       return;
     if (localStorage["domain_implementation_main_path"]) {
@@ -195,7 +199,7 @@ let feature_verification = function feature_verification()
   }
 
   // Check dead feature
-  function Check_dead(graph, c_errors, c_overlays, model_component){
+  function check_dead(graph, c_errors, c_overlays, model_component){
     if(check_input_minizinc(graph,c_errors,c_overlays, model_component))
       return;
     if (localStorage["domain_implementation_main_path"]) {
@@ -269,7 +273,7 @@ let feature_verification = function feature_verification()
   }
 
   // Check false optional
-  function Check_optional(graph, c_errors, c_overlays, model_component){
+  function check_optional(graph, c_errors, c_overlays, model_component){
     if(check_input_minizinc(graph,c_errors,c_overlays, model_component))
       return;
     if (localStorage["domain_implementation_main_path"]) {
@@ -361,7 +365,7 @@ let feature_verification = function feature_verification()
   }
 
   // check cardinality in multiplicity conflicts
-  function Check_multi_conflicts(graph, c_errors, c_overlays, model_component){
+  function check_multi_conflicts(graph, c_errors, c_overlays, model_component){
     if(check_input_minizinc(graph,c_errors,c_overlays, model_component))
       return;
     if (localStorage["domain_implementation_main_path"]) {
@@ -428,7 +432,7 @@ let feature_verification = function feature_verification()
   }
 
   // show the HLVL code
-  function Check_HLVL(graph, c_errors, c_overlays, model_component){
+  function check_HLVL(graph, c_errors, c_overlays, model_component){
     if(check_input_minizinc(graph,c_errors,c_overlays, model_component))
       return;
     if (localStorage["domain_implementation_main_path"]) {

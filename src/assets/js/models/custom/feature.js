@@ -145,6 +145,7 @@ let feature_main = function feature_main(graph)
 		methods[1]=function(){
 			let lowRange = document.getElementById("input-lowRange").value;
 			let highRange = document.getElementById("input-highRange").value;
+			/*** TO FIX -> CHANGE AS TEXT ***/
 			// if the high range smaller than 0, it will set as '*' and type will change to 'text'
 			if(highRange<0 && document.getElementById("input-highRange").type === 'number')
 			{
@@ -168,6 +169,7 @@ let feature_main = function feature_main(graph)
 				alert(global.messages["feature_custom_range_check"]);
 				return false;
 			}
+			/*** TO FIX -> CHANGE AS TEXT ***/
 			return true;
 		};
 		methods[2]=function(graph){
