@@ -2,6 +2,10 @@ const messages={
     "model_main_browser":"Browser is not supported!",
     "model_load_invalid_cell":"error invalid cell",
 
+    "modal_error":"Error",
+    "model_actions_backend_problem":" || Back-End problem",
+    "verification_path_problem":"Please setup BackEnd parameters first",
+
     "setup_buttons_viewxml":"View XML",
     "setup_buttons_reset":"Reset Current Model",
     "setup_buttons_reset_all":"Reset All Models",

@@ -145,7 +145,26 @@ let feature_main = function feature_main(graph)
 		methods[1]=function(){
 			let lowRange = document.getElementById("input-lowRange").value;
 			let highRange = document.getElementById("input-highRange").value;
-			if(lowRange>highRange){
+			// if the high range smaller than 0, it will set as '*' and type will change to 'text'
+			if(highRange<0 && document.getElementById("input-highRange").type === 'number')
+			{
+				document.getElementById("input-highRange").type = 'text';
+				document.getElementById("input-highRange").value = '*';
+				return true;
+			}
+			// if the original is '*' and needs to be changed, it needs to be not lower than low range
+			if(highRange !== '*' && document.getElementById("input-highRange").type === 'text')
+			{
+				if(parseInt(document.getElementById("input-highRange").value) >= lowRange)
+				{
+					document.getElementById("input-highRange").type = 'number';
+					return true;
+				}
+				document.getElementById("input-highRange").value = '*';
+				alert(global.messages["feature_custom_range_check"]);
+				return false;
+			}
+			if(lowRange>highRange && document.getElementById("input-highRange").type === 'number'){
 				alert(global.messages["feature_custom_range_check"]);
 				return false;
 			}
