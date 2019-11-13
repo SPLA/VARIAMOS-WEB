@@ -1,7 +1,7 @@
-let setup_keys = function setup_keys(keyHandler,graph,reused_functions){
+let setupKeys = function setupKeys(keyHandler, graph, reusedFunctions){
     //allows removing elements with supr key
 
-    keyHandler.bindKey(46, reused_functions[0]);
+    keyHandler.bindKey(46, reusedFunctions[0]);
 
     /* zoomin, zoomout the model with ctrl + mousewheel */
     mxEvent.addMouseWheelListener(function (evt, up) {
@@ -16,4 +16,4 @@ let setup_keys = function setup_keys(keyHandler,graph,reused_functions){
     });
 }
 
-export default setup_keys
+export default setupKeys

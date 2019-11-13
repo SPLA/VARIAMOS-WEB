@@ -1,4 +1,4 @@
-let setup_relations = function setup_relations(graph,relations,relation_styles,constraints_relations){
+let setupRelations = function setupRelations(graph, relations, relationStyles, constraintsRelations){
     graph.connectionHandler.insertEdge = function(parent, id, value, source, target, style)
     {
         let doc = mxUtils.createXmlDocument();
@@ -16,9 +16,9 @@ let setup_relations = function setup_relations(graph,relations,relation_styles,c
         }
 
         //custom constraints for relations
-        if(constraints_relations){
-            let valid_connection = constraints_relations(graph, source, target);
-            if(!valid_connection){
+        if(constraintsRelations){
+            let validConnection = constraintsRelations(graph, source, target);
+            if(!validConnection){
                 return null;
             }
         }
@@ -44,16 +44,16 @@ let setup_relations = function setup_relations(graph,relations,relation_styles,c
         }
 
         //setup custom styles for relations
-        if(relation_styles){
-            for (let i = 0; i < relation_styles.length; i++) {
-                if(relation_styles[i]["rel_source_target"]=="and"){
-                    if((relation_styles[i]["source"].indexOf(source.getAttribute("type")) > -1) && (relation_styles[i]["target"].indexOf(target.getAttribute("type"))> -1)){
-                        style=relation_styles[i]["style"];
+        if(relationStyles){
+            for (let i = 0; i < relationStyles.length; i++) {
+                if(relationStyles[i]["rel_source_target"]=="and"){
+                    if((relationStyles[i]["source"].indexOf(source.getAttribute("type")) > -1) && (relationStyles[i]["target"].indexOf(target.getAttribute("type"))> -1)){
+                        style=relationStyles[i]["style"];
                     }
                 }
                 else{
-                    if((relation_styles[i]["source"].indexOf(source.getAttribute("type")) > -1) || (relation_styles[i]["target"].indexOf(target.getAttribute("type"))> -1)){
-                        style=relation_styles[i]["style"];
+                    if((relationStyles[i]["source"].indexOf(source.getAttribute("type")) > -1) || (relationStyles[i]["target"].indexOf(target.getAttribute("type"))> -1)){
+                        style=relationStyles[i]["style"];
                     }
                 }
             }
@@ -64,4 +64,4 @@ let setup_relations = function setup_relations(graph,relations,relation_styles,c
     };
 }
 
-export default setup_relations
+export default setupRelations

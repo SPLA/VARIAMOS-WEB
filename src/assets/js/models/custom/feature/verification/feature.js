@@ -1,45 +1,45 @@
 import axios from "axios";
 import { setupModal, modalH3, modalSimpleText } from '../../../../common/util';
 
-let feature_verification = function feature_verification()
+let featureVerification = function featureVerification()
 {
   //custom verification menu options and functions
-  let data=[];
-  data[0]={
+  let data = [];
+  data[0] = {
       "label":"Check unique feature IDs",
-      "func":check_unique_ids
+      "func":checkUniqueIds
   };
-  data[1]={
+  data[1] = {
       "label":"Check void product line",
-      "func":check_void
+      "func":checkVoid
   };
-  data[2]={
+  data[2] = {
     "label":"Check false product line",
-    "func":check_false
+    "func":checkFalse
   };
-  data[3]={
+  data[3] = {
       "label":"Check dead feature",
-      "func":check_dead
+      "func":checkDead
   };
-  data[4]={
+  data[4] = {
     "label":"Check false optional feature",
-    "func":check_optional
+    "func":checkOptional
   };
-  data[5]={
+  data[5] = {
     "label":"Check multiplicity conflicts",
-    "func":check_multi_conflicts
+    "func":checkMultiConflicts
   };
-  data[6]={
+  data[6] = {
     "label":"Show HLVL",
-    "func":check_HLVL
+    "func":checkHLVL
   };
 
   return data;
 
   //check that all the features (root, abstract and concrete) contain unique IDs
-  function check_unique_ids(graph,c_errors,c_overlays, model_component){
-    let feature_root = graph.getModel().getCell("feature");    
-    let childs = graph.getModel().getChildVertices(feature_root);
+  function checkUniqueIds(graph, cErrors, cOverlays, modelComponent){
+    let featureRoot = graph.getModel().getCell("feature");    
+    let childs = graph.getModel().getChildVertices(featureRoot);
     let names = [];
     let result = "";
 
@@ -50,8 +50,8 @@ let feature_verification = function feature_verification()
           result+="Duplicated feature ID - " + label + "\n";
           let overlay = new mxCellOverlay(new mxImage('images/MX/error.gif', 16, 16), 'Overlay tooltip', 'right', 'top');
           graph.addCellOverlay(childs[i], overlay);
-          c_errors.push(childs[i]);
-          c_overlays.push(overlay);
+          cErrors.push(childs[i]);
+          cOverlays.push(overlay);
         }else{
           names.push(label);
         }
@@ -64,9 +64,9 @@ let feature_verification = function feature_verification()
       }
       return result;
   }
-  function check_input_minizinc(graph,c_errors,c_overlays, model_component){
-    let feature_root = graph.getModel().getCell("feature");    
-    let childs = graph.getModel().getChildVertices(feature_root);
+  function checkInputMinizinc(graph, cErrors, cOverlays, modelComponent){
+    let featureRoot = graph.getModel().getCell("feature");    
+    let childs = graph.getModel().getChildVertices(featureRoot);
     let names = [];
     let result = "";
 
@@ -75,11 +75,11 @@ let feature_verification = function feature_verification()
       let label = childs[i].getAttribute("label");
       // check duplicated name
       if (names.indexOf(label) > -1) {
-          result+="Duplicated feature ID - " + label + "\n";
+          result += "Duplicated feature ID - " + label + "\n";
           let overlay = new mxCellOverlay(new mxImage('images/MX/error.gif', 16, 16), 'Overlay tooltip', 'right', 'top');
           graph.addCellOverlay(childs[i], overlay);
-          c_errors.push(childs[i]);
-          c_overlays.push(overlay);
+          cErrors.push(childs[i]);
+          cOverlays.push(overlay);
         }
         else{
           if(childs[i].getAttribute("type") !== "bundle")
@@ -88,11 +88,11 @@ let feature_verification = function feature_verification()
         // check space in the name
         if(childs[i].getAttribute("label").indexOf(' ') > -1)
         {
-          result+="Label \"" + childs[i].getAttribute("label") + "\" should not have space " + "\n";
+          result += "Label \"" + childs[i].getAttribute("label") + "\" should not have space " + "\n";
           let overlay = new mxCellOverlay(new mxImage('images/MX/error.gif', 16, 16), 'Overlay tooltip', 'right', 'top');
           graph.addCellOverlay(childs[i], overlay);
-          c_errors.push(childs[i]);
-          c_overlays.push(overlay);
+          cErrors.push(childs[i]);
+          cOverlays.push(overlay);
         }
       }
 
@@ -108,19 +108,19 @@ let feature_verification = function feature_verification()
   }
   
   // check the void product line
-  function check_void(graph, c_errors, c_overlays, model_component){
+  function checkVoid(graph, cErrors, cOverlays, modelComponent){
     // check duplicated name and space in name
-    if(check_input_minizinc(graph,c_errors,c_overlays, model_component))
+    if(checkInputMinizinc(graph, cErrors, cOverlays, modelComponent)){
       return;
+    }
     if (localStorage["domain_implementation_main_path"]) {
       let errors=[];
-
       let encoder = new mxCodec();
       let result = encoder.encode(graph.getModel());
       let xml = mxUtils.getPrettyXml(result);
-      let feature_root = graph.getModel().getCell("feature");
-      let childs = graph.getModel().getChildVertices(feature_root);
-      let selection_parameter = {};
+      let featureRoot = graph.getModel().getCell("feature");
+      let childs = graph.getModel().getChildVertices(featureRoot);
+      let selectionParameter = {};
       /**
        * @todo keep for the selections of features
        */
@@ -128,34 +128,34 @@ let feature_verification = function feature_verification()
       {
         if(childs[i].getAttribute("type") !== "bundle")
         {
-          selection_parameter[childs[i].getAttribute("label")] = false;
+          selectionParameter[childs[i].getAttribute("label")] = false;
         }
       }
 
-      axios.post(localStorage["domain_implementation_main_path"]+'Verification/check_void', {
-        data: xml, name: model_component, param: selection_parameter
+      axios.post(localStorage["domain_implementation_main_path"] + 'Verification/check_void', {
+        data: xml, name: modelComponent, param: selectionParameter
       })
       .then(response => {
-        let c_header = modalH3("Verification result");
-        let c_body = modalSimpleText("Void product line:\n " + JSON.stringify(response.data));
-        setupModal(c_header,c_body);
+        let cHeader = modalH3("Verification result");
+        let cBody = modalSimpleText("Void product line:\n " + JSON.stringify(response.data));
+        setupModal(cHeader,cBody);
       })
       .catch(e => {
         errors.push(e); 
-        let c_header = modalH3(global.messages["modal_error"],"error");
-        let c_body = modalSimpleText(e + global.messages["model_actions_backend_problem"]);
-        setupModal(c_header,c_body);
+        let cHeader = modalH3(global.messages["modal_error"], "error");
+        let cBody = modalSimpleText(e + global.messages["model_actions_backend_problem"]);
+        setupModal(cHeader, cBody);
       });
     }else{
-      let c_header = modalH3(global.messages["modal_error"],"error");
-      let c_body = modalSimpleText(global.messages["verification_path_problem"]);
-      setupModal(c_header,c_body);
+      let cHeader = modalH3(global.messages["modal_error"], "error");
+      let cBody = modalSimpleText(global.messages["verification_path_problem"]);
+      setupModal(cHeader, cBody);
     }
   }
 
   // check false product line
-  function check_false(graph, c_errors, c_overlays, model_component){
-    if(check_input_minizinc(graph,c_errors,c_overlays, model_component))
+  function checkFalse(graph, cErrors, cOverlays, modelComponent){
+    if(checkInputMinizinc(graph, cErrors, cOverlays, modelComponent))
       return;
     if (localStorage["domain_implementation_main_path"]) {
       let errors=[];
@@ -163,9 +163,9 @@ let feature_verification = function feature_verification()
       let encoder = new mxCodec();
       let result = encoder.encode(graph.getModel());
       let xml = mxUtils.getPrettyXml(result);
-      let feature_root = graph.getModel().getCell("feature");
-      let childs = graph.getModel().getChildVertices(feature_root);
-      let selection_parameter = {};
+      let featureRoot = graph.getModel().getCell("feature");
+      let childs = graph.getModel().getChildVertices(featureRoot);
+      let selectionParameter = {};
       /**
        * @todo keep for the selections of features
        */
@@ -173,44 +173,44 @@ let feature_verification = function feature_verification()
       {
         if(childs[i].getAttribute("type") !== "bundle")
         {
-          selection_parameter[childs[i].getAttribute("label")] = false;
+          selectionParameter[childs[i].getAttribute("label")] = false;
         }
       }
 
-      axios.post(localStorage["domain_implementation_main_path"]+'Verification/check_false', {
-        data: xml, name: model_component, param: selection_parameter
+      axios.post(localStorage["domain_implementation_main_path"] + 'Verification/check_false', {
+        data: xml, name: modelComponent, param: selectionParameter
       })
       .then(response => {
-        let c_header = modalH3("Verification result");
-        let c_body = modalSimpleText("False product line:\n " + JSON.stringify(response.data));
-        setupModal(c_header,c_body);
+        let cHeader = modalH3("Verification result");
+        let cBody = modalSimpleText("False product line:\n " + JSON.stringify(response.data));
+        setupModal(cHeader, cBody);
       })
       .catch(e => {
         errors.push(e); 
-        let c_header = modalH3(global.messages["modal_error"],"error");
-        let c_body = modalSimpleText(e + global.messages["model_actions_backend_problem"]);
-        setupModal(c_header,c_body);
+        let cHeader = modalH3(global.messages["modal_error"], "error");
+        let cBody = modalSimpleText(e + global.messages["model_actions_backend_problem"]);
+        setupModal(cHeader, cBody);
       });
     }else{
-      let c_header = modalH3(global.messages["modal_error"],"error");
-      let c_body = modalSimpleText(global.messages["verification_path_problem"]);
-      setupModal(c_header,c_body);
+      let cHeader = modalH3(global.messages["modal_error"], "error");
+      let cBody = modalSimpleText(global.messages["verification_path_problem"]);
+      setupModal(cHeader, cBody);
     }
   }
 
   // Check dead feature
-  function check_dead(graph, c_errors, c_overlays, model_component){
-    if(check_input_minizinc(graph,c_errors,c_overlays, model_component))
+  function checkDead(graph, cErrors, cOverlays, modelComponent){
+    if(checkInputMinizinc(graph,cErrors, cOverlays, modelComponent))
       return;
     if (localStorage["domain_implementation_main_path"]) {
-      let errors=[];
+      let errors = [];
 
       let encoder = new mxCodec();
       let result = encoder.encode(graph.getModel());
       let xml = mxUtils.getPrettyXml(result);
-      let feature_root = graph.getModel().getCell("feature");
-      let childs = graph.getModel().getChildVertices(feature_root);
-      let selection_parameter = {};
+      let featureRoot = graph.getModel().getCell("feature");
+      let childs = graph.getModel().getChildVertices(featureRoot);
+      let selectionParameter = {};
       /**
        * @todo keep for the selections of features
        */
@@ -218,19 +218,19 @@ let feature_verification = function feature_verification()
       {
         if(childs[i].getAttribute("type") !== "bundle")
         {
-          selection_parameter[childs[i].getAttribute("label")] = false;
+          selectionParameter[childs[i].getAttribute("label")] = false;
         }
       }
 
-      axios.post(localStorage["domain_implementation_main_path"]+'Verification/check_dead', {
-        data: xml, name: model_component, param: selection_parameter
+      axios.post(localStorage["domain_implementation_main_path"] + 'Verification/check_dead', {
+        data: xml, name: modelComponent, param: selectionParameter
       })
       .then(response => {
         if(Object.keys(response.data).length === 0)
         {
-          let c_header = modalH3("Verification result");
-          let c_body = modalSimpleText("There is no dead feature.");
-          setupModal(c_header,c_body);
+          let cHeader = modalH3("Verification result");
+          let cBody = modalSimpleText("There is no dead feature.");
+          setupModal(cHeader, cBody);
         }
         else
         {
@@ -241,51 +241,51 @@ let feature_verification = function feature_verification()
             response_data[num] = response.data[key];
             num++;
           }
-          let c_header = modalH3("Verification result");
-          let c_body = modalSimpleText("There are dead features.");
-          setupModal(c_header,c_body);
+          let cHeader = modalH3("Verification result");
+          let cBody = modalSimpleText("There are dead features.");
+          setupModal(cHeader, cBody);
 
           // set overlay on the dead features
-          let feature_root = graph.getModel().getCell("feature");    
-          let childs = graph.getModel().getChildVertices(feature_root);
+          let featureRoot = graph.getModel().getCell("feature");    
+          let childs = graph.getModel().getChildVertices(featureRoot);
           for (let i = 0; i < childs.length; i++) {
             if(response_data.includes(childs[i].getAttribute("label")))
             {
               let overlay = new mxCellOverlay(new mxImage('images/MX/error.gif', 16, 16), 'Overlay tooltip', 'right', 'top');
               graph.addCellOverlay(childs[i], overlay);
-              c_errors.push(childs[i]);
-              c_overlays.push(overlay);
+              cErrors.push(childs[i]);
+              cOverlays.push(overlay);
             }
           }
         }
       })
       .catch(e => {
         errors.push(e); 
-        let c_header = modalH3(global.messages["modal_error"],"error");
-        let c_body = modalSimpleText(e + global.messages["model_actions_backend_problem"]);
-        setupModal(c_header,c_body);
+        let cHeader = modalH3(global.messages["modal_error"], "error");
+        let cBody = modalSimpleText(e + global.messages["model_actions_backend_problem"]);
+        setupModal(cHeader, cBody);
       });
     }else{
-      let c_header = modalH3(global.messages["modal_error"],"error");
-      let c_body = modalSimpleText(global.messages["verification_path_problem"]);
-      setupModal(c_header,c_body);
+      let cHeader = modalH3(global.messages["modal_error"], "error");
+      let cBody = modalSimpleText(global.messages["verification_path_problem"]);
+      setupModal(cHeader, cBody);
     }
   }
 
   // Check false optional
-  function check_optional(graph, c_errors, c_overlays, model_component){
-    if(check_input_minizinc(graph,c_errors,c_overlays, model_component))
+  function checkOptional(graph, cErrors, cOverlays, modelComponent){
+    if(checkInputMinizinc(graph, cErrors, cOverlays, modelComponent))
       return;
     if (localStorage["domain_implementation_main_path"]) {
-      let errors=[];
+      let errors = [];
 
       let encoder = new mxCodec();
       let result = encoder.encode(graph.getModel());
       let xml = mxUtils.getPrettyXml(result);
-      let feature_root = graph.getModel().getCell("feature");
-      let childs = graph.getModel().getChildVertices(feature_root);
-      let selection_parameter = {};
-      let optionals= {};
+      let featureRoot = graph.getModel().getCell("feature");
+      let childs = graph.getModel().getChildVertices(featureRoot);
+      let selectionParameter = {};
+      let optionals = {};
       /**
        * @todo keep for the selections of features
        */
@@ -293,36 +293,36 @@ let feature_verification = function feature_verification()
       {
         if(childs[i].getAttribute("type") !== "bundle")
         {
-          selection_parameter[childs[i].getAttribute("label")] = false;
+          selectionParameter[childs[i].getAttribute("label")] = false;
         }
       }
       // get all the optional features
-      for(let i = 0; i < feature_root.children.length; i++)
+      for(let i = 0; i < featureRoot.children.length; i++)
       {
         // add the optional feature into groups
-        if(feature_root.children[i].getAttribute("type") === "relation" && feature_root.children[i].getAttribute("relType") === "optional")
+        if(featureRoot.children[i].getAttribute("type") === "relation" && featureRoot.children[i].getAttribute("relType") === "optional")
         {
-          optionals[feature_root.children[i].source.getAttribute("label")] = false;
+          optionals[featureRoot.children[i].source.getAttribute("label")] = false;
         }
         /**
          * add the children of bundle in the optional feature groups
          * @todo it looks not complete according to false optional feature verification
          */
-        if(feature_root.children[i].value.nodeName === 'rel_concrete_bundle' || feature_root.children[i].value.nodeName === 'rel_abstract_bundle')
+        if(featureRoot.children[i].value.nodeName === 'rel_concrete_bundle' || featureRoot.children[i].value.nodeName === 'rel_abstract_bundle')
         {
-          optionals[feature_root.children[i].source.getAttribute("label")] = false;
+          optionals[featureRoot.children[i].source.getAttribute("label")] = false;
         }
       }
 
       axios.post(localStorage["domain_implementation_main_path"]+'Verification/check_optional', {
-        data: xml, name: model_component, param: selection_parameter, optional: optionals
+        data: xml, name: modelComponent, param: selectionParameter, optional: optionals
       })
       .then(response => {
         if(Object.keys(response.data).length === 0)
         {
-          let c_header = modalH3("Verification result");
-          let c_body = modalSimpleText("There is no false optional feature.");
-          setupModal(c_header,c_body);
+          let cHeader = modalH3("Verification result");
+          let cBody = modalSimpleText("There is no false optional feature.");
+          setupModal(cHeader, cBody);
         }
         else
         {
@@ -333,40 +333,40 @@ let feature_verification = function feature_verification()
             response_data[num] = response.data[key];
             num++;
           }
-          let c_header = modalH3("Verification result");
-          let c_body = modalSimpleText("There are false optional features.");
-          setupModal(c_header,c_body);
+          let cHeader = modalH3("Verification result");
+          let cBody = modalSimpleText("There are false optional features.");
+          setupModal(cHeader, cBody);
 
           // set overlay to the false optional features
-          let feature_root = graph.getModel().getCell("feature");    
-          let childs = graph.getModel().getChildVertices(feature_root);
+          let featureRoot = graph.getModel().getCell("feature");    
+          let childs = graph.getModel().getChildVertices(featureRoot);
           for (let i = 0; i < childs.length; i++) {
             if(response_data.includes(childs[i].getAttribute("label")))
             {
               let overlay = new mxCellOverlay(new mxImage('images/MX/error.gif', 16, 16), 'Overlay tooltip', 'right', 'top');
               graph.addCellOverlay(childs[i], overlay);
-              c_errors.push(childs[i]);
-              c_overlays.push(overlay);
+              cErrors.push(childs[i]);
+              cOverlays.push(overlay);
             }
           }
         }
       })
       .catch(e => {
         errors.push(e); 
-        let c_header = modalH3(global.messages["modal_error"],"error");
-        let c_body = modalSimpleText(e + global.messages["model_actions_backend_problem"]);
-        setupModal(c_header,c_body);
+        let cHeader = modalH3(global.messages["modal_error"],"error");
+        let cBody = modalSimpleText(e + global.messages["model_actions_backend_problem"]);
+        setupModal(cHeader,cBody);
       });
     }else{
-      let c_header = modalH3(global.messages["modal_error"],"error");
-      let c_body = modalSimpleText(global.messages["verification_path_problem"]);
-      setupModal(c_header,c_body);
+      let cHeader = modalH3(global.messages["modal_error"],"error");
+      let cBody = modalSimpleText(global.messages["verification_path_problem"]);
+      setupModal(cHeader,cBody);
     }
   }
 
   // check cardinality in multiplicity conflicts
-  function check_multi_conflicts(graph, c_errors, c_overlays, model_component){
-    if(check_input_minizinc(graph,c_errors,c_overlays, model_component))
+  function checkMultiConflicts(graph, cErrors, cOverlays, modelComponent){
+    if(checkInputMinizinc(graph, cErrors, cOverlays, modelComponent))
       return;
     if (localStorage["domain_implementation_main_path"]) {
       let errors=[];
@@ -374,9 +374,9 @@ let feature_verification = function feature_verification()
       let encoder = new mxCodec();
       let result = encoder.encode(graph.getModel());
       let xml = mxUtils.getPrettyXml(result);
-      let feature_root = graph.getModel().getCell("feature");
-      let childs = graph.getModel().getChildVertices(feature_root);
-      let selection_parameter = {};
+      let featureRoot = graph.getModel().getCell("feature");
+      let childs = graph.getModel().getChildVertices(featureRoot);
+      let selectionParameter = {};
       /**
        * @todo keep for the selections of features
        */
@@ -384,24 +384,24 @@ let feature_verification = function feature_verification()
       {
         if(childs[i].getAttribute("type") !== "bundle")
         {
-          selection_parameter[childs[i].getAttribute("label")] = false;
+          selectionParameter[childs[i].getAttribute("label")] = false;
         }
       }
 
       // check if feature model has solutions without cardinality
-      let check_xml = xml.split("bundleType=\"RANGE\"").join("bundleType=\"AND\"");
+      let checkXml = xml.split("bundleType=\"RANGE\"").join("bundleType=\"AND\"");
       axios.post(localStorage["domain_implementation_main_path"]+'Verification/check_multi_conflict', {
-        data: xml, name: model_component, param: selection_parameter, check_xml: check_xml
+        data: xml, name: modelComponent, param: selectionParameter, check_xml: checkXml
       })
       .then(response => { 
-        let c_header = modalH3("Verification result");
-        let c_body = modalSimpleText(JSON.stringify(response.data));
-        setupModal(c_header,c_body);
+        let cHeader = modalH3("Verification result");
+        let cBody = modalSimpleText(JSON.stringify(response.data));
+        setupModal(cHeader, cBody);
         // set overlay on all the range bundle
         if(JSON.stringify(response.data).includes('There are some multiplicity conflicts.'))
         {
-          let feature_root = graph.getModel().getCell("feature");    
-          let childs = graph.getModel().getChildVertices(feature_root);
+          let featureRoot = graph.getModel().getCell("feature");    
+          let childs = graph.getModel().getChildVertices(featureRoot);
           for (let i = 0; i < childs.length; i++) {
             if(childs[i].getAttribute("type") === "bundle")
             {
@@ -411,8 +411,8 @@ let feature_verification = function feature_verification()
               {
                 let overlay = new mxCellOverlay(new mxImage('images/MX/error.gif', 16, 16), 'Overlay tooltip', 'right', 'top');
                 graph.addCellOverlay(childs[i], overlay);
-                c_errors.push(childs[i]);
-                c_overlays.push(overlay);
+                cErrors.push(childs[i]);
+                cOverlays.push(overlay);
               }
             }
           }
@@ -420,20 +420,20 @@ let feature_verification = function feature_verification()
       })
       .catch(e => {
         errors.push(e); 
-        let c_header = modalH3(global.messages["modal_error"],"error");
-        let c_body = modalSimpleText(e + global.messages["model_actions_backend_problem"]);
-        setupModal(c_header,c_body);
+        let cHeader = modalH3(global.messages["modal_error"],"error");
+        let cBody = modalSimpleText(e + global.messages["model_actions_backend_problem"]);
+        setupModal(cHeader, cBody);
       });
     }else{
-      let c_header = modalH3(global.messages["modal_error"],"error");
-      let c_body = modalSimpleText(global.messages["verification_path_problem"]);
-      setupModal(c_header,c_body);
+      let cHeader = modalH3(global.messages["modal_error"],"error");
+      let cBody = modalSimpleText(global.messages["verification_path_problem"]);
+      setupModal(cHeader, cBody);
     }
   }
 
   // show the HLVL code
-  function check_HLVL(graph, c_errors, c_overlays, model_component){
-    if(check_input_minizinc(graph,c_errors,c_overlays, model_component))
+  function checkHLVL(graph, cErrors, cOverlays, modelComponent){
+    if(checkInputMinizinc(graph, cErrors, cOverlays, modelComponent))
       return;
     if (localStorage["domain_implementation_main_path"]) {
       let errors=[];
@@ -441,9 +441,9 @@ let feature_verification = function feature_verification()
       let encoder = new mxCodec();
       let result = encoder.encode(graph.getModel());
       let xml = mxUtils.getPrettyXml(result);
-      let feature_root = graph.getModel().getCell("feature");
-      let childs = graph.getModel().getChildVertices(feature_root);
-      let selection_parameter = {};
+      let featureRoot = graph.getModel().getCell("feature");
+      let childs = graph.getModel().getChildVertices(featureRoot);
+      let selectionParameter = {};
       /**
        * @todo keep for the selections of features
        */
@@ -451,28 +451,28 @@ let feature_verification = function feature_verification()
       {
         if(childs[i].getAttribute("type") !== "bundle")
         {
-          selection_parameter[childs[i].getAttribute("label")] = false;
+          selectionParameter[childs[i].getAttribute("label")] = false;
         }
       }
 
-      axios.post(localStorage["domain_implementation_main_path"]+'Verification/check_HLVL', {
-        data: xml, name: model_component, param: selection_parameter
+      axios.post(localStorage["domain_implementation_main_path"]+'Verification/checkHLVL', {
+        data: xml, name: modelComponent, param: selectionParameter
       })
       .then(response => {
         mxUtils.popup(response.data, true);
       })
       .catch(e => {
         errors.push(e); 
-        let c_header = modalH3(global.messages["modal_error"],"error");
-        let c_body = modalSimpleText(e + global.messages["model_actions_backend_problem"]);
-        setupModal(c_header,c_body);
+        let cHeader = modalH3(global.messages["modal_error"], "error");
+        let cBody = modalSimpleText(e + global.messages["model_actions_backend_problem"]);
+        setupModal(cHeader, cBody);
       });
     }else{
-      let c_header = modalH3(global.messages["modal_error"],"error");
-      let c_body = modalSimpleText(global.messages["verification_path_problem"]);
-      setupModal(c_header,c_body);
+      let cHeader = modalH3(global.messages["modal_error"], "error");
+      let cBody = modalSimpleText(global.messages["verification_path_problem"]);
+      setupModal(cHeader, cBody);
     }
   }
 }
 
-export default feature_verification
+export default featureVerification
