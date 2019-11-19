@@ -52,6 +52,11 @@ let setup_properties = function setup_properties(graph,properties_styles){
 									}else if(properties_styles[type][j]["input_type"]=="checkbox"){
 										createCheckboxField(graph, form, cell, attrs[i], properties_styles[type][j]);
 										passed = true;
+									}else if(properties_styles[type][j]["input_type"]=="disabled"){
+										createTextField(graph, form, cell, attrs[i], properties_styles[type][j], true);
+										passed = true;
+									}else if(properties_styles[type][j]["input_type"]=="none"){
+										passed = true;
 									}
 								}
 							}
@@ -105,14 +110,14 @@ let setup_properties = function setup_properties(graph,properties_styles){
 	/**
 	 * Creates the textfield for the given property.
 	 */
-	function createTextField(graph, form, cell, attribute, custom)
+	function createTextField(graph, form, cell, attribute, custom, disabled)
 	{
 		let def_display = getDisplayValue(cell,custom);
 
 		let input = form.addText(attribute.nodeName, attribute.nodeValue, "text", def_display);
 		
 		//attribute type can not be modified
-		if(attribute.nodeName=="type"){
+		if(attribute.nodeName=="type" || disabled){
 			input.disabled="disabled";
 		}
 

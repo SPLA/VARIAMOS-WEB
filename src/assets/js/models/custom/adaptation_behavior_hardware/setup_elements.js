@@ -51,8 +51,8 @@ let setup_elements = function setup_elements(graph, elements, custom_attributes,
     {
         let doc = mxUtils.createXmlDocument();
         let node = doc.createElement(type);
-        node.setAttribute('label', type);
         node.setAttribute('type', type); 
+        node.setAttribute('label', type);
 
         //include custom attributes
         // if(custom_attributes){
@@ -67,12 +67,55 @@ let setup_elements = function setup_elements(graph, elements, custom_attributes,
         if(custom_attributes){
             for(let j = 0; j < custom_attributes.length; j++){
                 node.setAttribute(custom_attributes[j]["name"], custom_attributes[j]["def_value"]);
-            }
+                if(custom_attributes[j]["name"]=="subtype"){
+                    if(["writeAction", "readAction"].includes(type)){
+                        node.setAttribute('label', custom_attributes[j]["def_value"]);
+                    }
+                }
+            } 
         }
         
         let vertex = new mxCell(node, new mxGeometry(0, 0, w, h), style);
         vertex.setConnectable(true);
-        vertex.setVertex(true);
+        vertex.setVertex(true); 
+
+        if(["writeAction", "readAction"].includes(type)){
+            try{ 
+                vertex.setConnectable(false);
+                if(custom_attributes){
+                    for(let j = 0; j < custom_attributes.length; j++){
+                        if(custom_attributes[j]["name"]=="parameters"){
+                            let args=custom_attributes[j]["def_value"];
+                            let x=10;
+                            for(let a = 0; a < args.length; a++){
+                                let arg=args[a]; 
+                                let doc = mxUtils.createXmlDocument();
+                                let node = doc.createElement(arg.name); 
+                                node.setAttribute('label', arg.name);
+
+                                let geometry = new mxGeometry(x, 22, 10, 10);  
+                                geometry.offset = new mxPoint(0, 0);
+                                geometry.relative = false; 
+                                let connector = new mxCell(node, geometry, "shape=triangle;perimeter=trianglePerimeter;direction=north");
+                                graph.setCellStyles(mxConstants.STYLE_MOVABLE, '0', [connector]);
+                                graph.setCellStyles(mxConstants.STYLE_RESIZABLE, '0', [connector]);
+                                connector.setConnectable(true);
+                                connector.setVertex(true); 
+                                vertex.insert(connector, 0);
+                                x+=15;
+
+                            }
+                            break;
+                        }
+                    }
+                } 
+            }catch(error){
+                alert(error);
+            } 
+        }
+
+        
+ 
 
         if(c_constraints_ic != null && c_constraints_ic[type]){
             addToolbarItem(graph, toolbar, vertex, icon, namepalette, c_clon_cells, c_constraints_ic[type]);
@@ -99,7 +142,7 @@ let setup_elements = function setup_elements(graph, elements, custom_attributes,
                 let pt = graph.getPointForEvent(evt);
                 let vertex = graph.getModel().cloneCell(prototype);
                 vertex.geometry.x = pt.x;
-                vertex.geometry.y = pt.y;
+                vertex.geometry.y = pt.y; 
 
                 let new_cells = graph.importCells([vertex], 0, 0, cell);
                 graph.setSelectionCells(new_cells);
@@ -109,8 +152,10 @@ let setup_elements = function setup_elements(graph, elements, custom_attributes,
                     let type = new_cells[0].getAttribute("type");
                     if(c_clon_cells[type]){ //clon cell in a new model
                         graph.getModel().prefix="clon"; //cloned cell contains clon prefix
-                        graph.getModel().nextId=graph.getModel().nextId-1;
+                        //graph.getModel().nextId=graph.getModel().nextId-1;
+                        graph.getModel().nextId=new_cells[0].getId();
                         let vertex2 = graph.getModel().cloneCell(new_cells[0]);
+                        vertex2.setConnectable(true);
                         let parent2 = graph.getModel().getCell(c_clon_cells[type]);
                         graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#DCDCDC", [vertex2]); //different background for a cloned cell
                         graph.importCells([vertex2], 0, 0, parent2);

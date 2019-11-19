@@ -1,21 +1,23 @@
-let adaptation_binding_state_hardware_main = function adaptation_binding_state_hardware_main(graph) {
-	adaptation_binding_state_hardware_constraints(graph);
-	adaptation_binding_state_hardware_handlers(graph);
+let adaptation_behavior_states_main = function adaptation_behavior_states_main(graph) {
+    adaptation_behavior_states_constraints(graph);
+    adaptation_behavior_states_handlers(graph);
+
+    graph.keepEdgesInBackground=true;
 
 	let data = {};
 	data["m_type"] = "binding"; //custom type
-	data["m_elements"] = adaptation_binding_state_hardware_elements(); //custom elements
-	data["m_attributes"] = adaptation_binding_state_hardware_attributes(); //custom attributes
-	data["m_relations"] = adaptation_binding_state_hardware_relations(); //custom relations
-	data["m_properties_styles"] = adaptation_binding_state_hardware_properties_styles(); //custom properties styles
-	data["m_labels"] = adaptation_binding_state_hardware_labels(); //custom labels
-	data["m_clon_cells"] = adaptation_binding_state_hardware_clon_cells(); //custom clon cells
-	data["m_constraints_ic"] = adaptation_binding_state_hardware_constraints_in_creation(); //custom constraints in element creation
-	data["m_overlay"] = adaptation_binding_state_hardware_overlay(); //custom overlay
-	data["m_relation_styles"] = adaptation_binding_state_hardware_relation_styles();
+	data["m_elements"] = adaptation_behavior_states_elements(); //custom elements
+	data["m_attributes"] = adaptation_behavior_states_attributes(); //custom attributes
+	data["m_relations"] = adaptation_behavior_states_relations(); //custom relations
+	data["m_properties_styles"] = adaptation_behavior_states_properties_styles(); //custom properties styles
+	data["m_labels"] = adaptation_behavior_states_labels(); //custom labels
+	data["m_clon_cells"] = adaptation_behavior_states_clon_cells(); //custom clon cells
+	data["m_constraints_ic"] = adaptation_behavior_states_constraints_in_creation(); //custom constraints in element creation
+	data["m_overlay"] = adaptation_behavior_states_overlay(); //custom overlay
+	data["m_relation_styles"] = adaptation_behavior_states_relation_styles();
 	return data;
 
-	function adaptation_binding_state_hardware_constraints(graph) {
+	function adaptation_behavior_states_constraints(graph) {
 		graph.multiplicities = []; //reset multiplicities
 		// graph.multiplicities.push(new mxMultiplicity(
 		// 	true, "state", null, null, 0, 0, null,
@@ -27,20 +29,20 @@ let adaptation_binding_state_hardware_main = function adaptation_binding_state_h
 			"Only shape targets allowed"));
 	}
 
-	function adaptation_binding_state_hardware_handlers(graph) {
-		graph.removeListener(adaptation_binding_state_hardware_handlers_double_click, mxEvent.DOUBLE_CLICK);
-		graph.addListener(mxEvent.DOUBLE_CLICK, adaptation_binding_state_hardware_handlers_double_click);
+	function adaptation_behavior_states_handlers(graph) {
+		graph.removeListener(adaptation_behavior_states_handlers_double_click, mxEvent.DOUBLE_CLICK);
+		graph.addListener(mxEvent.DOUBLE_CLICK, adaptation_behavior_states_handlers_double_click);
 	}
 
-	function adaptation_binding_state_hardware_handlers_double_click(sender, evt) {
+	function adaptation_behavior_states_handlers_double_click(sender, evt) {
 		let cell = evt.getProperty("cell"); // cell may be null
 		if (cell != null) {
-			adaptation_binding_state_hardware_on_double_click(cell);
+			adaptation_behavior_states_on_double_click(cell);
 		}
 		evt.consume();
 	}
 
-	function adaptation_binding_state_hardware_elements() {
+	function adaptation_behavior_states_elements() {
 		let activity = { src: projectPath + "images/models/adaptation_binding_state_hardware/activity.png", wd: 100, hg: 35, type: "activity", style: "shape=activity", pname: "Activity" };
 		let digitalVariable = { src: projectPath + "images/models/adaptation_binding_state_hardware/digitalVariable.png", wd: 100, hg: 35, type: "digitalVariable", style: "shape=digitalVariable", pname: "Digital variable" };
 		let analogVariable = { src: projectPath + "images/models/adaptation_binding_state_hardware/analogVariable.png", wd: 100, hg: 35, type: "analogVariable", style: "shape=analogVariable", pname: "Analog variable" };
@@ -53,25 +55,27 @@ let adaptation_binding_state_hardware_main = function adaptation_binding_state_h
 		let customAction = { src: projectPath + "images/models/adaptation_binding_state_hardware/customAction.png", wd: 100, hg: 35, type: "customAction", style: "strokeWidth=2", pname: "Custom action" };
 		let logicalOperator = { src: projectPath + "images/models/adaptation_binding_state_hardware/logicalOperator.png", wd: 100, hg: 35, type: "logicalOperator", style: "shape=ellipse", pname: "Logical operator" };
 		let predicate = { src: projectPath + "images/models/adaptation_binding_state_hardware/predicate.png", wd: 100, hg: 35, type: "predicate", style: "shape=predicate", pname: "Predicate" };
+		let lifeLine = { src: projectPath + "images/models/adaptation_binding_state_hardware/lifeLine.png", wd: 100, hg: 35, type: "lifeLine", style: "shape=lifeLine", pname: "LifeLine" };
 
 		let elements = [];
 		elements[0] = activity;
-		elements[1] = timer;
-		elements[2] = writeAction;
-		elements[3] = readAction;
-		elements[4] = controlAction;
-		elements[5] = digitalVariable;
-		elements[6] = analogVariable;
-		elements[7] = stringVariable;
-		elements[8] = logicalOperator;
-		elements[9] = predicate;
+		elements[1] = lifeLine;
+		//elements[1] = writeAction;
+		//elements[2] = readAction;
+		//elements[3] = controlAction;
+		// elements[1] = timer;
+		// elements[5] = digitalVariable;
+		// elements[6] = analogVariable;
+		// elements[7] = stringVariable;
+		// elements[8] = logicalOperator;
+		// elements[9] = predicate;
 		//elements[7] = delayAction;
 		//elements[8] = customAction;
 
 		return elements;
 	}
 
-	function adaptation_binding_state_hardware_attributes() {
+	function adaptation_behavior_states_attributes() {
 		let attributes = [];
 		attributes[0] = {
 			"types": ["digitalAction"],
@@ -147,28 +151,45 @@ let adaptation_binding_state_hardware_main = function adaptation_binding_state_h
 		return attributes;
 	}
 
-	function adaptation_binding_state_hardware_relations() {
+	function adaptation_behavior_states_relations() {
 		let relations = [];
 		relations[0] = {
 			"source": ["state", "initialState"],
 			"rel_source_target": "and",
-			"target": ["activity"],
+			"target": ["lifeLine"],
 			"attributes": [{
 				"name": "phase",
 				"def_value": "begin"
 			}]
-		} 
+		};
+		relations[1] = {
+			"source": ["lifeLine"],
+			"rel_source_target": "and",
+			"target": ["lifeLine"],
+			"attributes": [{
+				"name": "time",
+				"def_value": "0"
+			},{
+				"name": "execution",
+				"def_value": "Synchronous"
+			}]
+		}  
 
 		return relations;
 	}
 
-	function adaptation_binding_state_hardware_properties_styles() {
+	function adaptation_behavior_states_properties_styles() {
 		let styles = {};
 		styles = {
 			"relation": [{
 				"attribute": "phase",
 				"input_type": "select",
 				"input_values": ["begin", "while", "end"]
+			},{
+				"attribute": "execution",
+				"input_type": "select",
+				"input_values": ["Synchronous", "Asynchronous"],
+				"onchange": adaptation_behavior_states_custom_methods(0)
 			}
 			],
 			"digitalAction": [{
@@ -200,52 +221,24 @@ let adaptation_binding_state_hardware_main = function adaptation_binding_state_h
 		return styles;
 	}
 
-	function adaptation_binding_state_hardware_custom_methods(pos) {
+	function adaptation_behavior_states_custom_methods(pos) {
 		let methods = [];
 		methods[0] = function () {
-			document.getElementById("tr-lowRange").style.display = "none";
-			document.getElementById("tr-highRange").style.display = "none";
-			let val = document.getElementById("tr-bundleType").getElementsByTagName('select')[0].value;
-			if (val == "RANGE") {
-				document.getElementById("tr-lowRange").style.display = "";
-				document.getElementById("tr-highRange").style.display = "";
-			}
-		};
-		methods[1] = function () {
-			let lowRange = document.getElementById("input-lowRange").value;
-			let highRange = document.getElementById("input-highRange").value;
-			if (lowRange > highRange) {
-				alert(global.messages["adaptation_binding_state_hardware_custom_range_check"]);
-				return false;
-			}
-			return true;
-		};
-		methods[2] = function (graph) {
-			let adaptation_binding_state_hardware_root = graph.getModel().getCell("adaptation_binding_state_hardware");
-			let adaptation_binding_state_hardware_vertices = graph.getModel().getChildVertices(adaptation_binding_state_hardware_root);
-
-			for (let i = 0; i < adaptation_binding_state_hardware_vertices.length; i++) {
-				if (adaptation_binding_state_hardware_vertices[i].getAttribute("type") == "root") {
-					alert(global.messages["adaptation_binding_state_hardware_custom_root_check"]);
-					return false;
-				}
-			}
-			return true;
-		};
-		methods[3] = function () {
-			// Creates a new overlay with an image and a tooltip and makes it "transparent" to events
-			let overlay = new mxCellOverlay(new mxImage('images/MX/check.png', 16, 16), 'Overlay tooltip');
-			if (this.checked) {
-				graph.addCellOverlay(graph.getModel().getCell(this.name), overlay);
-			} else {
-				graph.removeCellOverlay(graph.getModel().getCell(this.name));
-			}
-		};
+			const currentCell = graph.getModel().getCell(this.name);
+			let style=currentCell.getStyle();
+			alert(style);
+			if(this.value=="Asynchronous"){
+				style ="dashed=1;" + style;
+			}else{
+				style=style.replace("dashed=1;", "");
+			} 
+			currentCell.setStyle(style);
+		};   
 
 		return methods[pos];
 	}
 
-	function adaptation_binding_state_hardware_labels() {
+	function adaptation_behavior_states_labels() {
 		let labels = {};
 		labels = {
 			"bundle": "bundleType"
@@ -254,16 +247,16 @@ let adaptation_binding_state_hardware_main = function adaptation_binding_state_h
 		return labels;
 	}
 
-	function adaptation_binding_state_hardware_constraints_in_creation() {
+	function adaptation_behavior_states_constraints_in_creation() {
 		let constraints_ic = {};
 		constraints_ic = {
-			"root": adaptation_binding_state_hardware_custom_methods(2)
+			"root": adaptation_behavior_states_custom_methods(2)
 		};
 
 		return constraints_ic;
 	}
 
-	function adaptation_binding_state_hardware_clon_cells() {
+	function adaptation_behavior_states_clon_cells() {
 		let clons = {};
 		clons = {
 			"controlAction":"control"
@@ -272,12 +265,12 @@ let adaptation_binding_state_hardware_main = function adaptation_binding_state_h
 		return clons;
 	}
 
-	function adaptation_binding_state_hardware_overlay() {
+	function adaptation_behavior_states_overlay() {
 		let func1 = function () {
-			let adaptation_binding_state_hardware_root = graph.getModel().getCell("adaptation_binding_state_hardware");
-			let adaptation_binding_state_hardware_elements = graph.getModel().getChildEdges(adaptation_binding_state_hardware_root);
-			for (let i = 0; i < adaptation_binding_state_hardware_elements.length; i++) {
-				let source = adaptation_binding_state_hardware_elements[i].source;
+			let adaptation_behavior_states_root = graph.getModel().getCell("adaptation_behavior_states");
+			let adaptation_behavior_states_elements = graph.getModel().getChildEdges(adaptation_behavior_states_root);
+			for (let i = 0; i < adaptation_behavior_states_elements.length; i++) {
+				let source = adaptation_behavior_states_elements[i].source;
 				let type = source.getAttribute("type");
 				if (type == "concrete") {
 					let sel = source.getAttribute("selected");
@@ -292,13 +285,13 @@ let adaptation_binding_state_hardware_main = function adaptation_binding_state_h
 		return func1;
 	}
 
-	function adaptation_binding_state_hardware_relation_styles() {		
+	function adaptation_behavior_states_relation_styles() {		
 		let relations = []; 
 		relations[0] = {
-			"source": ["digitalVariable", "analogVariable", "timer", "analogActuator", "digitalActuator", "analogSensor", "digitalSensor"],
+			"source": ["state", "initialState", "activity", "readAction", "writeAction", "controlAction"],
 			"rel_source_target": "and",
-			"target": ["readAction", "writeAction", "controlAction"],
-			"style": "dashed=1;endFill=0;"
+			"target": ["lifeLine"],
+			"style": "dashed=1;endFill=0;endArrow=none;"
 		} 
 		relations[1] = {
 			"source": ["readAction", "writeAction", "controlAction"],
@@ -309,7 +302,7 @@ let adaptation_binding_state_hardware_main = function adaptation_binding_state_h
 		return relations; 
 	}
 
-	function adaptation_binding_state_hardware_on_double_click(cell) {
+	function adaptation_behavior_states_on_double_click(cell) {
 		// var sourceType = cell.getAttribute("type");
 		// alert(sourceType)
 		// if (sourceType == "initialState" || sourceType == "state" || sourceType == "transition") {
@@ -329,4 +322,4 @@ let adaptation_binding_state_hardware_main = function adaptation_binding_state_h
 
 }
 
-export default adaptation_binding_state_hardware_main
+export default adaptation_behavior_states_main

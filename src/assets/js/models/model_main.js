@@ -101,7 +101,7 @@ let main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model
 		while (shape != null)
 		{
 			if (shape.nodeType == mxConstants.NODETYPE_ELEMENT)
-			{
+			{ 
 				mxStencilRegistry.addStencil(shape.getAttribute('name'), new mxStencil(shape));
 			}
 			shape = shape.nextSibling;
@@ -163,7 +163,20 @@ let main = function main(graph,layers,mxModel,toolbar,keyHandler,container,model
 					}
 
 					if(!contain_clons){
-						graph.removeCells();
+					//	graph.removeCells();
+					let removed_cells=graph.removeCells();
+
+					//remove clons if exist
+					for (let i = 0; i < removed_cells.length; i++) {
+						if(removed_cells[i].isVertex()){
+							let clon = graph.getModel().getCell("clon"+removed_cells[i].getId());
+							if(clon){
+								let cells=[]
+								cells[0]=clon;
+								graph.removeCells(cells);
+							}
+						}
+					}
 					}
 				}else{
 					let removed_cells=graph.removeCells();
