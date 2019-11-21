@@ -1,20 +1,16 @@
-var binding_feature_component_main = function binding_feature_component_main(graph)
+let bindingFeatureComponentMain = function bindingFeatureComponentMain(graph)
 {
-    binding_f_c_constraints(graph);
-    var data=[];
-	data[0]="binding" //custom type
-	data[1]=binding_f_c_elements(); //custom elements
-	data[2]=binding_f_c_attributes(); //custom attributes
-	data[3]=null; //custom relations
-	data[4]=binding_f_c_properties_styles(); //custom properties styles
-	data[5]=binding_f_c_labels(); //custom labels
-	data[6]=null; //custom clon cells
-	data[7]=null; //custom constraints in element creation
-	data[8]=null; //custom overlays
+    bindingFCConstraints(graph);
+    let data={};
+	data["m_type"]="binding"; //custom type
+	data["m_elements"]=bindingFCElements(); //custom elements
+	data["m_attributes"]=bindingFCAttributes(); //custom attributes
+	data["m_properties_styles"]=bindingFCPropertiesStyles(); //custom properties styles
+	data["m_labels"]=bindingFCLabels(); //custom labels
     return data;
     
-    function binding_f_c_constraints(graph){
-		graph.multiplicities=[]; //reset multiplicities
+    function bindingFCConstraints(graph){
+		graph.multiplicities = []; //reset multiplicities
 		graph.multiplicities.push(new mxMultiplicity(
 			true, "bundle", null, null, 0, null, ["component"],
 			"Only 1 target allowed",
@@ -29,17 +25,17 @@ var binding_feature_component_main = function binding_feature_component_main(gra
 			"Only shape targets allowed"));
 	}
 
-	function binding_f_c_elements(){
-		var bundle = {src:projectPath+"images/models/feature/bundle.png", wd:35, hg:35, type:"bundle", style:"shape=ellipse", pname:"Bundle"};
-		var elements=[];
-		elements[0]=bundle;
+	function bindingFCElements(){
+		let bundle = {src:projectPath + "images/models/feature/bundle.png", wd:35, hg:35, type:"bundle", style:"shape=ellipse", pname:"Bundle"};
+		let elements = [];
+		elements[0] = bundle;
 		
 		return elements;
 	}
 
-	function binding_f_c_attributes(){
-		var attributes=[];
-		attributes[0]={
+	function bindingFCAttributes(){
+		let attributes = [];
+		attributes[0] = {
 			"types":["bundle"],
 			"custom_attributes":[{
 				"name":"bundleType",
@@ -57,15 +53,15 @@ var binding_feature_component_main = function binding_feature_component_main(gra
 		return attributes;
 	}
 
-	function binding_f_c_properties_styles(){
-		var styles={};
-		styles={
+	function bindingFCPropertiesStyles(){
+		let styles = {};
+		styles = {
 			"bundle":[
 				{
 					"attribute":"bundleType",
 					"input_type":"select",
 					"input_values":["AND","OR","XOR","RANGE"],
-					"onchange": binding_f_c_custom_methods(0)
+					"onchange": bindingFCCustomMethods(0)
 				},
 				{
 					"attribute":"lowRange",
@@ -75,7 +71,7 @@ var binding_feature_component_main = function binding_feature_component_main(gra
 					"display_check_attribute":"bundleType",
 					"display_check_value":"RANGE",
 					"display_check":"",
-					"onchangerestrictive": binding_f_c_custom_methods(1)
+					"onchangerestrictive": bindingFCCustomMethods(1)
 				},
 				{
 					"attribute":"highRange",
@@ -85,7 +81,7 @@ var binding_feature_component_main = function binding_feature_component_main(gra
 					"display_check_attribute":"bundleType",
 					"display_check_value":"RANGE",
 					"display_check":"",
-					"onchangerestrictive": binding_f_c_custom_methods(1)
+					"onchangerestrictive": bindingFCCustomMethods(1)
 				}
 			]
 		}
@@ -93,22 +89,22 @@ var binding_feature_component_main = function binding_feature_component_main(gra
 		return styles;
 	}
 
-	function binding_f_c_custom_methods(pos){
-		var methods=[]
-		methods[0]=function(){
-			document.getElementById("tr-lowRange").style.display="none";
-			document.getElementById("tr-highRange").style.display="none";
-			var val = document.getElementById("tr-bundleType").getElementsByTagName('select')[0].value;
-			if(val=="RANGE"){
-				document.getElementById("tr-lowRange").style.display="";
-				document.getElementById("tr-highRange").style.display="";
+	function bindingFCCustomMethods(pos){
+		let methods = [];
+		methods[0] = function(){
+			document.getElementById("tr-lowRange").style.display = "none";
+			document.getElementById("tr-highRange").style.display = "none";
+			let val = document.getElementById("tr-bundleType").getElementsByTagName('select')[0].value;
+			if(val == "RANGE"){
+				document.getElementById("tr-lowRange").style.display = "";
+				document.getElementById("tr-highRange").style.display = "";
 			}
 		};
-		methods[1]=function(){
-			var lowRange = document.getElementById("input-lowRange").value;
-			var highRange = document.getElementById("input-highRange").value;
-			if(lowRange>highRange){
-				alert(messages["feature_custom_range_check"]);
+		methods[1] = function(){
+			let lowRange = document.getElementById("input-lowRange").value;
+			let highRange = document.getElementById("input-highRange").value;
+			if(lowRange > highRange){
+				alert(global.messages["feature_custom_range_check"]);
 				return false;
 			}
 			return true;
@@ -117,9 +113,9 @@ var binding_feature_component_main = function binding_feature_component_main(gra
 		return methods[pos];
 	}
 
-	function binding_f_c_labels(){
-		var labels={};
-		labels={
+	function bindingFCLabels(){
+		let labels = {};
+		labels = {
 			"bundle":"bundleType"
 		};
 
@@ -128,4 +124,4 @@ var binding_feature_component_main = function binding_feature_component_main(gra
 
 }
 
-export default binding_feature_component_main
+export default bindingFeatureComponentMain

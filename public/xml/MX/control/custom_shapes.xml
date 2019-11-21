@@ -1,0 +1,100 @@
+<shapes>
+<!-- begin control states model -->
+<shape name="setpoint" aspect="variable">
+	<background>
+		<path>
+			<move x="0" y="0"/>
+			<line x="100" y="0"/>
+			<line x="100" y="100"/>
+			<line x="0" y="100"/>
+		
+			<close/>
+			<move x="100" y="10"/>  
+			<line x="85" y="10"/>
+			<move x="85" y="10"/>
+			<line x="85" y="25"/> 
+			<line x="70" y="25"/>   
+		</path>		
+	</background>
+	<foreground>
+		<fillstroke/>
+	</foreground>
+</shape>
+
+<shape name="measured_output" aspect="variable">
+	<background>
+		<path>
+			<move x="0" y="0"/>
+			<line x="100" y="0"/>
+			<line x="100" y="100"/>
+			<line x="0" y="100"/>
+		
+			<close/>
+			<move x="85" y="10"/>  
+			<line x="15" y="10"/>
+			<move x="15" y="10"/>
+			<line x="15" y="25"/>
+			<move x="15" y="25"/>
+			<line x="85" y="25"/>
+			<move x="85" y="25"/>
+			<line x="85" y="10"/>
+	
+		</path>		
+	</background>
+	<foreground>
+		<fillstroke/>
+	</foreground>
+</shape>
+
+<shape name="transducer" aspect="variable">
+	<background>
+		<path>
+			<move x="0" y="0"/>
+			<line x="100" y="0"/>
+			<line x="100" y="100"/>
+			<line x="0" y="100"/>
+		
+			<close/>
+			<move x="75" y="30"/>  
+			<line x="80" y="10"/>
+			<move x="80" y="10"/>
+			<line x="85" y="30"/>
+			<move x="85" y="30"/>
+			<line x="90" y="10"/>
+			<move x="90" y="10"/>
+			<close/>
+
+		</path>		
+	</background>
+	<foreground>
+		<fillstroke/>
+	</foreground>
+</shape>
+
+<shape name="filter" aspect="variable">
+	<background>
+		<path>
+			<move x="0" y="0"/>
+			<line x="100" y="0"/>
+			<line x="100" y="100"/>
+			<line x="0" y="100"/>
+		
+			<close/>
+			<move x="80" y="10"/>  
+			<line x="96" y="10"/>
+			<move x="96" y="10"/>
+			<line x="90" y="25"/>
+			<move x="90" y="25"/>
+			<line x="90" y="38"/>
+			<line x="86" y="43"/>
+			<line x="86" y="25"/>
+			<line x="80" y="10"/>
+
+		</path>		
+	</background>
+	<foreground>
+		<fillstroke/>
+	</foreground>
+</shape>
+<!-- end control model -->
+</shapes>

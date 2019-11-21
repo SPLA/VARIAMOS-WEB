@@ -1,48 +1,48 @@
-var feature_main = function feature_main(graph)
+let featureMain = function featureMain(graph)
 {
-	feature_constraints(graph);
-	var data=[];
-	data[0]="normal" //custom type
-	data[1]=feature_elements(); //custom elements
-	data[2]=feature_attributes(); //custom attributes
-	data[3]=feature_relations(); //custom relations
-	data[4]=feature_properties_styles(); //custom properties styles
-	data[5]=feature_labels(); //custom labels
-	data[6]=feature_clon_cells(); //custom clon cells
-	data[7]=feature_constraints_in_creation(); //custom constraints in element creation
-	data[8]=feature_overlay(); //custom overlay
+	featureConstraints(graph);
+	let data = {};
+	data["m_type"] = "normal"; //custom type
+	data["m_elements"] = featureElements(); //custom elements
+	data["m_attributes"] = featureAttributes(); //custom attributes
+	data["m_relations"] = featureRelations(); //custom relations
+	data["m_properties_styles"] = featurePropertiesStyles(); //custom properties styles
+	data["m_labels"] = featureLabels(); //custom labels
+	data["m_clon_cells"] = featureClonCells(); //custom clon cells
+	data["m_constraints_ic"] = featureConstraintsInCreation(); //custom constraints in element creation
+	data["m_overlay"] = featureOverlay(); //custom overlay
 	return data;
 	
-	function feature_constraints(graph){
-		graph.multiplicities=[]; //reset multiplicities
+	function featureConstraints(graph){
+		graph.multiplicities = []; //reset multiplicities
 		graph.multiplicities.push(new mxMultiplicity(
 			true, "root", null, null, 0, 0, null,
 			"Invalid connection",
 			"Only shape targets allowed"));
 		graph.multiplicities.push(new mxMultiplicity(
-			true, "bundle", null, null, 0, 1, ["root","general"],
+			true, "bundle", null, null, 0, 1, ["root","abstract"],
 			"Only 1 target allowed",
 			"Only shape targets allowed"));
 	}
 
-	function feature_elements(){
-		var root = {src:projectPath+"images/models/feature/rectangle.png", wd:100, hg:35, type:"root", style:"", pname:"Root Feature"};
-		var general = {src:projectPath+"images/models/feature/rectangle.png", wd:100, hg:35, type:"general", style:"", pname:"General Feature"};
-		var leaf = {src:projectPath+"images/models/feature/rectangle.png", wd:100, hg:35, type:"leaf", style:"", pname:"Leaf Feature"};
-		var bundle = {src:projectPath+"images/models/feature/bundle.png", wd:35, hg:35, type:"bundle", style:"shape=ellipse", pname:"Bundle"};
+	function featureElements(){
+		let root = {src:projectPath + "images/models/feature/rectangle3.png", wd:100, hg:35, type:"root", style:"strokeWidth=3", pname:"Root Feature"};
+		let abstract = {src:projectPath + "images/models/feature/rectangle2.png", wd:100, hg:35, type:"abstract", style:"strokeWidth=2", pname:"Abstract Feature"};
+		let concrete = {src:projectPath + "images/models/feature/rectangle.png", wd:100, hg:35, type:"concrete", style:"", pname:"Concrete Feature"};
+		let bundle = {src:projectPath + "images/models/feature/bundle.png", wd:35, hg:35, type:"bundle", style:"shape=ellipse", pname:"Bundle"};
 		
-		var elements=[];
-		elements[0]=root;
-		elements[1]=general;
-		elements[2]=leaf;
-		elements[3]=bundle;
+		let elements = [];
+		elements[0] = root;
+		elements[1] = abstract;
+		elements[2] = concrete;
+		elements[3] = bundle;
 		
 		return elements;
 	}
 
-	function feature_attributes(){
-		var attributes=[];
-		attributes[0]={
+	function featureAttributes(){
+		let attributes = [];
+		attributes[0] = {
 			"types":["bundle"],
 			"custom_attributes":[{
 				"name":"bundleType",
@@ -57,8 +57,8 @@ var feature_main = function feature_main(graph)
 				"def_value":"1"
 			}]
 		};
-		attributes[1]={
-			"types":["leaf"],
+		attributes[1] = {
+			"types":["concrete"],
 			"custom_attributes":[{
 				"name":"selected",
 				"def_value":"false"
@@ -68,12 +68,12 @@ var feature_main = function feature_main(graph)
 		return attributes;
 	}
 
-	function feature_relations(){
-		var relations=[];
-		relations[0]={
-			"source":["general","leaf"],
+	function featureRelations(){
+		let relations = [];
+		relations[0] = {
+			"source":["abstract","concrete","relations"],
 			"rel_source_target":"and",
-			"target":["general","leaf","root"],
+			"target":["abstract","concrete","root","relations"],
 			"attributes":[{
 				"name":"relType",
 				"def_value":"mandatory"
@@ -83,13 +83,13 @@ var feature_main = function feature_main(graph)
 		return relations;
 	}
 
-	function feature_properties_styles(){
-		var styles={};
-		styles={
-			"leaf":[{
+	function featurePropertiesStyles(){
+		let styles = {};
+		styles = {
+			"concrete":[{
 					"attribute":"selected",
 					"input_type":"checkbox",
-					"onchange": feature_custom_methods(3)
+					"onchange": featureCustomMethods(3)
 				}
 			],
 			"relation":[{
@@ -103,7 +103,7 @@ var feature_main = function feature_main(graph)
 					"attribute":"bundleType",
 					"input_type":"select",
 					"input_values":["AND","OR","XOR","RANGE"],
-					"onchange": feature_custom_methods(0)
+					"onchange": featureCustomMethods(0)
 				},
 				{
 					"attribute":"lowRange",
@@ -113,7 +113,7 @@ var feature_main = function feature_main(graph)
 					"display_check_attribute":"bundleType",
 					"display_check_value":"RANGE",
 					"display_check":"",
-					"onchangerestrictive": feature_custom_methods(1)
+					"onchangerestrictive": featureCustomMethods(1)
 				},
 				{
 					"attribute":"highRange",
@@ -123,7 +123,7 @@ var feature_main = function feature_main(graph)
 					"display_check_attribute":"bundleType",
 					"display_check_value":"RANGE",
 					"display_check":"",
-					"onchangerestrictive": feature_custom_methods(1)
+					"onchangerestrictive": featureCustomMethods(1)
 				}
 			]
 		}
@@ -131,41 +131,62 @@ var feature_main = function feature_main(graph)
 		return styles;
 	}
 
-	function feature_custom_methods(pos){
-		var methods=[]
-		methods[0]=function(){
-			document.getElementById("tr-lowRange").style.display="none";
-			document.getElementById("tr-highRange").style.display="none";
-			var val = document.getElementById("tr-bundleType").getElementsByTagName('select')[0].value;
-			if(val=="RANGE"){
-				document.getElementById("tr-lowRange").style.display="";
-				document.getElementById("tr-highRange").style.display="";
+	function featureCustomMethods(pos){
+		let methods = [];
+		methods[0] = function(){
+			document.getElementById("tr-lowRange").style.display = "none";
+			document.getElementById("tr-highRange").style.display = "none";
+			let val = document.getElementById("tr-bundleType").getElementsByTagName('select')[0].value;
+			if(val == "RANGE"){
+				document.getElementById("tr-lowRange").style.display = "";
+				document.getElementById("tr-highRange").style.display = "";
 			}
 		};
-		methods[1]=function(){
-			var lowRange = document.getElementById("input-lowRange").value;
-			var highRange = document.getElementById("input-highRange").value;
-			if(lowRange>highRange){
-				alert(messages["feature_custom_range_check"]);
+		methods[1] = function(){
+			let lowRange = document.getElementById("input-lowRange").value;
+			let highRange = document.getElementById("input-highRange").value;
+			/*** TO FIX -> CHANGE AS TEXT ***/
+			// if the high range smaller than 0, it will set as '*' and type will change to 'text'
+			if(highRange < 0 && document.getElementById("input-highRange").type === 'number')
+			{
+				document.getElementById("input-highRange").type = 'text';
+				document.getElementById("input-highRange").value = '*';
+				return true;
+			}
+			// if the original is '*' and needs to be changed, it needs to be not lower than low range
+			if(highRange !== '*' && document.getElementById("input-highRange").type === 'text')
+			{
+				if(parseInt(document.getElementById("input-highRange").value) >= lowRange)
+				{
+					document.getElementById("input-highRange").type = 'number';
+					return true;
+				}
+				document.getElementById("input-highRange").value = '*';
+				alert(global.messages["feature_custom_range_check"]);
 				return false;
 			}
+			if(lowRange>highRange && document.getElementById("input-highRange").type === 'number'){
+				alert(global.messages["feature_custom_range_check"]);
+				return false;
+			}
+			/*** TO FIX -> CHANGE AS TEXT ***/
 			return true;
 		};
-		methods[2]=function(graph){
-			var feature_root = graph.getModel().getCell("feature");    
-			var feature_vertices = graph.getModel().getChildVertices(feature_root);
+		methods[2] = function(graph){
+			let feature_root = graph.getModel().getCell("feature");    
+			let feature_vertices = graph.getModel().getChildVertices(feature_root);
 
-			for (var i = 0; i < feature_vertices.length; i++) {
+			for (let i = 0; i < feature_vertices.length; i++) {
 				if(feature_vertices[i].getAttribute("type")=="root"){
-					alert(messages["feature_custom_root_check"]);
+					alert(global.messages["feature_custom_root_check"]);
 					return false;
 				}
 			}
 			return true;
 		};
-		methods[3]=function(){
+		methods[3] = function(){
 			// Creates a new overlay with an image and a tooltip and makes it "transparent" to events
-			var overlay = new mxCellOverlay(new mxImage('images/MX/check.png', 16, 16), 'Overlay tooltip');	
+			let overlay = new mxCellOverlay(new mxImage('images/MX/check.png', 16, 16), 'Overlay tooltip');	
 			if(this.checked){
 				graph.addCellOverlay(graph.getModel().getCell(this.name), overlay);
 			}else{
@@ -176,45 +197,45 @@ var feature_main = function feature_main(graph)
 		return methods[pos];
 	}
 
-	function feature_labels(){
-		var labels={};
-		labels={
+	function featureLabels(){
+		let labels = {};
+		labels = {
 			"bundle":"bundleType"
 		};
 
 		return labels;
 	}
 
-	function feature_constraints_in_creation(){
-		var constraints_ic={};
-		constraints_ic={
-			"root":feature_custom_methods(2)
+	function featureConstraintsInCreation(){
+		let constraintsIc = {};
+		constraintsIc = {
+			"root":featureCustomMethods(2)
 		};
 
-		return constraints_ic;
+		return constraintsIc;
 	}
 
-	function feature_clon_cells(){
-		var clons={};
-		clons={
-			"leaf":"binding_feature_component"
+	function featureClonCells(){
+		let clons = {};
+		clons = {
+			"concrete":"binding_feature_component"
 		};
 
 		return clons;
 	}
 
-	function feature_overlay(){
-		var func1=function(){
-			var feature_root = graph.getModel().getCell("feature");
-			var feature_elements = graph.getModel().getChildEdges(feature_root);
-			for (var i = 0; i < feature_elements.length; i++) {
-				var source = feature_elements[i].source;
-				var type = source.getAttribute("type");
-				if(type=="leaf"){
-					var sel = source.getAttribute("selected");
-					if(sel=="true"){
-						var overlay = new mxCellOverlay(new mxImage('images/MX/check.png', 16, 16), 'Overlay tooltip');
-						graph.addCellOverlay(source,overlay);
+	function featureOverlay(){
+		let func1 = function(){
+			let featureRoot = graph.getModel().getCell("feature");
+			let featureElements = graph.getModel().getChildEdges(featureRoot);
+			for (let i = 0; i < featureElements.length; i++) {
+				let source = featureElements[i].source;
+				let type = source.getAttribute("type");
+				if(type == "concrete"){
+					let sel = source.getAttribute("selected");
+					if(sel == "true"){
+						let overlay = new mxCellOverlay(new mxImage('images/MX/check.png', 16, 16), 'Overlay tooltip');
+						graph.addCellOverlay(source, overlay);
 					}
 				}
 			}
@@ -225,4 +246,4 @@ var feature_main = function feature_main(graph)
 	
 }
 
-export default feature_main
+export default featureMain

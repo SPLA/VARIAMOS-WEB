@@ -1,3 +1,6 @@
 module.exports = {
-  baseUrl: "/variamosweb/"
+  publicPath: "/variamosweb/",
+  configureWebpack: {
+    devtool: 'source-map'
+  },
 };

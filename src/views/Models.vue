@@ -4,7 +4,7 @@
     <div class="card mb-3">
             <div class="card-body">
 
-              <div class="button-header">
+              <div class="button-header" style="font-size:13px">
                  <nav class="navbar navbar-expand-lg navbar-light bg-light nav_domain">
                   <div id="navbarSupportedContent">
                     <ul class="navbar-nav navbar-nav2 mr-auto">
@@ -12,7 +12,8 @@
                       {{ $t("models_area") }} - {{ $route.params.type }} {{ $t("models_model") }}</a></li>
                       <!-- model actions -->
                       <BackEnd /> 
-                      <DomainImplementation :current_graph="graph" /> 
+                      <DomainMenu :current_graph="graph" :model_type="modelType" />
+                      <ApplicationMenu :current_graph="graph" :model_type="modelType" /> 
                       <Verification :current_graph="graph" /> 
                     </ul>
                   </div>
@@ -24,6 +25,7 @@
                     <div class="button-unique" id="buttonUNDO"></div>
                     <div class="button-unique" id="buttonREDO"></div>
                     <div class="button-unique" id="buttonSHOW"></div>
+                    <div class="button-unique" id="buttonPONE"></div>
                     <div class="button-unique" id="buttonDELETE"></div>
                     <div class="button-unique" id="buttonRESET"></div>
                     <div class="button-unique" id="buttonRESETALL"></div>
@@ -34,19 +36,22 @@
 
               <div class="row main_area">
 
-                <div class="col-sm-9 left-area">
+                <div id="left-draw" class="col-sm-9 left-area">
                   <div id="graphContainer" class="model-area"></div>
-                  <div class="properties-area"><b>{{ $t("models_element_properties") }}</b><br />
+                  <div class="properties-area" style="font-size:13px"><b>{{ $t("models_element_properties") }}</b><br />
                     <div id="properties"></div>
                   </div>
                 </div>
 
-                <div class="col-sm-3 right-area">
+                <div id="right-draw" class="col-sm-3 right-area" style="font-size:13px">
                   <div class="pallete-area">
                   <b>{{ $t("models_palette") }}</b><br /><br />
                   <div id="tbContainer"></div>
                   </div>
-                  <div class="other-area"><b>{{ $t("models_navigator") }}</b>
+                  <div class="other-area"><!--<b>{{ $t("models_navigator") }}</b>-->
+                  <div class="navi-buttons">
+                    <div id="buttonZIN"></div><div id="buttonZOUT"></div><div id="buttonZR"></div>
+                  </div>
                   <div id="navigator" class="navigator"></div>
                   </div>
                 </div>
@@ -57,7 +62,7 @@
             <div class="card-footer small text-muted"></div>
         </div>
 
-        <div>
+        <div id="hidden_elements">
           <input type="hidden" id="model_code" @change="persist()" v-model="modelCode" />
           <input type="hidden" id="current_type" v-bind:value="$route.params.type" />
           <input id="file" type="file" class="button_hidden" />
@@ -67,19 +72,15 @@
 </template>
 
 <script>
-import setup_relations from '@/assets/js/models/setup_relations.js'
-import setup_elements from '@/assets/js/models/setup_elements.js'
-import setup_buttons from '@/assets/js/models/setup_buttons.js'
-import setup_keys from '@/assets/js/models/setup_keys.js'
-import setup_properties from '@/assets/js/models/setup_properties.js'
 import main from '@/assets/js/models/model_main.js'
 import model_load from '@/assets/js/models/model_load.js'
-import feature_main from '@/assets/js/models/custom/feature.js'
-import component_main from '@/assets/js/models/custom/component.js'
-import binding_feature_component_main from '@/assets/js/models/custom/binding_feature_component.js'
+import Bus from '../assets/js/common/bus.js'
+import { getModelInfo } from '../assets/js/common/global_info'
+import { setupModal, modalH3, modalSimpleText } from '../assets/js/common/util'
 
 /* import actions */
-import DomainImplementation from '../components/model_actions/DomainImplementation'
+import DomainMenu from '../components/model_actions/DomainMenu'
+import ApplicationMenu from '../components/model_actions/ApplicationMenu'
 import Verification from '../components/model_actions/Verification'
 import BackEnd from '../components/model_actions/BackEnd'
 
@@ -92,42 +93,65 @@ export default{
       keyHandler: new Object(), //mxKeyHandler
       undoManager: new Object(), //mxUndoManager
       layers:{}, //model layers
-      modelFunctions:{},
       setupFunctions:{},
       models:[], //available models
-      currentFunction:"",
+      currentModel:"",
       mxModel: new Object(), //mxGraphModel
-      modelType:"" 
+      modelType:"", 
     }
   },
   components: {
     BackEnd,
-    DomainImplementation,
+    DomainMenu,
+    ApplicationMenu,
     Verification
   },
   mounted: function(){
-    this.models = ["feature","component","binding_feature_component"]; //represent the available models
-    this.modelFunctions = {
-      "feature":feature_main,
-      "component":component_main,
-      "binding_feature_component":binding_feature_component_main
-    }
-    this.setupFunctions = {
-      "setup_relations":setup_relations,
-      "setup_buttons":setup_buttons,
-      "setup_keys":setup_keys,
-      "setup_properties":setup_properties,
-      "setup_elements":setup_elements
-    }
+    /**
+     * set this mxgraph disabled
+     * @listens module:Filemanagetree~event:setfalsegraph
+     */
+    Bus.$on('setfalsegraph', data=>{
+      this.graph.setEnabled(false);
+    });
+    this.models = getModelInfo()["gmodels"]; //represent the available models
     //preload the saved model if exists
-    if (localStorage["model_code"]) {
-        this.modelCode = localStorage["model_code"];
+    let temp = this.getmodel_component;
+    if (localStorage[temp]) {
+        this.modelCode = localStorage[temp];
     }
     this.graph = new mxGraph(document.getElementById('graphContainer'));
     //load saved model into the graph if exists, and return layers
     this.layers=model_load(this.graph,this.models,this.modelCode);
     this.modelType=this.$route.params.type; //based on URL Route
-    this.currentFunction=this.modelFunctions[this.modelType];
+
+    // display custom menu options for domain-menu
+    let domain_childs = document.querySelectorAll('#domain-menu a');
+    this.hide_menu_options(domain_childs);
+    // display custom menu options for verification-menu
+    domain_childs = document.querySelectorAll('#verification-menu a');
+    this.hide_menu_options(domain_childs);
+    // display custom menu options for application-menu
+    domain_childs = document.querySelectorAll('#application-menu a');
+    this.hide_menu_options(domain_childs);
+
+    //dynamic load of setup functions
+    let all_setups = ["setup_relations","setup_buttons","setup_keys","setup_properties","setup_elements","setup_events"];
+    for(let i=0;i<all_setups.length;i++){
+      try{
+        //try to load setup functions from custom model folder
+        let st_fun = require(`@/assets/js/models/custom/${this.modelType}/${all_setups[i]}.js`);
+        this.setupFunctions[all_setups[i]]=st_fun.default;
+      }catch (ex) {
+        //load setup functions from models folder
+        let st_fun = require(`@/assets/js/models/${all_setups[i]}.js`);
+        this.setupFunctions[all_setups[i]]=st_fun.default;
+      }
+    }
+
+    //Import the current model file
+    let modelToImport = require('@/assets/js/models/custom/'+this.modelType+'.js');
+    this.currentModel = modelToImport.default;
     this.toolbar = new mxToolbar(document.getElementById('tbContainer'));
     this.keyHandler = new mxKeyHandler(this.graph);
     this.undoManager = new mxUndoManager();
@@ -136,21 +160,39 @@ export default{
     this.initialize_mx(1);
     //clear undo redo history
     this.undoManager.clear();
+
+    if(localStorage['cache_selected'+temp])
+      this.$store.dispatch('updatecacheselected', JSON.parse(localStorage['cache_selected'+temp]));
   },
   methods: {
     persist() {
       //save model in localstorage
-      localStorage["model_code"] = document.getElementById('model_code').value;
+      let temp = this.getmodel_component;
+      localStorage[temp] = document.getElementById('model_code').value;
       if(document.getElementById('model_code').value!=""){
-        var c_header = modalH3(this.$t("modal_success"),"success");
-        var c_body = modalSimpleText(this.$t("models_save_model"));
+        let c_header = modalH3(this.$t("modal_success"),"success");
+        let c_body = modalSimpleText(this.$t("models_save_model"));
         setupModal(c_header,c_body);
       }
     },
     initialize_mx(counter){
       //counter equals 1 load the entire mxGraph
-      var graphContainer = document.getElementById('graphContainer');
-      main(this.graph,this.layers,this.mxModel,this.toolbar,this.keyHandler,graphContainer,this.modelType,this.currentFunction,counter,this.setupFunctions,this.undoManager);
+      let graphContainer = document.getElementById('graphContainer');
+      main(this.graph,this.layers,this.mxModel,this.toolbar,this.keyHandler,graphContainer,this.modelType,this.currentModel,counter,this.setupFunctions,this.undoManager, this.$route.params, this.$store);
+      let outline = new mxOutline(this.graph, document.getElementById('navigator'));
+		  outline.refresh();
+    },
+    hide_menu_options(domain_childs){
+        for (let i = 0; i < domain_childs.length; i++) {
+        if(domain_childs[i].dataset.menudisplay!=null){
+          let listdis = domain_childs[i].dataset.menudisplay;
+          if(listdis.includes(this.modelType)){
+            domain_childs[i].style.display="";
+          }else{
+            domain_childs[i].style.display="none";
+          }
+        }
+      }
     }
   },
   beforeRouteLeave(to, from, next){
@@ -158,17 +200,68 @@ export default{
     this.keyHandler.destroy();
     next();
   },
+  computed: {
+    /**
+     * @returns {string} the current folder name in the store
+     */
+    getmodel_component (){
+        return this.$store.getters.getmodelcomponent;
+    },
+    /**
+     * @returns {array} the selected elements from feature and component models
+     */
+    getcache_selected (){
+      return this.$store.getters.getcacheselected;
+    }
+  },
   watch:{
     $route (to, from){
-      //remove the palette content when there is a change in the component route
-      document.getElementById('tbContainer').innerHTML="";
-      this.modelType=this.$route.params.type;
-      this.currentFunction=this.modelFunctions[this.modelType];
-      this.undoManager = new mxUndoManager();
-      this.initialize_mx(2);
-      //clear undo redo history
-      this.undoManager.clear();
-    }
+      if(this.$route.name === 'Models')
+      {
+        //remove the palette content and navigator content when there is a change in the component route
+        document.getElementById('tbContainer').innerHTML="";
+        document.getElementById('navigator').innerHTML="";
+        this.modelType=this.$route.params.type;
+
+        // display custom menu options for domain-menu
+        let domain_childs = document.querySelectorAll('#domain-menu a');
+        this.hide_menu_options(domain_childs);
+        // display custom menu options for verification-menu
+        domain_childs = document.querySelectorAll('#verification-menu a');
+        this.hide_menu_options(domain_childs);
+        // display custom menu options for application-menu
+        domain_childs = document.querySelectorAll('#application-menu a');
+        this.hide_menu_options(domain_childs);
+
+        //dynamic load of setup functions
+        let all_setups = ["setup_relations","setup_buttons","setup_keys","setup_properties","setup_elements","setup_events"];
+        for(let i=0;i<all_setups.length;i++){
+          try{
+            //try to load setup functions from custom model folder
+            let st_fun = require(`@/assets/js/models/custom/${this.modelType}/${all_setups[i]}.js`);
+            this.setupFunctions[all_setups[i]]=st_fun.default;
+          }catch (ex) {
+            //load setup functions from models folder
+            let st_fun = require(`@/assets/js/models/${all_setups[i]}.js`);
+            this.setupFunctions[all_setups[i]]=st_fun.default;
+          }
+        }
+        //Import only the current need model file
+        let modelToImport = require('@/assets/js/models/custom/'+this.modelType+'.js');
+        this.currentModel = modelToImport.default;
+        this.undoManager = new mxUndoManager();
+        this.initialize_mx(2);
+        //clear undo redo history
+        this.undoManager.clear();
+      }
+    },
+    // when the selected elements cache is changed, update localstorage
+    getcache_selected: {
+			handler(val) {
+				localStorage.setItem('cache_selected'+this.getmodel_component, JSON.stringify(val));
+     	},
+      deep:true
+		}
   }
 }
 </script>
@@ -227,7 +320,7 @@ export default{
 
 .navigator{
   border: 2px solid rgba(0,0,0,.125);
-  margin-top: 10px;
+  margin-top: 5px;
 }
 
 .button-area{
@@ -254,7 +347,7 @@ export default{
   overflow-block: scroll;
   overflow-x: auto;
   overflow-y: auto;
-  height:350px;
+  height:55vh;
   background:url("../assets/images/grid.gif");
   cursor:default;
   padding-right: 0px; 
@@ -276,5 +369,42 @@ table{
 
 .properties-table td{
 	padding: 5px;
+}
+</style>
+
+<style>
+#tbContainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.pallete-div {
+  display: block;
+  max-width: 70px;
+  margin: 3px;
+}
+
+.pallete-div span{
+  font-size: 12px;
+}
+
+.nav-item a{
+  cursor: pointer;
+}
+
+.navi-buttons{
+  display: flex;
+  margin: 0 auto;
+  justify-content: flex-end;
+}
+
+.navi-buttons button{
+  border: 1px solid #ccc;
+  padding: 2px;
+  padding-left: 7px;
+  padding-right: 7px;
+  width: 25px;
+  margin-right: 2px;
 }
 </style>
