@@ -1,27 +1,28 @@
 /**
  * return the VariaMos main model info
- * @property    {array} projFolders             - each folder should have how many models when the folder or project is generated
+ * @property {array} projFolders - each folder should have how many models when the folder or project is generated
  */
 export function getModelInfo(){
-    let info =[];
+    let info = [];
     //list of graphical models
-    info["gmodels"]=["feature","component","binding_feature_component","istar","adaptation_state","adaptation_hardware","adaptation_binding_state_hardware","control"];
+    info["gmodels"] = ["feature", "component", "binding_feature_component", "istar",
+        "adaptation_state", "adaptation_hardware", "adaptation_binding_state_hardware", "control"];
     //define feature model main info
-    info["feature"]={projFolders:["Domain"],label:"Feature"};
+    info["feature"] = {projFolders:["Domain"], label:"Feature"};
     //define component model main info
-    info["component"]={projFolders:["Domain"],label:"Component"};
+    info["component"] = {projFolders:["Domain"], label:"Component"};
     //define binding model main info
-    info["binding_feature_component"]={projFolders:["Domain"],label:"Binding FeatureComponent"};
+    info["binding_feature_component"] = {projFolders:["Domain"], label:"Binding FeatureComponent"};
     //define istar model main info
-    info["istar"]={projFolders:["Domain"],label:"iStar"};
+    info["istar"] = {projFolders:["Domain"], label:"iStar"};
     //define adaptation_state model main info
     info["adaptation_state"]={projFolders:["Application"],label:"State"};
     //define adaptation_hardware model main info
-    info["adaptation_hardware"]={projFolders:["Application"],label:"Hardware"};
+    info["adaptation_hardware"] = {projFolders:["Application"], label:"Hardware"};
     //define adaptation_binding_state_hardware model main info
-    info["adaptation_binding_state_hardware"]={projFolders:["Application"],label:"Binding StateHardware"};
+    info["adaptation_binding_state_hardware"] = {projFolders:["Application"], label:"Binding StateHardware"};
     //define control model main info
-    info["control"]={projFolders:["Application"],label:"Control"};
+    info["control"] = {projFolders:["Application"], label:"Control"};
     return info;
 }
 

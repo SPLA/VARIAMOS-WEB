@@ -1,20 +1,20 @@
-let feature_main = function feature_main(graph)
+let featureMain = function featureMain(graph)
 {
-	feature_constraints(graph);
-	let data={};
-	data["m_type"]="normal"; //custom type
-	data["m_elements"]=feature_elements(); //custom elements
-	data["m_attributes"]=feature_attributes(); //custom attributes
-	data["m_relations"]=feature_relations(); //custom relations
-	data["m_properties_styles"]=feature_properties_styles(); //custom properties styles
-	data["m_labels"]=feature_labels(); //custom labels
-	data["m_clon_cells"]=feature_clon_cells(); //custom clon cells
-	data["m_constraints_ic"]=feature_constraints_in_creation(); //custom constraints in element creation
-	data["m_overlay"]=feature_overlay(); //custom overlay
+	featureConstraints(graph);
+	let data = {};
+	data["m_type"] = "normal"; //custom type
+	data["m_elements"] = featureElements(); //custom elements
+	data["m_attributes"] = featureAttributes(); //custom attributes
+	data["m_relations"] = featureRelations(); //custom relations
+	data["m_properties_styles"] = featurePropertiesStyles(); //custom properties styles
+	data["m_labels"] = featureLabels(); //custom labels
+	data["m_clon_cells"] = featureClonCells(); //custom clon cells
+	data["m_constraints_ic"] = featureConstraintsInCreation(); //custom constraints in element creation
+	data["m_overlay"] = featureOverlay(); //custom overlay
 	return data;
 	
-	function feature_constraints(graph){
-		graph.multiplicities=[]; //reset multiplicities
+	function featureConstraints(graph){
+		graph.multiplicities = []; //reset multiplicities
 		graph.multiplicities.push(new mxMultiplicity(
 			true, "root", null, null, 0, 0, null,
 			"Invalid connection",
@@ -25,24 +25,24 @@ let feature_main = function feature_main(graph)
 			"Only shape targets allowed"));
 	}
 
-	function feature_elements(){
-		let root = {src:projectPath+"images/models/feature/rectangle3.png", wd:100, hg:35, type:"root", style:"strokeWidth=3", pname:"Root Feature"};
-		let abstract = {src:projectPath+"images/models/feature/rectangle2.png", wd:100, hg:35, type:"abstract", style:"strokeWidth=2", pname:"Abstract Feature"};
-		let concrete = {src:projectPath+"images/models/feature/rectangle.png", wd:100, hg:35, type:"concrete", style:"", pname:"Concrete Feature"};
-		let bundle = {src:projectPath+"images/models/feature/bundle.png", wd:35, hg:35, type:"bundle", style:"shape=ellipse", pname:"Bundle"};
+	function featureElements(){
+		let root = {src:projectPath + "images/models/feature/rectangle3.png", wd:100, hg:35, type:"root", style:"strokeWidth=3", pname:"Root Feature"};
+		let abstract = {src:projectPath + "images/models/feature/rectangle2.png", wd:100, hg:35, type:"abstract", style:"strokeWidth=2", pname:"Abstract Feature"};
+		let concrete = {src:projectPath + "images/models/feature/rectangle.png", wd:100, hg:35, type:"concrete", style:"", pname:"Concrete Feature"};
+		let bundle = {src:projectPath + "images/models/feature/bundle.png", wd:35, hg:35, type:"bundle", style:"shape=ellipse", pname:"Bundle"};
 		
-		let elements=[];
-		elements[0]=root;
-		elements[1]=abstract;
-		elements[2]=concrete;
-		elements[3]=bundle;
+		let elements = [];
+		elements[0] = root;
+		elements[1] = abstract;
+		elements[2] = concrete;
+		elements[3] = bundle;
 		
 		return elements;
 	}
 
-	function feature_attributes(){
-		let attributes=[];
-		attributes[0]={
+	function featureAttributes(){
+		let attributes = [];
+		attributes[0] = {
 			"types":["bundle"],
 			"custom_attributes":[{
 				"name":"bundleType",
@@ -57,7 +57,7 @@ let feature_main = function feature_main(graph)
 				"def_value":"1"
 			}]
 		};
-		attributes[1]={
+		attributes[1] = {
 			"types":["concrete"],
 			"custom_attributes":[{
 				"name":"selected",
@@ -68,9 +68,9 @@ let feature_main = function feature_main(graph)
 		return attributes;
 	}
 
-	function feature_relations(){
-		let relations=[];
-		relations[0]={
+	function featureRelations(){
+		let relations = [];
+		relations[0] = {
 			"source":["abstract","concrete","relations"],
 			"rel_source_target":"and",
 			"target":["abstract","concrete","root","relations"],
@@ -83,13 +83,13 @@ let feature_main = function feature_main(graph)
 		return relations;
 	}
 
-	function feature_properties_styles(){
-		let styles={};
-		styles={
+	function featurePropertiesStyles(){
+		let styles = {};
+		styles = {
 			"concrete":[{
 					"attribute":"selected",
 					"input_type":"checkbox",
-					"onchange": feature_custom_methods(3)
+					"onchange": featureCustomMethods(3)
 				}
 			],
 			"relation":[{
@@ -103,7 +103,7 @@ let feature_main = function feature_main(graph)
 					"attribute":"bundleType",
 					"input_type":"select",
 					"input_values":["AND","OR","XOR","RANGE"],
-					"onchange": feature_custom_methods(0)
+					"onchange": featureCustomMethods(0)
 				},
 				{
 					"attribute":"lowRange",
@@ -113,7 +113,7 @@ let feature_main = function feature_main(graph)
 					"display_check_attribute":"bundleType",
 					"display_check_value":"RANGE",
 					"display_check":"",
-					"onchangerestrictive": feature_custom_methods(1)
+					"onchangerestrictive": featureCustomMethods(1)
 				},
 				{
 					"attribute":"highRange",
@@ -123,7 +123,7 @@ let feature_main = function feature_main(graph)
 					"display_check_attribute":"bundleType",
 					"display_check_value":"RANGE",
 					"display_check":"",
-					"onchangerestrictive": feature_custom_methods(1)
+					"onchangerestrictive": featureCustomMethods(1)
 				}
 			]
 		}
@@ -131,27 +131,48 @@ let feature_main = function feature_main(graph)
 		return styles;
 	}
 
-	function feature_custom_methods(pos){
-		let methods=[];
-		methods[0]=function(){
-			document.getElementById("tr-lowRange").style.display="none";
-			document.getElementById("tr-highRange").style.display="none";
+	function featureCustomMethods(pos){
+		let methods = [];
+		methods[0] = function(){
+			document.getElementById("tr-lowRange").style.display = "none";
+			document.getElementById("tr-highRange").style.display = "none";
 			let val = document.getElementById("tr-bundleType").getElementsByTagName('select')[0].value;
-			if(val=="RANGE"){
-				document.getElementById("tr-lowRange").style.display="";
-				document.getElementById("tr-highRange").style.display="";
+			if(val == "RANGE"){
+				document.getElementById("tr-lowRange").style.display = "";
+				document.getElementById("tr-highRange").style.display = "";
 			}
 		};
-		methods[1]=function(){
+		methods[1] = function(){
 			let lowRange = document.getElementById("input-lowRange").value;
 			let highRange = document.getElementById("input-highRange").value;
-			if(lowRange>highRange){
+			/*** TO FIX -> CHANGE AS TEXT ***/
+			// if the high range smaller than 0, it will set as '*' and type will change to 'text'
+			if(highRange < 0 && document.getElementById("input-highRange").type === 'number')
+			{
+				document.getElementById("input-highRange").type = 'text';
+				document.getElementById("input-highRange").value = '*';
+				return true;
+			}
+			// if the original is '*' and needs to be changed, it needs to be not lower than low range
+			if(highRange !== '*' && document.getElementById("input-highRange").type === 'text')
+			{
+				if(parseInt(document.getElementById("input-highRange").value) >= lowRange)
+				{
+					document.getElementById("input-highRange").type = 'number';
+					return true;
+				}
+				document.getElementById("input-highRange").value = '*';
 				alert(global.messages["feature_custom_range_check"]);
 				return false;
 			}
+			if(lowRange>highRange && document.getElementById("input-highRange").type === 'number'){
+				alert(global.messages["feature_custom_range_check"]);
+				return false;
+			}
+			/*** TO FIX -> CHANGE AS TEXT ***/
 			return true;
 		};
-		methods[2]=function(graph){
+		methods[2] = function(graph){
 			let feature_root = graph.getModel().getCell("feature");    
 			let feature_vertices = graph.getModel().getChildVertices(feature_root);
 
@@ -163,7 +184,7 @@ let feature_main = function feature_main(graph)
 			}
 			return true;
 		};
-		methods[3]=function(){
+		methods[3] = function(){
 			// Creates a new overlay with an image and a tooltip and makes it "transparent" to events
 			let overlay = new mxCellOverlay(new mxImage('images/MX/check.png', 16, 16), 'Overlay tooltip');	
 			if(this.checked){
@@ -176,45 +197,45 @@ let feature_main = function feature_main(graph)
 		return methods[pos];
 	}
 
-	function feature_labels(){
-		let labels={};
-		labels={
+	function featureLabels(){
+		let labels = {};
+		labels = {
 			"bundle":"bundleType"
 		};
 
 		return labels;
 	}
 
-	function feature_constraints_in_creation(){
-		let constraints_ic={};
-		constraints_ic={
-			"root":feature_custom_methods(2)
+	function featureConstraintsInCreation(){
+		let constraintsIc = {};
+		constraintsIc = {
+			"root":featureCustomMethods(2)
 		};
 
-		return constraints_ic;
+		return constraintsIc;
 	}
 
-	function feature_clon_cells(){
-		let clons={};
-		clons={
+	function featureClonCells(){
+		let clons = {};
+		clons = {
 			"concrete":"binding_feature_component"
 		};
 
 		return clons;
 	}
 
-	function feature_overlay(){
-		let func1=function(){
-			let feature_root = graph.getModel().getCell("feature");
-			let feature_elements = graph.getModel().getChildEdges(feature_root);
-			for (let i = 0; i < feature_elements.length; i++) {
-				let source = feature_elements[i].source;
+	function featureOverlay(){
+		let func1 = function(){
+			let featureRoot = graph.getModel().getCell("feature");
+			let featureElements = graph.getModel().getChildEdges(featureRoot);
+			for (let i = 0; i < featureElements.length; i++) {
+				let source = featureElements[i].source;
 				let type = source.getAttribute("type");
-				if(type=="concrete"){
+				if(type == "concrete"){
 					let sel = source.getAttribute("selected");
-					if(sel=="true"){
+					if(sel == "true"){
 						let overlay = new mxCellOverlay(new mxImage('images/MX/check.png', 16, 16), 'Overlay tooltip');
-						graph.addCellOverlay(source,overlay);
+						graph.addCellOverlay(source, overlay);
 					}
 				}
 			}
@@ -225,4 +246,4 @@ let feature_main = function feature_main(graph)
 	
 }
 
-export default feature_main
+export default featureMain

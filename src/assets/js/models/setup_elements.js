@@ -1,5 +1,5 @@
-let setup_elements = function setup_elements(graph, elements, custom_attributes, c_clon_cells, c_constraints_ic, toolbar, c_type){    
-    if(elements==null){
+let setupElements = function setupElements(graph, elements, customAttributes, cClonCells, cConstraintsIc, toolbar, cType){    
+    if(elements == null){
         //disable palette for "binding" models
         let tbContainer = document.getElementById('tbContainer');
         let span = document.createElement('span');
@@ -8,11 +8,11 @@ let setup_elements = function setup_elements(graph, elements, custom_attributes,
     }else{
         //add elements to the palette
         for (let i = 0; i < elements.length; i++) {
-            addVertex(graph, toolbar, elements[i].src, elements[i].wd, elements[i].hg, elements[i].style, elements[i].type, elements[i].pname, custom_attributes, c_clon_cells, c_constraints_ic);
+            addVertex(graph, toolbar, elements[i].src, elements[i].wd, elements[i].hg, elements[i].style, elements[i].type, elements[i].pname, customAttributes, cClonCells, cConstraintsIc);
         }
     }
 
-    function addVertex(graph, toolbar, icon, w, h, style, type, namepalette, custom_attributes, c_clon_cells, c_constraints_ic)
+    function addVertex(graph, toolbar, icon, w, h, style, type, namepalette, customAttributes, cClonCells, cConstraintsIc)
     {
         let doc = mxUtils.createXmlDocument();
         let node = doc.createElement(type);
@@ -20,11 +20,11 @@ let setup_elements = function setup_elements(graph, elements, custom_attributes,
         node.setAttribute('type', type);
 
         //include custom attributes
-        if(custom_attributes){
-            for (let z = 0; z < custom_attributes.length; z++) {
-                if((custom_attributes[z]["types"].indexOf(type) > -1)){
-                    for(let j = 0; j < custom_attributes[z]["custom_attributes"].length; j++){
-                        node.setAttribute(custom_attributes[z]["custom_attributes"][j]["name"], custom_attributes[z]["custom_attributes"][j]["def_value"]);
+        if(customAttributes){
+            for (let z = 0; z < customAttributes.length; z++) {
+                if((customAttributes[z]["types"].indexOf(type) > -1)){
+                    for(let j = 0; j < customAttributes[z]["custom_attributes"].length; j++){
+                        node.setAttribute(customAttributes[z]["custom_attributes"][j]["name"], customAttributes[z]["custom_attributes"][j]["def_value"]);
                     }
                 }
             }
@@ -34,44 +34,44 @@ let setup_elements = function setup_elements(graph, elements, custom_attributes,
         vertex.setConnectable(true);
         vertex.setVertex(true);
 
-        if(c_constraints_ic != null && c_constraints_ic[type]){
-            addToolbarItem(graph, toolbar, vertex, icon, namepalette, c_clon_cells, c_constraints_ic[type]);
+        if(cConstraintsIc != null && cConstraintsIc[type]){
+            addToolbarItem(graph, toolbar, vertex, icon, namepalette, cClonCells, cConstraintsIc[type]);
         }else{
-            addToolbarItem(graph, toolbar, vertex, icon, namepalette, c_clon_cells, "");
+            addToolbarItem(graph, toolbar, vertex, icon, namepalette, cClonCells, "");
         }
     }
 
-    function addToolbarItem(graph, toolbar, prototype, image, namepalette, c_clon_cells, c_constraints_ic)
+    function addToolbarItem(graph, toolbar, prototype, image, namepalette, cClonCells, cConstraintsIc)
     {
         // Function that is executed when the image is dropped on
         // the graph. The cell argument points to the cell under
         // the mousepointer if there is one.
         let funct = function(graph, evt, cell)
 		{
-            let oncreation_allowed = true;
+            let onCreationAllowed = true;
 
-            if(c_constraints_ic!=""){
-                oncreation_allowed = c_constraints_ic(graph);
+            if(cConstraintsIc!=""){
+                onCreationAllowed = cConstraintsIc(graph);
             }
 
-            if(oncreation_allowed){
+            if(onCreationAllowed){
                 graph.stopEditing(false);
                 let pt = graph.getPointForEvent(evt);
                 let vertex = graph.getModel().cloneCell(prototype);
                 vertex.geometry.x = pt.x;
                 vertex.geometry.y = pt.y;
 
-                let new_cells = graph.importCells([vertex], 0, 0, cell);
-                graph.setSelectionCells(new_cells);
+                let newCells = graph.importCells([vertex], 0, 0, cell);
+                graph.setSelectionCells(newCells);
 
                 //execute if there are clons for the current element
-                if(c_clon_cells!=null){
-                    let type = new_cells[0].getAttribute("type");
-                    if(c_clon_cells[type]){ //clon cell in a new model
+                if(cClonCells != null){
+                    let type = newCells[0].getAttribute("type");
+                    if(cClonCells[type]){ //clon cell in a new model
                         graph.getModel().prefix="clon"; //cloned cell contains clon prefix
                         graph.getModel().nextId=graph.getModel().nextId-1;
-                        let vertex2 = graph.getModel().cloneCell(new_cells[0]);
-                        let parent2 = graph.getModel().getCell(c_clon_cells[type]);
+                        let vertex2 = graph.getModel().cloneCell(newCells[0]);
+                        let parent2 = graph.getModel().getCell(cClonCells[type]);
                         graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#DCDCDC", [vertex2]); //different background for a cloned cell
                         graph.importCells([vertex2], 0, 0, parent2);
                         graph.getModel().prefix=""; //restart prefix
@@ -97,4 +97,4 @@ let setup_elements = function setup_elements(graph, elements, custom_attributes,
     }
 }
 
-export default setup_elements
+export default setupElements

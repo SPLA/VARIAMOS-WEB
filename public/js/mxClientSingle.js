@@ -3335,14 +3335,14 @@ var mxUtils =
 	 * current document.
 	 */
 
-	button_with_icon: function(label, funct, icon_style, doc)
+	buttonWithIcon: function(label, funct, iconStyle, doc)
 	{
 		doc = (doc != null) ? doc : document;
 		
 		var button = doc.createElement('button');
 		button.className = "btn-model-area btn btn-sm btn-outline-secondary";
 		var icon = document.createElement('i');
-		icon.className = "fas "+ "fa-"+icon_style;
+		icon.className = "fas "+ "fa-"+iconStyle;
 		button.appendChild(icon);
 		mxUtils.write(button, label);
 

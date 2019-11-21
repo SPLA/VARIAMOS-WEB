@@ -6,61 +6,63 @@ export function jsUcfirst(string)
 }
 
 // setup main modal view
-export function setupModal(header_content,body_content="",footer_content="") 
+export function setupModal(headerContent, bodyContent="", footerContent="") 
 {
-    let main_modal=document.getElementById('main_modal');
-    let main_modal_header=document.getElementById('main_modal_header');
-    let main_modal_body=document.getElementById('main_modal_body');
-    let main_modal_footer=document.getElementById('main_modal_footer');
-    main_modal_header.innerHTML="";
-    main_modal_body.innerHTML="";
-    main_modal_footer.innerHTML="";
-    main_modal.style.display="inline-table";
+    let mainModal = document.getElementById('main_modal');
+    let mainModalHeader = document.getElementById('main_modal_header');
+    let mainModalBody = document.getElementById('main_modal_body');
+    let mainModalFooter = document.getElementById('main_modal_footer');
+    mainModalHeader.innerHTML = "";
+    mainModalBody.innerHTML = "";
+    mainModalFooter.innerHTML = "";
+    mainModal.style.display = "inline-table";
 
-    main_modal_header.appendChild(header_content);
-    if(body_content!=""){main_modal_body.appendChild(body_content);}
-    if(footer_content!=""){
-        if(Array.isArray(footer_content)){
-            footer_content.forEach(footer_element => {
-                main_modal_footer.appendChild(footer_element);
+    mainModalHeader.appendChild(headerContent);
+    if(bodyContent != ""){
+        mainModalBody.appendChild(bodyContent);
+    }
+    if(footerContent != ""){
+        if(Array.isArray(footerContent)){
+            footerContent.forEach(footerElement => {
+                mainModalFooter.appendChild(footerElement);
             });
         } else {
-            main_modal_footer.appendChild(footer_content);
+            mainModalFooter.appendChild(footerContent);
         }
     }
 }
 
-export function modalH3(text,type="normal"){
-    let c_h3 = document.createElement('h3');
-    c_h3.innerText=text;
-    if(type=="error"){
-        c_h3.style.color="crimson";
-    }else if(type=="success"){
-        c_h3.style.color="forestgreen";
+export function modalH3(text, type="normal"){
+    let cH3 = document.createElement('h3');
+    cH3.innerText = text;
+    if(type == "error"){
+        cH3.style.color = "crimson";
+    }else if(type == "success"){
+        cH3.style.color = "forestgreen";
     }
-    return c_h3;
+    return cH3;
 }
 
 export function modalSimpleText(text){
-    let c_span = document.createElement('span');
-    c_span.innerText=text;
-    return c_span;
+    let cSpan = document.createElement('span');
+    cSpan.innerText = text;
+    return cSpan;
 }
 
-export function modalInputTexts(texts,inputs,default_vals){
+export function modalInputTexts(texts, inputs, defaultVals){
     let table = document.createElement('table');
-    for(let i=0;i<texts.length;i++){
+    for(let i = 0; i < texts.length; i++){
         let tr = document.createElement('tr');
         let td = document.createElement('td');
         td.innerHTML=texts[i];
         tr.appendChild(td);
         
         let input = document.createElement('input');
-        input.value=default_vals[i];
-        input.type="text";
-        input.id=inputs[i];
-        input.size=40;
-        input.name=inputs[i];
+        input.value = defaultVals[i];
+        input.type = "text";
+        input.id = inputs[i];
+        input.size = 40;
+        input.name = inputs[i];
         let td2 = document.createElement('td');
         td2.appendChild(input);
         tr.appendChild(td2);
@@ -69,37 +71,37 @@ export function modalInputTexts(texts,inputs,default_vals){
     return table;
 }
 
-export function modalCustomization(texts,inputs,default_vals){
+export function modalCustomization(texts, inputs, defaultVals){
     let table = document.createElement('table');
-    for(let i=0;i<texts.length;i++){
+    for(let i = 0; i < texts.length; i++){
         let tr = document.createElement('tr');
-        if(i==3){
-            tr.id="filetouploadtr";
-            tr.style.display="none";
+        if(i == 3){
+            tr.id = "filetouploadtr";
+            tr.style.display = "none";
         }
         let td = document.createElement('td');
-        td.innerHTML=texts[i];
+        td.innerHTML = texts[i];
         tr.appendChild(td);
 
         let input = {};
 
-        if(i==0){
+        if(i == 0){
             input = document.createElement('input');
-            input.size=48;
+            input.size = 48;
         }
-        else if(i==3){
+        else if(i == 3){
             input = document.createElement('input');
-            input.type="file";
+            input.type = "file";
         }else{
             input = document.createElement('textarea');
-            input.cols=50;
+            input.cols = 50;
         }
 
-        input.value=default_vals[i];
-        input.id=inputs[i];
-        input.name=inputs[i];
-        if(i==0 || i==1 || i==4){
-            input.disabled="disabled";
+        input.value = defaultVals[i];
+        input.id = inputs[i];
+        input.name = inputs[i];
+        if(i == 0 || i == 1 || i == 4){
+            input.disabled = "disabled";
         }
 
         let td2 = document.createElement('td');
@@ -110,11 +112,11 @@ export function modalCustomization(texts,inputs,default_vals){
     return table;
 }
 
-export function modalButton(text,function_to_append){
+export function modalButton(text, functionToAppend){
     let button = document.createElement('button');
-    button.innerText=text;
-    button.id=text;
-    button.addEventListener("click", function_to_append, false);
+    button.innerText = text;
+    button.id = text;
+    button.addEventListener("click", functionToAppend, false);
     return button;
 }
  
