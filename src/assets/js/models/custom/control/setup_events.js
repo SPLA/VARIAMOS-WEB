@@ -1,6 +1,7 @@
 import { setupModal, modalH3, modalSimpleText, modalButton } from '../../../common/util'
 import * as Mathjax from 'mathjax';
 
+// modal function
 function modalControl(texts,inputs,default_vals){
   let table = document.createElement('table');
   for(let i=0;i<texts.length;i++){
@@ -35,8 +36,6 @@ function modalControl(texts,inputs,default_vals){
   return table;
 }
 
-
-
 let setup_events = function setup_events(graph){
   let texts = ['Input [∆𝑋] (Setpoint injection): ',"Delay[𝜃](Time it takes for the system output to increase): ",
 "Note: Data must have a comma-separated csv file, where time is specified in the first column and output in the second."]   
@@ -65,33 +64,32 @@ let setup_events = function setup_events(graph){
 
           } 
           let type = cell.getAttribute("type");
-      if (type == "controller") {
-        generate_graph();
-          }  
+            if (type == "controller")
+            {
+            generate_graph();
+            }  
 
-          if (type == "plant") {
+            if (type == "plant") 
+            {
             data_continuous();
-              }
+            }
+            
       }
-    
-      
   }); 
   // Modal Identifying transfer function  
     let data_continuous = function() {
     let c_header = modalH3(("System model"));
     let c_body = modalControl(texts,inputs,default_vals);
     let c_footer = [];
-    c_footer.push(modalButton("Import Data", function(){
-    
+    c_footer.push(modalButton("Import Data", function(){ 
         uploadData()
     }));
     c_footer.push(modalButton("Estimate", function(){
-      
       if(  document.getElementById('idDeltaU').value =="")
         {
           alert("Incomplete information")
         }
-        else
+      else
         {
           canvas();
         }
@@ -102,173 +100,164 @@ let setup_events = function setup_events(graph){
   let data_csv = function() {
     let text=localStorage["control_data"];
     let allTextLines = text.split(/\r\n|\n/);
-    let lines = [];
-    let data
-    let data_n
+    let list_data = [];
+    let data;
     for (let i=0; i<allTextLines.length; i++) {
         data = allTextLines[i].split(";")[1];
         if(data!=null)
         {
         data = data.replace(",", ".");
-        data_n= parseFloat(data)
-        lines.push(data_n)
+        data= parseFloat(data)
+        list_data.push(data)
         }
     }
-    
-    lines.pop();
-  
-    return lines 
+    list_data.pop();
+    return list_data 
   }
 
   let data_csv_time = function() {
     let text=localStorage["control_data"];
     let allTextLines = text.split(/\r\n|\n/);
-    let time = [];
-    let data
-    let data_n
+    let list_time = [];
+    let data;
     for (let i=0; i<allTextLines.length; i++) {
         data = allTextLines[i].split(";")[0];
         if(data!=null)
         {
         data = data.replace(",", ".");
-        data_n= parseFloat(data)
-        time.push(data_n)
+        data= parseFloat(data);
+        list_time.push(data);
         }
-    }
-    
-    time.pop();
-  
-    return time 
+    } 
+    list_time.pop();
+    return list_time; 
   }
- // generate canvas Identifying model
+
+ //Generate canvas Identifying model
   function canvas()
   {
+    let lines=data_csv();
+    let delay=data_csv_time()
+    let last=lines.slice(-2)[0];
+    let tao_value;
+    let first=lines[0];
+    let tao=((last-first)*0.63)+first;
+    let delta_value = document.getElementById('idDeltaU').value;
+    let k=(last-first)/parseInt(delta_value);
+    let tex;
+
+    //Calculate delay
     let pos_delay = function() {
-      let pos
-      for (let i=0; i<lines.length; i++) {
-       
+      let position;
+      for (let i=0; i<lines.length; i++) {   
         if(lines[i]!=lines[0])
         {  
           first=lines[i-1]
-          pos=i-1
+          position=i-1
           break;
         }
         else
         {
-          pos=0
-        }
-    }
-      return pos
-    }
-
-    let time=[];
-    let lines=data_csv();
-    let k
-    let delay=data_csv_time()
-    let last=lines.slice(-2)[0];
-    let tao_value
-    let first=lines[0]
-    let tao=((last-first)*0.63)+first
-    let delta_value = document.getElementById('idDeltaU').value;
-
-    k=(last-first)/parseInt(delta_value);
-
-    let tao_aproximate = function() {
-      let cercano=0;
-      let diferencia=0;
-
-      for (let i = 0; i < lines.length; i++)
-      {
-        if ( Math.abs(tao -cercano) > Math.abs(lines[i] - tao)) {
-          cercano = lines[i];
-          diferencia=i; 
+          position=0;
         }
       }
-      
-      return diferencia;
+      return position;
     }
-    if(document.getElementById('idDelay').checked==false)
-    {
-      first=lines[0];
-      
-      tao_value = delay[tao_aproximate()];
-      //var tex = "\\frac{"+ k.toFixed(2)+"}{"+tao_value+"+1}";
-      var tex='K: '+k.toFixed(2)+" "+'Tao: '+tao_value;
-      
-    }
-    else{
-  
-      first=lines[pos_delay()]
-      tao_value = delay[tao_aproximate()] - delay[pos_delay()]
-      //var tex = "\\frac{"+ k.toFixed(2)+"* e^-"+ delay[pos_delay()]+"s}{"+tao_value+"+1}";
-      var tex= "K: "+k.toFixed(2)+" "+'𝜃: '+delay[pos_delay()]+" "+'Tao: '+tao_value;
-      localStorage.setItem("k",k)
-      localStorage.setItem("delay",delay[pos_delay()])
-      localStorage.setItem("tao", tao_value)
-    }    
-      let continuous = function() {
+    let continuous = function() {
       let result=[];
-      let delta_value = document.getElementById('idDeltaU').value;
-      k=(last-first)/parseInt(delta_value);
- 
       for (let i = 0; i < lines.length; i++)
       { 
           let value=(k*parseInt(delta_value)*(1-Math.exp(-delay[i]/parseInt(tao_value)))+first);
           result.push(value);
-          time.push(i); 
       }
       return result;
       };
-    let result_continuous=continuous()
+    let tao_aproximate = function() {
+      let near=0;
+      let difference=0;
+      for (let i = 0; i < lines.length; i++)
+      {
+        if ( Math.abs(tao -near) > Math.abs(lines[i] - tao)) {
+          near = lines[i];
+          difference=i; 
+        }
+      }  
+      return difference;
+    }
     let fit_graph = function() {
-      let difference=[];
-      let diff;
+      let result_continuous=continuous()
+      let list_difference=[];
+      let difference;
       let sum;
       let fit;
       for (let i = 0; i < lines.length; i++)
       {
-        diff=result_continuous[i]-lines[i] 
-        diff=Math.pow(diff,2)
-        sum+=diff
-        difference.push(diff)
+        difference=result_continuous[i]-lines[i] 
+        difference=Math.pow(difference,2)
+        sum+=difference
+        list_difference.push(difference)
       }
-     
       const reducer = (accumulator, currentValue) => accumulator + currentValue;
-
-      sum=difference.reduce(reducer);
+      sum=list_difference.reduce(reducer);
       fit=Math.sqrt(sum/lines.length)
-
       return fit;
     }
+    let feedback_root = graph.getModel().getCell("control");
+    let childs = graph.getModel().getChildVertices(feedback_root);
+    for (let i = 0; i < childs.length; i++) {
+      if ( childs[i].getAttribute("type") == "controlAction") { //change
+          childs[i].setAttribute("Delay")==true;
+       
 
+        }
+    }
   
-    let c_header = modalH3("System Model");
-    let c_body=""
-    let c_footer = modalButton(("return"),function(){data_continuous();});
-    setupModal(c_header,c_body,c_footer)
-    let main_modal = document.getElementById("main_modal_body");
+    if(document.getElementById('idDelay').checked==false)
+    {
+       tao_value = delay[tao_aproximate()];
+       //var tex = "\\frac{"+ k.toFixed(2)+"}{"+tao_value+"+1}";
+       tex='K: '+k.toFixed(2)+" "+'Tao: '+tao_value;
+       localStorage.setItem("tao", tao_value);    
+    }
+    else{
+      first=lines[pos_delay()]
+      tao_value = delay[tao_aproximate()] - delay[pos_delay()]
+      //let text = "\\frac{"+ k.toFixed(2)+"* e^-"+ delay[pos_delay()]+"s}{"+tao_value+"+1}";
+      tex= "K: "+k.toFixed(2)+" "+'𝜃: '+delay[pos_delay()]+" "+'Tao: '+tao_value;
+      localStorage.setItem("k",k)
+      localStorage.setItem("delay",delay[pos_delay()])
+      localStorage.setItem("tao", tao_value)
+      }    
+     
+      
+      //First Modal
     let div=document.createElement("div");
     div.setAttribute("align", "center")
     div.id="formula";
     div.size=50;
+    div.innerHTML =tex
+
+    let main_modal = document.getElementById("main_modal_body");
+    let c_header = modalH3("System Model");
+    let c_body=""
+    let c_footer = modalButton(("return"),function(){data_continuous();});
+    
+    setupModal(c_header,c_body,c_footer)
     main_modal.appendChild(div);
     //div.innerHTML = "\\["+tex+"\\]";
-    div.innerHTML =tex
     //Mathjax.Hub.Queue(["Typeset",MathJax.Hub,div]);
    /* let div2=document.createElement("div");
     div2.id="formula2";
     main_modal.appendChild(div2);*/
-    let ti=2*delay[pos_delay()]
-    let td=ti/4
+    let ti=2*delay[pos_delay()];
+    let td=ti/4;
     let fit= (fit_graph().toFixed(2)*100)/last;
     fit=(100-fit).toFixed(2);
-    
-    
     /*div2.innerHTML = "\\[proportional:"+ k.toFixed(2)+"\\"+"   " +" integral:"+ti+" \\ "+"   " +"derivate:"+td+"\\]";
     MathJax.Hub.Queue(["Typeset",MathJax.Hub,div2]);*/
 
 
-    
+    // Modal Canvas Plant
     let canvas = document.createElement("canvas");
           canvas.id = "myChart";
           canvas.width = 500;
@@ -294,7 +283,7 @@ let setup_events = function setup_events(graph){
                   pointBorderWidth: 0
                 },
                 {
-                  data: result_continuous,
+                  data: continuous(),
                   label: "Data Transfer Function",
                   lineTension: 0,
                   backgroundColor: "transparent",
@@ -308,7 +297,6 @@ let setup_events = function setup_events(graph){
               ]
             },
             options: {
-              
               title: {
                 display: true,
                 text: ['Proportional: '+ k.toFixed(2)+" "+"Integral: "+ti+" "+"Derivate: "+td+" ",'Best fits:'+fit+"%"],
@@ -317,23 +305,23 @@ let setup_events = function setup_events(graph){
           });
           return canvas
   }
+
   // load data from csv
   function uploadData()
   {
-      let he = document.getElementById("hidden_elements");
+      let hidden = document.getElementById("hidden_elements");
       let input=document.createElement('input');
-          input.type="file";
-          input.style.display="none";           
-          he.appendChild(input);
+      input.type="file";
+      input.style.display="none";           
+      hidden.appendChild(input);
         input.addEventListener('change', function(event) {
         let fileToLoad = input.files[0];
         let fileReader = new FileReader();
-        fileReader.onload = function(fileLoadedEvent) 
-        {   
+          fileReader.onload = function(fileLoadedEvent) {   
                 let textload = fileLoadedEvent.target.result;
                 localStorage["control_data"]=textload; 
                 alert("Successfully stored data")
-        }
+          }
         fileReader.readAsText(fileToLoad, "UTF-8");
         });
       if (input)
@@ -342,30 +330,26 @@ let setup_events = function setup_events(graph){
       }  
     }
   
-    
-
       function generate_graph() {
-        var controlAction =
+      let controlAction =
       localStorage["adaptation_binding_state_hardware_controlAction"];
       let c_header = modalH3("Controller Tuning");
       let value_label = controlAction;
       let c_body = modalSimpleText("");
-      let result_outputs = [];
-      let result_outputs2 = [];
+      let result_simple_plant = [];
+      let result_cascade_plant = [];
       let result = [];
       let names = [];
       let feedback_root = graph.getModel().getCell("control");
       let childs = graph
         .getModel()
         .getChildVertices(feedback_root);
-      //navigates through the feature model childsld
       for (let i = 0; i < childs.length; i++) {
-        if ( childs[i].getAttribute("type") == "plant") { //change
+        if ( childs[i].getAttribute("type") == "controlAction") { //change
           let target_sys = childs[i].getAttribute("label");
           names.push(target_sys);
-         
-        }
-    
+
+          }
       }
 
       //  target system variables
@@ -407,12 +391,12 @@ let setup_events = function setup_events(graph){
       let subraction_value;
 
       // branch variables
-      let id_branch; // id branchpoint
+      let id_branch; // id Branchpoint
       let id_final_branch;
-      let branch_relations_targets; // target relations branchpoint
-      let branch_relations_targets2; // target relations branchpoint
-      let branch_relations; // source relations branchpoint
-      let final_branch_relations; // source relations branchpoint
+      let branch_relations_targets; // target relations Branchpoint
+      let branch_relations_targets2; // target relations Branchpoint
+      let branch_relations; // source relations Branchpoint
+      let final_branch_relations; // source relations Branchpoint
       // output variables
       let id_output; // id output
       let currentoutput; // current output
@@ -425,13 +409,13 @@ let setup_events = function setup_events(graph){
       let id_final;
 
       for (let i = 0; i < names.length; i++) {
-        //if (value_label == names[i]) {
+        if (value_label == names[i]) {
           setupModal(c_header, c_body);
           let main_modal = document.getElementById("main_modal_body");
           let canvas = document.createElement("canvas");
 
           for (let i = 0; i < childs.length; i++) {
-            if (childs[i].getAttribute("type") == "plant") { //change
+            if (childs[i].getAttribute("type") == "controlAction") { //change
               //only selected concrete features are analyzed
               
              // if (childs[i].getAttribute("label") == value_label) {
@@ -494,7 +478,7 @@ let setup_events = function setup_events(graph){
             let source = controller_inner_relations[i].source;
             if (source.getAttribute("type") == "summing_point") {
               id_summing = source.getId();
-
+              
               list_elements.push(id_summing);
               summing_value_inner = source.getAttribute("Direction");
             }
@@ -512,10 +496,11 @@ let setup_events = function setup_events(graph){
               list_elements.push(id_filter);
             }
 
-            if (source.getAttribute("type") == "branchpoint") {
+            if (source.getAttribute("type") == "Branchpoint") {
               id_final_branch = source.getId();
+              
             }
-            if (source.getAttribute("type") == "plant") { //change
+            if (source.getAttribute("type") == "controlAction") { //change
               target_system_id = source.getId();
             }
             if (source.getAttribute("type") == "controller") {
@@ -570,7 +555,7 @@ let setup_events = function setup_events(graph){
             } else if (source.getAttribute("type") == "filter") {
               id_filter = source.getId();
               list_elements.push(id_filter);
-            } else if (source.getAttribute("type") == "branchpoint") {
+            } else if (source.getAttribute("type") == "Branchpoint") {
               id_final_branch = source.getId();
             } else if (source.getAttribute("type") == "transducer") {
               id_transducer = source.getId();
@@ -581,7 +566,7 @@ let setup_events = function setup_events(graph){
             .getIncomingEdges(graph.getModel().getCell(id_filter));
           for (let i = 0; i < filter_relations.length; i++) {
             let source = filter_relations[i].source;
-            if (source.getAttribute("type") == "branchpoint") {
+            if (source.getAttribute("type") == "Branchpoint") {
               id_final_branch = source.getId();
               list_elements.push(id_branch);
             } else if (source.getAttribute("type") == "transducer") {
@@ -597,7 +582,7 @@ let setup_events = function setup_events(graph){
             );
           for (let i = 0; i < transducer_relations.length; i++) {
             let source = transducer_relations[i].source;
-            if (source.getAttribute("type") == "branchpoint") {
+            if (source.getAttribute("type") == "Branchpoint") {
               id_final_branch = source.getId();
               list_elements.push(id_branch);
             }
@@ -622,7 +607,7 @@ let setup_events = function setup_events(graph){
           for (let i = 0; i < final_branch_relations.length; i++) {
             let source = final_branch_relations[i].source;
 
-            if (source.getAttribute("type") == "branchpoint") {
+            if (source.getAttribute("type") == "Branchpoint") {
               id_branch = source.getId();
 
               list_elements.push(id_branch);
@@ -636,7 +621,7 @@ let setup_events = function setup_events(graph){
             let source = branch_relations[i].source;
             if (
               source.getId() == target_system_id &&
-              source.getAttribute("type") == "plant" //change
+              source.getAttribute("type") == "controlAction" //change
             ) {
               id_final = source.getId();
             }
@@ -663,7 +648,7 @@ let setup_events = function setup_events(graph){
             ) {
               graph.getModel().setVisible(childs2[i], false);
             } else {
-              //graph.getModel().setVisible(childs2[i], true);
+              graph.getModel().setVisible(childs2[i], true);
             }
           }
           let MiniPID = (function() {
@@ -678,7 +663,7 @@ let setup_events = function setup_events(graph){
               this.maxError = 0;
               this.errorSum = 0;
               this.maxOutput = 0;
-              this.minOutput = 0;
+              this.minOutput = 0;                                                                                      
               this.setpoint = 0;
               this.lastActual = 0;
               this.lastError = 0;
@@ -715,11 +700,12 @@ let setup_events = function setup_events(graph){
                 this.lastOutput = Poutput + Foutput;
                 this.firstRun = false;
               }
-                derivate=(error-this.lastActual)/this.DT
+             
+                derivate=(error-this.lastError)/this.DT
             Doutput=this.D*derivate;
-            this.lastActual = error;
             integral = this.errorSum * this.DT;
             Ioutput  = this.I * integral;
+           
 
             
               if (this.maxIOutput !== 0) {
@@ -760,17 +746,43 @@ let setup_events = function setup_events(graph){
                   this.lastOutput + this.outputRampRate
                 );
               }
-              if (this.minOutput !== this.maxOutput) {
+              if (this.maxIOutput !== 0)
+              {
+                  Ioutput = this.limit(Ioutput, -this.maxIOutput, this.maxIOutput);
+              }
+              output = Foutput + Poutput + Ioutput + Doutput;
+              if (this.minOutput !== this.maxOutput && !this.delimited(output, this.minOutput, this.maxOutput)) 
+              {
+                  this.errorSum = error* this.DT;
+              }
+                else if (this.outputRampRate !== 0 && !this.delimited(output, this.lastOutput - this.outputRampRate,
+                this.lastOutput + this.outputRampRate))
+                {
+                    this.errorSum = error* this.DT;
+                }
+                else if (this.maxIOutput !== 0)
+                {
+                    this.errorSum = this.limit(this.errorSum + error, -this.maxError, this.maxError);
+                }
+              else 
+              {
+                this.errorSum += (error * this.DT);
+              }
+              if (this.outputRampRate !== 0)
+              {
+                output = this.limit(output, this.lastOutput - this.outputRampRate, this.lastOutput + this.outputRampRate);
+              }
+              if (this.minOutput !== this.maxOutput)
+              {
                 output = this.limit(output, this.minOutput, this.maxOutput);
               }
-              if (this.outputFilter !== 0) {
-                output =
-                  this.lastOutput * this.outputFilter +
-                  output * (1 - this.outputFilter);
+              if (this.outputFilter !== 0)  
+              {
+                output = this.lastOutput * this.outputFilter + output * (1 - this.outputFilter);
               }
-              this.lastOutput = output;
-              return output;
-            };
+                this.lastOutput = output;
+                return output;
+            }
             MiniPID.prototype.setmaxIOutput = function(maximum) {
               this.maxIOutput = maximum;
               if (this.I !== 0) {
@@ -831,98 +843,82 @@ let setup_events = function setup_events(graph){
                 if (this.DF < 0) this.DF *= -1;
               }
             };
-            MiniPID.prototype.data_csv = function() {
-             let text=localStorage["control_data"];
-              let allTextLines = text.split(/\r\n|\n/);
-              let lines = [];
-              let data
-              let data_n
-              let cont=0
-              let time=[]
-              for (let i=0; i<allTextLines.length; i++) {
-                  data = allTextLines[i];
-                  data = data.replace(",", ".");
-                  data_n= parseFloat(data)
-                  lines.push(data_n);
-                  cont=i*cont;
-                  time.push(i);
-              }
-              return lines
-            };
-            
+           
             return MiniPID;
           })();
           let control_loop = []; // list outputs
           let listaset = []; // list set points
-          function main() {
+    function main() {
             let miniPID;
             let miniPID2;
-    
             miniPID = new MiniPID(
               proportional_inner,
               integral_inner,
               derivate_inner,
               setpoint_time
             );
-            let lines =miniPID.data_csv()
-            let output = 50;
-            let actual2=lines[1];
             let error = 0;
-            let y;
+            let filter;
+            let output=0;
             let actual=0;
-            result_outputs.push(actual);
             let times_sum = 0;
             let time_float = parseFloat(setpoint_time);
-            //miniPID.setmaxIOutput(2);
-            miniPID.RampRateOutput(3);
+         // miniPID.setmaxIOutput(2);
+           miniPID.RampRateOutput(2);
             if (summing_value_inner == "-/+" || summing_value_inner == "-/-") {
               miniPID.reversedf();
+              console.log("reverser")
+              alert(proportional_inner)
             }
             if (id_set2 == false) {
-               for (let i = 0; i < 300; i++) {
+               for (let i = 0; i < 500; i++) {
+                 console.log(summing_value_inner)
                 output = miniPID.getOutput(actual, setpoint_value, error);
-                y =miniPID.recursiveFilter(output);
-                actual = actual+miniPID.plant()*output;
+                filter =miniPID.recursiveFilter(output);
+                
                 if (summing_value_inner == "+/-") {
                   error = setpoint_value - actual;
                 } else if (summing_value_inner == "+/+") {
                   error = setpoint_value + actual;
                 } else {
-
                   error = setpoint_value - actual;
                 }
-                
-                result_outputs.push(actual);
+                  actual = actual+(miniPID.plant()*output);
+               result_simple_plant.push(actual);
                // times_sum = i * time_float.toFixed(2);
                // times_sum = times_sum.toFixed(2);
                times_sum=times_sum+0.01;
-                times.push(times_sum.toFixed(2));
-                listaset.push(setpoint_value);
+               times.push(times_sum.toFixed(2));
+               listaset.push(setpoint_value);
               }
-              result = result_outputs;
-            } else if (id_set2 == true) {
-              miniPID = new MiniPID(
+              result = result_simple_plant;
+            } 
+            else if (id_set2 == true) {
+                miniPID = new MiniPID(
                 proportional,
                 integral,
                 derivate,
                 setpoint_time
               );
-              if (summing_value == "-/+" || summing_value == "-/-") {
+              if (summing_value == "-/+" || summing_value == "-/-")
+               {
                 miniPID.reversedf();
-              }
-              miniPID.setmaxIOutput(2);
-              miniPID.RampRateOutput(3);
-              for (let i = 0; i < 150; i++) {
+               }
+                miniPID.setmaxIOutput(2);
+                miniPID.RampRateOutput(3);
+                for (let i = 0; i < 150; i++)
+                {
                 output = miniPID.getOutput(actual, setpoint_value, error);
                 actual = actual * output;
-                if (summing_value == "+/-") {
+                  if (summing_value == "+/-")
+                  {
                   error = setpoint_value - actual;
-                } else if (summing_value == "+/+") {
+                  } else if (summing_value == "+/+") {
                   error = setpoint_value + actual;
-                }
+                  }
                 
-                result_outputs.push(actual);
-              }
+                result_simple_plant.push(actual);
+                }
               let error2 = 0;
               miniPID2 = new MiniPID(
                 proportional_inner,
@@ -930,26 +926,26 @@ let setup_events = function setup_events(graph){
                 derivate_inner,
                 setpoint_time
               );
-              for (let i = 0; i < result_outputs.length; i++) {
+              for (let i = 0; i < result_simple_plant.length; i++) {
                 let output2 = miniPID2.getOutput(
-                  result_outputs[i],
+                  result_simple_plant[i],
                   setpoint_value,
                   error2
                 );
                 if (summing_value_inner == "+/-") {
-                  error2 = setpoint_value - result_outputs[i];
-                  actual2 = result_outputs[i] + output2;
+                  error2 = setpoint_value - result_simple_plant[i];
+                  actual2 = result_simple_plant[i] + output2;
                 } else if (summing_value_inner == "+/+") {
-                  error = setpoint_value + result_outputs[i];
-                  actual2 = result_outputs[i] + output2;
+                  error = setpoint_value + result_simple_plant[i];
+                  actual2 = result_simple_plant[i] + output2;
                 } else if (summing_value_inner == "-/+") {
-                  error = setpoint_value + result_outputs[i];
-                  actual2 = result_outputs[i] - output2;
+                  error = setpoint_value + result_simple_plant[i];
+                  actual2 = result_simple_plant[i] - output2;
                 } else if (summing_value_inner == "-/-") {
-                  error = setpoint_value - result_outputs[i];
-                  actual2 = result_outputs[i] - output2;
+                  error = setpoint_value - result_simple_plant[i];
+                  actual2 = result_simple_plant[i] - output2;
                 }
-                result_outputs2.push(
+                result_cascade_plant.push(
                   actual2);
                 times_sum = i * time_float.toFixed(1);
                 times_sum = times_sum.toFixed(1);
@@ -957,45 +953,19 @@ let setup_events = function setup_events(graph){
                 listaset.push(setpoint_value);
               }
 
-              result = result_outputs2;
+              result = result_cascade_plant;
             }
             return result;
           }
           control_loop = main();
 
 
-          let data_csv_time = function() {
-            let text=localStorage["control_data"];
-            let allTextLines = text.split(/\r\n|\n/);
-            let time = [];
-            let data
-            let data_n
-            for (let i=0; i<allTextLines.length; i++) {
-                data = allTextLines[i].split(";")[0];
-                if(data!=null)
-                {
-                data = data.replace(",", ".");
-                data_n= parseFloat(data)
-                time.push(data_n)
-                }
-            }
-            
-            time.pop();
-          
-            return time 
-          }
+        
 
           canvas.id = "myChart";
           canvas.width = 800;
           canvas.height = 300;
           canvas.className = "my-4 chartjs-render-monitor";
-          for (let i = 0; i < childs.length; i++) {
-            if (childs[i].getAttribute("type") == "set_point") {
-              let set = childs[i].getAttribute("SetPoint");
-              let plant = childs[i].getAttribute("Plant");
-            }
-          }
-
           main_modal.appendChild(canvas);
           let ctx = document.getElementById("myChart");
           let myChart = new Chart(ctx, {
@@ -1034,7 +1004,7 @@ let setup_events = function setup_events(graph){
                 yAxes: [
                   {
                     ticks: {
-                      beginAtZero: false
+                      beginAtZero: result_cascade_plant
                     }
                   }
                 ]
@@ -1044,15 +1014,15 @@ let setup_events = function setup_events(graph){
               }
             }
           });
-       // }
+        }
       }
     }
 
 
 
- /* let controlAction = findControlAction(graph)
-  hide_control_elements(graph, controlAction);*/
-  /*function findControlAction(graph){
+  let controlAction = findControlAction(graph)
+  hide_control_elements(graph, controlAction);
+  function findControlAction(graph){
     //se busca el control action en la url
     // let url = document.URL;  
     // var captured = /controlAction=([^&]+)/.exec(url)[1]; // Value is in [1] ('384' in our case)
@@ -1073,9 +1043,9 @@ let setup_events = function setup_events(graph){
       }
     } 
     return controlAction;
-  };*/
+  };
 
- /* function hide_control_elements(graph, controlActionLabel){
+  function hide_control_elements(graph, controlActionLabel){
       //alert('escondiendo elementos ' + controlActionLabel);
      let names_control_action = [];
      let target_system_id; // target system id
@@ -1097,11 +1067,11 @@ let setup_events = function setup_events(graph){
      // set point variables
      let id_set;// id setpoint
      // branch variables
-     let id_branch// id branchpoint
+     let id_branch// id Branchpoint
      let id_final_branch
-     let branch_relations_targets// target relations branchpoint
-     let branch_relations// source relations branchpoint
-      let final_branch_relations// source relations branchpoint
+     let branch_relations_targets// target relations Branchpoint
+     let branch_relations// source relations Branchpoint
+      let final_branch_relations// source relations Branchpoint
      // output variables
      let id_output// id output
      // transducer variables
@@ -1204,7 +1174,7 @@ let setup_events = function setup_events(graph){
                 list_elements.push(id_filter); 
              }
                
-             else if(source.getAttribute("type")=="branchpoint"  )
+             else if(source.getAttribute("type")=="Branchpoint"  )
              { 
                id_final_branch = source.getId(); 
                
@@ -1264,7 +1234,7 @@ let setup_events = function setup_events(graph){
                 list_elements.push(id_filter); 
              }
                
-            else if(source.getAttribute("type")=="branchpoint"  )
+            else if(source.getAttribute("type")=="Branchpoint"  )
              { 
                id_final_branch = source.getId(); 
                
@@ -1280,7 +1250,7 @@ let setup_events = function setup_events(graph){
            for (let i = 0; i < filter_relations.length; i++)
            {
               let source = filter_relations[i].source;
-             if(source.getAttribute("type")=="branchpoint")
+             if(source.getAttribute("type")=="Branchpoint")
              {
                id_final_branch = source.getId(); 
                 list_elements.push(id_branch); 
@@ -1296,7 +1266,7 @@ let setup_events = function setup_events(graph){
            for (let i = 0; i < transducer_relations.length; i++)
            {
               let source = transducer_relations[i].source;
-             if(source.getAttribute("type")=="branchpoint")
+             if(source.getAttribute("type")=="Branchpoint")
              {
                id_final_branch = source.getId(); 
                list_elements.push(id_branch); 
@@ -1320,7 +1290,7 @@ let setup_events = function setup_events(graph){
            {
                let source = final_branch_relations[i].source;
               
-             if(source.getAttribute("type")=="branchpoint")
+             if(source.getAttribute("type")=="Branchpoint")
              {
                id_branch= source.getId();
                 list_elements.push(id_branch); 
@@ -1362,7 +1332,7 @@ let setup_events = function setup_events(graph){
        }
 
      }
-  };*/
+  };
 }
 
 export default setup_events
