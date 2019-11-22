@@ -22,8 +22,8 @@ let setupElements = function setupElements(graph, elements, customAttributes, cC
         if(customAttributes){
             for (let z = 0; z < customAttributes.length; z++) {
                 if((customAttributes[z]["types"].indexOf(type) > -1)){
-                    for(let j = 0; j < customAttributes[z]["customAttributes"].length; j++){
-                        node.setAttribute(customAttributes[z]["customAttributes"][j]["name"], customAttributes[z]["customAttributes"][j]["def_value"]);
+                    for(let j = 0; j < customAttributes[z]["custom_attributes"].length; j++){
+                        node.setAttribute(customAttributes[z]["custom_attributes"][j]["name"], customAttributes[z]["custom_attributes"][j]["def_value"]);
                     }
                 }
             }
@@ -137,14 +137,14 @@ let setupElements = function setupElements(graph, elements, customAttributes, cC
         if(pos == 0 ){
             //image frame
             graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, "transparent", [newCells]);
-            overlayLeft = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/layer-frame.png', 16, 16), 'Overlay tooltip');
+            overlayLeft = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/layerFrame.png', 16, 16), 'Overlay tooltip');
             overlayLeft.offset = new mxPoint(10,10);
 
         }
         if(pos == 1 ){
             //image frame
             graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, "transparent", [newCells]);
-            overlayLeft = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/module-frame.png', 16, 16), 'Overlay tooltip');
+            overlayLeft = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/moduleFrame.png', 16, 16), 'Overlay tooltip');
             overlayRigth = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/paralelo.png', 16, 16), 'Overlay tooltip');
             overlayLeft.offset = new mxPoint(10,10);
         }
@@ -160,8 +160,8 @@ let setupElements = function setupElements(graph, elements, customAttributes, cC
         if(pos == 3 ){
             //image frame
             graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, '#CCFFCC', [newCells]);
-            overlayLeft = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/DEVICES.png', 16, 16), 'Overlay tooltip');
-            overlayRigth = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/Electric.png', 16, 16), 'Overlay tooltip');
+            overlayLeft = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/devices.png', 16, 16), 'Overlay tooltip');
+            overlayRigth = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/electric.png', 16, 16), 'Overlay tooltip');
             overlayLeft.offset = new mxPoint(10,10);
 
         }
@@ -169,14 +169,14 @@ let setupElements = function setupElements(graph, elements, customAttributes, cC
             //image frame
             graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, '#CCFFCC', [newCells]);
             overlayLeft = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/software.png', 16, 16), 'Overlay tooltip');
-            overlayRigth = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/OS.png', 16, 16), 'Overlay tooltip');
+            overlayRigth = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/os.png', 16, 16), 'Overlay tooltip');
             overlayLeft.offset = new mxPoint(10,10);
 
         }
         if(pos == 5 ){
             //image frame
             graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, '#CCFFCC', [newCells]);
-            overlayLeft = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/Sensor.png', 16, 16), 'Overlay tooltip');
+            overlayLeft = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/sensor.png', 16, 16), 'Overlay tooltip');
             overlayRigth = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/digital.png', 16, 16), 'Overlay tooltip');
             overlayLeft.offset = new mxPoint(10,10);
 
@@ -207,7 +207,7 @@ let setupElements = function setupElements(graph, elements, customAttributes, cC
             //image frame
             graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, '#CCFFCC', [newCells]);
             let overlayLeft = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/computer.png', 16, 16), 'Overlay tooltip');
-            overlayRigth = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/cloud_computer.png', 16, 16), 'Overlay tooltip');
+            overlayRigth = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/cloudComputer.png', 16, 16), 'Overlay tooltip');
             overlayLeft.offset = new mxPoint(10,10);
 
         }
