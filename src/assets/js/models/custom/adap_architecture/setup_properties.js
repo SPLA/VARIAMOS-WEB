@@ -1,4 +1,4 @@
-var setupProperties = function setupProperties(graph,properties_styles){
+let setupProperties = function setupProperties(graph,properties_styles){
 	//remove previous listeners
 	if(graph.getSelectionModel().eventListeners.length>3){
 		graph.getSelectionModel().eventListeners.pop();
@@ -14,13 +14,13 @@ var setupProperties = function setupProperties(graph,properties_styles){
 
     function selectionChanged(graph,properties_styles)
 	{
-		var div = document.getElementById('properties');
+		let div = document.getElementById('properties');
 		// Forces focusout in IE
 		graph.container.focus();
 		// Clears the DIV the non-DOM way
 		div.innerHTML = '';
 		// Gets the selection cell
-		var cell = graph.getSelectionCell();
+		let cell = graph.getSelectionCell();
 		
 		if (cell == null)
 		{
@@ -32,16 +32,16 @@ var setupProperties = function setupProperties(graph,properties_styles){
 				mxUtils.writeln(div, global.messages["setup_properties_clon"]);
 			}else{
 				if(cell.value.attributes){
-					var form = new mxForm("properties-table");
-					var attrs = cell.value.attributes;
+					let form = new mxForm("properties-table");
+					let attrs = cell.value.attributes;
 					
-					for (var i = 0; i < attrs.length; i++)
+					for (let i = 0; i < attrs.length; i++)
 					{
 						if(properties_styles!=null && properties_styles[cell.getAttribute("type")]){
-							var type = cell.getAttribute("type");
-							var passed = false;
+							let type = cell.getAttribute("type");
+							let passed = false;
 
-							for (var j = 0; j < properties_styles[type].length; j++)
+							for (let j = 0; j < properties_styles[type].length; j++)
 							{form
 								if(properties_styles[type][j]["attribute"]==attrs[i].nodeName){
 									if(properties_styles[type][j]["input_type"]=="text"){
@@ -76,8 +76,8 @@ var setupProperties = function setupProperties(graph,properties_styles){
 	 */
 	function createCheckboxField(graph, form, cell, attribute, custom){
 
-		var defDisplay = getDisplayValue(cell,custom);
-		var input = form.addCheckbox(attribute.nodeName, attribute.nodeValue, defDisplay);
+		let defDisplay = getDisplayValue(cell,custom);
+		let input = form.addCheckbox(attribute.nodeName, attribute.nodeValue, defDisplay);
 
 		executeApplyHandler(graph, form, cell, attribute, input, custom);
 	}
@@ -87,10 +87,10 @@ var setupProperties = function setupProperties(graph,properties_styles){
 	 */
 	function createSelectField(graph, form, cell, attribute, custom){
 
-		var values=custom["input_values"];
-		var defDisplay = getDisplayValue(cell,custom);
-		var input = form.addCombo(attribute.nodeName, false, 1, defDisplay);
-		for (var i = 0; i < values.length; i++)
+		let values=custom["input_values"];
+		let defDisplay = getDisplayValue(cell,custom);
+		let input = form.addCombo(attribute.nodeName, false, 1, defDisplay);
+		for (let i = 0; i < values.length; i++)
 		{
 			if(values[i]==attribute.nodeValue){
 				form.addOption(input,values[i],values[i],true);
@@ -107,9 +107,9 @@ var setupProperties = function setupProperties(graph,properties_styles){
 	 */
 	function createTextField(graph, form, cell, attribute, custom)
 	{
-		var defDisplay = getDisplayValue(cell,custom);
+		let defDisplay = getDisplayValue(cell,custom);
 
-		var input = form.addText(attribute.nodeName, attribute.nodeValue, "text", defDisplay);
+		let input = form.addText(attribute.nodeName, attribute.nodeValue, "text", defDisplay);
 		
 		//attribute type can not be modified
 		if(attribute.nodeName=="type"){
@@ -125,9 +125,9 @@ var setupProperties = function setupProperties(graph,properties_styles){
 		//apply custom configurations
 		applyCustomElements(input, custom, cell);
 
-		var applyHandler = function()
+		let applyHandler = function()
 		{
-			var newValue = "";
+			let newValue = "";
 
 			if(input.type=="checkbox"){
 				newValue = "false";
@@ -138,8 +138,8 @@ var setupProperties = function setupProperties(graph,properties_styles){
 				newValue = input.value || '';
 			}
 
-			var oldValue = cell.getAttribute(attribute.nodeName, '');
-			var onchange_allowed = true;
+			let oldValue = cell.getAttribute(attribute.nodeName, '');
+			let onchange_allowed = true;
 
 			//check custom changes that are not allowed
 			if(custom["onchangerestrictive"]!=null){
@@ -188,15 +188,15 @@ var setupProperties = function setupProperties(graph,properties_styles){
 							graph.getModel().setStyle(cell.children[0], 'shape=Wirless_comunication;labelBackgroundColor=#ffffff;labelPosition=left;spacingRight=2;align=right;fontStyle=0;');
 							break;
 						default:
-							var edit = new mxCellAttributeChange(cell, attribute.nodeName,newValue);
+							let edit = new mxCellAttributeChange(cell, attribute.nodeName,newValue);
 							graph.getModel().execute(edit);
 							break;
 					}
 					
 					//update cloned cell if exists
-					var clon = graph.getModel().getCell("clon"+cell.getId());
+					let clon = graph.getModel().getCell("clon"+cell.getId());
 					if(clon){
-						var edit2 = new mxCellAttributeChange(
+						let edit2 = new mxCellAttributeChange(
 							clon, attribute.nodeName,
 							newValue);
 						graph.getModel().execute(edit2);
@@ -228,7 +228,7 @@ var setupProperties = function setupProperties(graph,properties_styles){
 			// Note: Known problem is the blurring of fields in
 			// Firefox by changing the selection, in which case
 			// no event is fired in FF and the change is lost.
-			// As a workaround you should use a local variable
+			// As a workaround you should use a local letiable
 			// that stores the focused field and invoke blur
 			// explicitely where we do the graph.focus above.
 			mxEvent.addListener(input, 'blur', applyHandler);
@@ -236,7 +236,7 @@ var setupProperties = function setupProperties(graph,properties_styles){
 	}
 
 	function getDisplayValue(cell,custom){
-		var defDisplay = "";
+		let defDisplay = "";
  		if(custom!=null && custom["def_display"]!=null){
 			defDisplay=custom["def_display"];
 			if(custom["display_check_attribute"]){
@@ -260,7 +260,7 @@ var setupProperties = function setupProperties(graph,properties_styles){
 
 			//custom input type
 			if(custom["input_text_type"]){
-				var type=custom["input_text_type"];
+				let type=custom["input_text_type"];
 				input.setAttribute('type', type);
 			}
 		}

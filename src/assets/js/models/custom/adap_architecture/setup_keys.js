@@ -1,4 +1,4 @@
-var setupKeys = function setupKeys(keyHandler,graph,reused_functions){
+let setupKeys = function setupKeys(keyHandler,graph,reused_functions){
     //allows removing elements with supr key
 
     keyHandler.bindKey(46, reused_functions[0]);
