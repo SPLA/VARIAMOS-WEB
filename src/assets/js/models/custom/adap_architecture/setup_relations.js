@@ -37,7 +37,6 @@ var setup_relations = function setup_relations(graph,relations,relation_styles){
             }
         }
 
-
         //setup custom styles for relations
         if(relation_styles){
             for (var i = 0; i < relation_styles.length; i++) {
@@ -54,8 +53,6 @@ var setup_relations = function setup_relations(graph,relations,relation_styles){
                 }
             }
         }
-
-        
         
         var cell = graph.insertEdge(parent, id, node, source, target, style);
 
@@ -118,12 +115,11 @@ var setup_relations = function setup_relations(graph,relations,relation_styles){
         else{
             styles = graph.insertVertex(cell, null, 'Label', 0, 0, 20, 14,'shape=link;labelBackgroundColor=#ffffff;labelPosition=left;spacingRight=2;align=right;fontStyle=0;');
         }
+        
         styles.geometry.offset = new mxPoint(-10, -7);
 		styles.geometry.relative = true;
         styles.connectable = false;
-        return styles;
-
-        
+        return styles;  
     };
 }
 

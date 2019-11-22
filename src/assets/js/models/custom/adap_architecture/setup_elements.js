@@ -63,42 +63,42 @@ let setup_elements = function setup_elements(graph, elements, custom_attributes,
 
                 let newCells = graph.importCells([vertex], 0, 0, cell);
                 graph.setSelectionCells(newCells);
-                //Implementation of default style for adap_architecture
-    switch (newCells[0].getAttribute("type")) {
-        case "layer":
-            personalShapes(graph, 0, newCells[0]);
-            break;
-        case "module":
-            personalShapes(graph,1, newCells[0]);
-            break;
-        case "package":
-            personalShapes(graph, 2, newCells[0]);
-            break;
-        case "device":
-            personalShapes(graph, 3, newCells[0]);
-            break;
-        case "software":
-            personalShapes(graph, 4, newCells[0]);
-            break;
-        case "sensor":
-            personalShapes(graph, 5, newCells[0]);
-            break;
-        case "actuator":
-            personalShapes(graph, 6, newCells[0]);
-            break;
-        case "resource":
-            personalShapes(graph, 7, newCells[0]);
-            break;
-        case "network":
-            personalShapes(graph, 8, newCells[0]);
-            break;
-        case "computer":
-            personalShapes(graph, 9, newCells[0]);
-            break;
-        default:
-            break;
-    }
 
+                //Implementation of default style for adap_architecture
+                switch (newCells[0].getAttribute("type")) {
+                    case "layer":
+                        personalShapes(graph, 0, newCells[0]);
+                        break;
+                    case "module":
+                        personalShapes(graph,1, newCells[0]);
+                        break;
+                    case "package":
+                        personalShapes(graph, 2, newCells[0]);
+                        break;
+                    case "device":
+                        personalShapes(graph, 3, newCells[0]);
+                        break;
+                    case "software":
+                        personalShapes(graph, 4, newCells[0]);
+                        break;
+                    case "sensor":
+                        personalShapes(graph, 5, newCells[0]);
+                        break;
+                    case "actuator":
+                        personalShapes(graph, 6, newCells[0]);
+                        break;
+                    case "resource":
+                        personalShapes(graph, 7, newCells[0]);
+                        break;
+                    case "network":
+                        personalShapes(graph, 8, newCells[0]);
+                        break;
+                    case "computer":
+                        personalShapes(graph, 9, newCells[0]);
+                        break;
+                    default:
+                        break;
+                }
                 //execute if there are clons for the current element
                 if(c_clon_cells!=null){
                     let type = newCells[0].getAttribute("type");
@@ -113,7 +113,6 @@ let setup_elements = function setup_elements(graph, elements, custom_attributes,
                     }
                 }
             }
-
         }
         
         let tbContainer = document.getElementById('tbContainer');
@@ -136,6 +135,7 @@ let setup_elements = function setup_elements(graph, elements, custom_attributes,
         graph.setCellStyles(mxConstants.STYLE_VERTICAL_ALIGN, mxConstants.ALIGN_TOP, [newCells]);
         graph.setCellStyles(mxConstants.STYLE_FONTSIZE, 9, [newCells]);
         graph.setCellStyles(mxConstants.STYLE_ALIGN, mxConstants.ALIGN_CENTER, [newCells]);
+        
         var overlayLeft = null;
         var overlayRigth = null;
         
