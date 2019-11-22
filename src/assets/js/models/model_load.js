@@ -1,7 +1,5 @@
 /*
-
 To check available models go to Public/js/global_info.js
-
 */
 let modelLoad = function modelLoad(graph,models,mCode){
     let layers = {}; 
@@ -15,10 +13,10 @@ let modelLoad = function modelLoad(graph,models,mCode){
 
         let maxVal = root.getChildCount();
         for (let i = 0; i < models.length; i++) {
-            if(i<maxVal){
+            if(i < maxVal){
                 let current_cell = root.getChildAt(i);
                 let cId = current_cell.getId();
-                if(cId==models[i]){
+                if(cId == models[i]){
                     layers[models[i]] = current_cell;
                 }else{
                     let valid_cell=false;

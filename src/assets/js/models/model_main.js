@@ -166,7 +166,19 @@ let main = function main(graph, layers, mxModel, toolbar, keyHandler, container,
 					}
 
 					if(!containClons){
-						graph.removeCells();
+						let removedCells=graph.removeCells();
+
+						//remove clons if exist
+						for (let i = 0; i < removedCells.length; i++) {
+							if(removedCells[i].isVertex()){
+								let clon = graph.getModel().getCell("clon" + removedCells[i].getId());
+								if(clon){
+									let cells = [];
+									cells[0] = clon;
+									graph.removeCells(cells);
+								}
+							}
+						}
 					}
 				}else{
 					let removedCells=graph.removeCells();
