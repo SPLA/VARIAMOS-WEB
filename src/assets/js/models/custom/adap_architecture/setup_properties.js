@@ -1,4 +1,4 @@
-let setupProperties = function setupProperties(graph,properties_styles){
+let setupProperties = function setupProperties(graph, properties_styles){
 	//remove previous listeners
 	if(graph.getSelectionModel().eventListeners.length>3){
 		graph.getSelectionModel().eventListeners.pop();
