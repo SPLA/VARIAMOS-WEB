@@ -10,15 +10,14 @@ let setupButtons = function setupButtons(graph, undoManager, reused_functions, r
         let encoder = new mxCodec();
         let node = encoder.encode(graph.getModel());
         mxUtils.popup(mxUtils.getPrettyXml(node), true);
-    },"code"));
+    }, "code"));
     /* end buttonxml */
 
     /* begin buttonreset */
     // Adds an option to reset the graph
     let buttonRESET = document.getElementById('buttonRESET');
     buttonRESET.innerHTML="";
-    buttonRESET.appendChild(mxUtils.buttonWithIcon(global.messages["setup_buttons_reset"], function()
-    {
+    buttonRESET.appendChild(mxUtils.buttonWithIcon(global.messages["setup_buttons_reset"], function(){
         let conf =  confirm("Are you sure you want to delete the current model?");
         if(conf){
             let removedCells = graph.removeCells(graph.getChildVertices(graph.getDefaultParent()));
@@ -42,16 +41,16 @@ let setupButtons = function setupButtons(graph, undoManager, reused_functions, r
             let event = new Event('change');
             model_code.dispatchEvent(event);
         }
-    },"eraser"));
+    }, "eraser"));
     /* end buttonreset */
 
     /* begin buttonreset */
     // Adds an option to reset the graph
     let buttonRESETALL = document.getElementById('buttonRESETALL');
-    buttonRESETALL.innerHTML="";
+    buttonRESETALL.innerHTML = "";
     buttonRESETALL.appendChild(mxUtils.buttonWithIcon(global.messages["setup_buttons_reset_all"], function()
     {
-        let conf =  confirm("Are you sure you want to delete all models?");
+        let conf = confirm("Are you sure you want to delete all models?");
         if(conf){
             model_code.value="";
             let event = new Event('change');
@@ -59,15 +58,14 @@ let setupButtons = function setupButtons(graph, undoManager, reused_functions, r
             store.dispatch('updatecacheselected', []);
             location.reload();
         }
-    },"eraser"));
+    }, "eraser"));
     /* end buttonreset */
 
     /* begin buttonsave */
     // Adds an option to save in localstorage the graph
     let buttonSAVE = document.getElementById('buttonSAVE');
-    buttonSAVE.innerHTML="";
-    buttonSAVE.appendChild(mxUtils.buttonWithIcon(global.messages["setup_buttons_save"], function()
-    {
+    buttonSAVE.innerHTML = "";
+    buttonSAVE.appendChild(mxUtils.buttonWithIcon(global.messages["setup_buttons_save"], function(){
         let encoder = new mxCodec();
         let result = encoder.encode(graph.getModel());
         let xml = mxUtils.getPrettyXml(result);
@@ -76,14 +74,13 @@ let setupButtons = function setupButtons(graph, undoManager, reused_functions, r
         model_code.value = xml;
         let event = new Event('change');
         model_code.dispatchEvent(event);
-    },"save"));
+    }, "save"));
     /* end buttonsave */
 
     /* begin buttonExport */
     let buttonEXPORT = document.getElementById('buttonEXPORT');
     buttonEXPORT.innerHTML = "";
-    buttonEXPORT.appendChild(mxUtils.buttonWithIcon(global.messages["setup_buttons_export"], function()
-    {
+    buttonEXPORT.appendChild(mxUtils.buttonWithIcon(global.messages["setup_buttons_export"], function(){
         let encoder = new mxCodec();
         let result = encoder.encode(graph.getModel());
         let xml = mxUtils.getPrettyXml(result);
@@ -105,7 +102,7 @@ let setupButtons = function setupButtons(graph, undoManager, reused_functions, r
      
         downloadLink.click();
         
-    },"upload"));
+    }, "upload"));
     /* end buttonExport */
 
     /* begin buttonImport */
@@ -127,15 +124,13 @@ let setupButtons = function setupButtons(graph, undoManager, reused_functions, r
 
     let buttonIMPORT = document.getElementById('buttonIMPORT');
     buttonIMPORT.innerHTML = "";
-    buttonIMPORT.appendChild(mxUtils.buttonWithIcon(global.messages["setup_buttons_import"], function()
-    {   
+    buttonIMPORT.appendChild(mxUtils.buttonWithIcon(global.messages["setup_buttons_import"], function(){   
         store.dispatch('updatecacheselected', []);
         file.click();
-    },"download"));
+    }, "download"));
     /* end buttonImport */
 
-    let listener = function(sender, evt)
-    {
+    let listener = function(sender, evt){
         undoManager.undoableEditHappened(evt.getProperty('edit'));
     };
     graph.getModel().addListener(mxEvent.UNDO, listener);
@@ -144,33 +139,30 @@ let setupButtons = function setupButtons(graph, undoManager, reused_functions, r
     /* begin buttonUNDO */
     let buttonUNDO = document.getElementById('buttonUNDO');
     buttonUNDO.innerHTML = "";
-    buttonUNDO.appendChild(mxUtils.buttonWithIcon(global.messages["setup_buttons_undo"], function()
-    {
+    buttonUNDO.appendChild(mxUtils.buttonWithIcon(global.messages["setup_buttons_undo"], function(){
         if(undoManager.canUndo()){
             undoManager.undo();
         }
-    },"undo"));
+    }, "undo"));
     /* end buttonUNDO */
 
     /* begin buttonREDO */
     let buttonREDO = document.getElementById('buttonREDO');
     buttonREDO.innerHTML = "";
-    buttonREDO.appendChild(mxUtils.buttonWithIcon(global.messages["setup_buttons_redo"], function()
-    {
+    buttonREDO.appendChild(mxUtils.buttonWithIcon(global.messages["setup_buttons_redo"], function(){
         if(undoManager.canRedo()){
             undoManager.redo();
         }
-    },"redo"));
+    }, "redo"));
     /* end buttonREDO */
 
     /* begin buttonSHOW */
     let buttonSHOW = document.getElementById('buttonSHOW');
     buttonSHOW.innerHTML = "";
-    buttonSHOW.appendChild(mxUtils.buttonWithIcon(global.messages["setup_buttons_show"], function()
-    {
+    buttonSHOW.appendChild(mxUtils.buttonWithIcon(global.messages["setup_buttons_show"], function(){
         let preview = new mxPrintPreview(graph, 1);
 		preview.open();
-    },"print"));
+    }, "print"));
     /* end buttonSHOW */
 
     /* begin buttonDELETE */
@@ -185,7 +177,7 @@ let setupButtons = function setupButtons(graph, undoManager, reused_functions, r
     buttonPONE.appendChild(mxUtils.buttonWithIcon(global.messages["setup_buttons_img"],function(evt){
         const svg = document.getElementById('graphContainer').firstElementChild;
         svgpng.saveSvgAsPng(svg, "diagram.png");
-    },"print"));
+    }, "print"));
     /* end buttonPONE */
 
     /* begin buttonZIN */

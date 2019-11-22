@@ -18,7 +18,7 @@ let setupEvents = function setupEvents(graph){
                 let originalCellId = cell.getId().substring(4);
                 let originalCell = graph.getModel().getCell(originalCellId);
                 let parent = originalCell.getParent();
-                window.location.href = resultUrl+"/"+parent.getId();
+                window.location.href = resultUrl + "/" + parent.getId();
             }
         }
     });

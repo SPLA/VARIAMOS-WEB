@@ -227,9 +227,9 @@ let featureMain = function featureMain(graph)
 	function featureOverlay(){
 		let func1 = function(){
 			let featureRoot = graph.getModel().getCell("feature");
-			let featureElements = graph.getModel().getChildEdges(featureRoot);
+			let featureElements = graph.getModel().getChildVertices(featureRoot);
 			for (let i = 0; i < featureElements.length; i++) {
-				let source = featureElements[i].source;
+				let source = featureElements[i];
 				let type = source.getAttribute("type");
 				if(type == "concrete"){
 					let sel = source.getAttribute("selected");
