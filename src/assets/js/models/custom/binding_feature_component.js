@@ -1,12 +1,12 @@
-let bindingFeatureComponentMain = function bindingFeatureComponentMain(graph)
-{
+let bindingFeatureComponentMain = function bindingFeatureComponentMain(graph){
     bindingFCConstraints(graph);
-    let data={};
-	data["m_type"]="binding"; //custom type
-	/*data["m_elements"]=bindingFCElements(); //custom elements
-	data["m_attributes"]=bindingFCAttributes(); //custom attributes
-	data["m_properties_styles"]=bindingFCPropertiesStyles(); //custom properties styles
-	data["m_labels"]=bindingFCLabels(); //custom labels*/
+
+    let data = {};
+	  data["m_type"] = "binding"; //custom type
+	  data["m_elements"] = bindingFCElements(); //custom elements
+	  data["m_attributes"] = bindingFCAttributes(); //custom attributes
+	  data["m_properties_styles"] = bindingFCPropertiesStyles(); //custom properties styles
+	  data["m_labels"] = bindingFCLabels(); //custom labels
     return data;
     
     function bindingFCConstraints(graph){

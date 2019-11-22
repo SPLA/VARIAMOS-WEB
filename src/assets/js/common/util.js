@@ -1,13 +1,11 @@
 /* begin util */
 // converts the first letter in uppercase
-export function jsUcfirst(string) 
-{
+export function jsUcfirst(string){
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
 // setup main modal view
-export function setupModal(headerContent, bodyContent="", footerContent="") 
-{
+export function setupModal(headerContent, bodyContent = "", footerContent = ""){
     let mainModal = document.getElementById('main_modal');
     let mainModalHeader = document.getElementById('main_modal_header');
     let mainModalBody = document.getElementById('main_modal_body');
@@ -120,7 +118,7 @@ export function modalButton(text, functionToAppend){
     return button;
 }
  
-export function downloadFile(filename, text) {
+export function downloadFile(filename, text){
     var element = document.createElement('a');
     element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
     element.setAttribute('download', filename); 
@@ -128,6 +126,6 @@ export function downloadFile(filename, text) {
     document.body.appendChild(element); 
     element.click(); 
     document.body.removeChild(element);
-  }
+}
 
 /* end util */

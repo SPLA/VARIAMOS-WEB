@@ -12,8 +12,7 @@ let setupElements = function setupElements(graph, elements, customAttributes, cC
         }
     }
 
-    function addVertex(graph, toolbar, icon, w, h, style, type, namepalette, customAttributes, cClonCells, cConstraintsIc)
-    {
+    function addVertex(graph, toolbar, icon, w, h, style, type, namepalette, customAttributes, cClonCells, cConstraintsIc){
         let doc = mxUtils.createXmlDocument();
         let node = doc.createElement(type);
         node.setAttribute('label', type);
@@ -41,16 +40,14 @@ let setupElements = function setupElements(graph, elements, customAttributes, cC
         }
     }
 
-    function addToolbarItem(graph, toolbar, prototype, image, namepalette, cClonCells, cConstraintsIc)
-    {
+    function addToolbarItem(graph, toolbar, prototype, image, namepalette, cClonCells, cConstraintsIc){
         // Function that is executed when the image is dropped on
         // the graph. The cell argument points to the cell under
         // the mousepointer if there is one.
-        let funct = function(graph, evt, cell)
-		{
+        let funct = function(graph, evt, cell){
             let onCreationAllowed = true;
 
-            if(cConstraintsIc!=""){
+            if(cConstraintsIc != ""){
                 onCreationAllowed = cConstraintsIc(graph);
             }
 
@@ -74,7 +71,7 @@ let setupElements = function setupElements(graph, elements, customAttributes, cC
                         let parent2 = graph.getModel().getCell(cClonCells[type]);
                         graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#DCDCDC", [vertex2]); //different background for a cloned cell
                         graph.importCells([vertex2], 0, 0, parent2);
-                        graph.getModel().prefix=""; //restart prefix
+                        graph.getModel().prefix = ""; //restart prefix
                     }
                 }
             }
@@ -84,7 +81,7 @@ let setupElements = function setupElements(graph, elements, customAttributes, cC
         let tbContainer = document.getElementById('tbContainer');
         let mdiv = document.createElement('div');
         let span = document.createElement('span');
-        span.innerHTML = namepalette+"<br />";
+        span.innerHTML = namepalette + "<br />";
         mdiv.appendChild(span);
 
         // Creates the image which is used as the drag icon (preview)
