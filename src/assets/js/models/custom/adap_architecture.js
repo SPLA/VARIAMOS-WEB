@@ -607,7 +607,6 @@ let adapArchitectureMain = function adapArchitectureMain(graph)
 					overlayRigth = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/localComputer.png', 16, 16), 'Overlay tooltip');
 					break;
 				case "Firmware":
-					console.log("pase");
 					graph.removeCellOverlay(graph.getModel().getCell(this.name));
 					overlayRigth = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/firmware.png', 16, 16), 'Overlay tooltip');
 					break;
@@ -649,7 +648,6 @@ let adapArchitectureMain = function adapArchitectureMain(graph)
 
 		methods[2]=function(){
 			let select = document.getElementById('select-softwareType');
-			console.log(select.value)
 			let selectOption = select.value;
 			let overlayRigth =  null;
 			switch (selectOption) {
@@ -1052,8 +1050,6 @@ let adapArchitectureMain = function adapArchitectureMain(graph)
 					if(!done.some(pair => {
 						return (pair.t1 === srcId && pair.t2 === tgtId) || (pair.t1 === tgtId && pair.t2 === tgtId);
 					})){
-						console.log('sourceCell :', sourceCell);
-						console.log('targetCell :', targetCell);
 						const newEdge = graph.insertEdge(boundaryCell, uuidv1(), edge.value, sourceCell, targetCell, edge.style);
 						if(newEdge.getAttribute('type').includes('dependum')){
 						//Gather the state information of both the source and target elements.
@@ -1062,7 +1058,6 @@ let adapArchitectureMain = function adapArchitectureMain(graph)
 						const targetState = graph.view.getState(targetCell);
 						const targetGeo = targetCell.getGeometry();
 
-						console.log(boundaryGeo);
 						//Obtain the coordinates and offset to the center of the bounding rectangle.
 						//If the state is undefined, it is because it has just been created.
 						const initX = sourceState !== undefined ? (sourceState.origin.x + (sourceGeo.width/2)) : (boundaryGeo.x + sourceGeo.getCenterX());
@@ -1304,7 +1299,6 @@ let adapArchitectureMain = function adapArchitectureMain(graph)
 	function loadmodal(adap, graph){
 		if(adap){
 			for (let i=0; i < adap.length; i++){
-				console.log(adap[i]);
 				if(adap[i]){
 					if(adap[i].children){
 						if(!adap[i].value.attributes){
@@ -1363,7 +1357,6 @@ let adapArchitectureMain = function adapArchitectureMain(graph)
 					graph.removeCellOverlay(adap);
 					overlayLeft = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/devices.png', 16, 16), 'Overlay tooltip');
 					overlayLeft.offset = new mxPoint(10,10);
-					console.log(adap.value.attributes[2].nodeValue)
 					switch (adap.value.attributes[2].nodeValue) {
 						case "Cloud Computer":
 							overlayRigth = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/cloudComputer.png', 16, 16), 'Overlay tooltip');
