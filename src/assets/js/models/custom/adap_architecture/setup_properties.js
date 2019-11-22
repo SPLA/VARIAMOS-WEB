@@ -12,8 +12,7 @@ let setupProperties = function setupProperties(graph, properties_styles){
 
     selectionChanged(graph,properties_styles);
 
-    function selectionChanged(graph,properties_styles)
-	{
+    function selectionChanged(graph,properties_styles){
 		let div = document.getElementById('properties');
 		// Forces focusout in IE
 		graph.container.focus();
