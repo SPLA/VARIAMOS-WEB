@@ -1,4 +1,4 @@
-var setup_properties = function setup_properties(graph,properties_styles){
+var setupProperties = function setupProperties(graph,properties_styles){
 	//remove previous listeners
 	if(graph.getSelectionModel().eventListeners.length>3){
 		graph.getSelectionModel().eventListeners.pop();
@@ -39,8 +39,8 @@ var setup_properties = function setup_properties(graph,properties_styles){
 					{
 						if(properties_styles!=null && properties_styles[cell.getAttribute("type")]){
 							var type = cell.getAttribute("type");
-							
 							var passed = false;
+
 							for (var j = 0; j < properties_styles[type].length; j++)
 							{form
 								if(properties_styles[type][j]["attribute"]==attrs[i].nodeName){
@@ -76,8 +76,8 @@ var setup_properties = function setup_properties(graph,properties_styles){
 	 */
 	function createCheckboxField(graph, form, cell, attribute, custom){
 
-		var def_display = getDisplayValue(cell,custom);
-		var input = form.addCheckbox(attribute.nodeName, attribute.nodeValue, def_display);
+		var defDisplay = getDisplayValue(cell,custom);
+		var input = form.addCheckbox(attribute.nodeName, attribute.nodeValue, defDisplay);
 
 		executeApplyHandler(graph, form, cell, attribute, input, custom);
 	}
@@ -88,8 +88,8 @@ var setup_properties = function setup_properties(graph,properties_styles){
 	function createSelectField(graph, form, cell, attribute, custom){
 
 		var values=custom["input_values"];
-		var def_display = getDisplayValue(cell,custom);
-		var input = form.addCombo(attribute.nodeName, false, 1, def_display);
+		var defDisplay = getDisplayValue(cell,custom);
+		var input = form.addCombo(attribute.nodeName, false, 1, defDisplay);
 		for (var i = 0; i < values.length; i++)
 		{
 			if(values[i]==attribute.nodeValue){
@@ -107,9 +107,9 @@ var setup_properties = function setup_properties(graph,properties_styles){
 	 */
 	function createTextField(graph, form, cell, attribute, custom)
 	{
-		var def_display = getDisplayValue(cell,custom);
+		var defDisplay = getDisplayValue(cell,custom);
 
-		var input = form.addText(attribute.nodeName, attribute.nodeValue, "text", def_display);
+		var input = form.addText(attribute.nodeName, attribute.nodeValue, "text", defDisplay);
 		
 		//attribute type can not be modified
 		if(attribute.nodeName=="type"){
@@ -188,13 +188,10 @@ var setup_properties = function setup_properties(graph,properties_styles){
 							graph.getModel().setStyle(cell.children[0], 'shape=Wirless_comunication;labelBackgroundColor=#ffffff;labelPosition=left;spacingRight=2;align=right;fontStyle=0;');
 							break;
 						default:
-							var edit = new mxCellAttributeChange(
-										cell, attribute.nodeName,
-										newValue);
-								graph.getModel().execute(edit);
-							  	break;
-						  }
-
+							var edit = new mxCellAttributeChange(cell, attribute.nodeName,newValue);
+							graph.getModel().execute(edit);
+							break;
+					}
 					
 					//update cloned cell if exists
 					var clon = graph.getModel().getCell("clon"+cell.getId());
@@ -239,18 +236,18 @@ var setup_properties = function setup_properties(graph,properties_styles){
 	}
 
 	function getDisplayValue(cell,custom){
-		var def_display = "";
+		var defDisplay = "";
  		if(custom!=null && custom["def_display"]!=null){
-			def_display=custom["def_display"];
+			defDisplay=custom["def_display"];
 			if(custom["display_check_attribute"]){
 				if(custom["display_check_value"]==cell.getAttribute(custom["display_check_attribute"])){
 					console.log(custom["display_check"]);
-					def_display=custom["display_check"];
+					defDisplay=custom["display_check"];
 				}
 			}
 		}
 
-		return def_display;
+		return defDisplay;
 	}
 
 	function applyCustomElements(input, custom, cell){
@@ -270,4 +267,4 @@ var setup_properties = function setup_properties(graph,properties_styles){
 	}
 }
 
-export default setup_properties
+export default setupProperties
