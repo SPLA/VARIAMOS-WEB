@@ -12,7 +12,7 @@ let adapArchitectureMain = function adapArchitectureMain(graph)
 	data["m_relations"] = adapArchitectureRelations(); //custom relations
 	data["m_relation_styles"] = adapArchitectureRelationStyles();
 	data["m_properties_styles"] = adapArchitecturePropertiesStyles(); //custom properties styles
-	data["m_clon_cells"]  =  adapArchitectureClonCells(); //custom clon cells
+	//data["m_clon_cells"]  =  adapArchitectureClonCells(); //custom clon cells
 	data["m_overlay"]  =  adapArchitectureOverlay();
 	return data;
 	
@@ -1067,7 +1067,7 @@ let adapArchitectureMain = function adapArchitectureMain(graph)
 						//Calculate the angle given by the edge in its current orientation.
 						const angle = (Math.atan2(destY-initY,destX-initX) * (180/Math.PI)).toFixed(0);
 						//Insert a new element onto the the edge with the calculated angle.
-						const capitald = graph.insertVertex(newEdge,uuidv1(),null,0,0,20,20,'shape =  capitald;fillColor =  #FFFFFF;rotation =  '+angle+';');
+						const capitald = graph.insertVertex(newEdge,uuidv1(),null,0,0,20,20,'shape =  capitald; fillColor =  #000080;rotation =  '+angle+';');
 						//Set the offset of the element so that it is centered. 
 						capitald.geometry.offset = new mxPoint(-10, -10);
 						capitald.geometry.relative = true;
@@ -1142,7 +1142,7 @@ let adapArchitectureMain = function adapArchitectureMain(graph)
 							//Calculate the angle given by the edge in its current orientation.
 							const angle = (Math.atan2(destY-initY,destX-initX) * (180/Math.PI)).toFixed(0);
 							//Insert a new element onto the the edge with the calculated angle.
-							const capitald = graph.insertVertex(newEdge,uuidv1(),null,0,0,20,20,'shape =  capitald;fillColor =  #FFFFFF;rotation =  '+angle+';');
+							const capitald = graph.insertVertex(newEdge,uuidv1(),null,0,0,20,20,'shape =  capitald;fillColor =  #000080;rotation =  '+angle+';');
 							//Set the offset of the element so that it is centered. 
 							capitald.geometry.offset = new mxPoint(-10, -10);
 							capitald.geometry.relative = true;
@@ -1522,13 +1522,13 @@ let adapArchitectureMain = function adapArchitectureMain(graph)
 
 	}
 
-	function adapArchitectureClonCells(){
+	/*function adapArchitectureClonCells(){
 		let clons = {};
 		clons = {
 			"module":"dinamic_adap_architecture"
 		};
 		return clons;
-	}
+	}*/
 }
 
 export default adapArchitectureMain
