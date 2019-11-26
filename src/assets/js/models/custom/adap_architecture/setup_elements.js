@@ -191,14 +191,14 @@ let setupElements = function setupElements(graph, elements, customAttributes, cC
         if(pos == 7 ){
             //image frame
             graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, '#CCFFCC', [newCells]);
-            let overlayLeft = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/resource.png', 16, 16), 'Overlay tooltip');
+            overlayLeft = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/resource.png', 16, 16), 'Overlay tooltip');
             overlayRigth = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/cyber.png', 16, 16), 'Overlay tooltip');
             overlayLeft.offset = new mxPoint(10,10);
         }
         if(pos == 8 ){
             //image frame
             graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, '#CCFFCC', [newCells]);
-            let overlayLeft = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/network.png', 16, 16), 'Overlay tooltip');
+            overlayLeft = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/network.png', 16, 16), 'Overlay tooltip');
             overlayRigth = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/internet.png', 16, 16), 'Overlay tooltip');
             overlayLeft.offset = new mxPoint(10,10);
 
@@ -206,7 +206,7 @@ let setupElements = function setupElements(graph, elements, customAttributes, cC
         if(pos == 9 ){
             //image frame
             graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, '#CCFFCC', [newCells]);
-            let overlayLeft = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/computer.png', 16, 16), 'Overlay tooltip');
+            overlayLeft = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/computer.png', 16, 16), 'Overlay tooltip');
             overlayRigth = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/cloudComputer.png', 16, 16), 'Overlay tooltip');
             overlayLeft.offset = new mxPoint(10,10);
 
