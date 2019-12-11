@@ -5,7 +5,7 @@
 export function getModelInfo(){
     let info = [];
     //list of graphical models
-    info["gmodels"] = ["feature", "component", "binding_feature_component", "istar" , "adap_architecture",
+    info["gmodels"] = ["feature", "component", "binding_feature_component", "istar", "class", "adap_architecture",
         "adaptation_state", "adaptation_hardware", "adaptation_binding_state_hardware", "control"];
     //define feature model main info
     info["feature"] = {projFolders:["Domain"], label:"Feature"};
@@ -17,6 +17,8 @@ export function getModelInfo(){
     info["adap_architecture"]={projFolders:["Domain"], label:"Adaptative Architecture"};
     //define istar model main info
     info["istar"] = {projFolders:["Domain"], label:"iStar"};
+    //define class diagram model main info
+    info["class"] = {projFolders:["Domain"], label:"Class Diagram"}
     //define adaptation_state model main info
     info["adaptation_state"]={projFolders:["Application"],label:"State"};
     //define adaptation_hardware model main info
