@@ -5,7 +5,9 @@ let classMain = function classMain(graph) {
   data["m_type"] = "normal"; //custom type
   data["m_elements"] = classElements(); //custom elements
   data["m_attributes"] = classAttributes(); //custom attributes
+  data["m_relations"]= classRelations(); //custom relations
   data["m_relation_styles"] = classRelationStyles(); //custom relation styles
+  data["m_properties_styles"] = classPropertiesStyles();
   data["m_constraints_relations"] = classConstraintsRelations; //custom constraints for relations
   return data;
 
@@ -17,22 +19,6 @@ let classMain = function classMain(graph) {
 
   function classConstraints(graph) {
     graph.multiplicities = []; //reset multiplicities
-    graph.multiplicities.push(new mxMultiplicity(
-      true, "class", null, null, 0, 0, null,
-      "Invalid connection",
-      "Only shape targets allowed"));
-    graph.multiplicities.push(new mxMultiplicity(
-      true, "file", null, null, 0, 1, ["class"],
-      "Invalid connection",
-      "Only shape targets allowed"));
-    graph.multiplicities.push(new mxMultiplicity(
-      true, "custom", null, null, 0, 1, ["class"],
-      "Invalid connection",
-      "Only shape targets allowed"));
-    graph.multiplicities.push(new mxMultiplicity(
-      true, "fragment", null, null, 0, null, ["file", "class"],
-      "Invalid connection",
-      "Only shape targets allowed"));
   }
 
   function classElements() {
@@ -68,17 +54,79 @@ let classMain = function classMain(graph) {
     return attributes;
   }
 
+  function classRelations(){
+    var relations = [];
+    relations.push({
+      "source":["class"],
+      "rel_source_target":"and",
+      "target":["class"],
+      "attributes":[{
+        "name":"relation",
+        "def_value":"and"
+      }]
+    });
+    return relations;
+  }
+
 
   function classRelationStyles() {
     var relations = [];
     relations.push({
-      "source": ["fragment"],
+      "source": ["class"],
       "rel_source_target": "and",
-      "target": ["file"],
-      "style": "dashed=1;endArrow=open;strokeColor=red;"
+      "target": ["class"],
+      "style": "endArrow=diamond;endFill=1;endSize=10;"
     });
 
     return relations;
+  }
+
+  function classPropertiesStyles(){
+    const styles = {};
+    styles["rel_class_class"] = [{
+      "attribute":"relation",
+      "input_type": "select",
+      "input_values": 
+        [
+          "Composition", 
+          "Aggregation", 
+          "Inheritance", 
+          "Association"
+        ],
+      "onchange": changeRelStyle
+    }]
+    return styles;
+  }
+
+  function changeRelStyle(){
+    const currentCell = graph.getModel().getCell(this.name);
+    graph.getModel().beginUpdate();
+    try{
+      let styleArrow = "";
+      let styleFill = "";
+      switch(this.value){
+        case "Composition":
+          styleArrow = "diamond";
+          styleFill = "1";
+          break;
+        case "Aggregation":
+          styleArrow = "diamond";
+          styleFill = "0"
+          break;
+        case "Inheritance":
+          styleArrow = "block";
+          styleFill = "0";
+          break;
+        case "Association":
+          styleArrow = "none";
+          styleFill = "none";
+          break;
+      }
+      graph.setCellStyles(mxConstants.STYLE_ENDARROW, styleArrow, [currentCell]);
+      graph.setCellStyles(mxConstants.STYLE_ENDFILL, styleFill, [currentCell]);
+    } finally {
+      graph.getModel().endUpdate();
+    }
   }
 
   function classConstraintsRelations(graph, source, target) {
