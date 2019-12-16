@@ -41,6 +41,11 @@ export default new Router({
       path: '/hlvl',
       name: 'HLVL',
       component: () => import('./views/HLVL.vue')
+    },
+    {
+      path: '/requireX',
+      name: 'RequireX',
+      component: () => import('./views/RequireX.vue')
     }
   ]
 })
