@@ -139,5 +139,16 @@
   "filemanagement_newadaptation_error1":"Duplicated name! Please type in a new name.",
   "filemanagement_newadaptation_error2":"Empty is not allowed! Please type in a new name.",
   
-  "adaptation_state_source_code_generation":"Source code generation"
+  "adaptation_state_source_code_generation":"Source code generation",
+
+  "requirex_application": "Application",
+  "requirex_domain": "Domain",
+  "requirex_adaptation":"Self-Adaptation",
+  "requirex_admin":"Administration",
+
+  "requirex_application_tittle": "Requirements - Application requirement",
+  "requirex_domain_tittle": "Requirements - Domain requirement",
+  "requirex_adaptation_tittle":"Requirements - Self-Adaptation requirement",
+  "requirex_admin_tittle":"Requirements - Administration Panel",
+  "Requirements" : "Requirements"
 }
