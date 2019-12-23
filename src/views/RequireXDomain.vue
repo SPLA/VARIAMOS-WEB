@@ -4,6 +4,13 @@
       <span></span>
     </div>
 
+    <div class="container text-left">
+      <button class="btn" @click="onGoBack">
+        <i class="fa fa-arrow-left"></i>
+        <small class="mx-2">{{ $t("requirex_go_back") }}</small>
+      </button>
+    </div>
+
     <div class="my-3">
       <h2>{{$t("requirex_domain_tittle")}}</h2>
     </div>
@@ -432,17 +439,18 @@ export default {
       this.countDomain++;
       this.requirement.id = this.countDomain;
       this.requirement.requirementNumber = "D.R." + this.requirement.id;
-      this.requirement.date_at =  new Date().toISOString().slice(0, 10);
+      this.requirement.date_at = new Date().toISOString().slice(0, 10);
 
       this.saveRequirement();
 
       //Contar Requerimientos
 
-
       $("#domainMessage span").text("Success!");
       $("#domainMessage").addClass("alert-success");
       $("#domainMessage").removeClass("alert-danger");
       setTimeout(this.showTooltip, 500);
+
+      $("#domainForm").trigger("reset");
     },
     showTooltip() {
       $("#domainMessage").show("slow");
@@ -457,6 +465,11 @@ export default {
       this.axios.post(uri, this.requirement).then(() => {
         this.$Message.success("Success!");
         this.$router.push("/requirex");
+      });
+    },
+    onGoBack() {
+      this.$router.push({
+        name: "RequireX"
       });
     }
   },

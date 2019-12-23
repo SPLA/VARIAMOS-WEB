@@ -262,6 +262,7 @@
   "requirex_generate": "Generate Requirement",
   "requirex_cancel": "Cancel",
   "requirex_delete": "Delete",
-  "requirex_get_all": "Get All"
+  "requirex_get_all": "Get All",
+  "requirex_go_back": "Go Back"
 
 }

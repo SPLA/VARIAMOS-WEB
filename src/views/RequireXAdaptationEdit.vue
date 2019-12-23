@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container">
     <div id="adaptationMessage" class="alert alert-danger" role="alert" style="display: none">
       <span></span>
     </div>
@@ -318,38 +318,20 @@
     </div>
   </div>
 </template>
-
 <script>
+import $ from "jquery";
+
+$(function() {
+  //Agregar o retirar condiciones del sistema
+  $(document).on("click", "#cancel", function() {
+    $("#domainForm").trigger("reset");
+  });
+});
+
 export default {
   data() {
     return {
-      listAdaptationRequirement: [],
-      requirement: {
-        id: 0,
-        requirementNumber: "",
-        reqType: this.$t("requirex_requirement_type_value_1"),
-        name: "",
-        condition: false,
-        conditionDescription: "",
-        imperative: this.$t("requirex_requirement_imperative_value_1"),
-        systemName: "",
-        processVerb: "",
-        object: "",
-        system: "",
-        relaxing: this.$t("requirex_requirement_relax_many"),
-        postBehaviour: this.$t("requirex_requirement_after"),
-        event: "",
-        timeInterval: 0,
-        units: "",
-        quantity: "",
-        frecuency: "",
-        quantityFrecuency: "",
-        msg: "",
-        estado: true,
-        date_at: new Date().toISOString().slice(0, 10)
-      },
-
-      countAdaptation: 0
+      requirement: {}
     };
   },
   methods: {
@@ -370,8 +352,6 @@ export default {
       $("#adaptationForm").trigger("reset");
     },
     onGenerateRequirement(name) {
-      //Validar el formulario
-
       this.requirement.msg = "";
 
       //Si hay una condición
@@ -462,22 +442,15 @@ export default {
           " " +
           this.requirement.quantityFrecuency;
       }
-      //Agregar item a la lista
-      this.countAdaptation++;
-      this.requirement.id = this.countAdaptation;
-      this.requirement.requirementNumber = "S.R." + this.requirement.id;
-
-      this.saveRequirement();
+      this.updateRequirement();
     },
-    saveRequirement() {
-      let uri = "http://localhost:4000/adaptations/add";
+    updateRequirement() {
+      let uri = `http://localhost:4000/adaptations/update/${this.$route.params.id}`;
       this.axios.post(uri, this.requirement).then(() => {
         $("#adaptationMessage span").text("Success!");
         $("#adaptationMessage").addClass("alert-success");
         $("#adaptationMessage").removeClass("alert-danger");
         setTimeout(this.showTooltip, 500);
-        //Limpiar formulario
-        this.onAdaptationCancel();
       });
     },
     onGoBack() {
@@ -494,21 +467,11 @@ export default {
       $("#adaptationMessage").hide("slow");
     }
   },
-  mounted() {},
-  created() {
-    //Cargar lista de requerimientos de aplicacion
-    let uri = "http://localhost:4000/adaptations";
+  mounted() {
+    let uri = `http://localhost:4000/adaptations/${this.$route.params.id}`;
     this.axios.get(uri).then(response => {
-      this.listAdaptationRequirement = response.data;
-      this.countAdaptation = this.listAdaptationRequirement.length;
+      this.requirement = response.data;
     });
   }
 };
 </script>
-
-<style scoped>
-.form-requirement {
-  margin: 0 auto;
-  max-width: 500px;
-}
-</style>

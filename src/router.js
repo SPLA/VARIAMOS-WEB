@@ -56,7 +56,13 @@ export default new Router({
           path: '/requireX/applications',
           name: 'applications',
           component: () => import('./components/requirex/ApplicationsTable.vue')
+        },
+        {
+          path: '/requireX/adaptations',
+          name: 'adaptations',
+          component: () => import('./components/requirex/AdaptationsTable.vue')
         }
+
 
       ]
     },
@@ -66,14 +72,29 @@ export default new Router({
       component: () => import('./views/RequireXDomain.vue')
     },
     {
+      path: '/requirex/domain/edit/:id',
+      name: 'requirexdomainedit',
+      component: () => import('./views/RequireXDomainEdit.vue')
+    },
+    {
       path: '/requireX/application',
       name: 'requirexapplication',
       component: () => import('./views/RequireXApplication.vue')
     },
     {
+      name: 'requirexapplicationedit',
+      path: '/requirex/application/edit/:id',
+      component: () => import('./views/RequireXApplicationEdit.vue')
+    },
+    {
       path: '/requirex/adaptation',
       name: 'requirexadaptation',
       component: () => import('./views/RequireXAdaptation.vue')
+    },
+    {
+      path: '/requirex/adaptation/edit/:id',
+      name: 'requirexadaptationedit',
+      component: () => import('./views/RequireXAdaptationEdit.vue')
     },
   ]
 })

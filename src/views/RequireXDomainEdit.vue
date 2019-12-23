@@ -1,40 +1,75 @@
 <template>
   <div class="container">
-    <div id="applicationMessage" class="alert alert-danger" role="alert" style="display: none">
+    <div id="domainMessage" class="alert alert-danger" role="alert" style="display: none">
       <span></span>
     </div>
 
     <div class="container text-left">
       <button class="btn" @click="onGoBack">
         <i class="fa fa-arrow-left"></i>
-        <small class="mx-2">{{ $t("requirex_go_back") }}</small>
+        <small class="mx-2"> {{ $t("requirex_go_back") }} </small>
       </button>
     </div>
 
     <div class="my-3">
-      <h2>{{$t("requirex_application_tittle")}}</h2>
+      <h2>{{$t("requirex_domain_tittle")}}</h2>
     </div>
 
     <div class="container my-2 form-requirement">
-      <form id="applicationForm" ref="requirement">
+      <form id="domainForm" ref="requirement">
         <div class="row">
-          ´
-          <label for="reqType">
-            <font size="3" color="red">*</font>
-            {{$t('requirex_requirement_type_label')}}
-          </label>
+          <div class="col">
+            <label for="reqType">
+              <font size="3" color="red">*</font>
+              {{$t('requirex_requirement_type_label')}}
+            </label>
 
-          <select id="reqType" v-model="requirement.reqType" class="form-control">
-            <option
-              :value="$t('requirex_requirement_type_value_1')"
-            >{{ $t('requirex_requirement_type1')}}</option>
-            <option
-              :value="$t('requirex_requirement_type_value_2')"
-            >{{ $t('requirex_requirement_type2')}}</option>
-            <option
-              :value="$t('requirex_requirement_type_value_3')"
-            >{{ $t('requirex_requirement_type3')}}</option>
-          </select>
+            <select id="reqType" v-model="requirement.reqType" class="form-control">
+              <option
+                :value="$t('requirex_requirement_type_value_1')"
+              >{{ $t('requirex_requirement_type1')}}</option>
+              <option
+                :value="$t('requirex_requirement_type_value_2')"
+              >{{ $t('requirex_requirement_type2')}}</option>
+              <option
+                :value="$t('requirex_requirement_type_value_3')"
+              >{{ $t('requirex_requirement_type3')}}</option>
+            </select>
+          </div>
+          <div class="col">
+            <label for="affectedSystems">
+              <font size="3" color="red">*</font>
+              {{$t('requirex_requirement_affected_systems_label')}}
+            </label>
+
+            <select
+              id="affectedSystems"
+              v-model="requirement.affectedSystems"
+              @change="onaffectedSystemsChange"
+              class="form-control"
+            >
+              <option
+                :value="$t('requirex_requirement_affected_systems1')"
+                selected
+              >{{ $t('requirex_requirement_affected_systems1')}}</option>
+              <option
+                :value="$t('requirex_requirement_affected_systems2')"
+              >{{ $t('requirex_requirement_affected_systems2')}}</option>
+              <option
+                :value="$t('requirex_requirement_affected_systems3')"
+              >{{ $t('requirex_requirement_affected_systems3')}}</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="thoseCoditionContainer" class="form-group my-3" style="display: none">
+          <label for="thoseCodition">{{$t('requirex_requirement_affected_condition')}}</label>
+          <input
+            id="thoseCodition"
+            v-model="requirement.thoseCodition"
+            class="form-control"
+            :placeholder="$t('requirex_requirement_affected_condition')"
+          />
         </div>
 
         <div class="row my-2">
@@ -227,63 +262,63 @@
           />
         </div>
       </form>
-    </div>
 
-    <div class="container text-right my-2">
-      <button
-        id="generate"
-        @click="onGenerateRequirement"
-        type="button"
-        class="btn btn-outline-dark mx-2"
-      >{{$t('requirex_generate')}}</button>
-      <button id="cancel" type="button" class="btn btn-danger">{{$t('requirex_cancel')}}</button>
+      <div class="container text-right my-2">
+        <button
+          id="generate"
+          @click="onGenerateRequirement"
+          type="button"
+          class="btn btn-outline-dark mx-2"
+        >{{$t('requirex_generate')}}</button>
+        <button id="cancel" type="button" class="btn btn-danger">{{$t('requirex_cancel')}}</button>
+      </div>
     </div>
   </div>
 </template>
-
 <script>
 import $ from "jquery";
 
 $(function() {
   //Agregar o retirar condiciones del sistema
   $(document).on("click", "#cancel", function() {
-    $("#applicationForm").trigger("reset");
+    $("#domainForm").trigger("reset");
   });
 });
 
 export default {
   data() {
     return {
-      listApplicationRequirement: [],
-      requirement: {
-        id: 0,
-        requirementNumber: "",
-        reqType: this.$t("requirex_requirement_type_value_1"),
-        name: "",
-        condition: false,
-        conditionDescription: "",
-        imperative: this.$t("requirex_requirement_imperative_value_1"),
-        systemName: "",
-        systemActivity: this.$t("requirex_requirement_system_activity_value_1"),
-        user: "",
-        processVerb: "",
-        object: "",
-        system: "",
-        from: this.$t("requirex_requirement_from_value_1"),
-        processVerb: "",
-        systemCondition: false,
-        systemConditionDescription: "",
-        msg: "",
-        estado: true,
-        date_at: new Date().toISOString().slice(0, 10)
-      },
-      countApplication: 0,
-      lastTimeApplication: ""
+      requirement: {},
+      countDomain: 0
     };
   },
+  created() {
+    let uri = `http://localhost:4000/domains/${this.$route.params.id}`;
+    this.axios.get(uri).then(response => {
+      this.requirement = response.data;
+    });
+  },
   methods: {
+    //Alcambiar Los sistemas afectados
+    onaffectedSystemsChange() {
+      alert(this.requirement.affectedSystems);
+      if (
+        this.requirement.affectedSystems ==
+        this.$t("requirex_requirement_affected_systems3")
+      ) {
+        $("#thoseCoditionContainer")
+          .first()
+          .fadeIn("slow");
+
+        this.requirement.isThoseCodition = true;
+      } else {
+        this.requirement.isThoseCodition = false;
+        $("#thoseCoditionContainer").hide();
+      }
+    },
     //Activar condiciones
     onConditionCheck() {
+      console.log("entro");
       if ($("#condition").is(":checked")) {
         $("#conditionDescriptionContainer")
           .first()
@@ -295,7 +330,6 @@ export default {
         $("#conditionDescriptionContainer").hide();
       }
     },
-
     //Activar condiciones
     onSystemConditionCheck() {
       if ($("#systemCondition").is(":checked")) {
@@ -308,7 +342,6 @@ export default {
         $("#systemConditionDescriptionContainer").hide();
       }
     },
-
     onSystemActivityChange() {
       if (this.requirement.systemActivity == "userInt") {
         $("#userContent")
@@ -327,19 +360,42 @@ export default {
           .fadeIn("slow");
       }
     },
+    showTooltip() {
+      $("#domainMessage").show("slow");
+      setTimeout(this.hideTooltip, 5000);
+    },
+
+    hideTooltip() {
+      $("#domainMessage").hide("slow");
+    },
+
     onGenerateRequirement() {
+      //Reiniciar requerimiento
       this.requirement.msg = "";
-      //this.$Message.success("Success!");
+
       //Si hay una condición
-      if (this.requirement.condition) {
+      if (this.requirement.condition == true) {
         this.requirement.msg += this.requirement.conditionDescription + " ";
       }
 
+      //Sistemas afectado
+      this.requirement.msg += this.requirement.affectedSystems + " ";
+      //Complemento
+      this.requirement.msg += this.$t(
+        "requirex_requirement_affected_systems_complement"
+      );
+
+      if (
+        this.requirement.affectedSystems ==
+        this.$t("requirex_requirement_affected_systems3")
+      ) {
+        this.requirement.msg +=
+          this.$t("requirex_requirement_affected_that") + " ";
+        this.requirement.msg += this.requirement.thoseCodition + " ";
+      }
+
       this.requirement.msg +=
-        "The " +
-        this.requirement.systemName +
-        " " +
-        this.requirement.imperative;
+        this.requirement.systemName + " " + this.requirement.imperative;
 
       //Validate system activity
       if (this.requirement.systemActivity == "autoAct") {
@@ -347,7 +403,7 @@ export default {
           " " + this.requirement.processVerb + " " + this.requirement.object;
       } else if (this.requirement.systemActivity == "userInt") {
         this.requirement.msg +=
-          " provide the " + this.requirement.user + " the capacity of";
+          " provide the " + this.requirement.user + " with the capacity of";
         this.requirement.msg +=
           " " + this.requirement.processVerb + " " + this.requirement.object;
       } else if (this.requirement.systemActivity == "extInt") {
@@ -368,55 +424,23 @@ export default {
           ", " + this.requirement.systemConditionDescription;
       }
 
-      //Agregar item a la lista
-      this.countApplication++;
-      this.requirement.id = this.countApplication;
-      this.requirement.requirementNumber = "P.R." + this.requirement.id;
-      this.requirement.date_at = new Date().toISOString().slice(0, 10);
-
-      this.saveRequirement();
-      //Reiniciar Formulario
-    },
-    showTooltip() {
-      $("#applicationMessage").show("slow");
-      setTimeout(this.hideTooltip, 5000);
+      this.updateRequirement();
     },
 
-    hideTooltip() {
-      $("#applicationMessage").hide("slow");
-    },
-
-    saveRequirement() {
-      let uri = "http://localhost:4000/applications/add";
+    updateRequirement() {
+      let uri = `http://localhost:4000/domains/update/${this.$route.params.id}`;
       this.axios.post(uri, this.requirement).then(() => {
-        $("#applicationMessage span").text("Success!");
-        $("#applicationMessage").addClass("alert-success");
-        $("#applicationMessage").removeClass("alert-danger");
+        $("#domainMessage span").text("Success!");
+        $("#domainMessage").addClass("alert-success");
+        $("#domainMessage").removeClass("alert-danger");
         setTimeout(this.showTooltip, 500);
-        $("#applicationForm").trigger("reset");
       });
     },
-
-    onGoBack() {
-      this.$router.push({
-        name: "RequireX"
+    onGoBack(){
+        this.$router.push({
+        name: "RequireX",
       });
     }
-  },
-  mounted() {
-    //Cargar lista de requerimientos de aplicacion
-    let uri = "http://localhost:4000/applications";
-    this.axios.get(uri).then(response => {
-      this.listApplicationRequirement = response.data;
-      this.countApplication = this.listApplicationRequirement.length;
-    });
   }
 };
 </script>
-
-<style scoped>
-.form-requirement {
-  margin: 0 auto;
-  max-width: 500px;
-}
-</style>

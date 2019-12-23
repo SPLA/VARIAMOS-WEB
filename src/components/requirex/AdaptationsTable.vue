@@ -5,7 +5,7 @@
         <h5 class="card-title text-left">{{$t("requirex_admin_tittle")}}</h5>
         <h6
           class="card-subtitle mb-2 text-muted text-left"
-        >{{$t("requirex_domain")}} - {{$t("Requirements")}}</h6>
+        >{{$t("requirex_adaptation")}} - {{$t("Requirements")}}</h6>
         <p
           class="card-text"
         >Some quick example text to build on the card title and make up the bulk of the card's content.</p>
@@ -21,16 +21,16 @@
           </thead>
           <tbody>
             <tr
-              v-for="(domain, index) in requirementsDomain"
-              :key="domain.id"
-              @click="onSelectedRequitement(domain)"
+              v-for="(adaptation, index) in requirementsAdaptation"
+              :key="adaptation.id"
+              @click="onSelectedRequitement(adaptation)"
             >
               <th scope="row">{{index + 1}}</th>
-              <td>{{ domain.requirementNumber }}</td>
-              <td>{{ domain.name }}</td>
-              <td>{{  formatDate(domain.date_at) }}</td>
+              <td>{{ adaptation.requirementNumber }}</td>
+              <td>{{ adaptation.name }}</td>
+              <td>{{ formatDate(adaptation.date_at) }}</td>
               <td>
-                <button class="btn text-danger" @click="update(domain)">
+                <button class="btn text-danger" @click="update(adaptation)">
                   <i class="fas fa-trash"></i>
                 </button>
                 <button class="btn text-primary" @click="edit">
@@ -43,7 +43,8 @@
             </tr>
           </tbody>
         </table>
-        <router-link to="/requirex/domain">{{$t("New")}} {{$t("Requirement")}}</router-link>
+
+        <router-link to="/requirex/adaptation">{{$t("New")}} {{$t("Requirement")}}</router-link>
       </div>
     </div>
 
@@ -57,7 +58,7 @@
           <p class="card-text text-left">
             <small class="text-muted">{{selectedRequirement.systemName}}</small>
           </p>
-          <a href="#" class="btn btn-primary">{{$t("requirex_edit")}}</a>
+          <button class="btn btn-link" @click="edit">{{$t("requirex_edit")}}</button>
         </div>
         <div class="card-body" v-else>
           <h5 class="card-title">Select a Requirement for actions</h5>
@@ -73,26 +74,21 @@ import moment from "moment";
 export default {
   data() {
     return {
-      requirementsDomain: [],
+      requirementsAdaptation: [],
       selectedRequirement: null,
-      countDomain: 0
+      countadAptation: 0
     };
   },
   methods: {
     onSelectedRequitement(requirement) {
       this.selectedRequirement = requirement;
     },
-    formatDate(date) {
-      if (date) {
-        return moment(String(date)).format("DD/MM/YYYY");
-      }
-    },
     update(requirement) {
       requirement.estado = false;
 
-      let uri = `http://localhost:4000/domains/delete/${requirement._id}`;
+      let uri = `http://localhost:4000/adaptations/delete/${requirement._id}`;
       this.axios.post(uri, requirement).then(() => {
-        //Eliminar item de la lista domains
+        //Eliminar item de la lista applications
         this.row.listRequirements.splice(
           this.row.listRequirements.indexOf(requirement._id),
           1
@@ -101,22 +97,25 @@ export default {
     },
     edit() {
       this.$router.push({
-        name: "requirexdomainedit",
+        name: "requirexadaptationedit",
         params: { id: this.selectedRequirement._id }
       });
+    },
+    formatDate(date) {
+      if (date) {
+        return moment(String(date)).format("DD/MM/YYYY");
+      }
     }
   },
   mounted() {
-    //Cargar lista de requerimientos de dominio
-    let uri = "http://localhost:4000/domains";
+    //Cargar lista de requerimientos de aplicacion
+    let uri = "http://localhost:4000/adaptations";
     this.axios.get(uri).then(response => {
       for (var i = 0; i < response.data.length; i++) {
         if (response.data[i].estado) {
-          this.requirementsDomain.push(response.data[i]);
+          this.requirementsAdaptation.push(response.data[i]);
         }
       }
-      this.requirementsDomain;
-      console.log("tamaño : " + this.requirementsDomain.length);
     });
   }
 };

@@ -28,12 +28,12 @@
               <th scope="row">{{index + 1}}</th>
               <td>{{ application.requirementNumber }}</td>
               <td>{{ application.name }}</td>
-              <td>{{ application.date_at }}</td>
+              <td>{{  formatDate(application.date_at) }}</td>
               <td>
                 <button class="btn text-danger" @click="update(application)">
                   <i class="fas fa-trash"></i>
                 </button>
-                <button class="btn text-primary">
+                <button class="btn text-primary" @click="edit">
                   <i class="fa fa-pencil-alt" aria-hidden="true"></i>
                 </button>
                 <button class="btn text-primary">
@@ -43,7 +43,7 @@
             </tr>
           </tbody>
         </table>
-        
+
         <router-link to="/requirex/application">{{$t("New")}} {{$t("Requirement")}}</router-link>
       </div>
     </div>
@@ -58,7 +58,7 @@
           <p class="card-text text-left">
             <small class="text-muted">{{selectedRequirement.systemName}}</small>
           </p>
-          <a href="#" class="btn btn-primary">{{$t("requirex_edit")}}</a>
+          <button class="btn btn-link" @click="edit">{{$t("requirex_edit")}}</button>
         </div>
         <div class="card-body" v-else>
           <h5 class="card-title">Select a Requirement for actions</h5>
@@ -69,6 +69,8 @@
 </template>
 
 <script>
+import moment from "moment";
+
 export default {
   data() {
     return {
@@ -81,10 +83,15 @@ export default {
     onSelectedRequitement(requirement) {
       this.selectedRequirement = requirement;
     },
+    formatDate(date) {
+      if (date) {
+        return moment(String(date)).format("DD/MM/YYYY");
+      }
+    },
     update(requirement) {
       requirement.estado = false;
 
-      let uri = `http://localhost:4000/dapplications/delete/${requirement._id}`;
+      let uri = `http://localhost:4000/applications/delete/${requirement._id}`;
       this.axios.post(uri, requirement).then(() => {
         //Eliminar item de la lista applications
         this.row.listRequirements.splice(
@@ -92,10 +99,17 @@ export default {
           1
         );
       });
+    },
+
+    edit() {
+      this.$router.push({
+        name: "requirexapplicationedit",
+        params: { id: this.selectedRequirement._id }
+      });
     }
   },
   mounted() {
-  //Cargar lista de requerimientos de aplicacion
+    //Cargar lista de requerimientos de aplicacion
     let uri = "http://localhost:4000/applications";
     this.axios.get(uri).then(response => {
       for (var i = 0; i < response.data.length; i++) {

@@ -274,7 +274,7 @@ export default {
       }
     }
   },
-  created() {
+  mounted() {
     //Cargar lista de requerimientos de dominio
     let uri = "http://localhost:4000/domains";
     this.axios.get(uri).then(response => {
@@ -305,26 +305,8 @@ export default {
         }
       }
 
-      this.requirementsTableCollection[2].listRequirements = this.requirementsAdaptation;
-      this.requirementsTableCollection[2].amount = this.requirementsAdaptation.length;
     });
   },
-  mounted() {
-    //Carga desde el local storage
-    if (localStorage.lastTimeDomain) {
-      this.requirementsTableCollection[0].lastTime =
-        localStorage.lastTimeDomain;
-    }
-    /*---------------------------*/
-    if (localStorage.lastTimeApplication) {
-      this.requirementsTableCollection[1].lastTime =
-        localStorage.lastTimeApplication;
-    }
-    /*---------------------------*/
-    if (localStorage.lastTimeAdaptation) {
-      this.requirementsTableCollection[2].lastTime =
-        localStorage.lastTimeAdaptation;
-    }
-  }
+ 
 };
 </script>

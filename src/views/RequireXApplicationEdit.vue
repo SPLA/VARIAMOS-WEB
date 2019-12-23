@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div id="applicationMessage" class="alert alert-danger" role="alert" style="display: none">
+     <div id="applicationMessage" class="alert alert-danger" role="alert" style="display: none">
       <span></span>
     </div>
 
@@ -9,10 +9,6 @@
         <i class="fa fa-arrow-left"></i>
         <small class="mx-2">{{ $t("requirex_go_back") }}</small>
       </button>
-    </div>
-
-    <div class="my-3">
-      <h2>{{$t("requirex_application_tittle")}}</h2>
     </div>
 
     <div class="container my-2 form-requirement">
@@ -227,16 +223,16 @@
           />
         </div>
       </form>
-    </div>
 
-    <div class="container text-right my-2">
-      <button
-        id="generate"
-        @click="onGenerateRequirement"
-        type="button"
-        class="btn btn-outline-dark mx-2"
-      >{{$t('requirex_generate')}}</button>
-      <button id="cancel" type="button" class="btn btn-danger">{{$t('requirex_cancel')}}</button>
+      <div class="container text-right my-2">
+        <button
+          id="generate"
+          @click="onGenerateRequirement"
+          type="button"
+          class="btn btn-outline-dark mx-2"
+        >{{$t('requirex_generate')}}</button>
+        <button id="cancel" type="button" class="btn btn-danger">{{$t('requirex_cancel')}}</button>
+      </div>
     </div>
   </div>
 </template>
@@ -250,39 +246,19 @@ $(function() {
     $("#applicationForm").trigger("reset");
   });
 });
-
 export default {
   data() {
     return {
-      listApplicationRequirement: [],
-      requirement: {
-        id: 0,
-        requirementNumber: "",
-        reqType: this.$t("requirex_requirement_type_value_1"),
-        name: "",
-        condition: false,
-        conditionDescription: "",
-        imperative: this.$t("requirex_requirement_imperative_value_1"),
-        systemName: "",
-        systemActivity: this.$t("requirex_requirement_system_activity_value_1"),
-        user: "",
-        processVerb: "",
-        object: "",
-        system: "",
-        from: this.$t("requirex_requirement_from_value_1"),
-        processVerb: "",
-        systemCondition: false,
-        systemConditionDescription: "",
-        msg: "",
-        estado: true,
-        date_at: new Date().toISOString().slice(0, 10)
-      },
-      countApplication: 0,
-      lastTimeApplication: ""
+      requirement: {}
     };
   },
+  created() {
+    let uri = `http://localhost:4000/applications/${this.$route.params.id}`;
+    this.axios.get(uri).then(response => {
+      this.requirement = response.data;
+    });
+  },
   methods: {
-    //Activar condiciones
     onConditionCheck() {
       if ($("#condition").is(":checked")) {
         $("#conditionDescriptionContainer")
@@ -327,9 +303,8 @@ export default {
           .fadeIn("slow");
       }
     },
-    onGenerateRequirement() {
+    onGenerateRequirement(nae) {
       this.requirement.msg = "";
-      //this.$Message.success("Success!");
       //Si hay una condición
       if (this.requirement.condition) {
         this.requirement.msg += this.requirement.conditionDescription + " ";
@@ -368,16 +343,18 @@ export default {
           ", " + this.requirement.systemConditionDescription;
       }
 
-      //Agregar item a la lista
-      this.countApplication++;
-      this.requirement.id = this.countApplication;
-      this.requirement.requirementNumber = "P.R." + this.requirement.id;
-      this.requirement.date_at = new Date().toISOString().slice(0, 10);
-
-      this.saveRequirement();
-      //Reiniciar Formulario
+      this.updateRequirement();
     },
-    showTooltip() {
+    updateRequirement() {
+      let uri = `http://localhost:4000/applications/update/${this.$route.params.id}`;
+      this.axios.post(uri, this.requirement).then(() => {
+        $("#applicationMessage span").text("Success!");
+        $("#applicationMessage").addClass("alert-success");
+        $("#applicationMessage").removeClass("alert-danger");
+        setTimeout(this.showTooltip, 500);
+      });
+    },
+     showTooltip() {
       $("#applicationMessage").show("slow");
       setTimeout(this.hideTooltip, 5000);
     },
@@ -386,37 +363,11 @@ export default {
       $("#applicationMessage").hide("slow");
     },
 
-    saveRequirement() {
-      let uri = "http://localhost:4000/applications/add";
-      this.axios.post(uri, this.requirement).then(() => {
-        $("#applicationMessage span").text("Success!");
-        $("#applicationMessage").addClass("alert-success");
-        $("#applicationMessage").removeClass("alert-danger");
-        setTimeout(this.showTooltip, 500);
-        $("#applicationForm").trigger("reset");
-      });
-    },
-
     onGoBack() {
       this.$router.push({
         name: "RequireX"
       });
     }
-  },
-  mounted() {
-    //Cargar lista de requerimientos de aplicacion
-    let uri = "http://localhost:4000/applications";
-    this.axios.get(uri).then(response => {
-      this.listApplicationRequirement = response.data;
-      this.countApplication = this.listApplicationRequirement.length;
-    });
   }
 };
 </script>
-
-<style scoped>
-.form-requirement {
-  margin: 0 auto;
-  max-width: 500px;
-}
-</style>
