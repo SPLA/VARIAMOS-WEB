@@ -25,7 +25,8 @@ let Adaptation = new Schema({
     frecuency: { type: String },
     quantityFrecuency: { type: String },
     msg: { type: String },
-    estado: { type: Boolean}
+    estado: { type: Boolean},
+    date_at: { type: Date }
 }, {
         collection: 'adaptations'
     });

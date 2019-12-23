@@ -150,5 +150,118 @@
   "requirex_domain_tittle": "Requirements - Domain requirement",
   "requirex_adaptation_tittle":"Requirements - Self-Adaptation requirement",
   "requirex_admin_tittle":"Requirements - Administration Panel",
-  "Requirements" : "Requirements"
+  "Requirements" : "Requirements",
+  "New" : "New",
+  "requirex_edit": "Edit",
+  "requirex_requirement_description" : "Description",
+
+  "requirex_select":"select an option",
+  "requirex_requirement_type_label" : "Requirement Type",
+  "requirex_requirement_type1": "Constraint",  
+  "requirex_requirement_type2": "Functional Requirements",  
+  "requirex_requirement_type3": "Quality Requirement",
+  "requirex_requirement_type_value_1": "constraint",  
+  "requirex_requirement_type_value_2": "functionalRequirements",  
+  "requirex_requirement_type_value_3": "qualityRequirement",
+
+  "requirex_requirement_name_label": "Requirement Name", 
+
+  "requirex_requirement_condition_label": "Requirement have a conditional?",
+  "requirex_requirement_condition_descrive_label": "Plase enter a condition.",
+
+  "requirex_requirement_imperative_label" : "Imperative",
+  "requirex_requirement_imperative1": "Shall",  
+  "requirex_requirement_imperative2": "Should",   
+  "requirex_requirement_imperative3": "Could",
+  "requirex_requirement_imperative_value_1": "shall",  
+  "requirex_requirement_imperative_value_2": "should",  
+  "requirex_requirement_imperative_value_3": "could",
+
+  "requirex_requirement_system_name_label":"System or SubSystem",
+  "requirex_requirement_system_domain_name_label":"Product Line Name",
+
+  "requirex_requirement_affected_systems_label":"Affected Systems",
+  "requirex_requirement_affected_systems1": "All",  
+  "requirex_requirement_affected_systems2": "Some",   
+  "requirex_requirement_affected_systems3": "Those",
+  "requirex_requirement_affected_condition": "Plase enter a condition ",
+  "requirex_requirement_affected_that" : "that",
+
+  "requirex_requirement_affected_systems_complement":"systems of product line ",
+
+  "requirex_requirement_system_activity_label" : "System Activity",
+  "requirex_requirement_system_activity1": "User Interaction",  
+  "requirex_requirement_system_activity2": "Autonomous Activity",   
+  "requirex_requirement_system_activity3": "External Interface",
+  "requirex_requirement_system_domain_activity_label" : "Productline Activity",
+  "requirex_requirement_system_domain_activity1": "User",  
+  "requirex_requirement_system_domain_activity2": "Autonomous Activity",   
+  "requirex_requirement_system_domain_activity3": "External Interface",
+  "requirex_requirement_system_activity_value_1": "userInt",  
+  "requirex_requirement_system_activity_value_2": "autoAct",  
+  "requirex_requirement_system_activity_value_3": "extInt",
+
+  "requirex_requirement_user_label":"User",
+  "requirex_requirement_user_domain_label":"Domain User",  
+  "requirex_requirement_process_verb_label":"Process Verb",
+  "requirex_requirement_object_domain_label":"Domain Objet",
+  "requirex_requirement_object_label":"Objet",
+
+  "requirex_requirement_system_condition_label": "Object have a conditional?",
+  "requirex_requirement_system_condition_domain_label": "Domain Object have a conditional?",
+  "requirex_requirement_system_condition_descrive_label": "Plase enter a condition of the type 'if and only if'",
+
+  "requirex_requirement_system_label":"External System or Device",
+
+  "requirex_requirement_from_label" : "Interface requirement interaction",
+  "requirex_requirement_from1": "From",  
+  "requirex_requirement_from2": "Towards",   
+  "requirex_requirement_from_value_1": "from",  
+  "requirex_requirement_from_value_2": "towards",
+
+  "requirex_requirement_relax_label": "Relaxing",
+  "requirex_requirement_relax_many" : "As Many",
+  "requirex_requirement_relax_few" : "As Few",
+  "requirex_requirement_relax_before" : "Before",
+  "requirex_requirement_relax_after": "After",
+  "requirex_requirement_relax_during": "During",
+  "requirex_requirement_relax_until": "Until",
+  "requirex_requirement_relax_within" : "Within",
+  "requirex_requirement_relax_least" : "At Least",
+  "requirex_requirement_relax_eventually" : "Eventually",
+  "requirex_requirement_relax_close" : "As close as possible to",
+  
+  "requirex_requirement_post_behaviour": "Post Behaviour",  
+  "requirex_requirement_after": "After",
+  "requirex_requirement_before": "Before",
+  "requirex_requirement_during": "During",
+  "requirex_requirement_event": "Event",
+
+  "requirex_requirement_time": "Time Interval",  
+  "requirex_requirement_times": "Times for",  
+  "requirex_requirement_units": "Units",
+  "requirex_requirement_units_milliseconds": "Milliseconds",
+  "requirex_requirement_units_seconds": "Seconds",
+  "requirex_requirement_units_minutes": "Minutes",
+  "requirex_requirement_units_hours": "Hours",
+  "requirex_requirement_units_days": "Days",
+  "requirex_requirement_units_weeks": "weeks",
+  "requirex_requirement_units_months": "Months",
+  "requirex_requirement_units_years": "years",
+
+  "requirex_requirement_quantity": "Quantity",
+  "requirex_requirement_frecuency": "Frecuency",
+  "requirex_requirement_quantity_frecuency": "Quantity or Frecuency",
+
+  "requirex_requirement_complement": "Complement",
+
+  "requirex_requirement_sel_adaptive_complement" : "The self-adaptive system ",
+  "requirex_requirement_as_posible" : "as posible",
+
+  "requirex_generate_pdf": "Generate Pdf",
+  "requirex_generate": "Generate Requirement",
+  "requirex_cancel": "Cancel",
+  "requirex_delete": "Delete",
+  "requirex_get_all": "Get All"
+
 }

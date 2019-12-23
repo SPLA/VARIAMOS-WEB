@@ -25,7 +25,8 @@ let Domain = new Schema({
     systemCondition: {type:Boolean},
     systemConditionDescription: { type: String},
     msg: { type: String},
-    estado: { type: Boolean}
+    estado: { type: Boolean},
+    date_at: { type: Date }
 }, {
         collection: 'domains'
     });
