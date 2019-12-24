@@ -277,6 +277,7 @@
 </template>
 <script>
 import $ from "jquery";
+import { c } from "../assets/js/common/cons";
 
 $(function() {
   //Agregar o retirar condiciones del sistema
@@ -293,7 +294,7 @@ export default {
     };
   },
   created() {
-    let uri = `http://localhost:4000/domains/${this.$route.params.id}`;
+    let uri = c.host + `domains/${this.$route.params.id}`;
     this.axios.get(uri).then(response => {
       this.requirement = response.data;
     });
@@ -428,7 +429,7 @@ export default {
     },
 
     updateRequirement() {
-      let uri = `http://localhost:4000/domains/update/${this.$route.params.id}`;
+      let uri = c.host + `domains/update/${this.$route.params.id}`;
       this.axios.post(uri, this.requirement).then(() => {
         $("#domainMessage span").text("Success!");
         $("#domainMessage").addClass("alert-success");

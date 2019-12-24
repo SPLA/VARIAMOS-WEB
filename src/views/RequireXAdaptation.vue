@@ -320,6 +320,9 @@
 </template>
 
 <script>
+
+import { c } from '../assets/js/common/cons';
+
 export default {
   data() {
     return {
@@ -470,7 +473,7 @@ export default {
       this.saveRequirement();
     },
     saveRequirement() {
-      let uri = "http://localhost:4000/adaptations/add";
+      let uri = c.host + "adaptations/add";
       this.axios.post(uri, this.requirement).then(() => {
         $("#adaptationMessage span").text("Success!");
         $("#adaptationMessage").addClass("alert-success");
@@ -497,7 +500,7 @@ export default {
   mounted() {},
   created() {
     //Cargar lista de requerimientos de aplicacion
-    let uri = "http://localhost:4000/adaptations";
+    let uri = c.host + "adaptations";
     this.axios.get(uri).then(response => {
       this.listAdaptationRequirement = response.data;
       this.countAdaptation = this.listAdaptationRequirement.length;

@@ -5,5 +5,5 @@
 
 //Conexion con mongo db
 module.exports = {
-    DB: 'mongodb://localhost:27017/variamosdb'
+    DB: 'mongodb://variamos:RSEqfbe5ghR0sDquHO3Ms2wWOLmL7euLeVYo9krr9jqw150zGBd7IPk4bl6HqdkxEyGDmJC5Id79ZydmupHtGQ==@variamos.documents.azure.com:10255/?ssl=true'
 }

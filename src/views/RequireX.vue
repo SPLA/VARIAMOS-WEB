@@ -74,6 +74,7 @@
 </template>
 
 <script>
+import { c } from '../assets/js/common/cons';
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 
@@ -131,7 +132,7 @@ export default {
         this.$router.push("/requirex/adaptations");
       }
     },
-
+/*
     onGeneratePdf() {
       var domainCount = this.requirementsTableCollection[0].amount;
       var applicationCount = this.requirementsTableCollection[1].amount;
@@ -272,11 +273,11 @@ export default {
       } else {
         this.$Message.error("There are no requirements to generate!");
       }
-    }
+    }*/
   },
   mounted() {
     //Cargar lista de requerimientos de dominio
-    let uri = "http://localhost:4000/domains";
+    let uri = c.host + "domains";
     this.axios.get(uri).then(response => {
       for (var i = 0; i < response.data.length; i++) {
         if (response.data[i].estado) {
@@ -287,7 +288,7 @@ export default {
     });
 
     //Cargar lista de requerimientos de aplicacion
-    uri = "http://localhost:4000/applications";
+    uri = c.host + "applications";
     this.axios.get(uri).then(response => {
       for (var i = 0; i < response.data.length; i++) {
         if (response.data[i].estado) {
@@ -297,7 +298,7 @@ export default {
     });
 
     //Cargar lista de requerimientos de aplicacion
-    uri = "http://localhost:4000/adaptations";
+    uri = c.host + "adaptations";
     this.axios.get(uri).then(response => {
       for (var i = 0; i < response.data.length; i++) {
         if (response.data[i].estado) {

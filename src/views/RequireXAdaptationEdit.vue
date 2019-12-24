@@ -445,7 +445,7 @@ export default {
       this.updateRequirement();
     },
     updateRequirement() {
-      let uri = `http://localhost:4000/adaptations/update/${this.$route.params.id}`;
+      let uri = c.host + `adaptations/update/${this.$route.params.id}`;
       this.axios.post(uri, this.requirement).then(() => {
         $("#adaptationMessage span").text("Success!");
         $("#adaptationMessage").addClass("alert-success");
@@ -468,7 +468,7 @@ export default {
     }
   },
   mounted() {
-    let uri = `http://localhost:4000/adaptations/${this.$route.params.id}`;
+    let uri = c.host + `adaptations/${this.$route.params.id}`;
     this.axios.get(uri).then(response => {
       this.requirement = response.data;
     });

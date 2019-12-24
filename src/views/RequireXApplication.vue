@@ -243,6 +243,7 @@
 
 <script>
 import $ from "jquery";
+import { c } from "../assets/js/common/cons";
 
 $(function() {
   //Agregar o retirar condiciones del sistema
@@ -387,7 +388,7 @@ export default {
     },
 
     saveRequirement() {
-      let uri = "http://localhost:4000/applications/add";
+      let uri = c.host +  "applications/add";
       this.axios.post(uri, this.requirement).then(() => {
         $("#applicationMessage span").text("Success!");
         $("#applicationMessage").addClass("alert-success");
@@ -405,7 +406,7 @@ export default {
   },
   mounted() {
     //Cargar lista de requerimientos de aplicacion
-    let uri = "http://localhost:4000/applications";
+    let uri = c.host + "applications";
     this.axios.get(uri).then(response => {
       this.listApplicationRequirement = response.data;
       this.countApplication = this.listApplicationRequirement.length;
