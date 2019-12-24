@@ -6,9 +6,14 @@
         <h6
           class="card-subtitle mb-2 text-muted text-left"
         >{{$t("requirex_domain")}} - {{$t("Requirements")}}</h6>
-        <p
-          class="card-text"
-        >Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+        <div class="text-left">
+          <button class="card-text btn btn-link text-left" @click="generateConsolidatePdf">
+            {{$t("requirex_generate_pdf")}}
+            <span class="text-danger">
+              <i class="fa fa-file-pdf" aria-hidden="true"></i>
+            </span>
+          </button>
+        </div>
         <table class="table table-sm table-hover">
           <thead class="thead-dark">
             <tr>
@@ -28,7 +33,7 @@
               <th scope="row">{{index + 1}}</th>
               <td>{{ domain.requirementNumber }}</td>
               <td>{{ domain.name }}</td>
-              <td>{{  formatDate(domain.date_at) }}</td>
+              <td>{{ formatDate(domain.date_at) }}</td>
               <td>
                 <button class="btn text-danger" @click="update(domain)">
                   <i class="fas fa-trash"></i>
@@ -36,7 +41,7 @@
                 <button class="btn text-primary" @click="edit">
                   <i class="fa fa-pencil-alt" aria-hidden="true"></i>
                 </button>
-                <button class="btn text-primary">
+                <button class="btn text-primary" @click="generatePdf(domain, 1)">
                   <i class="fa fa-file-pdf" aria-hidden="true"></i>
                 </button>
               </td>
@@ -69,6 +74,8 @@
 
 <script>
 import moment from "moment";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 
 export default {
   data() {
@@ -104,6 +111,92 @@ export default {
         name: "requirexdomainedit",
         params: { id: this.selectedRequirement._id }
       });
+    },
+
+    generatePdf(requirement, total) {
+      var doc = new jsPDF();
+      var linea = 20;
+
+      //Titulo
+      doc.setFontSize(22);
+      doc.text(20, linea, "Variamos - RequireX");
+
+      if (total > 0) {
+        linea += 20;
+        doc.setFontSize(16);
+        doc.text(20, linea, this.$t("requirex_domain_tittle") + "s");
+        linea += 10;
+
+        var vec = [];
+        var item = {
+          id: requirement.requirementNumber,
+          system: requirement.systemName,
+          name: requirement.name,
+          requirement: requirement.msg,
+          date: this.formatDate(requirement.date_at)
+        };
+        vec.push(item);
+
+        //Tabla
+        doc.autoTable({
+          columns: [
+            { header: "Id", dataKey: "id" },
+            { header: "Name", dataKey: "name" },
+            { header: "Requirement", dataKey: "requirement" },
+            { header: "Date", dataKey: "date" }
+          ],
+          body: vec,
+          startY: linea,
+          theme: "grid"
+        });
+
+        doc.save("requirement.pdf");
+      }
+    },
+
+    generateConsolidatePdf() {
+      var doc = new jsPDF();
+      var linea = 20;
+      var total = this.requirementsDomain.length;
+
+      //Titulo
+      doc.setFontSize(22);
+      doc.text(20, linea, "Variamos - RequireX");
+
+      if (total > 0) {
+        linea += 20;
+        doc.setFontSize(16);
+        doc.text(20, linea, this.$t("requirex_domain_tittle") + "s");
+        linea += 10;
+
+        var vec = [];
+        for (var i = 0; i < this.requirementsDomain.length; i++) {
+          var requirement = this.requirementsDomain[i];
+
+          var item = {
+            id: requirement.requirementNumber,
+            system: requirement.systemName,
+            name: requirement.name,
+            requirement: requirement.msg,
+            date: this.formatDate(requirement.date_at)
+          };
+          vec.push(item);
+        }
+        //Tabla
+        doc.autoTable({
+          columns: [
+            { header: "Id", dataKey: "id" },
+            { header: "Name", dataKey: "name" },
+            { header: "Requirement", dataKey: "requirement" },
+            { header: "Date", dataKey: "date" }
+          ],
+          body: vec,
+          startY: linea,
+          theme: "grid"
+        });
+
+        doc.save("requirement.pdf");
+      }
     }
   },
   mounted() {

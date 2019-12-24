@@ -258,7 +258,7 @@
   "requirex_requirement_sel_adaptive_complement" : "The self-adaptive system ",
   "requirex_requirement_as_posible" : "as posible",
 
-  "requirex_generate_pdf": "Generate Pdf",
+  "requirex_generate_pdf": "Generate a consolidated Pdf",
   "requirex_generate": "Generate Requirement",
   "requirex_cancel": "Cancel",
   "requirex_delete": "Delete",
