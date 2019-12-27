@@ -3,7 +3,6 @@
   "version": "2.0.1",
   "private": true,
   "scripts": {
-    "dev": "nodemon src/www/server.js",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit"
