@@ -57,62 +57,74 @@ let setup_relations = function setup_relations(graph, relations, relation_styles
         let cell = graph.insertEdge(parent, id, node, source, target, style);
         let styles = null;
 
+        node = doc.createElement(cell.value.attributes[2].nodeName)
+        node.setAttribute('label', cell.value.attributes[2].value);
+        styles = graph.insertVertex(cell, null, node , -0.7, 10, 20, 20,'fontSize=12;fontColor=black;fillColor=transparent;strokeColor=transparent', true);
+        styles.geometry.offset = new mxPoint(-styles.geometry.width / 2, -styles.geometry.height / 2);
+        styles.connectable = false;
+
+        node = doc.createElement(cell.value.attributes[3].nodeName)
+        node.setAttribute('label', cell.value.attributes[3].value);
+        styles = graph.insertVertex(cell, null, node , 0.7, 10, 20, 20,'fontSize=12;fontColor=black;fillColor=transparent;strokeColor=transparent;', true);
+        styles.geometry.offset = new mxPoint(-styles.geometry.width / 2, -styles.geometry.height / 2);
+        styles.connectable = false;
+
         if (cell.source.value.nodeName == "actuator" && cell.target.value.nodeName == "resource"){
-            styles = graph.insertVertex(cell, null, 'Label', 0, 0, 20, 14,'shape=Resource_link;labelBackgroundColor=#ffffff;labelPosition=left;spacingRight=2;align=right;fontStyle=0;');
+            styles = graph.insertVertex(cell, null, 'Label', 0, 0, 20, 14,'shape=Resource_link;labelBackgroundColor=#ffffff;labelPosition=left;spacingRight=2;align=right;');
         }
         else if (cell.source.value.nodeName == "device" && cell.target.value.nodeName == "device"){
-            styles = graph.insertVertex(cell, null, 'Label', 0, 0, 20, 14,'shape=Aggregation;labelBackgroundColor=#ffffff;labelPosition=left;spacingRight=2;align=right;fontStyle=0;');
+            styles = graph.insertVertex(cell, null, 'Label', 0, 0, 20, 14,'shape=Aggregation;labelBackgroundColor=#ffffff;labelPosition=left;spacingRight=2;align=right;');
         }      
         else if (cell.source.value.nodeName == "device" && cell.target.value.nodeName == "computer"){
-            styles = graph.insertVertex(cell, null, 'Label', 0, 0, 20, 14,'shape=Aggregation;labelBackgroundColor=#ffffff;labelPosition=left;spacingRight=2;align=right;fontStyle=0;');
+            styles = graph.insertVertex(cell, null, 'Label', 0, 0, 20, 14,'shape=Aggregation;labelBackgroundColor=#ffffff;labelPosition=left;spacingRight=2;align=right;');
         }    
         else if (cell.source.value.nodeName == "device" && cell.target.value.nodeName == "actuator"){
-            styles = graph.insertVertex(cell, null, 'Label', 0, 0, 20, 14,'shape=Signal;labelBackgroundColor=#ffffff;labelPosition=left;spacingRight=2;align=right;fontStyle=0;');
+            styles = graph.insertVertex(cell, null, 'Label', 0, 0, 20, 14,'shape=Signal;labelBackgroundColor=#ffffff;labelPosition=left;spacingRight=2;align=right;');
         }  
         else if (cell.source.value.nodeName == "device" && cell.target.value.nodeName == "network"){
-            styles = graph.insertVertex(cell, null, 'Label', 0, 0, 20, 14,'shape=Wired_comunication;labelBackgroundColor=#ffffff;labelPosition=left;spacingRight=2;align=right;fontStyle=0;');
+            styles = graph.insertVertex(cell, null, 'Label', 0, 0, 20, 14,'shape=Wired_comunication;labelBackgroundColor=#ffffff;labelPosition=left;spacingRight=2;align=right;');
         }  
         else if (cell.source.value.nodeName == "computer" && cell.target.value.nodeName == "actuator"){
-            styles = graph.insertVertex(cell, null, 'Label', 0, 0, 20, 14,'shape=Signal;labelBackgroundColor=#ffffff;labelPosition=left;spacingRight=2;align=right;fontStyle=0;');
+            styles = graph.insertVertex(cell, null, 'Label', 0, 0, 20, 14,'shape=Signal;labelBackgroundColor=#ffffff;labelPosition=left;spacingRight=2;align=right;');
         } 
         else if (cell.source.value.nodeName == "computer" && cell.target.value.nodeName == "network"){
-            styles = graph.insertVertex(cell, null, 'Label', 0, 0, 20, 14,'shape=Wired_comunication;labelBackgroundColor=#ffffff;labelPosition=left;spacingRight=2;align=right;fontStyle=0;');
+            styles = graph.insertVertex(cell, null, 'Label', 0, 0, 20, 14,'shape=Wired_comunication;labelBackgroundColor=#ffffff;labelPosition=left;spacingRight=2;align=right;');
         } 
         else if (cell.source.value.nodeName == "software" && cell.target.value.nodeName == "device"){
-            styles = graph.insertVertex(cell, null, 'Label', 0, 0, 20, 14,'shape=Aggregation;labelBackgroundColor=#ffffff;labelPosition=left;spacingRight=2;align=right;fontStyle=0;');
+            styles = graph.insertVertex(cell, null, 'Label', 0, 0, 20, 14,'shape=Aggregation;labelBackgroundColor=#ffffff;labelPosition=left;spacingRight=2;align=right;');
         } 
         else if (cell.source.value.nodeName == "software" && cell.target.value.nodeName == "computer"){
-            styles = graph.insertVertex(cell, null, 'Label', 0, 0, 20, 14,'shape=Aggregation;labelBackgroundColor=#ffffff;labelPosition=left;spacingRight=2;align=right;fontStyle=0;');
+            styles = graph.insertVertex(cell, null, 'Label', 0, 0, 20, 14,'shape=Aggregation;labelBackgroundColor=#ffffff;labelPosition=left;spacingRight=2;align=right;');
         }
         else if (cell.source.value.nodeName == "software" && cell.target.value.nodeName == "software"){
-            styles = graph.insertVertex(cell, null, 'Label', 0, 0, 20, 14,'shape=Wired_comunication;labelBackgroundColor=#ffffff;labelPosition=left;spacingRight=2;align=right;fontStyle=0;');
+            styles = graph.insertVertex(cell, null, 'Label', 0, 0, 20, 14,'shape=Wired_comunication;labelBackgroundColor=#ffffff;labelPosition=left;spacingRight=2;align=right;');
         } 
         else if (cell.source.value.nodeName == "software" && cell.target.value.nodeName == "software"){
-            styles = graph.insertVertex(cell, null, 'Label', 0, 0, 20, 14,'shape=Integration;labelBackgroundColor=#ffffff;labelPosition=left;spacingRight=2;align=right;fontStyle=0;');
+            styles = graph.insertVertex(cell, null, 'Label', 0, 0, 20, 14,'shape=Integration;labelBackgroundColor=#ffffff;labelPosition=left;spacingRight=2;align=right;');
         } 
         else if (cell.source.value.nodeName == "sensor" && cell.target.value.nodeName == "device"){
-            styles = graph.insertVertex(cell, null, 'Label', 0, 0, 20, 14,'shape=DataIn;labelBackgroundColor=#ffffff;labelPosition=left;spacingRight=2;align=right;fontStyle=0;');
+            styles = graph.insertVertex(cell, null, 'Label', 0, 0, 20, 14,'shape=DataIn;labelBackgroundColor=#ffffff;labelPosition=left;spacingRight=2;align=right;');
         }
         else if (cell.source.value.nodeName == "sensor" && cell.target.value.nodeName == "computer"){
-            styles = graph.insertVertex(cell, null, 'Label', 0, 0, 20, 14,'shape=DataIn;labelBackgroundColor=#ffffff;labelPosition=left;spacingRight=2;align=right;fontStyle=0;');
+            styles = graph.insertVertex(cell, null, 'Label', 0, 0, 20, 14,'shape=DataIn;labelBackgroundColor=#ffffff;labelPosition=left;spacingRight=2;align=right;');
         }
         else if (cell.source.value.nodeName == "sensor" && cell.target.value.nodeName == "resource"){
-            styles = graph.insertVertex(cell, null, 'Label', 0, 0, 20, 14,'shape=Aggregation;labelBackgroundColor=#ffffff;labelPosition=left;spacingRight=2;align=right;fontStyle=0;');
+            styles = graph.insertVertex(cell, null, 'Label', 0, 0, 20, 14,'shape=Aggregation;labelBackgroundColor=#ffffff;labelPosition=left;spacingRight=2;align=right;');
         }
         else if (cell.source.value.nodeName == "actuator" && cell.target.value.nodeName == "device"){
-            styles = graph.insertVertex(cell, null, 'Label', 0, 0, 20, 14,'shape=DataIn;labelBackgroundColor=#ffffff;labelPosition=left;spacingRight=2;align=right;fontStyle=0;');
+            styles = graph.insertVertex(cell, null, 'Label', 0, 0, 20, 14,'shape=DataIn;labelBackgroundColor=#ffffff;labelPosition=left;spacingRight=2;align=right;');
         }
         else if (cell.source.value.nodeName == "actuator" && cell.target.value.nodeName == "computer"){
-            styles = graph.insertVertex(cell, null, 'Label', 0, 0, 20, 14,'shape=DataIn;labelBackgroundColor=#ffffff;labelPosition=left;spacingRight=2;align=right;fontStyle=0;');
+            styles = graph.insertVertex(cell, null, 'Label', 0, 0, 20, 14,'shape=DataIn;labelBackgroundColor=#ffffff;labelPosition=left;spacingRight=2;align=right;');
         }
         else if (cell.source.value.nodeName == "actuator" && cell.target.value.nodeName == "resource"){
-            styles = graph.insertVertex(cell, null, 'Label', 0, 0, 20, 14,'shape=Aggregation;labelBackgroundColor=#ffffff;labelPosition=left;spacingRight=2;align=right;fontStyle=0;');
+            styles = graph.insertVertex(cell, null, 'Label', 0, 0, 20, 14,'shape=Aggregation;labelBackgroundColor=#ffffff;labelPosition=left;spacingRight=2;align=right;');
         }
         else if (cell.source.value.nodeName == "resource" && cell.target.value.nodeName == "resource"){
-            styles = graph.insertVertex(cell, null, 'Label', 0, 0, 20, 14,'shape=Resource_link;labelBackgroundColor=#ffffff;labelPosition=left;spacingRight=2;align=right;fontStyle=0;');
+            styles = graph.insertVertex(cell, null, 'Label', 0, 0, 20, 14,'shape=Resource_link;labelBackgroundColor=#ffffff;labelPosition=left;spacingRight=2;align=right;');
         }
         else{
-            styles = graph.insertVertex(cell, null, 'Label', 0, 0, 20, 14,'shape=link;labelBackgroundColor=#ffffff;labelPosition=left;spacingRight=2;align=right;fontStyle=0;');
+            styles = graph.insertVertex(cell, null, 'Label', 0, 0, 20, 14,'shape=link;labelBackgroundColor=#ffffff;labelPosition=left;spacingRight=2;align=right;');
         }
         
         styles.geometry.offset = new mxPoint(-10, -7);

@@ -19,7 +19,7 @@ let adapArchitectureMain = function adapArchitectureMain(graph)
 	function adapArchitectureConstraints(graph){
 		graph.multiplicities = []; //reset multiplicities
 		graph.multiplicities.push(new mxMultiplicity(
-			true, 'layer', null, null, 'Link', 1, 100, ['layer'],
+			true, 'layer', null, null, 1, 100, ['layer'],
 			'Only 2 targets allowed',
 			'Invalid connection'));
 		graph.multiplicities.push(new mxMultiplicity(
@@ -27,35 +27,35 @@ let adapArchitectureMain = function adapArchitectureMain(graph)
 			'Only 2 targets allowed',
 			'Invalid connection'));
 		graph.multiplicities.push(new mxMultiplicity(
-			true, 'package', null, 'Link', 1, 100, ['package'],
+			true, 'package', null, null, 1, 100, ['package'],
 			'Only 2 targets allowed',
 			'Invalid connection'));
 		graph.multiplicities.push(new mxMultiplicity(
-			true, 'module', null, 'Link', 1, 100, ['module'],
+			true, 'module', null, null, 1, 100, ['module'],
 			'Only 2 targets allowed',
 			'Invalid connection'));	
 		graph.multiplicities.push(new mxMultiplicity(
-			true, 'software', null, 'Link', 1, 100, ['software', 'computer','device'],
+			true, 'software', null, null, 1, 100, ['software', 'computer','device'],
 			'Only 2 targets allowed',
 			'Invalid connection'));	
 		graph.multiplicities.push(new mxMultiplicity(
-			true, 'sensor', null, 'Link', 1, 100, ['device', 'computer', 'resource'],
+			true, 'sensor', null, null, 1, 100, ['actuator','device', 'computer', 'resource'],
 			'Only 2 targets allowed',
 			'Invalid connection'));	
 		graph.multiplicities.push(new mxMultiplicity(
-			true, 'actuator', null, 'Link', 1, 100, ['device', 'computer', 'resource'],
+			true, 'actuator', null, null, 1, 100, ['device', 'computer', 'resource'],
 			'Only 2 targets allowed',
 			'Invalid connection'));
 		graph.multiplicities.push(new mxMultiplicity(
-			true, 'resource', null, 'Link', 1, 100, ['resource'],
+			true, 'resource', null, null, 1, 100, ['resource'],
 			'Only 2 targets allowed',
 			'Invalid connection'));
 		graph.multiplicities.push(new mxMultiplicity(
-			true, 'computer', null, 'Link', 1, 100, ['actuator', 'network'],
+			true, 'computer', null, null, 1, 100, ['computer','actuator', 'network'],
 			'Only 2 targets allowed',
 			'Invalid connection'));
 		graph.multiplicities.push(new mxMultiplicity(
-			true, 'network', null, 'Link', 1, 100, ['network'],
+			true, 'network', null, null, 1, 100, ['network'],
 			'Only 2 targets allowed',
 			'Invalid connection'));
 
@@ -181,6 +181,14 @@ let adapArchitectureMain = function adapArchitectureMain(graph)
 			"attributes":[{
 				"name":'relType_L2L',
 				"def_value":"link"
+			},
+			{
+				"name":"sourceCardinality",
+				"def_value":"1"
+			},
+			{
+				"name":"destinationCardinality",
+				"def_value":"1"
 			}]
 		}
 		relations[1] = {
@@ -190,6 +198,14 @@ let adapArchitectureMain = function adapArchitectureMain(graph)
 			"attributes":[{
 				"name":'relType_P2P',
 				"def_value":""
+			},
+			{
+				"name":"sourceCardinality",
+				"def_value":"1"
+			},
+			{
+				"name":"destinationCardinality",
+				"def_value":"1"
 			}]
 		}
 		relations[2] = {
@@ -199,6 +215,14 @@ let adapArchitectureMain = function adapArchitectureMain(graph)
 			"attributes":[{
 				"name":"relType_M2M",
 				"def_value":""
+			},
+			{
+				"name":"sourceCardinality",
+				"def_value":"1"
+			},
+			{
+				"name":"destinationCardinality",
+				"def_value":"1"
 			}]
 		}
 		relations[3] = {
@@ -208,6 +232,14 @@ let adapArchitectureMain = function adapArchitectureMain(graph)
 			"attributes":[{
 				"name":"relType_D2C",
 				"def_value":""
+			},
+			{
+				"name":"sourceCardinality",
+				"def_value":"1"
+			},
+			{
+				"name":"destinationCardinality",
+				"def_value":"1"
 			}]
 		}
 		relations[4] = {
@@ -217,6 +249,14 @@ let adapArchitectureMain = function adapArchitectureMain(graph)
 			"attributes":[{
 				"name":"relType_D2A",
 				"def_value":""
+			},
+			{
+				"name":"sourceCardinality",
+				"def_value":"1"
+			},
+			{
+				"name":"destinationCardinality",
+				"def_value":"1"
 			}]
 		}
 		relations[5] = {
@@ -226,6 +266,14 @@ let adapArchitectureMain = function adapArchitectureMain(graph)
 			"attributes":[{
 				"name":"relType_D2D",
 				"def_value":""
+			},
+			{
+				"name":"sourceCardinality",
+				"def_value":"1"
+			},
+			{
+				"name":"destinationCardinality",
+				"def_value":"1"
 			}]
 		}
 		relations[6] = {
@@ -235,6 +283,14 @@ let adapArchitectureMain = function adapArchitectureMain(graph)
 			"attributes":[{
 				"name":"relType_D2N",
 				"def_value":""
+			},
+			{
+				"name":"sourceCardinality",
+				"def_value":"1"
+			},
+			{
+				"name":"destinationCardinality",
+				"def_value":"1"
 			}]
 		}
 		relations[7] = {
@@ -249,31 +305,72 @@ let adapArchitectureMain = function adapArchitectureMain(graph)
 		relations[8] = {
 			"source":["computer"],
 			"rel_source_target":"and",
+			"target":["computer"],
+			"attributes":[{
+				"name":"relType_C2C",
+				"def_value":""
+			},
+			{
+				"name":"sourceCardinality",
+				"def_value":"1"
+			},
+			{
+				"name":"destinationCardinality",
+				"def_value":"1"
+			}]
+		}
+		relations[9] = {
+			"source":["computer"],
+			"rel_source_target":"and",
 			"target":["network"],
 			"attributes":[{
 				"name":"relType_C2N",
 				"def_value":""
+			},
+			{
+				"name":"sourceCardinality",
+				"def_value":"1"
+			},
+			{
+				"name":"destinationCardinality",
+				"def_value":"1"
 			}]
 		}
-		relations[9] = {
+		relations[10] = {
 			"source":["software"],
 			"rel_source_target":"and",
 			"target":["software"],
 			"attributes":[{
 				"name":"relType_S2S",
 				"def_value":""
+			},
+			{
+				"name":"sourceCardinality",
+				"def_value":"1"
+			},
+			{
+				"name":"destinationCardinality",
+				"def_value":"1"
 			}]
 		}
-		relations[10] = {
+		relations[11] = {
 			"source":["software"],
 			"rel_source_target":"and",
 			"target":["device"],
 			"attributes":[{
 				"name":"relType_S2D",
 				"def_value":""
+			},
+			{
+				"name":"sourceCardinality",
+				"def_value":"1"
+			},
+			{
+				"name":"destinationCardinality",
+				"def_value":"1"
 			}]
 		}
-		relations[11] = {
+		relations[12] = {
 			"source":["software"],
 			"rel_source_target":"and",
 			"target":["computer"],
@@ -282,76 +379,149 @@ let adapArchitectureMain = function adapArchitectureMain(graph)
 				"def_value":""
 			}]
 		}
-		relations[12] = {
+		relations[13] = {
 			"source":["sensor"],
 			"rel_source_target":"and",
 			"target":["device"],
 			"attributes":[{
 				"name":"relType_SS2D",
 				"def_value":""
-			}]
-		}
-		relations[13] = {
-			"source":["sensor"],
-			"rel_source_target":"and",
-			"target":["computer"],
-			"attributes":[{
-				"name":"relType_SS2C",
-				"def_value":""
+			},
+			{
+				"name":"sourceCardinality",
+				"def_value":"1"
+			},
+			{
+				"name":"destinationCardinality",
+				"def_value":"1"
 			}]
 		}
 		relations[14] = {
 			"source":["sensor"],
 			"rel_source_target":"and",
-			"target":["resource"],
+			"target":["actuator"],
 			"attributes":[{
-				"name":"relType_SS2R",
+				"name":"relType_SS2A",
 				"def_value":""
 			}]
 		}
 		relations[15] = {
+			"source":["sensor"],
+			"rel_source_target":"and",
+			"target":["computer"],
+			"attributes":[{
+				"name":"relType_SS2C",
+				"def_value":""
+			},
+			{
+				"name":"sourceCardinality",
+				"def_value":"1"
+			},
+			{
+				"name":"destinationCardinality",
+				"def_value":"1"
+			}]
+		}
+		relations[16] = {
+			"source":["sensor"],
+			"rel_source_target":"and",
+			"target":["resource"],
+			"attributes":[{
+				"name":"relType_SS2R",
+				"def_value":""
+			},
+			{
+				"name":"sourceCardinality",
+				"def_value":"1"
+			},
+			{
+				"name":"destinationCardinality",
+				"def_value":"1"
+			}]
+		}
+		relations[17] = {
 			"source":["actuator"],
 			"rel_source_target":"and",
 			"target":["device"],
 			"attributes":[{
 				"name":"relType_SS2D",
 				"def_value":""
+			},
+			{
+				"name":"sourceCardinality",
+				"def_value":"1"
+			},
+			{
+				"name":"destinationCardinality",
+				"def_value":"1"
 			}]
 		}
-		relations[16] = {
+		relations[18] = {
 			"source":["actuator"],
 			"rel_source_target":"and",
 			"target":["computer"],
 			"attributes":[{
 				"name":"relType_SS2C",
 				"def_value":""
+			},
+			{
+				"name":"sourceCardinality",
+				"def_value":"1"
+			},
+			{
+				"name":"destinationCardinality",
+				"def_value":"1"
 			}]
 		}
-		relations[17] = {
+		relations[19] = {
 			"source":["actuator"],
 			"rel_source_target":"and",
 			"target":["resource"],
 			"attributes":[{
 				"name":"relType_SS2R",
 				"def_value":""
+			},
+			{
+				"name":"sourceCardinality",
+				"def_value":"1"
+			},
+			{
+				"name":"destinationCardinality",
+				"def_value":"1"
 			}]
 		}
-		relations[18] = {
+		relations[20] = {
 			"source":["network"],
 			"rel_source_target":"and",
 			"target":["network"],
 			"attributes":[{
 				"name":"relType_N2N",
 				"def_value":""
+			},
+			{
+				"name":"sourceCardinality",
+				"def_value":"1"
+			},
+			{
+				"name":"destinationCardinality",
+				"def_value":"1"
 			}]
 		}
-		relations[19] = {
+		relations[21] = {
 			"source":["resource"],
 			"rel_source_target":"and",
 			"target":["resource"],
 			"attributes":[{
 				"name":"relType_R2R",
 				"def_value":""
+			},
+			{
+				"name":"sourceCardinality",
+				"def_value":"1"
+			},
+			{
+				"name":"destinationCardinality",
+				"def_value":"1"
 			}]
 		}
 		return relations;
@@ -444,6 +614,16 @@ let adapArchitectureMain = function adapArchitectureMain(graph)
 			],
 			"relation":[
 				{
+					"attribute":"sourceCardinality",
+					"input_type":"text",
+					"input_text_type":"label"
+				},
+				{
+					"attribute":"destinationCardinality",
+					"input_type":"text",
+					"input_text_type":"label"
+				},
+				{
 					"attribute":"relType_L2L",
 					"input_type":"select",
 					"input_values":["links"]
@@ -486,7 +666,7 @@ let adapArchitectureMain = function adapArchitectureMain(graph)
 				{
 					"attribute":"relType_D2C",
 					"input_type":"select",
-					"input_values":["wired", "wireless"]
+					"input_values":["aggregation","wired", "wireless"]
 				},
 				{
 					"attribute":"relType_D2N",
@@ -500,6 +680,11 @@ let adapArchitectureMain = function adapArchitectureMain(graph)
 				},
 				{
 					"attribute":"relType_C2N",
+					"input_type":"select",
+					"input_values":["wired", "wireless"]
+				},
+				{
+					"attribute":"relType_C2C",
 					"input_type":"select",
 					"input_values":["wired", "wireless"]
 				},
@@ -521,7 +706,12 @@ let adapArchitectureMain = function adapArchitectureMain(graph)
 				{
 					"attribute":"relType_SS2C",
 					"input_type":"select",
-					"input_values":["DataIn"]
+					"input_values":["dataIn"]
+				},
+				{
+					"attribute":"relType_SS2A",
+					"input_type":"select",
+					"input_values":["aggregation"]
 				},
 				{
 					"attribute":"relType_SS2R",
@@ -531,7 +721,7 @@ let adapArchitectureMain = function adapArchitectureMain(graph)
 				{
 					"attribute":"relType_R2R",
 					"input_type":"select",
-					"input_values":["resourcelink"]
+					"input_values":["aggregation"]
 				},
 				{
 					"attribute":"relType_N2N",
