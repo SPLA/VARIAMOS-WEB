@@ -1,2 +1,2 @@
 sudo docker build --rm -t variamos-vue .
-docker run -it -p 8080:80 --rm --name variamos-front variamos-vue
+docker run -it -p 80:80 --rm --name variamos-front variamos-vue
