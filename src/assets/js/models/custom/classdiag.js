@@ -15,41 +15,62 @@ let classMain = function classMain(graph) {
     graph.isHtmlLabel = function (cell) {
       return mxUtils.isNode(cell.value);
     }
+
+    graph.isCellSelectable = function(cell)
+    {
+      let state = this.view.getState(cell);
+      let style = (state != null) ? state.style : this.getCellStyle(cell);
+
+      return this.isCellsSelectable() && !this.isCellLocked(cell) && style['selectable'] != 0;
+    };
+
+    // Selects descendants before children selection mode
+		const graphHandlerGetInitialCellForEvent = mxGraphHandler.prototype.getInitialCellForEvent;
+		mxGraphHandler.prototype.getInitialCellForEvent = function(me)
+		{
+      let cell = graphHandlerGetInitialCellForEvent.apply(this, arguments);
+      const model = this.graph.getModel();
+      const parent = model.getParent(cell);
+      const parentType = parent.getAttribute('type');
+			
+      if (cell !== null && parent !== null) {
+        if (parentType === 'class'){
+          cell = parent;
+        } else if (['class_attributes', 'class_methods'].includes(parentType)) {
+          cell = model.getParent(parent);
+        }
+			}
+			
+			return cell;
+		};
   }
 
   function classConstraints(graph) {
     graph.multiplicities = []; //reset multiplicities
+    graph.multiplicities.push(new mxMultiplicity(true,"file",null,null,0,1,
+      ["class"],
+      "Only 1 class allowed","Only class targets allowed"));
   }
 
   function classElements() {
-    let class_elem = { src: projectPath + "images/models/feature/rectangle.png", wd: 100, hg: 30, type: "class", style: "html=1;whiteSpace=wrap;overflow=visible;fontColor=black;", pname: "Class" };
-
+    let class_elem = { src: projectPath + "images/models/feature/rectangle.png", wd: 100, hg: 100, type: "class", style: "html=1;whiteSpace=wrap;overflow=visible;fontColor=black;fillColor=none;strokeColor=#000000;strokeWidth=5;", pname: "Class" };
+    let file = {src:projectPath + "images/models/component/file.png", wd:100, hg:40, style:"shape=file", type:"file", pname:"File"};
     let elements = [];
-    elements[0] = class_elem;
+    elements.push(class_elem);
+    elements.push(file);
 
     return elements;
   }
 
   function classAttributes() {
     let attributes = [];
-    attributes[0] = {
-      "types": ["file"],
+    attributes.push({
+      "types": ["class"],
       "custom_attributes": [{
-        "name": "filename",
-        "def_value": ""
-      },
-      {
-        "name": "destination",
+        "name": "name",
         "def_value": ""
       }]
-    };
-    attributes[1] = {
-      "types": ["fragment"],
-      "custom_attributes": [{
-        "name": "filename",
-        "def_value": ""
-      }]
-    };
+    });
 
     return attributes;
   }
@@ -58,6 +79,15 @@ let classMain = function classMain(graph) {
     var relations = [];
     relations.push({
       "source":["class"],
+      "rel_source_target":"and",
+      "target":["class"],
+      "attributes":[{
+        "name":"relation",
+        "def_value":"and"
+      }]
+    });
+    relations.push({
+      "source":["file"],
       "rel_source_target":"and",
       "target":["class"],
       "attributes":[{
@@ -77,7 +107,12 @@ let classMain = function classMain(graph) {
       "target": ["class"],
       "style": "endArrow=diamond;endFill=1;endSize=10;"
     });
-
+    relations.push({
+      "source": ["file"],
+      "rel_source_target": "and",
+      "target": ["class"],
+      "style": "endArrow=none;dashed=1;"
+    });
     return relations;
   }
 
@@ -94,7 +129,12 @@ let classMain = function classMain(graph) {
           "Association"
         ],
       "onchange": changeRelStyle
-    }]
+    }];
+    styles["class"] = [{
+      "attribute":"name",
+      "input_type":"text",
+      "onchange": setDisplayName
+    }];
     return styles;
   }
 
@@ -129,29 +169,28 @@ let classMain = function classMain(graph) {
     }
   }
 
+  function setDisplayName(){
+    const currentCell = graph.getModel().getCell(this.name);
+    if(currentCell.getAttribute('type') === 'class'){
+      const nameContainer = currentCell.getChildAt(0);
+      graph.getModel().beginUpdate();
+        try{
+          let edit = new mxCellAttributeChange(
+            nameContainer, 'label',
+            this.value);
+          graph.getModel().execute(edit);
+        }
+        finally{
+          graph.getModel().endUpdate();
+        }
+    }
+  }
+
   function classConstraintsRelations(graph, source, target) {
     //only one custom file per class
-    if (target.getAttribute("type") == "class" && source.getAttribute("type") == "custom") {
-      let targetId = target.getId();
-      let incoEgdes = graph.getModel().getIncomingEdges(graph.getModel().getCell(targetId));
-      for (let j = 0; j < incoEgdes.length; j++) {
-        if (incoEgdes[j].source.getAttribute("type") == "custom") {
-          alert("Invalid connection only one custom. file can be linked for this class");
-          return false;
-        }
-      }
-    }
-
-    //fragment can be only linked with one class
-    if (target.getAttribute("type") == "class" && source.getAttribute("type") == "fragment") {
-      let sourceId = source.getId();
-      let outEgdes = graph.getModel().getOutgoingEdges(graph.getModel().getCell(sourceId));
-      for (let j = 0; j < outEgdes.length; j++) {
-        if (outEgdes[j].target.getAttribute("type") == "class") {
-          alert("Invalid connection one fragment can be only linked with one class");
-          return false;
-        }
-      }
+    if (target.getAttribute("type") == "file" && source.getAttribute("type") == "class") {
+      alert("Classes may not connect to notes, it must be in the other direction");
+      return false;
     }
 
     return true;
