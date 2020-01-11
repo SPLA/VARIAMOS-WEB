@@ -189,18 +189,26 @@ export function modalComponentInformation(structure, idx_cat, idx_subcat, cell, 
         } else if(element.element_type === 'textarea'){
             input = document.createElement('textarea');
             input.cols = 50;
-
-            const a = [];
-            a.forEach
-
-            if(element.interfaces !== undefined){
-                let str = '[';
-                element.interfaces.forEach((int, idx) => {
-                    str = str + int + (idx < element.interfaces.length - 1 ? ', ' : '');
-                })
-                str = str + ']';
-                input.innerText = str;
+            input.rows = 10;
+            if(element.value !== null){
+                input.value = element.value;
             }
+            input.addEventListener('input', () => {
+                const cell = graph.getModel().getCell(element.element_instance);
+                graph.getModel().beginUpdate();
+                try{
+					let edit = new mxCellAttributeChange(
+                            cell, 
+                            'information',
+							input.value);
+                    graph.getModel().execute(edit);
+                    element.value = input.value;
+                    console.log('element.value :', element.value);
+				}
+				finally{
+					graph.getModel().endUpdate();
+				}
+            });
         } else if(element.element_type === 'button') {
             input = document.createElement('div');
             const b1 = document.createElement('button');

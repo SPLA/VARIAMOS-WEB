@@ -16,7 +16,9 @@ let setup_events = function setup_events(graph){
         let cell = evt.getProperty('cell');
         if (cell !== null){
             const type = cell.getAttribute('type');
-            if (['class', 'class_name', 'class_attributes', 'class_methods', 'class_attributes', 'class_methods', 'attribute', 'method'].includes(type)){
+            if (['class', 'class_name', 'class_attributes', 'class_methods', 'class_attributes', 'class_methods', 'attribute', 'method','file'].includes(type)){
+                //If the event comes from a class/file(note) then keep going,
+                //otherwise set it to the appropirate parent.
                 if(['class_name', 'class_attributes', 'class_methods'].includes(type)){
                     cell = cell.getParent();
                 } else if (['attribute', 'method'].includes(type)){
@@ -26,6 +28,8 @@ let setup_events = function setup_events(graph){
                 let structure = {};
                 let idx_cat = 0;
                 let idx_subcat = 0;
+                //If the structure is still in memory, retrieve it instead of
+                //recreating it.
                 if(classMap.has(classId)){
                     //This point will be hit if the structure is present in the map.
                     const map_element = classMap.get(classId);
@@ -39,11 +43,11 @@ let setup_events = function setup_events(graph){
                     //If this point is hit, the structure for this cell
                     //does not yet exist.
                     //TODO: reafactor create_structure call
-                    structure = create_structure(true, cell);
+                    structure = create_structure(type !== 'file', cell);
                     classMap.set(classId, {structure, idx_cat: idx_cat, idx_subcat: idx_subcat})
                 }
                 //const limits = calculate_limits(classMap.get(classId));
-                const c_name = cell.getChildAt(0).getAttribute('label', '');
+                const c_name = type !== 'file' ? cell.getChildAt(0).getAttribute('label', '') : 'NOTE';
                 let c_header = modalH3(c_name !== '' ? c_name : 'No name yet...');
                 let c_body = modalComponentInformation(structure, idx_cat, idx_subcat, cell, graph, handleResize);
 
@@ -52,8 +56,6 @@ let setup_events = function setup_events(graph){
                 c_footer.push(modalButton("Next", function(){next_index(cell, true);}));
                 c_footer.push(modalButton("Back", function(){next_index(cell, false);}));
                 setupModal(c_header, c_body, c_footer);
-            } else if (['file'].includes(type)) {
-                console.log('hello');
             }
         }
         evt.consume();
@@ -193,7 +195,8 @@ let setup_events = function setup_events(graph){
         console.log('cellObj.idx_cat :', cellObj.idx_cat);
         console.log('cellObj.idx_subcat :', cellObj.idx_subcat);
         const newlimits = calculate_limits(cellObj);
-        let c_header = modalH3(cell.getAttribute('label'));
+        const c_name = cell.getAttribute('type') !== 'file' ? cell.getChildAt(0).getAttribute('label', '') : 'NOTE';
+        let c_header = modalH3(c_name !== '' ? c_name : 'No name yet...');
         let c_body = modalComponentInformation(cellObj.structure, cellObj.idx_cat, cellObj.idx_subcat, cell, graph, handleResize);
         main_modal_header.appendChild(c_header);
         main_modal_body.appendChild(c_body);
@@ -208,13 +211,12 @@ let setup_events = function setup_events(graph){
         };
     }
 
-    function create_structure(component, cell){
-        const cell_attrs = cell.getChildAt(1);
-        const cell_attrs_count = cell_attrs.getChildCount();
-        const cell_methods = cell.getChildAt(2);
-        const cell_methods_count = cell_methods.getChildCount
-
-        if(component){
+    function create_structure(isClass, cell){
+        if(isClass){
+            const cell_attrs = cell.getChildAt(1);
+            const cell_attrs_count = cell_attrs.getChildCount();
+            const cell_methods = cell.getChildAt(2);
+            const cell_methods_count = cell_methods.getChildCount();
             const structure = {
                 basic_information: {
                     attributes: [
@@ -311,7 +313,28 @@ let setup_events = function setup_events(graph){
             });
             return structure;
         } else {
-            return null; 
+            const structure = {
+                basic_information: {
+                    notes: [
+                        {
+                            element_id: 'information', 
+                            element_type: 'textarea', 
+                            element_instance: cell.getId(),
+                            value: cell.getAttribute('information', '')
+                        },
+                        /* {
+                            element_id: 'attribute1-name', 
+                            element_type: 'text',
+                            element_placeholder_txt: '- attribute : type'
+                        },
+                        {
+                            element_id: 'attribute1-Description', 
+                            element_type: 'text'
+                        } */
+                    ],
+                }
+            };
+            return structure; 
         }
     }
 
