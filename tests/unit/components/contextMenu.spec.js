@@ -8,7 +8,6 @@ import VueI18n from 'vue-i18n'
 import i18n from '../../../src/i18n'
 // eslint-disable-next-line no-unused-vars
 import contextMenu from '../../../src/components/contextMenu.vue'
-import iView from 'iview';
 import {
   stateFactory
 } from '../util/StateManagement'
@@ -21,7 +20,6 @@ chai.use(sinonChai)
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
-localVue.use(iView)
 localVue.use(VueI18n)
 
 describe('ContextMenu', () => {

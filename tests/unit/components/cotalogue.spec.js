@@ -11,8 +11,6 @@ import VueI18n from 'vue-i18n'
 import i18n from '../../../src/i18n'
 // eslint-disable-next-line no-unused-vars
 import cotalogue from '../../../src/components/cotalogue.vue'
-import iView from 'iview';
-import 'iview/dist/styles/iview.css';
 // eslint-disable-next-line no-unused-vars
 import flushPromises from 'flush-promises'
 import Bus from '../../../src/assets/js/common/bus.js'
@@ -28,7 +26,6 @@ chai.use(sinonChai)
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
-localVue.use(iView)
 localVue.use(VueI18n)
 
 describe('Catalogue', () => {
