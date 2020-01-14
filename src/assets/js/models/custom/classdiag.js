@@ -76,7 +76,7 @@ let classMain = function classMain(graph) {
   }
 
   function classRelations(){
-    var relations = [];
+    let relations = [];
     relations.push({
       "source":["class"],
       "rel_source_target":"and",
@@ -100,7 +100,7 @@ let classMain = function classMain(graph) {
 
 
   function classRelationStyles() {
-    var relations = [];
+    let relations = [];
     relations.push({
       "source": ["class"],
       "rel_source_target": "and",

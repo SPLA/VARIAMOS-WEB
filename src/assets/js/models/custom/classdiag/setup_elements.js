@@ -1,35 +1,35 @@
-var setup_elements = function setup_elements(graph, elements, custom_attributes, c_clon_cells, c_constraints_ic, toolbar, c_type){    
+let setup_elements = function setup_elements(graph, elements, custom_attributes, c_clon_cells, c_constraints_ic, toolbar, c_type){    
     if(elements==null){
         //disable palette for "binding" models
-        var tbContainer = document.getElementById('tbContainer');
-        var span = document.createElement('span');
+        let tbContainer = document.getElementById('tbContainer');
+        let span = document.createElement('span');
         span.innerHTML = global.messages["setup_elements_palette_no_elements"];
         tbContainer.appendChild(span);
     }else{
         //add elements to the palette
-        for (var i = 0; i < elements.length; i++) {
+        for (let i = 0; i < elements.length; i++) {
             addVertex(graph, toolbar, elements[i].src, elements[i].wd, elements[i].hg, elements[i].style, elements[i].type, elements[i].pname, custom_attributes, c_clon_cells, c_constraints_ic);
         }
     }
 
     function addVertex(graph, toolbar, icon, w, h, style, type, namepalette, custom_attributes, c_clon_cells, c_constraints_ic)
     {
-        var doc = mxUtils.createXmlDocument();
-        var node = doc.createElement(type);
+        let doc = mxUtils.createXmlDocument();
+        let node = doc.createElement(type);
         node.setAttribute('type', type);
 
         //include custom attributes
         if(custom_attributes){
-            for (var z = 0; z < custom_attributes.length; z++) {
+            for (let z = 0; z < custom_attributes.length; z++) {
                 if((custom_attributes[z]["types"].indexOf(type) > -1)){
-                    for(var j = 0; j < custom_attributes[z]["custom_attributes"].length; j++){
+                    for(let j = 0; j < custom_attributes[z]["custom_attributes"].length; j++){
                         node.setAttribute(custom_attributes[z]["custom_attributes"][j]["name"], custom_attributes[z]["custom_attributes"][j]["def_value"]);
                     }
                 }
             }
         }
         
-        var vertex = new mxCell(node, new mxGeometry(0, 0, w, h), style);
+        let vertex = new mxCell(node, new mxGeometry(0, 0, w, h), style);
         vertex.setConnectable(true);
         vertex.setVertex(true);
 
@@ -45,9 +45,9 @@ var setup_elements = function setup_elements(graph, elements, custom_attributes,
         // Function that is executed when the image is dropped on
         // the graph. The cell argument points to the cell under
         // the mousepointer if there is one.
-        var funct = function(graph, evt, cell)
+        let funct = function(graph, evt, cell)
 		{
-            var oncreation_allowed = true;
+            let oncreation_allowed = true;
 
             if(c_constraints_ic!=""){
                 //prototype is the toolbar item
@@ -57,12 +57,12 @@ var setup_elements = function setup_elements(graph, elements, custom_attributes,
 
             if(oncreation_allowed){
                 graph.stopEditing(false);
-                var pt = graph.getPointForEvent(evt);
-                var vertex = graph.getModel().cloneCell(prototype);
+                let pt = graph.getPointForEvent(evt);
+                let vertex = graph.getModel().cloneCell(prototype);
                 vertex.geometry.x = pt.x;
                 vertex.geometry.y = pt.y;
 
-                var new_cells = graph.importCells([vertex], 0, 0, cell);
+                let new_cells = graph.importCells([vertex], 0, 0, cell);
                 //Set up handling of new classes.
                 new_cells.forEach(element => {
                     const type = element.getAttribute("type");
@@ -111,7 +111,7 @@ var setup_elements = function setup_elements(graph, elements, custom_attributes,
 
 		}
         
-        var tbContainer = document.getElementById('tbContainer');
+        let tbContainer = document.getElementById('tbContainer');
         let mdiv = document.createElement('div');
         let span = document.createElement('span');
         span.innerHTML = namepalette+"<br />";
