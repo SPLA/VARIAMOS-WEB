@@ -55,11 +55,15 @@ let adaptation_behavior_states_main = function adaptation_behavior_states_main(g
 		let customAction = { src: projectPath + "images/models/adaptation_binding_state_hardware/customAction.png", wd: 100, hg: 35, type: "customAction", style: "strokeWidth=2", pname: "Custom action" };
 		let logicalOperator = { src: projectPath + "images/models/adaptation_binding_state_hardware/logicalOperator.png", wd: 100, hg: 35, type: "logicalOperator", style: "shape=ellipse", pname: "Logical operator" };
 		let predicate = { src: projectPath + "images/models/adaptation_binding_state_hardware/predicate.png", wd: 100, hg: 35, type: "predicate", style: "shape=predicate", pname: "Predicate" };
-		let lifeLine = { src: projectPath + "images/models/adaptation_binding_state_hardware/lifeLine.png", wd: 100, hg: 35, type: "lifeLine", style: "shape=lifeLine", pname: "LifeLine" };
+		let stateLifeLine = { src: projectPath + "images/models/adaptation_binding_state_hardware/lifeLine.png", wd: 100, hg: 35, type: "stateLifeLine", style: "shape=lifeLine", pname: "StateLifeLine" };
+		let activityLifeLine = { src: projectPath + "images/models/adaptation_binding_state_hardware/lifeLine.png", wd: 100, hg: 35, type: "activityLifeLine", style: "shape=lifeLine", pname: "ActivityLifeLine" };
+		let actionLifeLine = { src: projectPath + "images/models/adaptation_binding_state_hardware/lifeLine.png", wd: 100, hg: 35, type: "actionLifeLine", style: "shape=lifeLine", pname: "ActionLifeLine" };
 
 		let elements = [];
 		elements[0] = activity;
-		elements[1] = lifeLine;
+		elements[1] = stateLifeLine;
+		elements[2] = activityLifeLine;
+		elements[3] = actionLifeLine;
 		//elements[1] = writeAction;
 		//elements[2] = readAction;
 		//elements[3] = controlAction;
@@ -156,16 +160,16 @@ let adaptation_behavior_states_main = function adaptation_behavior_states_main(g
 		relations[0] = {
 			"source": ["state", "initialState"],
 			"rel_source_target": "and",
-			"target": ["lifeLine"],
+			"target": ["stateLifeLine"],
 			"attributes": [{
 				"name": "phase",
 				"def_value": "begin"
 			}]
 		};
 		relations[1] = {
-			"source": ["lifeLine"],
+			"source": ["stateLifeLine"],
 			"rel_source_target": "and",
-			"target": ["lifeLine"],
+			"target": ["activityLifeLine"],
 			"attributes": [{
 				"name": "time",
 				"def_value": "0"
@@ -174,6 +178,18 @@ let adaptation_behavior_states_main = function adaptation_behavior_states_main(g
 				"def_value": "Synchronous"
 			}]
 		}  
+		relations[1] = {
+			"source": ["activityLifeLine"],
+			"rel_source_target": "and",
+			"target": ["actionLifeLine"],
+			"attributes": [{
+				"name": "time",
+				"def_value": "0"
+			},{
+				"name": "execution",
+				"def_value": "Synchronous"
+			}]
+		} 
 
 		return relations;
 	}
@@ -290,7 +306,7 @@ let adaptation_behavior_states_main = function adaptation_behavior_states_main(g
 		relations[0] = {
 			"source": ["state", "initialState", "activity", "readAction", "writeAction", "controlAction"],
 			"rel_source_target": "and",
-			"target": ["lifeLine"],
+			"target": ["stateLifeLine","activityLifeLine","actionLifeLine"],
 			"style": "dashed=1;endFill=0;endArrow=none;"
 		} 
 		relations[1] = {

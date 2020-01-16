@@ -1,4 +1,4 @@
-let setup_elements = function setup_elements(graph, elements, custom_attributes, c_clon_cells, c_constraints_ic, toolbar, c_type){    
+let setup_elements = function setup_elements(graph, elements, custom_attributes, c_clon_cells, c_constraints_ic, toolbar, c_type){
     if(elements==null){
         //disable palette for "binding" models
         let tbContainer = document.getElementById('tbContainer');
@@ -9,7 +9,7 @@ let setup_elements = function setup_elements(graph, elements, custom_attributes,
         //add elements to the palette
         if(!custom_attributes){
             custom_attributes=[];
-        }    
+        }
         for (let i = 0; i < elements.length; i++) {
             //select custom attributes coco
             let element=elements[i];
@@ -18,15 +18,15 @@ let setup_elements = function setup_elements(graph, elements, custom_attributes,
             if(custom_attributes){
                 for (let z = 0; z < custom_attributes.length; z++) {
                     if((custom_attributes[z]["types"].indexOf(type) > -1)){
-                        attributes=custom_attributes[z]["custom_attributes"]; 
+                        attributes=custom_attributes[z]["custom_attributes"];
                     }
                 }
-            }  
+            }
             if(element.attributes){
-                for (let a = 0; a < element.attributes.length; a++) {  
+                for (let a = 0; a < element.attributes.length; a++) {
                     let attribute=element.attributes[a];
                     let name=attribute.name;
-                    let value=attribute.def_value;  
+                    let value=attribute.def_value;
                     let exists=false;
                     for(let j = 0; j < attributes.length; j++){
                         if(attributes[j]["name"]==name){
@@ -39,10 +39,10 @@ let setup_elements = function setup_elements(graph, elements, custom_attributes,
                             "name":name,
                             "def_value":value
                         });
-                    } 
+                    }
                 }
-            } 
- 
+            }
+
             addVertex(graph, toolbar, elements[i].src, elements[i].wd, elements[i].hg, elements[i].style, elements[i].type, elements[i].pname, attributes, c_clon_cells, c_constraints_ic);
         }
     }
@@ -51,7 +51,7 @@ let setup_elements = function setup_elements(graph, elements, custom_attributes,
     {
         let doc = mxUtils.createXmlDocument();
         let node = doc.createElement(type);
-        node.setAttribute('type', type); 
+        node.setAttribute('type', type);
         node.setAttribute('label', type);
 
         //include custom attributes
@@ -72,58 +72,189 @@ let setup_elements = function setup_elements(graph, elements, custom_attributes,
                         node.setAttribute('label', custom_attributes[j]["def_value"]);
                     }
                 }
-            } 
+            }
         }
-        
+
         let vertex = new mxCell(node, new mxGeometry(0, 0, w, h), style);
         vertex.setConnectable(true);
-        vertex.setVertex(true); 
+        vertex.setVertex(true);
 
-        if(["writeAction", "readAction"].includes(type)){
-            try{ 
-                // if(type=="writeAction"){
-                //     vertex.setConnectable(false);
-                // }
+        if(["board"].includes(type) || ["device"].includes(type)){
+            try{
+                vertex.setConnectable(false);
                 if(custom_attributes){
-                    for(let j = 0; j < custom_attributes.length; j++){
-                        if(custom_attributes[j]["name"]=="parameters"){
-                            let args=custom_attributes[j]["def_value"];
-                            let x=10;
-                            for(let a = 0; a < args.length; a++){
-                                let arg=args[a]; 
-                                let doc = mxUtils.createXmlDocument();
-                                let node = doc.createElement(arg.name); 
-                                node.setAttribute('label', arg.name);
 
-                                let geometry = new mxGeometry(x, 22, 10, 10);  
+                    let width = 10;
+                    let height = 10;
+
+                    let expandedx = false;
+                    let expandedy = 0;
+
+                    for(let j = 0; j < custom_attributes.length; j++){
+
+                        let x = 10;
+                        let y = 22;
+                        let o = 5;
+
+                        if(custom_attributes[j]["name"] == "digitalPins"){
+
+                            let args = custom_attributes[j]["def_value"];
+
+                            for(let a = 0; a < args.length; a++){
+
+                                let pinID = args[a];
+                                let doc = mxUtils.createXmlDocument();
+                                let node = doc.createElement(pinID);
+
+                                node.setAttribute('label', pinID);
+                                node.setAttribute('type', "digital");
+
+                                let geometry = new mxGeometry(x, y, 10, 10);
                                 geometry.offset = new mxPoint(0, 0);
-                                geometry.relative = false; 
+                                geometry.relative = false;
+                                let connector = new mxCell(node, geometry, "shape=ellipse;perimeter=trianglePerimeter;direction=north");
+                                graph.setCellStyles(mxConstants.STYLE_MOVABLE, '0', [connector]);
+                                graph.setCellStyles(mxConstants.STYLE_RESIZABLE, '0', [connector]);
+                                connector.setConnectable(true);
+                                connector.setVertex(true);
+                                vertex.insert(connector, 0);
+
+                                x += 15;
+
+                                if(!expandedx && width < x) {
+                                    width += 15;
+                                    vertex.geometry.width = width;
+                                }
+
+                                if(x >= 10 + (15 * o)) {
+
+                                    y += 22;
+                                    x = 10;
+
+                                    width += 15;
+                                    vertex.geometry.width = width;
+
+                                    if(!expandedx) { expandedx = true; }
+
+                                }
+
+                            }
+
+                        }
+
+                        x = 10;
+                        y += 44;
+                        height += 44;
+
+                        if(custom_attributes[j]["name"] == "analogPins"){
+
+                            let args = custom_attributes[j]["def_value"];
+
+                            for(let a = 0; a < args.length; a++){
+
+                                let pinID = args[a];
+                                let doc = mxUtils.createXmlDocument();
+                                let node = doc.createElement(pinID);
+                                node.setAttribute('label', pinID);
+                                node.setAttribute('type', "analog");
+
+                                let geometry = new mxGeometry(x, y, 10, 10);
+                                geometry.offset = new mxPoint(0, 0);
+                                geometry.relative = false;
+
                                 let connector = new mxCell(node, geometry, "shape=triangle;perimeter=trianglePerimeter;direction=north");
                                 graph.setCellStyles(mxConstants.STYLE_MOVABLE, '0', [connector]);
                                 graph.setCellStyles(mxConstants.STYLE_RESIZABLE, '0', [connector]);
                                 connector.setConnectable(true);
-                                connector.setVertex(true); 
+                                connector.setVertex(true);
+
                                 vertex.insert(connector, 0);
-                                x+=15;
+
+                                x += 15;
+
+                                if(!expandedx && width < x) {
+                                    width += 15;
+                                    vertex.geometry.width = width;
+                                }
+
+                                if(x >= 10 + (15 * o)) {
+
+                                    y += 22;
+                                    x = 10;
+
+                                    width += 15;
+                                    vertex.geometry.width = width;
+
+                                    if(!expandedx) { expandedx = true; }
+
+                                }
 
                             }
-                            break;
+
                         }
+
+                        x = 10;
+                        y += 44;
+                        height += 44;
+
+                        if(custom_attributes[j]["name"] == "pwmPins"){
+
+                            let args = custom_attributes[j]["def_value"];
+
+                            for(let a = 0; a < args.length; a++){
+
+                                let pinID = args[a];
+                                let doc = mxUtils.createXmlDocument();
+                                let node = doc.createElement(pinID);
+                                node.setAttribute('label', pinID);
+                                node.setAttribute('type', "pwm");
+
+                                let geometry = new mxGeometry(x, y, 10, 10);
+                                geometry.offset = new mxPoint(0, 0);
+                                geometry.relative = false;
+                                let connector = new mxCell(node, geometry, "shape=square;perimeter=trianglePerimeter;direction=north");
+                                graph.setCellStyles(mxConstants.STYLE_MOVABLE, '0', [connector]);
+                                graph.setCellStyles(mxConstants.STYLE_RESIZABLE, '0', [connector]);
+                                connector.setConnectable(true);
+                                connector.setVertex(true);
+                                vertex.insert(connector, 0);
+
+                                x += 15;
+
+                                if(!expandedx && width < x) {
+                                    width += 15;
+                                    vertex.geometry.width = width;
+                                }
+
+                                if(x >= 10 + (15 * o)) {
+
+                                    y += 22;
+                                    x = 10;
+
+                                    width += 15;
+                                    vertex.geometry.width = width;
+
+                                    if(!expandedx) { expandedx = true; }
+
+                                }
+
+                            }
+
+                        }
+
                     }
-                } 
+                }
             }catch(error){
                 alert(error);
-            } 
+            }
         }
-
-        
- 
 
         if(c_constraints_ic != null && c_constraints_ic[type]){
             addToolbarItem(graph, toolbar, vertex, icon, namepalette, c_clon_cells, c_constraints_ic[type]);
         }else{
             addToolbarItem(graph, toolbar, vertex, icon, namepalette, c_clon_cells, "");
         }
+
     }
 
     function addToolbarItem(graph, toolbar, prototype, image, namepalette, c_clon_cells, c_constraints_ic)
@@ -132,7 +263,7 @@ let setup_elements = function setup_elements(graph, elements, custom_attributes,
         // the graph. The cell argument points to the cell under
         // the mousepointer if there is one.
         let funct = function(graph, evt, cell)
-		{
+        {
             let oncreation_allowed = true;
 
             if(c_constraints_ic!=""){
@@ -144,7 +275,7 @@ let setup_elements = function setup_elements(graph, elements, custom_attributes,
                 let pt = graph.getPointForEvent(evt);
                 let vertex = graph.getModel().cloneCell(prototype);
                 vertex.geometry.x = pt.x;
-                vertex.geometry.y = pt.y; 
+                vertex.geometry.y = pt.y;
 
                 let new_cells = graph.importCells([vertex], 0, 0, cell);
                 graph.setSelectionCells(new_cells);
@@ -167,7 +298,7 @@ let setup_elements = function setup_elements(graph, elements, custom_attributes,
             }
 
         }
-        
+
         let tbContainer = document.getElementById('tbContainer');
         let mdiv = document.createElement('div');
         let span = document.createElement('span');
@@ -177,8 +308,8 @@ let setup_elements = function setup_elements(graph, elements, custom_attributes,
         // Creates the image which is used as the drag icon (preview)
         let img = toolbar.addMode(namepalette, image, funct);
         mxUtils.makeDraggable(img, graph, funct);
-        
-        mdiv.classList.add("pallete-div"); 
+
+        mdiv.classList.add("pallete-div");
         mdiv.appendChild(img);
         tbContainer.appendChild(mdiv);
     }

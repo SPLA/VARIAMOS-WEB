@@ -1,3 +1,5 @@
+import {getDevices} from './adaptation_hardware/devices'
+
 let adaptation_behavior_hardware_main = function adaptation_behavior_hardware_main(graph) {
 	adaptation_behavior_hardware_constraints(graph);
 	adaptation_behavior_hardware_handlers(graph);
@@ -72,95 +74,57 @@ let adaptation_behavior_hardware_main = function adaptation_behavior_hardware_ma
 		//elements[7] = delayAction;
 		//elements[8] = customAction;
 
-		let customWriteActions = [
-			{
-				"name":"turnOn",
-				"parameters":[
-					{
-						"name":"frecuency",
-						"type":"int"
-					} 
-				]
-			}, 
-			{
-				"name":"turnOff",
-				"parameters":[]
+		let customDevices = getDevices();
+
+		for(let device of customDevices) {
+			let customWriteActions=device.writeActions;
+			if(customWriteActions!=null){
+				for(let action of customWriteActions) { 
+					let devicePath = projectPath + "images/models/adaptation_binding_state_hardware/";
+					let shapeImagePath = devicePath + "writeAction.png";  
+					let deviceComposition = {
+						src: shapeImagePath,
+						wd: 100,
+						hg: 35,
+						type: "writeAction", //para poder clonarlo y bindearlo 
+						style: "shape=writeAction",
+						pname: action.name,
+						attributes:[{
+							"name":"subtype",
+							"def_value":action.name
+						},{ 
+							"name":"parameters",
+							"def_value":action.parameters
+						}]
+					}; 
+					elements[index++] = deviceComposition; 
+				}
 			}
-		];
 
-		for(let action of customWriteActions) { 
-			let devicePath = projectPath + "images/models/adaptation_binding_state_hardware/";
-			let shapeImagePath = devicePath + "writeAction.png"; 
+			let customReadActions=device.readActions;
+			if(customReadActions!=null){
+				for(let action of customReadActions) { 
+					let devicePath = projectPath + "images/models/adaptation_binding_state_hardware/";
+					let shapeImagePath = devicePath + "readAction.png"; 
 
-			let deviceComposition = {
-				src: shapeImagePath,
-				wd: 100,
-				hg: 35,
-				type: "writeAction", //para poder clonarlo y bindearlo 
-				style: "shape=writeAction",
-				pname: action.name,
-				attributes:[{
-					"name":"subtype",
-					"def_value":action.name
-				},{ 
-					"name":"parameters",
-					"def_value":action.parameters
-				}]
-			}; 
-			elements[index++] = deviceComposition; 
-		}
-
-		let customReadActions = [ 
-			{
-				"name":"isOn",
-				"parameters":[]
-			},
-			{
-				"name":"isOff",
-				"parameters":[]
-			},{
-				"name":"test",
-				"parameters":[
-					{
-						"name":"arg1",
-						"type":"int"
-					},
-					{
-						"name":"arg2",
-						"type":"int"
-					} ,
-					{
-						"name":"arg3",
-						"type":"int"
-					}  ,
-					{
-						"name":"arg4",
-						"type":"int"
-					}  
-				]
-			},
-		];
-
-		for(let action of customReadActions) { 
-			let devicePath = projectPath + "images/models/adaptation_binding_state_hardware/";
-			let shapeImagePath = devicePath + "readAction.png"; 
-
-			let deviceComposition = {
-				src: shapeImagePath,
-				wd: 100,
-				hg: 35,
-				type: "readAction", //para poder clonarlo y bindearlo 
-				style: "shape=readAction",
-				pname: action.name,
-				attributes:[{
-					"name":"subtype",
-					"def_value":action.name
-				},{ 
-					"name":"parameters",
-					"def_value":action.parameters
-				}]
-			}; 
-			elements[index++] = deviceComposition; 
+					let deviceComposition = {
+						src: shapeImagePath,
+						wd: 100,
+						hg: 35,
+						type: "readAction", //para poder clonarlo y bindearlo 
+						style: "shape=readAction",
+						pname: action.name,
+						attributes:[{
+							"name":"subtype",
+							"def_value":action.name
+						},{ 
+							"name":"parameters",
+							"def_value":action.parameters
+						}]
+					}; 
+					elements[index++] = deviceComposition; 
+				}
+			} 
 		}
  
 		return elements;

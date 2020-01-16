@@ -1,13 +1,70 @@
-let customDevices = [
-	"led",
-	"piezo",
-	"rgb",
-	"button",
-	"teclado"
-];
+import { getDevices } from "./adaptation_hardware/devices";
 
 let customBoards = [
-	"uno"
+	{
+		name: "ArduinoUNO",
+		digitalPins: [
+			"D1", "D2", "D3",
+			"D4", "D5"
+		],
+		analogPins: [
+			"A0", "A1", "A2",
+			"A3"
+		],
+		pwmPins: [
+			"P12", "P10"
+		]
+	},
+	{
+		name: "ArduinoNANO",
+		digitalPins: [
+			"D2", "D3", "D4",
+			"D5", "D7", "D10",
+			"D11"
+		],
+		analogPins: [
+			"A0", "A1", "A2",
+			"A3", "A4", "A5",
+			"A6", "A7"
+		],
+		pwmPins: [
+			"P6", "P8", "P9",
+			"P12", "P13", "P14"
+		]
+	},
+	{
+		name: "ArduinoMEGA",
+		digitalPins: [
+			"D0", "D1", "D14",
+			"D15", "D16", "D17",
+			"D18", "D19", "D20",
+			"D21", "D22", "D23",
+			"D24", "D25", "D26",
+			"D27", "D28", "D29",
+			"D30", "D31", "D32",
+			"D33", "D34", "D35",
+			"D36", "D37", "D38",
+			"D39", "D40", "D41",
+			"D42", "D43", "D44",
+			"D45", "D46", "D47",
+			"D48", "D49", "D50",
+			"D51", "D52", "D53"
+		],
+		analogPins: [
+			"A0", "A1", "A2",
+			"A3", "A4", "A5",
+			"A6", "A7", "A8",
+			"A9", "A10", "A11",
+			"A12", "A13", "A14",
+			"A15"
+		],
+		pwmPins: [
+			"P2", "P3", "P4",
+			"P5", "P6", "P7",
+			"P8", "P9", "P10",
+			"P11", "P12", "P13",
+		]
+	}
 ];
 
 let adaptation_hardware_main = function adaptation_hardware_main(graph) {
@@ -23,6 +80,8 @@ let adaptation_hardware_main = function adaptation_hardware_main(graph) {
 	data["m_clon_cells"]=adaptation_hardware_clon_cells(); //custom clon cells
 	data["m_constraints_ic"]=adaptation_hardware_constraints_in_creation(); //custom constraints in element creation
 	data["m_overlay"]=adaptation_hardware_overlay(); //custom overlay
+	data["m_relation_styles"] = adaptation_hardware_relation_styles();
+	data["m_constraints_relations"] = adaptation_hardware_constraints_relations; //custom constraints for relations
 	return data;
 
 	function adaptation_hardware_constraints(graph){
@@ -32,9 +91,39 @@ let adaptation_hardware_main = function adaptation_hardware_main(graph) {
 			"Invalid connection",
 			"Only shape targets allowed"));
 		graph.multiplicities.push(new mxMultiplicity(
-			true, "bundle", null, null, 0, 1, ["root","abstract"],
+			true, "analog", null, null, 0, 1, ["analog"],
 			"Only 1 target allowed",
 			"Only shape targets allowed"));
+	}
+
+	function adaptation_hardware_constraints_relations(graph, source, target){
+		//only one custom file per component
+		if((source.getAttribute("type")=="analog" && target.getAttribute("type")!="analog")){
+			alert("Invalid connection only one custom. file can be linked for this component");
+			return false;
+			/*let target_id = target.getId();
+			let inco_egdes = graph.getModel().getIncomingEdges(graph.getModel().getCell(target_id));
+			for (let j = 0; j < inco_egdes.length; j++) {
+				if(inco_egdes[j].source.getAttribute("type")=="custom"){
+					alert("Invalid connection only one custom. file can be linked for this component");
+					return false;
+				}
+			}*/
+		}
+
+		//fragment can be only linked with one component
+		if(target.getAttribute("type")=="component" && source.getAttribute("type")=="fragment"){
+			let source_id = source.getId();
+			let out_egdes = graph.getModel().getOutgoingEdges(graph.getModel().getCell(source_id));
+			for (let j = 0; j < out_egdes.length; j++) {
+				if(out_egdes[j].target.getAttribute("type")=="component"){
+					alert("Invalid connection one fragment can be only linked with one component");
+					return false;
+				}
+			}
+		}
+
+		return true;
 	}
 
 	function adaptation_hardware_elements(){
@@ -51,16 +140,29 @@ let adaptation_hardware_main = function adaptation_hardware_main(graph) {
 				src: shapeImagePath,
 				wd: 280,
 				hg: 180,
-				type: board,
-				style: "shape=" + board.toLowerCase(),
-				pname: "Arduino " + board.toUpperCase()
+				type: "board",
+				style: "shape=" + board.name.toLowerCase(),
+				pname: "Arduino " + board.name.toUpperCase(),
+				attributes:[{
+					"name": "subtype",
+					"def_value": board.name
+				},{
+					"name": "digitalPins",
+					"def_value": board.digitalPins
+				},{
+					"name": "analogPins",
+					"def_value": board.analogPins
+				},{
+					"name": "pwmPins",
+					"def_value": board.pwmPins
+				}]
 			};
 
 			elements[index++] = boardComposition;
 
 		}
 
-		for(let device of customDevices) {
+		for(let device of getDevices()) {
 
 			let devicePath = projectPath + "images/models/adaptation_hardware/";
 			let shapeImagePath = devicePath + "analogActuator.png";
@@ -70,11 +172,20 @@ let adaptation_hardware_main = function adaptation_hardware_main(graph) {
 				wd: 100,
 				hg: 35,
 				type: "device", //para poder clonarlo y bindearlo 
-				style: "shape=" + device,
-				pname: device,
+				style: "shape=" + device.name,
+				pname: device.name,
 				attributes:[{
 					"name":"subtype",
-					"def_value":device //led, piezo o lo que sea
+					"def_value": device.name //led, piezo o lo que sea
+				},{
+					"name": "digitalPins",
+					"def_value": device.digitalPins
+				},{
+					"name": "analogPins",
+					"def_value": device.analogPins
+				},{
+					"name": "pwmPins",
+					"def_value": device.pwmPins
 				}]
 			};
 
@@ -87,30 +198,109 @@ let adaptation_hardware_main = function adaptation_hardware_main(graph) {
 	}
 
 	function adaptation_hardware_attributes(){
+
+		let index = 0;
 		let attributes=[];
-		attributes[0]={
+
+		attributes[index++]={
 			"types":["board"],
 			"custom_attributes":[{
 				"name":"boardType",
 				"def_value":"ArduinoUNO"
 			}]
-		}; 
-		attributes[1]={
+		};
+		attributes[index++]={
 			"types":["device"],
 			"custom_attributes":[{
+				"name":"subType",
+				"def_value":"Simple"
+			},{
+				"name":"pin",
+				"def_value":"D2"
+			},{
+				"name":"initialValue",
+				"def_value":"LOW"
+			}]
+		};
+		attributes[index++]={
+			"types":["digitalSensor"],
+			"custom_attributes":[{
+				"name":"subType",
+				"def_value":"Simple"
+			},{
+				"name":"pin",
+				"def_value":"D12"
+			},{
+				"name":"initialValue",
+				"def_value":"LOW"
+			}]
+		};
+		attributes[index++]={
+			"types":["analogActuator"],
+			"custom_attributes":[{
+				"name":"subType",
+				"def_value":"Simple"
+			},{
+				"name":"pin",
+				"def_value":"A0"
+			},{
+				"name":"initialValue",
+				"def_value":"0"
+			}]
+		};
+		attributes[index++]={
+			"types":["analogSensor"],
+			"custom_attributes":[{
+				"name":"subType",
+				"def_value":"Simple"
+			},{
+				"name":"pin",
+				"def_value":"A4"
+			},{
+				"name":"initialValue",
+				"def_value":"0"
+			}]
+		};
+		attributes[index++]={
+			"types":["Led"],
+			"custom_attributes":[{
+				"name":"subType",
+				"def_value":"Simple"
+			},{
+				"name":"pin",
+				"def_value":"A4"
+			},{
 				"name":"subtype",
 				"def_value":"No se"
 			}]
 		};
+
+		for(let boardStyle of customBoards) {
+
+			attributes[index++] = {
+				"types":["Led"],
+				"custom_attributes":[{
+					"name": "pin",
+					"parameters":[
+						{
+							"name": "pin",
+							"def_value":"A4"
+						}
+					]
+				}]
+			};
+
+		}
+
 		return attributes;
 	}
 
 	function adaptation_hardware_relations(){
 		let relations=[];
 		relations[0]={
-			"source":["abstract","concrete"],
+			"source":["triangulito"],
 			"rel_source_target":"and",
-			"target":["abstract","concrete","root"],
+			"target":["triangulito"],
 			"attributes":[{
 				"name":"relType",
 				"def_value":"mandatory"
@@ -127,9 +317,8 @@ let adaptation_hardware_main = function adaptation_hardware_main(graph) {
 				"attribute":"boardType",
 				"input_type":"select",
 				"input_values":["ArduinoUno"]
-			}
-			],
-			"device":[
+			}],
+			"device": [
 				{
 					"attribute": "subtype",
 					"input_type":"disabled" 
@@ -153,8 +342,7 @@ let adaptation_hardware_main = function adaptation_hardware_main(graph) {
 			},{
 				"attribute":"pwm",
 				"input_type":"checkbox"
-			}
-			],
+			}],
 			"analogActuator":[{
 				"attribute":"subType",
 				"input_type":"select",
@@ -163,8 +351,7 @@ let adaptation_hardware_main = function adaptation_hardware_main(graph) {
 				"attribute":"pinX",
 				"input_type":"select",
 				"input_values":["A0","A1","A2","A3","A4","A5","A6"]
-			}
-			],
+			}],
 			"digitalSensor":[{
 				"attribute":"subType",
 				"input_type":"select",
@@ -188,6 +375,17 @@ let adaptation_hardware_main = function adaptation_hardware_main(graph) {
 		}
 
 		return styles;
+	}
+
+	function adaptation_hardware_relation_styles() {
+		let relations = [];
+		relations[0] = {
+			"source": ["analog"],
+			"rel_source_target": "and",
+			"target": ["analog"],
+			"style": "dashed=1;endFill=0;"
+		}
+		return relations;
 	}
 
 	function adaptation_hardware_custom_methods(pos){
@@ -256,6 +454,10 @@ let adaptation_hardware_main = function adaptation_hardware_main(graph) {
 	function adaptation_hardware_clon_cells(){
 		let clons={};
 		clons={
+			"digitalActuator":"adaptation_binding_state_hardware",
+			"digitalSensor":"adaptation_binding_state_hardware",
+			"analogActuator":"adaptation_binding_state_hardware",
+			"analogSensor":"adaptation_binding_state_hardware",
 			"device":"adaptation_behavior_hardware"
 		};
 
