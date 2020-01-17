@@ -16,7 +16,7 @@ let setup_events = function setup_events(graph){
         let cell = evt.getProperty('cell');
         if (cell !== null){
             const type = cell.getAttribute('type');
-            if (['class', 'class_name', 'class_attributes', 'class_methods', 'class_attributes', 'class_methods', 'attribute', 'method','file'].includes(type)){
+            if (['class', 'class_name', 'class_attributes', 'class_methods', 'class_attributes', 'class_methods', 'attribute', 'method','note'].includes(type)){
                 //If the event comes from a class/file(note) then keep going,
                 //otherwise set it to the appropirate parent.
                 if(['class_name', 'class_attributes', 'class_methods'].includes(type)){
@@ -43,11 +43,11 @@ let setup_events = function setup_events(graph){
                     //If this point is hit, the structure for this cell
                     //does not yet exist.
                     //TODO: reafactor create_structure call
-                    structure = create_structure(type !== 'file', cell);
+                    structure = create_structure(type !== 'note', cell);
                     classMap.set(classId, {structure, idx_cat: idx_cat, idx_subcat: idx_subcat})
                 }
                 //const limits = calculate_limits(classMap.get(classId));
-                const c_name = type !== 'file' ? cell.getChildAt(0).getAttribute('label', '') : 'NOTE';
+                const c_name = type !== 'note' ? cell.getChildAt(0).getAttribute('label', '') : 'NOTE';
                 let c_header = modalH3(c_name !== '' ? c_name : 'No name yet...');
                 let c_body = modalComponentInformation(structure, idx_cat, idx_subcat, cell, graph, handleResize);
 
@@ -195,7 +195,7 @@ let setup_events = function setup_events(graph){
         console.log('cellObj.idx_cat :', cellObj.idx_cat);
         console.log('cellObj.idx_subcat :', cellObj.idx_subcat);
         const newlimits = calculate_limits(cellObj);
-        const c_name = cell.getAttribute('type') !== 'file' ? cell.getChildAt(0).getAttribute('label', '') : 'NOTE';
+        const c_name = cell.getAttribute('type') !== 'note' ? cell.getChildAt(0).getAttribute('label', '') : 'NOTE';
         let c_header = modalH3(c_name !== '' ? c_name : 'No name yet...');
         let c_body = modalComponentInformation(cellObj.structure, cellObj.idx_cat, cellObj.idx_subcat, cell, graph, handleResize);
         main_modal_header.appendChild(c_header);

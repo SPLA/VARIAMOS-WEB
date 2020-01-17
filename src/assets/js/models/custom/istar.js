@@ -13,6 +13,7 @@ let istar_main = function istar_main(graph)
   data["m_constraints_ic"]=istar_constraints_in_creation();
   data["m_clon_cells"]=null; //custom clon cells
   data["m_relation_styles"]=istar_relation_styles();
+  data["m_overlay"] = istar_overlay(); //custom overlay
 	return data;
 	
 	function istar_constraints(){
@@ -180,10 +181,16 @@ let istar_main = function istar_main(graph)
     let attributes=[];
 		attributes.push({
 			"types":["actor","role","agent"],
-			"custom_attributes":[{
-				"name":"boundary",
-				"def_value":"false"
-			}]
+			"custom_attributes":[
+        {
+          "name":"boundary",
+          "def_value":"false"
+        },
+        {
+          "name":"selected",
+				  "def_value":"false"
+        }
+      ]
     });
     /* attributes.push({
       "types":["goal","quality","task","resource"],
@@ -317,11 +324,18 @@ let istar_main = function istar_main(graph)
   function istar_properties_styles(){
     return {
       //Actor
-      "actor":[{
-        "attribute":"boundary",
-        "input_type":"checkbox",
-        "onchange":actorboundary
-      }],
+      "actor":[
+        {
+          "attribute":"boundary",
+          "input_type":"checkbox",
+          "onchange":actorboundary
+        },
+        {
+          "attribute":"selected",
+					"input_type":"checkbox",
+					"onchange": set_selected_overlay
+        }
+      ],
       //Actor as source for a relation
       "rel_actor_actor":[{
         "attribute": "relType",
@@ -360,11 +374,18 @@ let istar_main = function istar_main(graph)
         "input_values":["D"]
       }], */
       //Agent
-      "agent":[{
-        "attribute":"boundary",
-        "input_type":"checkbox",
-        "onchange":actorboundary
-      }],
+      "agent":[
+        {
+          "attribute":"boundary",
+          "input_type":"checkbox",
+          "onchange":actorboundary
+        },
+        {
+          "attribute":"selected",
+					"input_type":"checkbox",
+					"onchange": set_selected_overlay
+        }
+      ],
       //Agent as source for a relation
       "rel_agent_actor":[{
         "attribute": "relType",
@@ -403,11 +424,18 @@ let istar_main = function istar_main(graph)
         "input_values":["D"]
       }], */
       //Role
-      "role":[{
-        "attribute":"boundary",
-        "input_type":"checkbox",
-        "onchange":actorboundary
-      }],
+      "role":[
+        {
+          "attribute":"boundary",
+          "input_type":"checkbox",
+          "onchange":actorboundary
+        },
+        {
+          "attribute":"selected",
+					"input_type":"checkbox",
+					"onchange": set_selected_overlay
+        }
+      ],
       //Role as source for a relation
       "rel_role_actor":[{
         "attribute": "relType",
@@ -554,7 +582,7 @@ let istar_main = function istar_main(graph)
       if (checked === 'true') {
         const boundaryCell = graph.insertVertex(parent, uuidv1(), '', currentCell.getGeometry().x, currentCell.getGeometry().y, 100, 100, 'shape=rectangle;fillColor=none;dashed=1;dashPattern=10 10;rounded=1;arcSize=15;');
         boundaryCell.setConnectable(false);
-        boundaryCell.setValue({'type':'boundary'});
+        boundaryCell.setValue({'type':'boundary', 'actorCellId': currentCell.getId()});
         graph.groupCells(boundaryCell, 0, [currentCell]);
         const geo = currentCell.getGeometry();
         geo.x = 0;
@@ -880,7 +908,45 @@ let istar_main = function istar_main(graph)
       })
     })
   }
-	
+  
+  function istar_overlay(){
+    return function(){
+      console.log('I was called');
+      const model = graph.getModel();
+			let featureRoot = model.getCell("istar");
+			let featureElements = model.getChildVertices(featureRoot);
+			for (let i = 0; i < featureElements.length; i++) {
+				let source = featureElements[i];
+        let type = source.getAttribute("type");
+        if(type === undefined){
+          const value = source.getValue();
+          type = value.type;
+        }
+				if(["actor","agent","role", "boundary"].includes(type)){
+          if("boundary" == type){
+            const value = source.getValue();
+            source = model.getCell(value.actorCellId);
+          }
+					let sel = source.getAttribute("selected");
+					if(sel == "true"){
+						let overlay = new mxCellOverlay(new mxImage('images/MX/check.png', 16, 16), 'Overlay tooltip');
+						graph.addCellOverlay(source, overlay);
+					}
+				}
+			}
+		};
+  }
+
+  function set_selected_overlay(){
+    // Creates a new overlay with an image and a tooltip and makes it "transparent" to events
+    let overlay = new mxCellOverlay(new mxImage('images/MX/check.png', 16, 16), 'Overlay tooltip');	
+    const model = graph.getModel();
+    if(this.checked){
+      graph.addCellOverlay(model.getCell(this.name), overlay);
+    }else{
+      graph.removeCellOverlay(model.getCell(this.name));
+    }
+  }
 }
 
 export default istar_main

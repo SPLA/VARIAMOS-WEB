@@ -47,17 +47,17 @@ let classMain = function classMain(graph) {
 
   function classConstraints(graph) {
     graph.multiplicities = []; //reset multiplicities
-    graph.multiplicities.push(new mxMultiplicity(true,"file",null,null,0,1,
+    graph.multiplicities.push(new mxMultiplicity(true,"note",null,null,0,1,
       ["class"],
       "Only 1 class allowed","Only class targets allowed"));
   }
 
   function classElements() {
     let class_elem = { src: projectPath + "images/models/feature/rectangle.png", wd: 100, hg: 100, type: "class", style: "html=1;whiteSpace=wrap;overflow=visible;fontColor=black;fillColor=none;strokeColor=#000000;strokeWidth=5;", pname: "Class" };
-    let file = {src:projectPath + "images/models/component/file.png", wd:100, hg:40, style:"shape=file", type:"file", pname:"File"};
+    let note = {src:projectPath + "images/models/component/file.png", wd:100, hg:40, style:"shape=file", type:"note", pname:"Note"};
     let elements = [];
     elements.push(class_elem);
-    elements.push(file);
+    elements.push(note);
 
     return elements;
   }
@@ -87,7 +87,7 @@ let classMain = function classMain(graph) {
       }]
     });
     relations.push({
-      "source":["file"],
+      "source":["note"],
       "rel_source_target":"and",
       "target":["class"],
       "attributes":[{
@@ -108,7 +108,7 @@ let classMain = function classMain(graph) {
       "style": "endArrow=diamond;endFill=1;endSize=10;"
     });
     relations.push({
-      "source": ["file"],
+      "source": ["note"],
       "rel_source_target": "and",
       "target": ["class"],
       "style": "endArrow=none;dashed=1;"
@@ -186,9 +186,9 @@ let classMain = function classMain(graph) {
     }
   }
 
-  function classConstraintsRelations(graph, source, target) {
-    //only one custom file per class
-    if (target.getAttribute("type") == "file" && source.getAttribute("type") == "class") {
+  function classConstraintsRelations(_graph, source, target) {
+    //only one custom note per class
+    if (target.getAttribute("type") == "note" && source.getAttribute("type") == "class") {
       alert("Classes may not connect to notes, it must be in the other direction");
       return false;
     }
