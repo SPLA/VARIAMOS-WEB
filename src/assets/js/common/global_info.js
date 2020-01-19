@@ -5,7 +5,7 @@
 export function getModelInfo(){
     let info = [];
     //list of graphical models
-    info["gmodels"] = ["feature", "component", "binding_feature_component", "istar", "classdiag", "adap_architecture",
+    info["gmodels"] = ["feature", "component", "binding_feature_component", "istar", "adap_architecture", "classdiag", 
         "adaptation_state", "adaptation_hardware", "adaptation_binding_state_hardware", "control"];
     //define feature model main info
     info["feature"] = {projFolders:["Domain"], label:"Feature"};

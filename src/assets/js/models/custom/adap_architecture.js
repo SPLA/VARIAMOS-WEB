@@ -300,6 +300,14 @@ let adapArchitectureMain = function adapArchitectureMain(graph)
 			"attributes":[{
 				"name":"relType_C2A",
 				"def_value":""
+			},
+			{
+				"name":"sourceCardinality",
+				"def_value":"1"
+			},
+			{
+				"name":"destinationCardinality",
+				"def_value":"1"
 			}]
 		}
 		relations[8] = {
@@ -377,6 +385,14 @@ let adapArchitectureMain = function adapArchitectureMain(graph)
 			"attributes":[{
 				"name":"relType_S2C",
 				"def_value":""
+			},
+			{
+				"name":"sourceCardinality",
+				"def_value":"1"
+			},
+			{
+				"name":"destinationCardinality",
+				"def_value":"1"
 			}]
 		}
 		relations[13] = {
@@ -403,6 +419,14 @@ let adapArchitectureMain = function adapArchitectureMain(graph)
 			"attributes":[{
 				"name":"relType_SS2A",
 				"def_value":""
+			},
+			{
+				"name":"sourceCardinality",
+				"def_value":"1"
+			},
+			{
+				"name":"destinationCardinality",
+				"def_value":"1"
 			}]
 		}
 		relations[15] = {
