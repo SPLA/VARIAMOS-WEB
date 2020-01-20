@@ -462,7 +462,7 @@ export default {
       $("#domainMessage").hide("slow");
     },
     saveRequirement() {
-      let uri = c.host + "domains/add";
+      let uri = c.host + "requirex/domains";
       this.axios.post(uri, this.requirement).then(() => {
         this.$Message.success("Success!");
         this.$router.push("/requirex");
@@ -476,11 +476,11 @@ export default {
   },
   created() {
     //Cargar lista de requerimientos de dominio
-    let uri = c.host + "domains";
+    let uri = c.host + "requirex/domains";
     this.axios.get(uri).then(response => {
       this.listDomainRequirement = response.data;
       this.countDomain = this.listDomainRequirement.length;
-      console.log(this.countDomain);
+      console.log("total dominio" + this.countDomain);
     });
   }
 };

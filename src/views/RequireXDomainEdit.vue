@@ -293,8 +293,8 @@ export default {
       countDomain: 0
     };
   },
-  created() {
-    let uri = c.host + `domains/${this.$route.params.id}`;
+  mounted() {
+    let uri = c.host + `requirex/domains/${this.$route.params.id}`;
     this.axios.get(uri).then(response => {
       this.requirement = response.data;
     });
@@ -429,8 +429,8 @@ export default {
     },
 
     updateRequirement() {
-      let uri = c.host + `domains/update/${this.$route.params.id}`;
-      this.axios.post(uri, this.requirement).then(() => {
+      let uri = c.host + `requirex/domains/${this.$route.params.id}`;
+      this.axios.put(uri, this.requirement).then(() => {
         $("#domainMessage span").text("Success!");
         $("#domainMessage").addClass("alert-success");
         $("#domainMessage").removeClass("alert-danger");

@@ -73,9 +73,9 @@
 </template>
 
 <script>
-import moment from "moment";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
+import { c } from "../../assets/js/common/cons";
 
 export default {
   data() {
@@ -91,17 +91,17 @@ export default {
     },
     formatDate(date) {
       if (date) {
-        return moment(String(date)).format("DD/MM/YYYY");
+        return date;
       }
     },
     update(requirement) {
       requirement.estado = false;
 
-      let uri = `http://localhost:4000/domains/delete/${requirement._id}`;
-      this.axios.post(uri, requirement).then(() => {
+      let uri = c.host + `requirex/domains/${requirement.id}`;
+      this.axios.delete(uri, requirement).then(() => {
         //Eliminar item de la lista domains
         this.row.listRequirements.splice(
-          this.row.listRequirements.indexOf(requirement._id),
+          this.row.listRequirements.indexOf(requirement.id),
           1
         );
       });
@@ -109,7 +109,7 @@ export default {
     edit() {
       this.$router.push({
         name: "requirexdomainedit",
-        params: { id: this.selectedRequirement._id }
+        params: { id: this.selectedRequirement.id }
       });
     },
 
@@ -201,7 +201,7 @@ export default {
   },
   mounted() {
     //Cargar lista de requerimientos de dominio
-    let uri = "http://localhost:4000/domains";
+    let uri = c.host + "requirex/domains";
     this.axios.get(uri).then(response => {
       for (var i = 0; i < response.data.length; i++) {
         if (response.data[i].estado) {

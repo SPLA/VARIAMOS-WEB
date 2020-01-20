@@ -9,7 +9,7 @@
         <div class="col-sm-4">
           <div class="card px-1">
             <h5 class="card-title ">{{$t("requirex_domain")}} - {{$t("Requirement")}}</h5>
-             <h6 class="card-subtitle mb-2 text-muted">Current Requirements {{requirementsDomain.length}}</h6>
+             <h6 class="card-subtitle mb-2 text-muted">Current Requirements {{countDomain}}</h6>
             <div class="card-body py-0 px-0 ">
               <div>
                 <button
@@ -28,7 +28,7 @@
         <div class="col-sm-4">
           <div class="card px-1">
             <h5 class="card-title ">{{$t("requirex_application")}} - {{$t("Requirement")}}</h5>
-            <h6 class="card-subtitle mb-2 text-muted">Current Requirements {{requirementsApplication.length}}</h6>
+            <h6 class="card-subtitle mb-2 text-muted">Current Requirements {{countApplication}}</h6>
             <div class="card-body py-0 px-0 ">
               <div>
                 <button
@@ -46,7 +46,7 @@
         <div class="col-sm-4">
           <div class="card">
             <h5 class="card-title">{{$t("requirex_adaptation")}} - {{$t("Requirement")}}</h5>
-            <h6 class="card-subtitle mb-2 text-muted">Current Requirements {{requirementsAdaptation.length}}</h6>
+            <h6 class="card-subtitle mb-2 text-muted">Current Requirements {{countAdaptation}}</h6>
             <div class="card-body py-0 px-0 ">
               <div>
                 <button
@@ -81,31 +81,6 @@ import "jspdf-autotable";
 export default {
   data() {
     return {
-      requirementsDomain: [],
-      requirementsAdaptation: [],
-      requirementsApplication: [],
-
-      requirementsTableCollection: [
-        {
-          reqType: this.$t("requirex_domain"),
-          amount: 0,
-          lastTime: "No Data",
-          listRequirements: []
-        },
-        {
-          reqType: this.$t("requirex_application"),
-          amount: 0,
-          lastTime: "No Data",
-          listRequirements: []
-        },
-        {
-          reqType: this.$t("requirex_adaptation"),
-          amount: 0,
-          lastTime: "No Data",
-          listRequirements: []
-        }
-      ],
-
       countDomain: 0,
       countApplication: 0,
       countAdaptation: 0,
@@ -132,180 +107,26 @@ export default {
         this.$router.push("/requirex/adaptations");
       }
     },
-/*
-    onGeneratePdf() {
-      var domainCount = this.requirementsTableCollection[0].amount;
-      var applicationCount = this.requirementsTableCollection[1].amount;
-      var adaptationCount = this.requirementsTableCollection[2].amount;
 
-      var linea = 20;
-      var idCount = 1;
-      var total = domainCount + applicationCount + adaptationCount;
-      var doc = new jsPDF();
-
-      //Titulo
-      doc.setFontSize(22);
-      doc.text(20, linea, "Variamos - RequireX");
-
-      if (total > 0) {
-        linea += 20;
-
-        //Sub titulo
-        if (domainCount > 0) {
-          doc.setFontSize(16);
-          doc.text(20, linea, this.$t("requirex_domain_tittle") + "s");
-          linea += 10;
-
-          var vec = [];
-          for (var i = 0; i < domainCount; i++) {
-            var item = {
-              id: this.requirementsTableCollection[0].listRequirements[i]
-                .requirementNumber,
-              system: this.requirementsTableCollection[0].listRequirements[i]
-                .systemName,
-              name: this.requirementsTableCollection[0].listRequirements[i]
-                .name,
-              requirement: this.requirementsTableCollection[0].listRequirements[
-                i
-              ].msg,
-              date: this.requirementsTableCollection[0].lastTime
-            };
-
-            vec.push(item);
-            idCount++;
-          }
-
-          doc.autoTable({
-            columns: [
-              { header: "Id", dataKey: "id" },
-              { header: "Name", dataKey: "name" },
-              { header: "Requirement", dataKey: "requirement" },
-              { header: "Date", dataKey: "date" }
-            ],
-            body: vec,
-            startY: linea,
-            theme: "grid"
-          });
-          linea += 15;
-          linea += domainCount * 15;
-        }
-
-        if (applicationCount > 0) {
-          doc.setFontSize(16);
-          doc.text(20, linea, this.$t("requirex_application_tittle") + "s");
-          linea += 10;
-
-          var vec = [];
-          for (var i = 0; i < applicationCount; i++) {
-            var item = {
-              id: this.requirementsTableCollection[1].listRequirements[i]
-                .requirementNumber,
-              system: this.requirementsTableCollection[1].listRequirements[i]
-                .systemName,
-              name: this.requirementsTableCollection[1].listRequirements[i]
-                .name,
-              requirement: this.requirementsTableCollection[1].listRequirements[
-                i
-              ].msg,
-              date: this.requirementsTableCollection[1].lastTime
-            };
-
-            vec.push(item);
-          }
-
-          doc.autoTable({
-            columns: [
-              { header: "Id", dataKey: "id" },
-              { header: "System", dataKey: "system" },
-              { header: "Name", dataKey: "name" },
-              { header: "Requirement", dataKey: "requirement" },
-              { header: "Date", dataKey: "date" }
-            ],
-            body: vec,
-            startY: linea,
-            theme: "grid"
-          });
-
-          linea += 15;
-          linea += applicationCount * 15;
-        }
-
-        //Sub titulo
-        if (adaptationCount > 0) {
-          doc.setFontSize(16);
-          doc.text(20, linea, this.$t("requirex_adaptation_tittle") + "s");
-          linea += 10;
-
-          var vec = [];
-          for (var i = 0; i < adaptationCount; i++) {
-            var item = {
-              id: this.requirementsTableCollection[2].listRequirements[i]
-                .requirementNumber,
-              system: this.requirementsTableCollection[2].listRequirements[i]
-                .systemName,
-              name: this.requirementsTableCollection[2].listRequirements[i]
-                .name,
-              requirement: this.requirementsTableCollection[2].listRequirements[
-                i
-              ].msg,
-              date: this.requirementsTableCollection[2].lastTime
-            };
-
-            vec.push(item);
-            idCount++;
-          }
-
-          doc.autoTable({
-            columns: [
-              { header: "Id", dataKey: "id" },
-              { header: "Name", dataKey: "name" },
-              { header: "Requirement", dataKey: "requirement" },
-              { header: "Date", dataKey: "date" }
-            ],
-            body: vec,
-            startY: linea,
-            theme: "grid"
-          });
-          linea += 15;
-          linea += domainCount * 15;
-        }
-        doc.save("requirement.pdf");
-      } else {
-        this.$Message.error("There are no requirements to generate!");
-      }
-    }*/
   },
   mounted() {
     //Cargar lista de requerimientos de dominio
-    let uri = c.host + "domains";
+    let uri = c.host + "requirex/domains/bytotal/true";
     this.axios.get(uri).then(response => {
-      for (var i = 0; i < response.data.length; i++) {
-        if (response.data[i].estado) {
-          this.requirementsDomain.push(response.data[i]);
-        }
-      }
-      console.log("tamaño : " + this.requirementsDomain.length);
+      this.countDomain = response.data;
+      console.log("tamaño : " + this.requirementsDomain );
     });
 
     //Cargar lista de requerimientos de aplicacion
-    uri = c.host + "applications";
+    uri = c.host + "requirex/applications/bytotal/true";
     this.axios.get(uri).then(response => {
-      for (var i = 0; i < response.data.length; i++) {
-        if (response.data[i].estado) {
-          this.requirementsApplication.push(response.data[i]);
-        }
-      }
+      this.countApplication = response.data;
     });
 
     //Cargar lista de requerimientos de aplicacion
-    uri = c.host + "adaptations";
+    uri = c.host + "requirex/adaptations/bytotal/true";
     this.axios.get(uri).then(response => {
-      for (var i = 0; i < response.data.length; i++) {
-        if (response.data[i].estado) {
-          this.requirementsAdaptation.push(response.data[i]);
-        }
-      }
-
+      this.countAdaptation = response.data;
     });
   },
  

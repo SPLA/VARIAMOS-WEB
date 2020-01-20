@@ -473,7 +473,7 @@ export default {
       this.saveRequirement();
     },
     saveRequirement() {
-      let uri = c.host + "adaptations/add";
+      let uri = c.host + "requirex/adaptations";
       this.axios.post(uri, this.requirement).then(() => {
         $("#adaptationMessage span").text("Success!");
         $("#adaptationMessage").addClass("alert-success");
@@ -497,10 +497,9 @@ export default {
       $("#adaptationMessage").hide("slow");
     }
   },
-  mounted() {},
-  created() {
+  mounted() {
     //Cargar lista de requerimientos de aplicacion
-    let uri = c.host + "adaptations";
+    let uri = c.host + "requirex/adaptations";
     this.axios.get(uri).then(response => {
       this.listAdaptationRequirement = response.data;
       this.countAdaptation = this.listAdaptationRequirement.length;

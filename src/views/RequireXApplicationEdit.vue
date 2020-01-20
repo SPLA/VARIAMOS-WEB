@@ -254,7 +254,7 @@ export default {
     };
   },
   created() {
-    let uri = c.host + `applications/${this.$route.params.id}`;
+    let uri = c.host + `requirex/applications/${this.$route.params.id}`;
     this.axios.get(uri).then(response => {
       this.requirement = response.data;
     });
@@ -347,8 +347,8 @@ export default {
       this.updateRequirement();
     },
     updateRequirement() {
-      let uri = c.host + `applications/update/${this.$route.params.id}`;
-      this.axios.post(uri, this.requirement).then(() => {
+      let uri = c.host + `requirex/applications/${this.$route.params.id}`;
+      this.axios.put(uri, this.requirement).then(() => {
         $("#applicationMessage span").text("Success!");
         $("#applicationMessage").addClass("alert-success");
         $("#applicationMessage").removeClass("alert-danger");
