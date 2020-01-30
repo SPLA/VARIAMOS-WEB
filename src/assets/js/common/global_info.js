@@ -5,7 +5,7 @@
 export function getModelInfo(){
     let info = [];
     //list of graphical models
-    info["gmodels"] = ["feature", "component", "binding_feature_component", "istar",
+    info["gmodels"] = ["feature", "component", "binding_feature_component", "istar", "classdiag", "adap_architecture",
         "adaptation_state", "adaptation_hardware", "adaptation_binding_state_hardware", "control"];
     //define feature model main info
     info["feature"] = {projFolders:["Domain"], label:"Feature"};
@@ -13,8 +13,12 @@ export function getModelInfo(){
     info["component"] = {projFolders:["Domain"], label:"Component"};
     //define binding model main info
     info["binding_feature_component"] = {projFolders:["Domain"], label:"Binding FeatureComponent"};
+    //define adapt_architecture model main info
+    info["adap_architecture"]={projFolders:["Domain"], label:"Adaptative Architecture"};
     //define istar model main info
     info["istar"] = {projFolders:["Domain"], label:"iStar"};
+    //define class diagram model main info
+    info["classdiag"] = {projFolders:["Domain"], label:"Class Diagram"}
     //define adaptation_state model main info
     info["adaptation_state"]={projFolders:["Application"],label:"State"};
     //define adaptation_hardware model main info
@@ -28,8 +32,7 @@ export function getModelInfo(){
 
 // insert models according to main model info
 export function insertmodel(data, index, temp) {
-    for(let i = 0; i < getModelInfo()['gmodels'].length; i++)
-	{
+    for(let i = 0; i < getModelInfo()['gmodels'].length; i++){
 		if(getModelInfo()[getModelInfo()['gmodels'][getModelInfo()['gmodels'].length-i-1]].projFolders.includes(data[index].data.nodeName.split(' -')[0]))
 		{
             /**

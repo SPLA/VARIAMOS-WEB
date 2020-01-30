@@ -101,7 +101,7 @@ export const mutations = {
 			state.cache_selected.push(data);
 	},
 	removecacheselected(state, data) {
-		for( var i = 0; i < state.cache_selected.length; i++){ 
+		for( let i = 0; i < state.cache_selected.length; i++){ 
 			if ( state.cache_selected[i] === data) {
 				state.cache_selected.splice(i, 1); 
 			}
