@@ -87,7 +87,12 @@ let control_main = function control_main(graph)
             {
                 "name":"Time",
                 "def_value":"0"
+            },
+            {
+                "name":"Tm",
+                "def_value":"100"
             }]
+            
         };
         attributes[2]={
             "types":["transducer"],
