@@ -10,8 +10,6 @@ import VueI18n from 'vue-i18n'
 import i18n from '../../../src/i18n'
 import Filemanagetree from '../../../src/views/Filemanagetree.vue'
 import cotalogue from '../../../src/components/cotalogue.vue'
-import iView from 'iview';
-import 'iview/dist/styles/iview.css';
 import Vue from 'vue'
 import {
   stateFactory
@@ -25,7 +23,6 @@ chai.use(sinonChai)
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
-localVue.use(iView)
 localVue.use(VueI18n)
 
 describe('Filemanagetree', () => {

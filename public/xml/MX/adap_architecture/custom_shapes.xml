@@ -4,7 +4,7 @@
 		<background>
 		</background>
 		<foreground>
-			<image src="../../images/models/adap_architecture/icons/link.png" x="-25" y="-25" w="150" h="150" />
+			<image src="../images/models/adap_architecture/icons/link.png" x="-25" y="-25" w="150" h="150" />
 		</foreground>
 	</shape>
 
@@ -12,7 +12,7 @@
 		<background>
 		</background>
 		<foreground>
-			<image src="../../images/models/adap_architecture/icons/aggregation.png" x="-25" y="-25" w="150" h="150" />
+			<image src="../images/models/adap_architecture/icons/aggregation.png" x="-25" y="-25" w="150" h="150" />
 		</foreground>
 	</shape>
 
@@ -20,7 +20,7 @@
 		<background>
 		</background>
 		<foreground>
-			<image src="../../images/models/adap_architecture/icons/signal.png" x="-25" y="-25" w="150" h="150" />
+			<image src="../images/models/adap_architecture/icons/signal.png" x="-25" y="-25" w="150" h="150" />
 		</foreground>
 	</shape>
 
@@ -28,7 +28,7 @@
 		<background>
 		</background>
 		<foreground>
-			<image src="../../images/models/adap_architecture/icons/resourceLink.png" x="-25" y="-25" w="150" h="150" />
+			<image src="../images/models/adap_architecture/icons/resourceLink.png" x="-25" y="-25" w="150" h="150" />
 		</foreground>
 	</shape>
 
@@ -36,7 +36,7 @@
 		<background>
 		</background>
 		<foreground>
-			<image src="../../images/models/adap_architecture/icons/actuatorLink.png" x="-25" y="-25" w="150" h="150" />
+			<image src="../images/models/adap_architecture/icons/actuatorLink.png" x="-25" y="-25" w="150" h="150" />
 		</foreground>
 	</shape>
 
@@ -45,7 +45,7 @@
 		<background>
 		</background>
 		<foreground>
-			<image src="../../images/models/adap_architecture/icons/sensorLink.png" x="-25" y="-25" w="150" h="150" />
+			<image src="../images/models/adap_architecture/icons/sensorLink.png" x="-25" y="-25" w="150" h="150" />
 		</foreground>
 	</shape>
 
@@ -53,7 +53,7 @@
 		<background>
 		</background>
 		<foreground>
-			<image src="../../images/models/adap_architecture/icons/wirlessComunication.png" x="-25" y="-25" w="150" h="150" />
+			<image src="../images/models/adap_architecture/icons/wirlessComunication.png" x="-25" y="-25" w="150" h="150" />
 		</foreground>
 	</shape>
 
@@ -61,7 +61,7 @@
 		<background>
 		</background>
 		<foreground>
-			<image src="../../images/models/adap_architecture/icons/wiredComunication.png" x="-25" y="-25" w="150" h="150" />
+			<image src="../images/models/adap_architecture/icons/wiredComunication.png" x="-25" y="-25" w="150" h="150" />
 		</foreground>
 	</shape>
 

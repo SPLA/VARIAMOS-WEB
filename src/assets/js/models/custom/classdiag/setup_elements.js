@@ -16,7 +16,6 @@ let setup_elements = function setup_elements(graph, elements, custom_attributes,
     {
         let doc = mxUtils.createXmlDocument();
         let node = doc.createElement(type);
-        node.setAttribute('label', type);
         node.setAttribute('type', type);
 
         //include custom attributes
@@ -64,32 +63,50 @@ let setup_elements = function setup_elements(graph, elements, custom_attributes,
                 vertex.geometry.y = pt.y;
 
                 let new_cells = graph.importCells([vertex], 0, 0, cell);
+                //Set up handling of new classes.
                 new_cells.forEach(element => {
                     const type = element.getAttribute("type");
-                    if(["goal","quality","task","resource"].includes(type)){
-                        if(cell == null){
-                            element.setAttribute("dependum", "true");
-                            element.setAttribute("type", type + "-dependum");
-                        } else {
-                            element.setAttribute("dependum", "false");
-                        }
+                    if(["class"].includes(type)){
+                        const class_name_type = 'class_name';
+                        const doc_name = mxUtils.createXmlDocument();
+                        const node_name = doc_name.createElement(class_name_type);
+                        node_name.setAttribute('type', class_name_type);
+                        node_name.setAttribute('label', '');
+                        const class_name = graph.insertVertex(element,null,node_name,0,0,100,20,'fillColor=#FFFFFF;selectable=0;fontColor=black;');
+                        class_name.setConnectable(false);
+
+                        const class_attributes_type = 'class_attributes';
+                        const doc_attributes = mxUtils.createXmlDocument();
+                        const node_attributes = doc_attributes.createElement(class_attributes_type);
+                        node_attributes.setAttribute('type', class_attributes_type);
+                        const class_attributes = graph.insertVertex(element,null,node_attributes,0,20,100,40,'fillColor=#FFFFFF;selectable=0;');
+                        class_attributes.setConnectable(false);
+
+                        /* const placeholder_attribute_type = 'attribute';
+                        const doc_placeholder_attribute = mxUtils.createXmlDocument();
+                        const node_placeholder_attribute = doc_placeholder_attribute.createElement(placeholder_attribute_type);
+                        node_placeholder_attribute.setAttribute('type', placeholder_attribute_type);
+                        node_placeholder_attribute.setAttribute('label', '- attribute : type')
+                        const placeholder_attribute = graph.insertVertex(class_attributes,null,node_placeholder_attribute,1,1,98,18,'fillColor=#FFFFFF;selectable=0;align=left;fontColor=black;strokeColor=none;');
+                        placeholder_attribute.setConnectable(false); */
+
+                        const class_methods_type = 'class_methods';
+                        const doc_methods = mxUtils.createXmlDocument();
+                        const node_methods = doc_methods.createElement(class_methods_type);
+                        node_methods.setAttribute('type', class_methods_type);
+                        const class_methods = graph.insertVertex(element,null,node_methods,0,60,100,40,'fillColor=#FFFFFF;selectable=0;');
+                        class_methods.setConnectable(false);
+
+                        /* const placeholder_method_type = 'method';
+                        const doc_placeholder_method = mxUtils.createXmlDocument();
+                        const node_placeholder_method = doc_placeholder_method.createElement(placeholder_method_type);
+                        node_placeholder_method.setAttribute('type', placeholder_method_type);
+                        node_placeholder_method.setAttribute('label', '- method()')
+                        const placeholder_method = graph.insertVertex(class_methods,null,node_placeholder_method,1,1,98,18,'fillColor=#FFFFFF;selectable=0;align=left;fontColor=black;strokeColor=none;');
+                        placeholder_method.setConnectable(false); */
                     }
                 })
                 graph.setSelectionCells(new_cells);
-
-                //execute if there are clons for the current element
-                if(c_clon_cells!=null){
-                    let type = new_cells[0].getAttribute("type");
-                    if(c_clon_cells[type]){ //clon cell in a new model
-                        graph.getModel().prefix="clon"; //cloned cell contains clon prefix
-                        graph.getModel().nextId=graph.getModel().nextId-1;
-                        let vertex2 = graph.getModel().cloneCell(new_cells[0]);
-                        let parent2 = graph.getModel().getCell(c_clon_cells[type]);
-                        graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#DCDCDC", [vertex2]); //different background for a cloned cell
-                        graph.importCells([vertex2], 0, 0, parent2);
-                        graph.getModel().prefix=""; //restart prefix
-                    }
-                }
             }
 
 		}

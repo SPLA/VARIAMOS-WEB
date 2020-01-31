@@ -158,39 +158,50 @@ let setupProperties = function setupProperties(graph, properties_styles){
 					///////////////////////////////////////////////Change cell over edge/////////////////////////////////////////////
 					/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-					switch (newValue) {
-						case 'links':
-							graph.getModel().setStyle(cell.children[0], 'shape=link;labelBackgroundColor=#ffffff;labelPosition=left;spacingRight=2;align=right;fontStyle=0;');
-							break;
-						case 'aggregation':
-							graph.getModel().setStyle(cell.children[0], 'shape=Aggregation;labelBackgroundColor=#ffffff;labelPosition=left;spacingRight=2;align=right;fontStyle=0;');
-							break;
-						case 'signal':
-							graph.getModel().setStyle(cell.children[0], 'shape=Signal;labelBackgroundColor=#ffffff;labelPosition=left;spacingRight=2;align=right;fontStyle=0;');
-							break;
-						case 'resourcelink':
-							graph.getModel().setStyle(cell.children[0], 'shape=Resource_link;labelBackgroundColor=#ffffff;labelPosition=left;spacingRight=2;align=right;fontStyle=0;');
-							break;
-						case 'actuatorsignal':
-							graph.getModel().setStyle(cell.children[0], 'shape=Actuator_link;labelBackgroundColor=#ffffff;labelPosition=left;spacingRight=2;align=right;fontStyle=0;');
-							break;
-						case 'actionlink':
-							graph.getModel().setStyle(cell.children[0], 'shape=Action_link;labelBackgroundColor=#ffffff;labelPosition=left;spacingRight=2;align=right;fontStyle=0;');
-							break;
-						case 'sensorlink':
-							graph.getModel().setStyle(cell.children[0], 'shape=Sensor_link;labelBackgroundColor=#ffffff;labelPosition=left;spacingRight=2;align=right;fontStyle=0;');
-							break;
-						case 'wired':
-							graph.getModel().setStyle(cell.children[0], 'shape=Wired_comunication;labelBackgroundColor=#ffffff;labelPosition=left;spacingRight=2;align=right;fontStyle=0;');
-							break;
-						case 'wireless':
-							graph.getModel().setStyle(cell.children[0], 'shape=Wirless_comunication;labelBackgroundColor=#ffffff;labelPosition=left;spacingRight=2;align=right;fontStyle=0;');
-							break;
-						default:
-							let edit = new mxCellAttributeChange(cell, attribute.nodeName,newValue);
-							graph.getModel().execute(edit);
-							break;
+					for (let i = 0; i<cell.children.length; i++){
+						if (cell.children[i].value == "Label"){
+							switch (newValue) {
+								case 'links':
+									graph.getModel().setStyle(cell.children[i], 'shape=link;labelBackgroundColor=#ffffff;labelPosition=left;spacingRight=2;align=right;fontStyle=0;');
+									break;
+								case 'aggregation':
+									graph.getModel().setStyle(cell.children[i], 'shape=Aggregation;labelBackgroundColor=#ffffff;labelPosition=left;spacingRight=2;align=right;fontStyle=0;');
+									break;
+								case 'signal':
+									graph.getModel().setStyle(cell.children[i], 'shape=Signal;labelBackgroundColor=#ffffff;labelPosition=left;spacingRight=2;align=right;fontStyle=0;');
+									break;
+								case 'resourcelink':
+									graph.getModel().setStyle(cell.children[i], 'shape=Resource_link;labelBackgroundColor=#ffffff;labelPosition=left;spacingRight=2;align=right;fontStyle=0;');
+									break;
+								case 'actuatorsignal':
+									graph.getModel().setStyle(cell.children[i], 'shape=Actuator_link;labelBackgroundColor=#ffffff;labelPosition=left;spacingRight=2;align=right;fontStyle=0;');
+									break;
+								case 'actionlink':
+									graph.getModel().setStyle(cell.children[i], 'shape=Action_link;labelBackgroundColor=#ffffff;labelPosition=left;spacingRight=2;align=right;fontStyle=0;');
+									break;
+								case 'sensorlink':
+									graph.getModel().setStyle(cell.children[i], 'shape=Sensor_link;labelBackgroundColor=#ffffff;labelPosition=left;spacingRight=2;align=right;fontStyle=0;');
+									break;
+								case 'wired':
+									graph.getModel().setStyle(cell.children[i], 'shape=Wired_comunication;labelBackgroundColor=#ffffff;labelPosition=left;spacingRight=2;align=right;fontStyle=0;');
+									break;
+								case 'wireless':
+									graph.getModel().setStyle(cell.children[i], 'shape=Wirless_comunication;labelBackgroundColor=#ffffff;labelPosition=left;spacingRight=2;align=right;fontStyle=0;');
+									break;
+								default:
+									let edit = new mxCellAttributeChange(cell, attribute.nodeName,newValue);
+									graph.getModel().execute(edit);
+									break;
+							}
+						}
+						else if(cell.children[i].value.attributes){
+							if(cell.children[i].value.localName == attribute.nodeName){
+								cell.children[i].value.attributes[0].nodeValue = newValue;
+							}
+
+						}
 					}
+					
 					
 					//update cloned cell if exists
 					let clon = graph.getModel().getCell("clon"+cell.getId());
