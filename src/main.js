@@ -11,11 +11,10 @@ import store from './store'
 import messages from './assets/js/common/messages'
 
 //Axio client HTTP basado en promesas.
-import VueAxios from 'vue-axios';
 import axios from 'axios';
 
 Vue.use(VueI18n)
-Vue.use(VueAxios, axios);
+Vue.use(axios);
 Vue.config.productionTip = false
 
 //Set variable on the global object.
