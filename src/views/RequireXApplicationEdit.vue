@@ -239,7 +239,6 @@
 
 <script>
 import $ from "jquery";
-import { c }  from "../assets/js/common/cons";
 
 $(function() {
   //Agregar o retirar condiciones del sistema
@@ -254,7 +253,7 @@ export default {
     };
   },
   created() {
-    let uri = c.host + `requirex/applications/${this.$route.params.id}`;
+    let uri = localStorage["domain_implementation_main_path"] + `requirex/applications/${this.$route.params.id}`;
     this.axios.get(uri).then(response => {
       this.requirement = response.data;
     });
@@ -347,7 +346,7 @@ export default {
       this.updateRequirement();
     },
     updateRequirement() {
-      let uri = c.host + `requirex/applications/${this.$route.params.id}`;
+      let uri = localStorage["domain_implementation_main_path"] + `requirex/applications/${this.$route.params.id}`;
       this.axios.put(uri, this.requirement).then(() => {
         $("#applicationMessage span").text("Success!");
         $("#applicationMessage").addClass("alert-success");

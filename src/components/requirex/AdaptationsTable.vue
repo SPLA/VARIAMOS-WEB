@@ -76,7 +76,6 @@
 <script>
 import jsPDF from "jspdf";
 import "jspdf-autotable";
-import { c } from "../../assets/js/common/cons";
 
 export default {
   data() {
@@ -93,7 +92,7 @@ export default {
     update(requirement) {
       requirement.estado = false;
 
-     let uri = c.host + `requirex/adaptations/${requirement.id}`;
+     let uri = localStorage["domain_implementation_main_path"] + `requirex/adaptations/${requirement.id}`;
       this.axios.delete(uri, requirement).then(() => {
         //Eliminar item de la lista applications
         this.row.listRequirements.splice(
@@ -114,8 +113,8 @@ export default {
       }
     },
     generatePdf(requirement) {
-      var doc = new jsPDF();
-      var linea = 20;
+      let doc = new jsPDF();
+      let linea = 20;
 
       //Titulo
       doc.setFontSize(22);
@@ -126,8 +125,8 @@ export default {
       doc.text(20, linea, this.$t("requirex_adaptation_tittle") + "s");
       linea += 10;
 
-      var vec = [];
-      var item = {
+      let vec = [];
+      let item = {
         id: requirement.requirementNumber,
         system: requirement.systemName,
         name: requirement.name,
@@ -152,9 +151,9 @@ export default {
       doc.save("requirement.pdf");
     },
     generateConsolidatePdf(){
-      var doc = new jsPDF();
-      var linea = 20;
-      var total = this.requirementsAdaptation.length;
+      let doc = new jsPDF();
+      let linea = 20;
+      let total = this.requirementsAdaptation.length;
 
       //Titulo
       doc.setFontSize(22);
@@ -165,10 +164,10 @@ export default {
       doc.text(20, linea, this.$t("requirex_adaptation_tittle") + "s");
       linea += 10;
 
-      var vec = [];
-       for (var i = 0; i < this.requirementsAdaptation.length; i++) {
-          var requirement = this.requirementsAdaptation[i];
-          var item = {
+      let vec = [];
+       for (let i = 0; i < this.requirementsAdaptation.length; i++) {
+          let requirement = this.requirementsAdaptation[i];
+          let item = {
             id: requirement.requirementNumber,
             system: requirement.systemName,
             name: requirement.name,
@@ -195,9 +194,9 @@ export default {
   },
   mounted() {
     //Cargar lista de requerimientos de aplicacion
-     let uri = c.host + "requirex/adaptations";
+     let uri =localStorage["domain_implementation_main_path"] + "requirex/adaptations";
     this.axios.get(uri).then(response => {
-      for (var i = 0; i < response.data.length; i++) {
+      for (let i = 0; i < response.data.length; i++) {
         if (response.data[i].estado) {
           this.requirementsAdaptation.push(response.data[i]);
         }

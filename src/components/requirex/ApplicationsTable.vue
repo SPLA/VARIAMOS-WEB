@@ -76,7 +76,6 @@
 <script>
 import jsPDF from "jspdf";
 import "jspdf-autotable";
-import { c } from "../../assets/js/common/cons";
 
 export default {
   data() {
@@ -98,7 +97,7 @@ export default {
     update(requirement) {
       requirement.estado = false;
 
-     let uri = c.host + `requirex/applications/${requirement.id}`;
+     let uri = localStorage["domain_implementation_main_path"] + `requirex/applications/${requirement.id}`;
       this.axios.delete(uri, requirement).then(() => {
         //Eliminar item de la lista applications
         this.row.listRequirements.splice(
@@ -115,8 +114,8 @@ export default {
       });
     },
     generatePdf(requirement, total) {
-      var doc = new jsPDF();
-      var linea = 20;
+      let doc = new jsPDF();
+      let linea = 20;
 
       //Titulo
       doc.setFontSize(22);
@@ -127,8 +126,8 @@ export default {
         doc.text(20, linea, this.$t("requirex_application_tittle") + "s");
         linea += 10;
 
-        var vec = [];
-        var item = {
+        let vec = [];
+        let item = {
           id: requirement.requirementNumber,
           system: requirement.systemName,
           name: requirement.name,
@@ -154,9 +153,9 @@ export default {
       
     },
     generateConsolidatePdf() {
-      var doc = new jsPDF();
-      var linea = 20;
-      var total = this.requirementsApplication.length;
+      let doc = new jsPDF();
+      let linea = 20;
+      let total = this.requirementsApplication.length;
 
       //Titulo
       doc.setFontSize(22);
@@ -168,11 +167,11 @@ export default {
         doc.text(20, linea, this.$t("requirex_application_tittle") + "s");
         linea += 10;
 
-        var vec = [];
+        let vec = [];
 
-        for (var i = 0; i < this.requirementsApplication.length; i++) {
-          var requirement = this.requirementsApplication[i];
-          var item = {
+        for (let i = 0; i < this.requirementsApplication.length; i++) {
+          let requirement = this.requirementsApplication[i];
+          let item = {
             id: requirement.requirementNumber,
             system: requirement.systemName,
             name: requirement.name,
@@ -200,9 +199,9 @@ export default {
   },
   mounted() {
     //Cargar lista de requerimientos de aplicacion
-      let uri = c.host + "requirex/applications";
+      let uri = localStorage["domain_implementation_main_path"] + "requirex/applications";
     this.axios.get(uri).then(response => {
-      for (var i = 0; i < response.data.length; i++) {
+      for (let i = 0; i < response.data.length; i++) {
         if (response.data[i].estado) {
           this.requirementsApplication.push(response.data[i]);
         }

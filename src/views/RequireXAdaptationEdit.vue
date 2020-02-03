@@ -445,7 +445,7 @@ export default {
       this.updateRequirement();
     },
     updateRequirement() {
-      let uri = c.host + `requirex/adaptations/${this.$route.params.id}`;
+      let uri = localStorage["domain_implementation_main_path"] + `requirex/adaptations/${this.$route.params.id}`;
       this.axios.put(uri, this.requirement).then(() => {
         $("#adaptationMessage span").text("Success!");
         $("#adaptationMessage").addClass("alert-success");
@@ -468,7 +468,7 @@ export default {
     }
   },
   mounted() {
-    let uri = c.host + `requirex/adaptations/${this.$route.params.id}`;
+    let uri = localStorage["domain_implementation_main_path"] + `requirex/adaptations/${this.$route.params.id}`;
     this.axios.get(uri).then(response => {
       this.requirement = response.data;
     });

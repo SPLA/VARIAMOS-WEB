@@ -74,7 +74,6 @@
 </template>
 
 <script>
-import { c } from '../assets/js/common/cons';
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 
@@ -110,21 +109,22 @@ export default {
 
   },
   mounted() {
+    alert(localStorage["domain_implementation_main_path"]);
     //Cargar lista de requerimientos de dominio
-    let uri = c.host + "requirex/domains/bytotal/true";
+    let uri = localStorage["domain_implementation_main_path"] + "requirex/domains/bytotal/true";
     this.axios.get(uri).then(response => {
       this.countDomain = response.data;
       console.log("tamaño : " + this.requirementsDomain );
     });
 
     //Cargar lista de requerimientos de aplicacion
-    uri = c.host + "requirex/applications/bytotal/true";
+    uri = localStorage["domain_implementation_main_path"] + "requirex/applications/bytotal/true";
     this.axios.get(uri).then(response => {
       this.countApplication = response.data;
     });
 
     //Cargar lista de requerimientos de aplicacion
-    uri = c.host + "requirex/adaptations/bytotal/true";
+    uri = localStorage["domain_implementation_main_path"] + "requirex/adaptations/bytotal/true";
     this.axios.get(uri).then(response => {
       this.countAdaptation = response.data;
     });

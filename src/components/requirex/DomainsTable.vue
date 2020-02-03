@@ -75,7 +75,6 @@
 <script>
 import jsPDF from "jspdf";
 import "jspdf-autotable";
-import { c } from "../../assets/js/common/cons";
 
 export default {
   data() {
@@ -97,7 +96,7 @@ export default {
     update(requirement) {
       requirement.estado = false;
 
-      let uri = c.host + `requirex/domains/${requirement.id}`;
+      let uri = localStorage["domain_implementation_main_path"] + `requirex/domains/${requirement.id}`;
       this.axios.delete(uri, requirement).then(() => {
         //Eliminar item de la lista domains
         this.row.listRequirements.splice(
@@ -114,8 +113,8 @@ export default {
     },
 
     generatePdf(requirement, total) {
-      var doc = new jsPDF();
-      var linea = 20;
+      let doc = new jsPDF();
+      let linea = 20;
 
       //Titulo
       doc.setFontSize(22);
@@ -127,8 +126,8 @@ export default {
         doc.text(20, linea, this.$t("requirex_domain_tittle") + "s");
         linea += 10;
 
-        var vec = [];
-        var item = {
+        let vec = [];
+        let item = {
           id: requirement.requirementNumber,
           system: requirement.systemName,
           name: requirement.name,
@@ -155,9 +154,9 @@ export default {
     },
 
     generateConsolidatePdf() {
-      var doc = new jsPDF();
-      var linea = 20;
-      var total = this.requirementsDomain.length;
+      let doc = new jsPDF();
+      let linea = 20;
+      let total = this.requirementsDomain.length;
 
       //Titulo
       doc.setFontSize(22);
@@ -169,11 +168,11 @@ export default {
         doc.text(20, linea, this.$t("requirex_domain_tittle") + "s");
         linea += 10;
 
-        var vec = [];
-        for (var i = 0; i < this.requirementsDomain.length; i++) {
-          var requirement = this.requirementsDomain[i];
+        let vec = [];
+        for (let i = 0; i < this.requirementsDomain.length; i++) {
+          let requirement = this.requirementsDomain[i];
 
-          var item = {
+          let item = {
             id: requirement.requirementNumber,
             system: requirement.systemName,
             name: requirement.name,
@@ -201,9 +200,9 @@ export default {
   },
   mounted() {
     //Cargar lista de requerimientos de dominio
-    let uri = c.host + "requirex/domains";
+    let uri = localStorage["domain_implementation_main_path"] + "requirex/domains";
     this.axios.get(uri).then(response => {
-      for (var i = 0; i < response.data.length; i++) {
+      for (let i = 0; i < response.data.length; i++) {
         if (response.data[i].estado) {
           this.requirementsDomain.push(response.data[i]);
         }

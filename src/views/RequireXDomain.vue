@@ -280,7 +280,6 @@
 
 <script>
 import $ from "jquery";
-import { c } from "../assets/js/common/cons";
 
 $(function() {
   //Agregar o retirar condiciones del sistema
@@ -462,7 +461,7 @@ export default {
       $("#domainMessage").hide("slow");
     },
     saveRequirement() {
-      let uri = c.host + "requirex/domains";
+      let uri = localStorage["domain_implementation_main_path"] + "requirex/domains";
       this.axios.post(uri, this.requirement).then(() => {
         this.$Message.success("Success!");
         this.$router.push("/requirex");
@@ -476,7 +475,7 @@ export default {
   },
   created() {
     //Cargar lista de requerimientos de dominio
-    let uri = c.host + "requirex/domains";
+    let uri = localStorage["domain_implementation_main_path"] + "requirex/domains";
     this.axios.get(uri).then(response => {
       this.listDomainRequirement = response.data;
       this.countDomain = this.listDomainRequirement.length;
