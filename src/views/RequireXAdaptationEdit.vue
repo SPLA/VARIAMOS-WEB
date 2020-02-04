@@ -320,6 +320,7 @@
 </template>
 <script>
 import $ from "jquery";
+import axios from 'axios';
 
 $(function() {
   //Agregar o retirar condiciones del sistema

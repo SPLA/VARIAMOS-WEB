@@ -10,11 +10,7 @@ import './assets/css/fontawesome.css'
 import store from './store'
 import messages from './assets/js/common/messages'
 
-//Axio client HTTP basado en promesas.
-import axios from 'axios';
-
 Vue.use(VueI18n)
-Vue.use(axios);
 Vue.config.productionTip = false
 
 //Set variable on the global object.
