@@ -2,7 +2,8 @@
 FROM node:lts-alpine as build-stage
 WORKDIR /app
 COPY package*.json ./
-RUN rm -rf node_modules && npm install
+RUN rm -rf node_modules 
+RUN npm install
 COPY . .
 RUN npm run build
 
