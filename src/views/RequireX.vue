@@ -110,7 +110,6 @@ export default {
 
   },
   mounted() {
-    alert(localStorage["domain_implementation_main_path"]);
     //Cargar lista de requerimientos de dominio
     let uri = localStorage["domain_implementation_main_path"] + "requirex/domains/bytotal/true";
     this.axios.get(uri).then(response => {
