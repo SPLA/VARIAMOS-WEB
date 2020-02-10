@@ -74,8 +74,6 @@
 </template>
 
 <script>
-import jsPDF from "jspdf";
-import "jspdf-autotable";
 import axios from 'axios';
 
 export default {

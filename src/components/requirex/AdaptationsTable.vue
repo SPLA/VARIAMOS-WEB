@@ -74,8 +74,8 @@
 </template>
 
 <script>
-import jsPDF from "jspdf";
-import "jspdf-autotable";
+/*import jsPDF from "jspdf";
+import "jspdf-autotable";*/
 import axios from 'axios';
 
 export default {
@@ -114,7 +114,7 @@ export default {
       }
     },
     generatePdf(requirement) {
-      let doc = new jsPDF();
+      let doc = ""; //new jsPDF();
       let linea = 20;
 
       //Titulo
