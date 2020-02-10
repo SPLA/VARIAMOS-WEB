@@ -83,7 +83,7 @@ let classMain = function classMain(graph) {
       "target":["class"],
       "attributes":[{
         "name":"relation",
-        "def_value":"and"
+        "def_value":"Composition"
       }]
     });
     relations.push({

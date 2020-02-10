@@ -88,8 +88,8 @@ let setup_events = function setup_events(graph){
                     const method_count = method_container.getChildCount();
 
                     const limitWidth = 100;
-                    const attribute_height = (20 * (attr_count + 1));
-                    const method_height = (20 * (method_count + 1));
+                    const attribute_height = attr_count === 0 ? 40 : (20 * (attr_count + 1));
+                    const method_height = method_count === 0 ? 40 : (20 * (method_count + 1));
                     const limitHeight = 20 + attribute_height + method_height;
                     let extraHeight = cellGeo.height - limitHeight;
                     if (extraHeight < 0){

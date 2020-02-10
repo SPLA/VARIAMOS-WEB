@@ -21,7 +21,7 @@ chai.use(sinonChai)
 const localVue = createLocalVue()
 localVue.use(Vuex)
 
-describe('Multi-Models', () => {
+describe.only('Multi-Models', () => {
   /**
    * The localgetters object permits us to spy
    * on the behaviour of the getters within the

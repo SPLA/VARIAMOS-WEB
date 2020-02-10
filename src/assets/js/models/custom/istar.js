@@ -1,5 +1,6 @@
 let istar_main = function istar_main(graph)
 {
+  istar_custom_overrides();
   istar_constraints();
   istar_custom_markers();
   istar_custom_events();
@@ -14,7 +15,21 @@ let istar_main = function istar_main(graph)
   data["m_clon_cells"]=null; //custom clon cells
   data["m_relation_styles"]=istar_relation_styles();
   data["m_overlay"] = istar_overlay(); //custom overlay
-	return data;
+  return data;
+  
+  function istar_custom_overrides(){
+    graph.isHtmlLabel = function (cell) {
+      return mxUtils.isNode(cell.value);
+    }
+
+    graph.isCellSelectable = function(cell)
+    {
+      let state = this.view.getState(cell);
+      let style = (state != null) ? state.style : this.getCellStyle(cell);
+
+      return this.isCellsSelectable() && !this.isCellLocked(cell) && style['selectable'] != 0;
+    };
+  }
 	
 	function istar_constraints(){
     graph.multiplicities=[]; //reset multiplicities
