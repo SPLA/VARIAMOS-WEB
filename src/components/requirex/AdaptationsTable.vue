@@ -114,7 +114,7 @@ export default {
       }
     },
     generatePdf(requirement) {
-      let doc = new jsPDF();
+      let doc =  new jsPDF();
       let linea = 20;
 
       //Titulo
