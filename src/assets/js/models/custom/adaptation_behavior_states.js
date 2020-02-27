@@ -178,7 +178,7 @@ let adaptation_behavior_states_main = function adaptation_behavior_states_main(g
 				"def_value": "Synchronous"
 			}]
 		}  
-		relations[1] = {
+		relations[2] = {
 			"source": ["activityLifeLine"],
 			"rel_source_target": "and",
 			"target": ["actionLifeLine"],

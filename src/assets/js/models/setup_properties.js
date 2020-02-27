@@ -165,14 +165,15 @@ let setup_properties = function setup_properties(graph,properties_styles){
 							newValue);
 					graph.getModel().execute(edit);
 					
-					//update cloned cell if exists
-					let clon = graph.getModel().getCell("clon"+cell.getId());
-					if(clon){
+					//update cloned cell if exists coco
+					let clons=findClons(cell.getId());
+					for (let ci = 0; ci < clons.length; ci++) {
+						let clon = clons[ci];
 						let edit2 = new mxCellAttributeChange(
 							clon, attribute.nodeName,
 							newValue);
 						graph.getModel().execute(edit2);
-					}
+					} 
 				}
 				finally
 				{
@@ -235,6 +236,25 @@ let setup_properties = function setup_properties(graph,properties_styles){
 				input.setAttribute('type', type);
 			}
 		}
+	}
+
+	function findClons(originalId){
+		let clons=[]; 
+		let clon = graph.getModel().getCell("clon"+originalId);
+		if(clon){
+			clons.push(clon);
+		}
+	    let prefix=0;
+		while(true){
+			let clon = graph.getModel().getCell("clon" + prefix + "_" + originalId);
+			if(clon){
+				clons.push(clon);
+				prefix++;
+			}else{
+				break;
+			}
+		}
+		return clons;
 	}
 }
 

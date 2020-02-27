@@ -1,11 +1,69 @@
 let customDevices = [
     {
+        name: "timer",
+        digitalPins: [],
+        analogPins: [],
+        pwmPins: [],
+        writeActions:[
+            {
+                "name":"reset",
+                "parameters":[]
+            }
+        ],
+        readActions:[
+            {
+                "name":"getTime",
+                "parameters":[]
+            }
+        ]
+    },
+    {
         name: "led",
         digitalPins: [
-            "D1"
+            "D0"
         ],
         analogPins: [],
-        pwmPins: []
+        pwmPins: [],
+        writeActions:[
+            {
+                "name":"on",
+                "parameters":[]
+            },
+            {
+                "name":"off",
+                "parameters":[]
+            },
+            {
+                "name":"turnOnWithPower",
+                "parameters":[
+                    {
+                        "name":"power",
+                        "type":"float"
+                    }
+                ]
+            }
+        ],
+    },
+    {
+        name: "powerLed",
+        digitalPins: [],
+        analogPins: [],
+        pwmPins: ["P1"],
+        writeActions:[
+            {
+                "name":"turnOn",
+                "parameters":[
+                    {
+                        "name":"power",
+                        "type":"float"
+                    }
+                ]
+            },
+            {
+                "name":"turnOff",
+                "parameters":[]
+            },
+        ],
     },
     {
         name: "rgb",
@@ -26,11 +84,19 @@ let customDevices = [
             }
         ],
         digitalPins: [],
-        analogPins: [
-            "A0",
-            "A1",
-            "A2"
+        analogPins: ["A0"],
+        pwmPins: []
+    },
+    {
+        name:"tmp36" ,
+        readActions:[
+            {
+                "name":"getTemperature",
+                "parameters":[]
+            }
         ],
+        digitalPins: [],
+        analogPins: ["A0"],
         pwmPins: []
     },
     {
@@ -83,19 +149,94 @@ let customDevices = [
                 ]
             }
         ],
-        digitalPins: [],
-        analogPins: [
-            "A0",
-            "A1",
-            "A2"
-        ],
+        digitalPins: ["D0"],
+        analogPins: [],
         pwmPins: []
+    },
+    {
+        name: "ledRGB",
+        digitalPins: [
+        ],
+        analogPins: [
+            "A0","A1","A2"
+        ],
+        pwmPins: [],
+        writeActions:[
+            {
+                "name":"RED_on",
+                "parameters":[
+                    {
+                        "name":"intensityRED",
+                        "type":"int"
+                    }
+                ]
+            },
+            {
+                "name":"GREEN_on",
+                "parameters":[
+                    {
+                        "name":"intensityGREEN",
+                        "type":"int"
+                    }
+                ]
+            },
+            {
+                "name":"BLUE_on",
+                "parameters":[
+                    {
+                        "name":"intensityBLUE",
+                        "type":"int"
+                    }
+                ]
+            },
+            {
+                "name":"RED_off",
+                "parameters":[]
+            },
+            {
+                "name":"GREEN_off",
+                "parameters":[]
+            },
+            {
+                "name":"BLUE_off",
+                "parameters":[]
+            }
+        ]
+    },
+    {
+        name: "dht11",
+        digitalPins: [
+        ],
+        analogPins: [
+            "A0"
+        ],
+        pwmPins: [],
+        writeActions:[],
+        readActions:[
+            {
+                name:"getTemperature",
+                parameters:[]
+            },
+            {
+                name:"getHumidity",
+                parameters:[]
+            }
+        ]
     }
 ];
 
 export function getDevices() {
 
     return customDevices;
+}
+
+export function getDevice(name) { 
+    for(let device of customDevices) {
+        if(device.name==name){
+            return device;
+        }
+    }
+    return null;
 }
 
 export function getActions(deviceName) {
@@ -117,4 +258,28 @@ export function getActions(deviceName) {
         }
     }
     return ret;
+}
+
+export function getAction(deviceName, actionName) {  
+    for(let device of customDevices) {
+        if(device.name==deviceName){
+            let actions=device.writeActions;
+            if(actions!=null){
+                for(let action of actions) {
+                    if (action.name==actionName) {
+                        return action;
+                    } 
+                }
+            }
+            actions=device.readActions;
+            if(actions!=null){
+                for(let action of actions) {
+                    if (action.name==actionName) {
+                        return action;
+                    } 
+                }
+            }
+        }
+    }
+    return null;
 }

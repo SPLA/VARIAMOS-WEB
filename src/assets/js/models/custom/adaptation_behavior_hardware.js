@@ -47,7 +47,7 @@ let adaptation_behavior_hardware_main = function adaptation_behavior_hardware_ma
 		let digitalVariable = { src: projectPath + "images/models/adaptation_binding_state_hardware/digitalVariable.png", wd: 100, hg: 35, type: "digitalVariable", style: "shape=digitalVariable", pname: "Digital variable" };
 		let analogVariable = { src: projectPath + "images/models/adaptation_binding_state_hardware/analogVariable.png", wd: 100, hg: 35, type: "analogVariable", style: "shape=analogVariable", pname: "Analog variable" };
 		let stringVariable = { src: projectPath + "images/models/adaptation_binding_state_hardware/stringVariable.png", wd: 100, hg: 35, type: "stringVariable", style: "shape=stringVariable", pname: "String variable" };
-		let timer = { src: projectPath + "images/models/adaptation_binding_state_hardware/timer.png", wd: 100, hg: 35, type: "timer", style: "shape=timer", pname: "Timer" };
+		//let timer = { src: projectPath + "images/models/adaptation_binding_state_hardware/timer.png", wd: 100, hg: 35, type: "timer", style: "shape=timer", pname: "Timer" };
 		let readAction = { src: projectPath + "images/models/adaptation_binding_state_hardware/readAction.png", wd: 100, hg: 35, type: "readAction", style: "shape=readAction", pname: "Read action" };
 		let writeAction = { src: projectPath + "images/models/adaptation_binding_state_hardware/writeAction.png", wd: 100, hg: 35, type: "writeAction", style: "shape=writeAction", pname: "Write action" };
 		let controlAction = { src: projectPath + "images/models/adaptation_binding_state_hardware/controlAction.png", wd: 100, hg: 35, type: "controlAction", style: "shape=controlAction", pname: "Control action" };
@@ -63,7 +63,7 @@ let adaptation_behavior_hardware_main = function adaptation_behavior_hardware_ma
 		elements[index++] = analogVariable;
 		elements[index++] = stringVariable;
 		elements[index++] = controlAction;
-		elements[index++] = timer;
+		//elements[index++] = timer;
 		//elements[index++] = writeAction;
 		//elements[index++] = readAction;
 
@@ -88,10 +88,13 @@ let adaptation_behavior_hardware_main = function adaptation_behavior_hardware_ma
 						hg: 35,
 						type: "writeAction", //para poder clonarlo y bindearlo 
 						style: "shape=writeAction",
-						pname: action.name,
+						pname: action.name, 
 						attributes:[{
 							"name":"subtype",
 							"def_value":action.name
+						},{
+							"name":"device",
+							"def_value":device.name
 						},{ 
 							"name":"parameters",
 							"def_value":action.parameters
@@ -113,10 +116,13 @@ let adaptation_behavior_hardware_main = function adaptation_behavior_hardware_ma
 						hg: 35,
 						type: "readAction", //para poder clonarlo y bindearlo 
 						style: "shape=readAction",
-						pname: action.name,
+						pname: action.name, 
 						attributes:[{
 							"name":"subtype",
 							"def_value":action.name
+						},{
+							"name":"device",
+							"def_value":device.name
 						},{ 
 							"name":"parameters",
 							"def_value":action.parameters
@@ -348,7 +354,6 @@ let adaptation_behavior_hardware_main = function adaptation_behavior_hardware_ma
 			"controlAction":"control",
 			"readAction":"adaptation_behavior_states",
 			"writeAction":"adaptation_behavior_states",
-			"controlAction":"adaptation_behavior_states",
 			"digitalVariable":"adaptation_behavior_transitions",
 			"analogVariable":"adaptation_behavior_transitions",
 			"stringVariable":"adaptation_behavior_transitions"

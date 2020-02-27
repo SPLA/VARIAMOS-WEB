@@ -1,3 +1,5 @@
+import {getAction} from '../adaptation_hardware/devices'
+
 let setup_elements = function setup_elements(graph, elements, custom_attributes, c_clon_cells, c_constraints_ic, toolbar, c_type){    
     if(elements==null){
         //disable palette for "binding" models
@@ -79,42 +81,43 @@ let setup_elements = function setup_elements(graph, elements, custom_attributes,
         vertex.setConnectable(true);
         vertex.setVertex(true); 
 
-        if(["writeAction", "readAction"].includes(type)){
-            try{ 
-                // if(type=="writeAction"){
-                //     vertex.setConnectable(false);
-                // }
-                if(custom_attributes){
-                    for(let j = 0; j < custom_attributes.length; j++){
-                        if(custom_attributes[j]["name"]=="parameters"){
-                            let args=custom_attributes[j]["def_value"];
-                            let x=10;
-                            for(let a = 0; a < args.length; a++){
-                                let arg=args[a]; 
-                                let doc = mxUtils.createXmlDocument();
-                                let node = doc.createElement(arg.name); 
-                                node.setAttribute('label', arg.name);
+        // if(["writeAction", "readAction"].includes(type)){
+        //     try{ 
+        //         // if(type=="writeAction"){
+        //         //     vertex.setConnectable(false);
+        //         // }
+        //         if(custom_attributes){
+        //             for(let j = 0; j < custom_attributes.length; j++){
+        //                 if(custom_attributes[j]["name"]=="parameters"){
+        //                     let args=custom_attributes[j]["def_value"];
+        //                     let x=10;
+        //                     for(let a = 0; a < args.length; a++){
+        //                         let arg=args[a]; 
+        //                         let doc = mxUtils.createXmlDocument();
+        //                         let node = doc.createElement(arg.name); 
+        //                         node.setAttribute('label', arg.name);
+        //                         //node.setAttribute('parent', type + '_' + );
 
-                                let geometry = new mxGeometry(x, 22, 10, 10);  
-                                geometry.offset = new mxPoint(0, 0);
-                                geometry.relative = false; 
-                                let connector = new mxCell(node, geometry, "shape=triangle;perimeter=trianglePerimeter;direction=north");
-                                graph.setCellStyles(mxConstants.STYLE_MOVABLE, '0', [connector]);
-                                graph.setCellStyles(mxConstants.STYLE_RESIZABLE, '0', [connector]);
-                                connector.setConnectable(true);
-                                connector.setVertex(true); 
-                                vertex.insert(connector, 0);
-                                x+=15;
+        //                         let geometry = new mxGeometry(x, 22, 10, 10);  
+        //                         geometry.offset = new mxPoint(0, 0);
+        //                         geometry.relative = false; 
+        //                         let connector = new mxCell(node, geometry, "shape=triangle;perimeter=trianglePerimeter;direction=north");
+        //                         graph.setCellStyles(mxConstants.STYLE_MOVABLE, '0', [connector]);
+        //                         graph.setCellStyles(mxConstants.STYLE_RESIZABLE, '0', [connector]);
+        //                         connector.setConnectable(true);
+        //                         connector.setVertex(true); 
+        //                         vertex.insert(connector, 0);
+        //                         x+=15;
 
-                            }
-                            break;
-                        }
-                    }
-                } 
-            }catch(error){
-                alert(error);
-            } 
-        }
+        //                     }
+        //                     break;
+        //                 }
+        //             }
+        //         } 
+        //     }catch(error){
+        //         alert(error);
+        //     } 
+        // }
 
         
  
@@ -147,10 +150,52 @@ let setup_elements = function setup_elements(graph, elements, custom_attributes,
                 vertex.geometry.y = pt.y; 
 
                 let new_cells = graph.importCells([vertex], 0, 0, cell);
+                //Set up handling of new classes.
+                new_cells.forEach(element => {
+                    const type = element.getAttribute("type");
+                    if(["writeAction", "readAction"].includes(type)){
+                        const device = element.getAttribute("device");
+                        const actionName = element.getAttribute("subtype");
+                        let action=getAction(device, actionName);
+ 
+                        let args= action.parameters;
+                        if (args) { 
+                            let x=10;
+                            for(let a = 0; a < args.length; a++){
+                                let arg=args[a];  
+                                const doc = mxUtils.createXmlDocument();
+                                const node = doc.createElement(arg.name);
+                                node.setAttribute('label', arg.name);
+                                node.setAttribute('type', 'actionArgument');
+                                node.setAttribute('dataType', arg.type);
+
+                                let geometry = new mxGeometry(x, 22, 10, 10);  
+                                geometry.offset = new mxPoint(0, 0);
+                                geometry.relative = false; 
+                                let connector = new mxCell(node, geometry, "shape=triangle;perimeter=trianglePerimeter;direction=north");
+                                graph.setCellStyles(mxConstants.STYLE_MOVABLE, '0', [connector]);
+                                graph.setCellStyles(mxConstants.STYLE_RESIZABLE, '0', [connector]);
+                                connector.setConnectable(true);
+                                connector.setVertex(true); 
+
+                                graph.addCell(connector, element); 
+                                x+=15; 
+                            }
+                        } 
+
+                        // const class_name_type = 'class_name';
+                        // const doc_name = mxUtils.createXmlDocument();
+                        // const node_name = doc_name.createElement(class_name_type);
+                        // node_name.setAttribute('type', class_name_type);
+                        // node_name.setAttribute('label', '');
+                        // const class_name = graph.insertVertex(element,null,node_name,0,0,100,20,'fillColor=#FFFFFF;selectable=0;fontColor=black;');
+                        // class_name.setConnectable(false);  
+                    }
+                })
                 graph.setSelectionCells(new_cells);
 
                 //execute if there are clons for the current element
-                if(c_clon_cells!=null){
+                if(c_clon_cells!=null){ 
                     let type = new_cells[0].getAttribute("type");
                     if(c_clon_cells[type]){ //clon cell in a new model
                         graph.getModel().prefix="clon"; //cloned cell contains clon prefix
@@ -158,10 +203,26 @@ let setup_elements = function setup_elements(graph, elements, custom_attributes,
                         graph.getModel().nextId=new_cells[0].getId();
                         let vertex2 = graph.getModel().cloneCell(new_cells[0]);
                         vertex2.setConnectable(true);
+                        vertex2.setAttribute('originalId', new_cells[0].getId());
                         let parent2 = graph.getModel().getCell(c_clon_cells[type]);
                         graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#DCDCDC", [vertex2]); //different background for a cloned cell
                         graph.importCells([vertex2], 0, 0, parent2);
                         graph.getModel().prefix=""; //restart prefix
+                    }
+
+                    if (type=="controlAction") {
+                        if(c_clon_cells[type]){ //clon cell in a new model
+                            graph.getModel().prefix="clon0_"; //cloned cell contains clon prefix
+                            //graph.getModel().nextId=graph.getModel().nextId-1;
+                            graph.getModel().nextId=new_cells[0].getId();
+                            let vertex2 = graph.getModel().cloneCell(new_cells[0]);
+                            vertex2.setConnectable(true);
+                            vertex2.setAttribute('originalId', new_cells[0].getId());
+                            let parent2 = graph.getModel().getCell("adaptation_behavior_states");
+                            graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#DCDCDC", [vertex2]); //different background for a cloned cell
+                            graph.importCells([vertex2], 0, 0, parent2);
+                            graph.getModel().prefix=""; //restart prefix
+                        }
                     }
                 }
             }
