@@ -151,7 +151,7 @@ let classMain = function classMain(graph) {
           break;
         case "Aggregation":
           styleArrow = "diamond";
-          styleFill = "0"
+          styleFill = "0";
           break;
         case "Inheritance":
           styleArrow = "block";

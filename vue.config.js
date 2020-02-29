@@ -2,6 +2,9 @@ module.exports = {
   publicPath: "/",
   configureWebpack: {
       devtool: 'source-map'  
+  },
+  devServer: {
+    host: "localhost"
   }
   //https://github.com/vuejs/vue-cli/issues/2590#issuecomment-559015806
   //http://cheng.logdown.com/posts/2016/03/25/679045

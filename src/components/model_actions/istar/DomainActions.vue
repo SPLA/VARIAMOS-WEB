@@ -23,6 +23,50 @@ export default {
    }
   },
   methods: {
+    createClass(xPos, yPos, actor, classDiagRoot){
+      const type = "class";
+      let doc = mxUtils.createXmlDocument();
+      let node = doc.createElement(type);
+      node.setAttribute('type', type);
+      //Create a class instance in a the corresponding model
+      const element = this.current_graph.insertVertex(classDiagRoot, null, node, xPos, yPos, 100, 100, "html=1;whiteSpace=wrap;overflow=visible;fontColor=black;fillColor=none;strokeColor=#000000;strokeWidth=5;");
+
+      //Insert name element
+      const class_name_type = 'class_name';
+      const doc_name = mxUtils.createXmlDocument();
+      const node_name = doc_name.createElement(class_name_type);
+      node_name.setAttribute('type', class_name_type);
+      node_name.setAttribute('label', actor.getAttribute('label'));
+      const class_name = this.current_graph.insertVertex(element,null,node_name,0,0,100,20,'fillColor=#FFFFFF;selectable=0;fontColor=black;');
+      class_name.setConnectable(false);
+      //Insert attributes element
+      const class_attributes_type = 'class_attributes';
+      const doc_attributes = mxUtils.createXmlDocument();
+      const node_attributes = doc_attributes.createElement(class_attributes_type);
+      node_attributes.setAttribute('type', class_attributes_type);
+      const class_attributes = this.current_graph.insertVertex(element,null,node_attributes,0,20,100,40,'fillColor=#FFFFFF;selectable=0;');
+      class_attributes.setConnectable(false);
+      //Insert methods element
+      const class_methods_type = 'class_methods';
+      const doc_methods = mxUtils.createXmlDocument();
+      const node_methods = doc_methods.createElement(class_methods_type);
+      node_methods.setAttribute('type', class_methods_type);
+      const class_methods = this.current_graph.insertVertex(element,null,node_methods,0,60,100,40,'fillColor=#FFFFFF;selectable=0;');
+      class_methods.setConnectable(false);
+      
+      return element;
+    },
+    checkPresence(relMap, source, target){
+      if(relMap.has(source)){
+        const links = relMap.get(source);
+        return !links.includes(target);
+      } else if (relMap.has(target)){
+        const links = relMap.get(target);
+        return !links.includes(source);
+      } else {
+        return true;
+      }
+    },
     generateClasses(){
       const model = this.current_graph.getModel();
       const istarRoot = model.getCell("istar"); 
@@ -32,7 +76,6 @@ export default {
       const actors = [];
       const dependums = [];
 
-      const visited = [];
       //Get the references to all top-level objects
       for(let i = 0; i < istarChildCount; i++){
         let child = istarRoot.getChildAt(i);
@@ -59,38 +102,14 @@ export default {
 
       //create the corresponding classes in the class diagram
       actors.forEach((actor, idx) => {
-        const type = "class";
-        let doc = mxUtils.createXmlDocument();
-        let node = doc.createElement(type);
-        node.setAttribute('type', type);
-        const x = 50 + (400*(idx%3));
-        const y = 50 + (400*(idx%2));
-        const element = this.current_graph.insertVertex(classDiagRoot, null, node, x, y, 100, 100, "html=1;whiteSpace=wrap;overflow=visible;fontColor=black;fillColor=none;strokeColor=#000000;strokeWidth=5;");
-        classMap.set(actor.getId(), element);
-
-        //Insert name element
-        const class_name_type = 'class_name';
-        const doc_name = mxUtils.createXmlDocument();
-        const node_name = doc_name.createElement(class_name_type);
-        node_name.setAttribute('type', class_name_type);
-        node_name.setAttribute('label', actor.getAttribute('label'));
-        const class_name = this.current_graph.insertVertex(element,null,node_name,0,0,100,20,'fillColor=#FFFFFF;selectable=0;fontColor=black;');
-        class_name.setConnectable(false);
-        //Insert attributes element
-        const class_attributes_type = 'class_attributes';
-        const doc_attributes = mxUtils.createXmlDocument();
-        const node_attributes = doc_attributes.createElement(class_attributes_type);
-        node_attributes.setAttribute('type', class_attributes_type);
-        const class_attributes = this.current_graph.insertVertex(element,null,node_attributes,0,20,100,40,'fillColor=#FFFFFF;selectable=0;');
-        class_attributes.setConnectable(false);
-        //Insert methods element
-        const class_methods_type = 'class_methods';
-        const doc_methods = mxUtils.createXmlDocument();
-        const node_methods = doc_methods.createElement(class_methods_type);
-        node_methods.setAttribute('type', class_methods_type);
-        const class_methods = this.current_graph.insertVertex(element,null,node_methods,0,60,100,40,'fillColor=#FFFFFF;selectable=0;');
-        class_methods.setConnectable(false);
+        const x = 50 + (200*(idx%3));
+        const y = 50 + (600*Math.floor(idx/3));
+        //add the actor's id as the key to the reference to the created class.
+        classMap.set(actor.getId(), this.createClass(x, y, actor, classDiagRoot));
       });
+
+      //Map all edges already analyzed
+      const relMap = new Map();
 
       //analyse direct connections between actors
       actors.forEach(actor => {
@@ -106,18 +125,28 @@ export default {
               const source = edge.getTerminal(true).getId();
               const target = edge.getTerminal(false).getId();
               const relType = edge.getAttribute("relType");
+              if(this.checkPresence(relMap, source, target)){
+                if(relMap.has(source)){
+                  const edgeList = relMap.get(source);
+                  edgeList.push(target);
+                  relMap.set(source, edgeList);
+                } else {
+                  const edgeList = [target];
+                  relMap.set(source, edgeList);
+                }
 
-              let relationType = 'rel_class_class';
-              let doc = mxUtils.createXmlDocument();
-              let node = doc.createElement(relationType);
-              node.setAttribute('type', relationType);
+                let relationType = 'rel_class_class';
+                let doc = mxUtils.createXmlDocument();
+                let node = doc.createElement(relationType);
+                node.setAttribute('type', relationType);
 
-              if(relType == "participates-in"){
-                node.setAttribute('relation', 'Association');
-                const newEdge = this.current_graph.insertEdge(classDiagRoot, null, node, classMap.get(source), classMap.get(target), "endArrow=none;endFill=none;endSize=10;");
-              } else  {
-                node.setAttribute('relation', 'Inheritance');
-                const newEdge = this.current_graph.insertEdge(classDiagRoot, null, node, classMap.get(source), classMap.get(target), "endArrow=block;endFill=0;endSize=10;");
+                if(relType == "participates-in"){
+                  node.setAttribute('relation', 'Association');
+                  const newEdge = this.current_graph.insertEdge(classDiagRoot, null, node, classMap.get(source), classMap.get(target), "endArrow=none;endFill=none;endSize=10;");
+                } else  {
+                  node.setAttribute('relation', 'Inheritance');
+                  const newEdge = this.current_graph.insertEdge(classDiagRoot, null, node, classMap.get(source), classMap.get(target), "endArrow=block;endFill=0;endSize=10;");
+                }
               }
             }
           }
@@ -157,7 +186,16 @@ export default {
           }
 
           const hasEntry = createdLinks.has(source.getId());
-          if(true){ //if(!hasEntry || (hasEntry && createdLinks.get(source.getId()) !== target.getId())){
+          if(this.checkPresence(relMap, source.getId(), target.getId())){ //if(!hasEntry || (hasEntry && createdLinks.get(source.getId()) !== target.getId())){
+            if(relMap.has(source.getId())){
+              const edgeList = relMap.get(source.getId());
+              edgeList.push(target.getId());
+              relMap.set(source.getId(), edgeList);
+            } else {
+              const edgeList = [target.getId()];
+              relMap.set(source.getId(), edgeList);
+            }
+
             const sourceClass = classMap.get(source.getId());
             const targetClass = classMap.get(target.getId());
 
@@ -200,7 +238,14 @@ export default {
         }
       });
       //TEMP Go over actor's internal structure
+      let lastIdx = actors.length;
+      const fieldMap = new Map();
+      const resources = [];
+      const qualities = {};
       actors.forEach(actor => {
+        const actorId = actor.getId();
+        //Init qualities object
+        qualities[actorId] = [];
         //Only check those that have boundaries
         const actor_parent = actor.getParent();
         let parent_type = actor_parent.getAttribute('type');
@@ -214,37 +259,197 @@ export default {
           const n_children = actor_parent.getChildCount();
           //At least one besides the actor
           if(n_children > 1){
-            const matching_class = classMap.get(actor.getId());
+            const matching_class = classMap.get(actorId);
             for(let i = 0; i < n_children; i++){
               const child = actor_parent.getChildAt(i);
+              const childId = child.getId();
               const child_txt = child.getAttribute('label');
               const child_type = child.getAttribute('type');
               if(["goal","task","quality","resource"].includes(child_type)){
-                //If it is a goal, make add as an attribute to the corresponding class
-                if("goal" === child_type){
-                  const attr_fields = matching_class.getChildAt(1);
-                  const n_children = attr_fields.getChildCount();
-                  const field_type = 'attribute';
-                  const doc_field = mxUtils.createXmlDocument();
-                  const node_field = doc_field.createElement(field_type);
-                  node_field.setAttribute('label', child_txt);
-                  const field = this.current_graph.insertVertex(attr_fields, null, node_field, 1, (20 * n_children) + 1, 98, 18, 'fillColor=#FFFFFF;selectable=0;align=left;fontColor=black;strokeColor=none;');
-                  field.setConnectable(false);
-                  this.handleResize(null, {getProperty(_string){return [matching_class]}});
-                } else if ("task" === child_type){
-                  const attr_fields = matching_class.getChildAt(2);
-                  const n_children = attr_fields.getChildCount();
-                  const field_type = 'method';
-                  const doc_field = mxUtils.createXmlDocument();
-                  const node_field = doc_field.createElement(field_type);
-                  node_field.setAttribute('label', child_txt+'()');
-                  const field = this.current_graph.insertVertex(attr_fields, null, node_field, 1, (20 * n_children) + 1, 98, 18, 'fillColor=#FFFFFF;selectable=0;align=left;fontColor=black;strokeColor=none;');
-                  field.setConnectable(false);
-                  this.handleResize(null, {getProperty(_string){return [matching_class]}});
+                let attr_fields;
+                let n_children;
+                let field_type;
+                let node_field;
+                let doc_field;
+                let field;
+                switch(child_type){ 
+                  //If it is a goal, add as an attribute to the corresponding class
+                  //TODO add boolean refinement
+                  case "goal":
+                    attr_fields = matching_class.getChildAt(1);
+                    n_children = attr_fields.getChildCount();
+                    field_type = 'attribute';
+                    doc_field = mxUtils.createXmlDocument();
+                    node_field = doc_field.createElement(field_type);
+                    node_field.setAttribute('label', child_txt);
+                    field = this.current_graph.insertVertex(attr_fields, null, node_field, 1, (20 * n_children) + 1, 98, 18, 'fillColor=#FFFFFF;selectable=0;align=left;fontColor=black;strokeColor=none;');
+                    field.setConnectable(false);
+                    this.handleResize(null, {getProperty(_string){return [matching_class]}});
+                    fieldMap.set(childId, field);
+                    break;
+                  //If it is a task it is added as a method to the class
+                  //TODO add boolean refinement
+                  case "task":
+                    attr_fields = matching_class.getChildAt(2);
+                    n_children = attr_fields.getChildCount();
+                    field_type = 'method';
+                    doc_field = mxUtils.createXmlDocument();
+                    node_field = doc_field.createElement(field_type);
+                    node_field.setAttribute('label', child_txt+'()');
+                    field = this.current_graph.insertVertex(attr_fields, null, node_field, 1, (20 * n_children) + 1, 98, 18, 'fillColor=#FFFFFF;selectable=0;align=left;fontColor=black;strokeColor=none;');
+                    field.setConnectable(false);
+                    this.handleResize(null, {getProperty(_string){return [matching_class]}});
+                    fieldMap.set(childId, field);
+                    break;
+                  //If it is a resource a new class must be created.
+                  //Assumtion, here needed by can only exist within the actor in question.
+                  case "resource":
+                    const x = 50 + (200*(lastIdx%3));
+                    const y = 50 + (600*Math.floor(lastIdx/3));
+                    lastIdx += 1;
+                    const elem = this.createClass(x, y, child, classDiagRoot);
+                    //Set the element in the graph.
+                    classMap.set(childId, elem);
+                    //Reuse the vars already defined,
+                    //instead of field, here we will insert a relation.
+                    field_type = 'rel_class_class';
+                    doc_field = mxUtils.createXmlDocument();
+                    node_field = doc_field.createElement(field_type);
+                    node_field.setAttribute('type', field_type);
+                    node_field.setAttribute('relation', 'Association');
+                    const newEdge = this.current_graph.insertEdge(classDiagRoot, null, node_field, classMap.get(childId), classMap.get(actorId), "endArrow=none;endFill=none;endSize=10;");
+                    fieldMap.set(childId, field);
+                    resources.push(child);
+                    break;
+                  case "quality":
+                    qualities[actorId].push(child);
+                    break;
+                  default:
+                    alert("something went wrong converting the model")
+                    break;
                 }
               }
             }
           }
+        }
+      });
+      //Now, we must go over all resources to do parameter refinement.
+      resources.forEach(resource => {
+        const n_edges = resource.getEdgeCount();
+        if(n_edges > 0){
+          for (let i = 0; i < n_edges; i++){
+            const edge = resource.getEdgeAt(i);
+            //Here we assume that what the edges lead to tasks.
+            const eSource = edge.getTerminal(true);
+            const eTarget = edge.getTerminal(false);
+            const eSourceId = eSource.getId();
+            const eTargetId = eTarget.getId();
+            //If you are the source, parametrize the field the target corresponds to
+            if(resource.getId() === eSourceId){
+              const field = fieldMap.get(eTargetId);
+              if(field !== undefined){
+                const txt = field.getAttribute('label');
+                const startP = txt.indexOf('(');
+                const endP = txt.indexOf(')');
+                const dif = endP - startP === 1;
+                let str = txt.slice(0,startP+1);
+                if(dif){
+                  str = str + resource.getAttribute('label') + ')';
+                }
+                field.setAttribute('label', str);
+              }
+            } else {
+              alert("TODO: Add support for multiple parameters");
+              //Evidently if not, do the opposite.
+            }
+          }
+        }
+      });
+      const visitedEdges = [];
+      //Now, for each actor, handle the associated notes.
+      actors.forEach(actor => {
+        const actorId = actor.getId();
+        const actor_quals = qualities[actorId];
+        if(actor_quals.length > 0){
+          //If this is the case, then we must add a note where we will put
+          //all of the notes.
+          const x = 50 + (200*(lastIdx%3));
+          const y = 50 + (600*Math.floor(lastIdx/3));
+          lastIdx += 1;
+
+          const type = "note";
+          let doc = mxUtils.createXmlDocument();
+          let node = doc.createElement(type);
+          node.setAttribute('type', type);
+          //Create a class instance in a the corresponding model
+          const note = this.current_graph.insertVertex(classDiagRoot, null, node, x, y, 100, 40, "shape=file");
+          //Link the note with the actor.
+          const link_type = 'rel_class_class';
+          const doc_link = mxUtils.createXmlDocument();
+          const node_link = doc_link.createElement(link_type);
+          node_link.setAttribute('type', link_type);
+          node_link.setAttribute('relation', 'Association');
+          //Add the edge.
+          const newEdge = this.current_graph.insertEdge(classDiagRoot, null, node_link, note, classMap.get(actorId), "endArrow=none;dashed=1;");
+          //Init info txt
+          let info = '';
+          //Go over all quality elements and examine their relations
+          actor_quals.forEach(quality => {
+            const qualityId = quality.getId();
+            //get quality edges.
+            const n_edges = quality.getEdgeCount();
+            if (n_edges > 0){
+              for(let i = 0; i < n_edges; i++){
+                const edge = quality.getEdgeAt(i);
+                const edgeId = edge.getId();
+                if(!visitedEdges.includes(edgeId)){
+                  visitedEdges.push(edgeId);
+
+                  const eSource = edge.getTerminal(true);
+                  const eSourceType = eSource.getAttribute('type');
+                  const eSourceLabel = eSource.getAttribute('label');
+                  const eTarget = edge.getTerminal(false);
+                  const eTargetType = eTarget.getAttribute('type');
+                  const eTargetLabel = eTarget.getAttribute('label');
+                  const eSourceId = eSource.getId();
+                  const eTargetId = eTarget.getId();
+                  const isSrc = eSourceId === qualityId;
+
+                  const relType = edge.getAttribute('relType');
+                  //If relType is undefined it means that it is a
+                  //qualification relation
+                  if(relType === undefined){
+                    //Handle special case for qualify links
+                    info += eSourceLabel + ' -> ' + eTargetLabel + '\n';
+                  } else {
+                    //Format the line
+                    info += eSourceLabel + ((!isSrc && eSourceType === 'task')? '() -> ' : ' -> ') + eTargetLabel;
+                    //Add the ending based on the type
+                    switch(relType){
+                      case "make":
+                        //TASK_CLASS_METHOD_NAME() -> TARGET_QUALITY_NAME [++]
+                        info += '[++]\n';
+                        break;
+                      case "help":
+                        //TASK_CLASS_METHOD_NAME() -> TARGET_QUALITY_NAME [+]
+                        info += '[+]\n';
+                        break;
+                      case "hurt":
+                        //TASK_CLASS_METHOD_NAME() -> TARGET_QUALITY_NAME [-]
+                        info += '[-]\n';
+                        break;
+                      case "break":
+                        //TASK_CLASS_METHOD_NAME() -> TARGET_QUALITY_NAME [--]
+                        info += '[--]\n';
+                        break;
+                    }
+                  }
+                }
+              } 
+            }
+          });
+          console.log(info);
+          note.setAttribute('information', info);
         }
       });
     },
