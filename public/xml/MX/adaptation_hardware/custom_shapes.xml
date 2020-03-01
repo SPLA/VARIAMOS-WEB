@@ -17,6 +17,103 @@
 	</foreground>
 </shape>
 
+<shape name="led" aspect="variable">
+	<background>
+		<path>
+			<move x="0" y="00"/>
+			<line x="100" y="00"/>
+			<line x="100" y="100"/>
+			<line x="0" y="100"/>
+			<line x="0" y="00"/>
+			<close/>
+			<fillstroke/>
+		</path>
+	</background>
+	<foreground>
+		<image src="http://localhost:8080/variamosweb/images/models/adaptation_hardware/actuator.png" x="1" y="3" w="15" h="35" />
+		<image src="http://localhost:8080/variamosweb/images/models/adaptation_hardware/digital.png" x="84" y="3" w="15" h="35" />
+	</foreground>
+</shape>
+
+<shape name="piezo" aspect="variable">
+	<background>
+		<path>
+			<move x="0" y="00"/>
+			<line x="100" y="00"/>
+			<line x="100" y="100"/>
+			<line x="0" y="100"/>
+			<line x="0" y="00"/>
+			<close/>
+			<fillstroke/>
+		</path>
+	</background>
+	<foreground>
+		<image src="http://localhost:8080/variamosweb/images/models/adaptation_hardware/actuator.png" x="1" y="3" w="15" h="35" />
+		<image src="http://localhost:8080/variamosweb/images/models/adaptation_hardware/digital.png" x="84" y="3" w="15" h="35" />
+	</foreground>
+</shape>
+
+<shape name="rgb" aspect="variable">
+	<background>
+		<path>
+			<move x="0" y="00"/>
+			<line x="100" y="00"/>
+			<line x="100" y="100"/>
+			<line x="0" y="100"/>
+			<line x="0" y="00"/>
+			<close/>
+			<fillstroke/>
+		</path>
+	</background>
+	<foreground>
+		<image src="http://localhost:8080/variamosweb/images/models/adaptation_hardware/actuator.png" x="1" y="3" w="15" h="35" />
+		<image src="http://localhost:8080/variamosweb/images/models/adaptation_hardware/digital.png" x="84" y="3" w="15" h="35" />
+	</foreground>
+</shape>
+
+<shape name="button" aspect="variable">
+	<background>
+		<path>
+			<move x="0" y="00"/>
+			<line x="100" y="00"/>
+			<line x="100" y="100"/>
+			<line x="0" y="100"/>
+			<line x="0" y="00"/>
+			<close/>
+			<fillstroke/>
+		</path>
+	</background>
+	<foreground>
+		<image src="http://localhost:8080/variamosweb/images/models/adaptation_hardware/sensor.png" x="1" y="3" w="15" h="35" />
+		<image src="http://localhost:8080/variamosweb/images/models/adaptation_hardware/digital.png" x="84" y="3" w="15" h="35" />
+	</foreground>
+</shape>
+
+<shape name="uno" aspect="fixed">
+	<connections>
+		<constraint x="0.462" y="0.048" perimeter="3"/>
+		<constraint x="0.5056" y="0.048" perimeter="3"/>
+		<constraint x="0.550" y="0.048" perimeter="3"/>
+		<constraint x="0.598" y="0.048" perimeter="3"/>
+		<constraint x="0.642" y="0.048" perimeter="3"/>
+		<constraint x="0.682" y="0.048" perimeter="3"/>
+	</connections>
+	<foreground>
+		<image src="http://localhost:8080/variamosweb/images/models/adaptation_hardware/arduinoUno.png" x="-15" y="0" w="130" h="100" />
+
+		<!-- <path crisp="1">
+			<move x="20" y="10"/>
+			<line x="90" y="10"/>
+			<line x="90" y="40"/>
+			<move x="20" y="90"/>
+			<line x="50" y="90"/>
+			<line x="50" y="70"/>
+			<line x="80" y="70"/>
+		</path> -->
+		<stroke/>
+	</foreground>
+</shape>
+
 <shape name="analogSensor" aspect="variable"> 
 	<background>
 		<path>
