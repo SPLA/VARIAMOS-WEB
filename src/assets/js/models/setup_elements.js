@@ -7,9 +7,6 @@ let setupElements = function setupElements(graph, elements, customAttributes, cC
         tbContainer.appendChild(span);
     }else{
         //add elements to the palette
-        if(!custom_attributes){
-            custom_attributes=[];
-        }    
         for (let i = 0; i < elements.length; i++) {
             addVertex(graph, toolbar, elements[i].src, elements[i].wd, elements[i].hg, elements[i].style, elements[i].type, elements[i].pname, customAttributes, cClonCells, cConstraintsIc);
         }
@@ -19,7 +16,7 @@ let setupElements = function setupElements(graph, elements, customAttributes, cC
         let doc = mxUtils.createXmlDocument();
         let node = doc.createElement(type);
         node.setAttribute('label', type);
-        node.setAttribute('type', type); 
+        node.setAttribute('type', type);
 
         //include custom attributes
         if(customAttributes){
