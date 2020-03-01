@@ -104,7 +104,7 @@ let main = function main(graph, layers, mxModel, toolbar, keyHandler, container,
 		while (shape != null)
 		{
 			if (shape.nodeType == mxConstants.NODETYPE_ELEMENT)
-			{
+			{ 
 				mxStencilRegistry.addStencil(shape.getAttribute('name'), new mxStencil(shape));
 			}
 			shape = shape.nextSibling;

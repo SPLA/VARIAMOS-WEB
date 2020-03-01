@@ -167,10 +167,10 @@ let adaptation_state_main = function adaptation_state_main(graph)
 
 	function adaptation_state_clon_cells(){
 		let clons={};
-		clons={
-			"state":"adaptation_binding_state_hardware", 
-			"initialState":"adaptation_binding_state_hardware",
-			"transition":"adaptation_binding_state_hardware"
+		clons={ 
+			"transition":"adaptation_behavior_transitions",
+			"state":"adaptation_behavior_states", 
+			"initialState":"adaptation_behavior_states" 
 		};
 
 		return clons;
