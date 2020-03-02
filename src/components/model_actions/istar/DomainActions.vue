@@ -1,6 +1,6 @@
 <template>
 <div>
-    <a @click="generateClasses()" class="dropdown-item">Generate classes</a>
+  <a @click="generateClasses()" class="dropdown-item">Generate classes</a>
 </div>
 </template>
 
@@ -67,12 +67,8 @@ export default {
         return true;
       }
     },
-    generateClasses(){
-      const model = this.current_graph.getModel();
-      const istarRoot = model.getCell("istar"); 
-      const classDiagRoot = model.getCell("classdiag");  
+    getTopLevelElems(istarRoot, model){
       const istarChildCount = istarRoot.getChildCount();
-      
       const actors = [];
       const dependums = [];
 
@@ -97,20 +93,20 @@ export default {
           }
         }
       }
-
+      return {actors, dependums};
+    },
+    createClassMap(actors, classDiagRoot){
       const classMap = new Map();
-
-      //create the corresponding classes in the class diagram
       actors.forEach((actor, idx) => {
         const x = 50 + (200*(idx%3));
         const y = 50 + (600*Math.floor(idx/3));
         //add the actor's id as the key to the reference to the created class.
         classMap.set(actor.getId(), this.createClass(x, y, actor, classDiagRoot));
       });
-
-      //Map all edges already analyzed
+      return classMap;
+    },
+    analyzeTopLevelConnections(actors, classMap, classDiagRoot){
       const relMap = new Map();
-
       //analyse direct connections between actors
       actors.forEach(actor => {
         //Get reference to corresponding class
@@ -152,8 +148,9 @@ export default {
           }
         }
       });
-
-      const createdLinks = new Map();
+      return relMap;
+    },
+    analyzeDependumConnections(dependums, classMap, relMap, classDiagRoot, model){
       //Go over all the dependums and construct the required dependencies.
       //TODO: Add Resource/Quality dependum handling
       dependums.forEach(dependum => {
@@ -185,8 +182,7 @@ export default {
             source = model.getCell(value.actorCellId);
           }
 
-          const hasEntry = createdLinks.has(source.getId());
-          if(this.checkPresence(relMap, source.getId(), target.getId())){ //if(!hasEntry || (hasEntry && createdLinks.get(source.getId()) !== target.getId())){
+          if(this.checkPresence(relMap, source.getId(), target.getId())){
             if(relMap.has(source.getId())){
               const edgeList = relMap.get(source.getId());
               edgeList.push(target.getId());
@@ -204,10 +200,6 @@ export default {
             let node = doc.createElement(relationType);
             node.setAttribute('type', relationType);
             node.setAttribute('relation', 'Association');
-
-            createdLinks.set(source.getId(), target.getId());
-            console.log(target.getAttribute('label'));
-            console.log(source.getAttribute('label'));
             const newEdge = this.current_graph.insertEdge(classDiagRoot, null, node, sourceClass, targetClass, "endArrow=none;endFill=none;endSize=10;");
             
             //Handle Goals-Dep as attributes and Task-Dep as methods
@@ -237,7 +229,8 @@ export default {
           }
         }
       });
-      //TEMP Go over actor's internal structure
+    },
+    analyzeActorStructure(actors, classMap, classDiagRoot){
       let lastIdx = actors.length;
       const fieldMap = new Map();
       const resources = [];
@@ -333,6 +326,9 @@ export default {
           }
         }
       });
+      return {lastIdx, fieldMap, resources, qualities};
+    },
+    analyzeResources(resources, fieldMap){
       //Now, we must go over all resources to do parameter refinement.
       resources.forEach(resource => {
         const n_edges = resource.getEdgeCount();
@@ -365,6 +361,9 @@ export default {
           }
         }
       });
+    },
+    analyzeQualities(actors, qualities, classMap, lastIdx, classDiagRoot){
+      let idx = lastIdx;
       const visitedEdges = [];
       //Now, for each actor, handle the associated notes.
       actors.forEach(actor => {
@@ -375,7 +374,7 @@ export default {
           //all of the notes.
           const x = 50 + (200*(lastIdx%3));
           const y = 50 + (600*Math.floor(lastIdx/3));
-          lastIdx += 1;
+          idx += 1;
 
           const type = "note";
           let doc = mxUtils.createXmlDocument();
@@ -448,10 +447,32 @@ export default {
               } 
             }
           });
-          console.log(info);
           note.setAttribute('information', info);
         }
       });
+    },
+    generateClasses(){
+      const model = this.current_graph.getModel();
+      const istarRoot = model.getCell("istar"); 
+      const classDiagRoot = model.getCell("classdiag");
+      //Go over all top level elements and extract actors and dependums
+      const {actors, dependums} = this.getTopLevelElems(istarRoot, model);
+      //Go over the actors, create their respective classes in the class diagram
+      //and create a map that has the actors as keys and the classes as values.
+      const classMap = this.createClassMap(actors, classDiagRoot);
+      //Go over all high level connections between actors and add the edges to
+      //a map of relations.
+      const relMap = this.analyzeTopLevelConnections(actors, classMap, classDiagRoot);
+      //Go over all dependums and construct the relationships between the actos
+      this.analyzeDependumConnections(dependums, classMap, relMap, classDiagRoot, model);
+      //Go over actor's internal structure and construct the corresponding
+      //fields and map them in a fieldMap. Also identify resources and qualities
+      //for further processing.
+      const {lastIdx, fieldMap, resources, qualities} = this.analyzeActorStructure(actors, classMap, classDiagRoot);
+      //Go over all resources and refine the fields that use them.
+      this.analyzeResources(resources, fieldMap);
+      //Go over all qualities and insert them into a note associated with a class.
+      this.analyzeQualities(actors, qualities, classMap, lastIdx, classDiagRoot);
     },
     //TEMP
     handleResize(_sender, evt){
