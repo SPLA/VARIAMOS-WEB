@@ -1,6 +1,6 @@
 import { setupModal, modalH3, modalSimpleText, modalButton } from '../../../common/util'
 
-let setup_events = function setup_events(graph){
+let setupEvents = function setupEvents(graph){
       let texts = ['Input [∆𝑋] (Setpoint injection): ',
       "Delay[𝜃](Time it takes for the system output to increase): "];
       let default_vals = ["",""];
@@ -20,52 +20,45 @@ let setup_events = function setup_events(graph){
             let url = document.URL;
             let n = url.lastIndexOf('/');
             let result_url = url.substring(0,n);
-            let original_cell_id = cell.getId().substring(4);
-            let original_cell = graph.getModel().getCell(original_cell_id);
-            let parent = original_cell.getParent();
+            let originalCellId = cell.getId().substring(4);
+            let originalCell = graph.getModel().getCell(originalCellId);
+            let parent = originalCell.getParent();
           /* window.location.href = result_url+"/"+parent.getId();*/
-           data_continuous();
-
+           DataContinuous()
           }
           let type = cell.getAttribute("type");
-            if (type == "controller")
-            {
-            generate_graph();
+            if (type == "controller") {
+              GenerateGraph();
             } 
-             
-            if (type == "plant") 
-            {
-            data_continuous();
+            if (type == "plant") {
+            DataContinuous();
             }
-        
       }
   }); 
 
   // modal function
-function modalControl(texts,inputs,default_vals){
+function ModalControl(texts,inputs,default_vals){
   let table = document.createElement('table');
-  for(let i=0;i<texts.length;i++){
+  for (let i=0;i<texts.length;i++) {
       let tr = document.createElement('tr');
       let td = document.createElement('td');
       td.innerHTML=texts[i];
       let input={}
       tr.appendChild(td);
-      if(i==1){
+      if (i==1) {
           input = document.createElement('input');
           input.type="checkbox";
           input.id=inputs[i];
       }
-      else if(i==2){
+      else if (i==2) {
         input = document.createElement('input');
         input.type="checkbox";
         input.id=inputs[i];
-    }
-      else if(i==3){
+      }
+      else if (i==3) {
           input = document.createElement('span');
           input.innerText=inputs[i];
-      }
-
-      else{  
+      } else {  
       input = document.createElement('input');
       input.value=default_vals[i];
       input.type="text";
@@ -82,27 +75,25 @@ function modalControl(texts,inputs,default_vals){
 }
 
   // Modal Identifying transfer function  
-    let data_continuous = function() {
-    let c_header = modalH3(("System model"));
-    let c_body = modalControl(texts,inputs,default_vals);
-    let c_footer = [];
-    c_footer.push(modalButton("Import Data", function(){ 
-        uploadData()
+    let DataContinuous = function() {
+    let header = modalH3(("System model"));
+    let body = ModalControl(texts,inputs,default_vals);
+    let footer = [];
+
+    footer.push(modalButton("Import Data", function() { 
+        UploadData()
     }));
-    c_footer.push(modalButton("Estimate", function(){
-      if(  document.getElementById('idDeltaU').value =="")
-        {
+    footer.push(modalButton("Estimate", function(){
+      if (document.getElementById('idDeltaU').value =="") {
           alert("Incomplete information")
-        }
-      else
-        {
-          sistemIdentification();
-        }
-      }));
-    setupModal(c_header, c_body, c_footer);  
+      } else {
+          SistemIdentification();
+      }
+    }));
+    setupModal(header, body, footer);  
   }
 
-  function uploadData()
+  function UploadData()
   {
       let hidden = document.getElementById("hidden_elements");
       let input=document.createElement('input');
@@ -119,175 +110,170 @@ function modalControl(texts,inputs,default_vals){
           }
         fileReader.readAsText(fileToLoad, "UTF-8");
         });
-      if (input)
-      {
+      if (input) {
       input.click();
       }  
     }
-    function sistemIdentification(){
+    function SistemIdentification(){
     
-    let datos_dic = function(){
+    let DatosLocalStorage = function(){
       let text=localStorage["control_data"];
       let allTextLines = text.split(/\r\n|\n/); 
-      let list_data = [];
-      let list_time = [];
+      let listData = [];
+      let listTime = [];
       let firstColumn;
-      let SecondColumn;
+      let secondColumn;
             for (let i=0; i<allTextLines.length; i++) {
               firstColumn = allTextLines[i].split(";")[1];
-              SecondColumn = allTextLines[i].split(";")[0];
-              if(firstColumn!=null && SecondColumn!=null){
+              secondColumn = allTextLines[i].split(";")[0];
+              if (firstColumn!=null && secondColumn!=null) {
                 firstColumn = firstColumn.replace(",", ".");
-                SecondColumn = SecondColumn.replace(",", ".");
+                secondColumn = secondColumn.replace(",", ".");
                 firstColumn= parseFloat(firstColumn);
-                SecondColumn= parseFloat(SecondColumn)
-                list_data.push(firstColumn);
-                list_time.push(SecondColumn);
+                secondColumn= parseFloat(secondColumn)
+                listData.push(firstColumn);
+                listTime.push(secondColumn);
               }
             }
-            list_data.pop();
-            list_time.push(SecondColumn);
+            listData.pop();
+            listTime.push(secondColumn);
             let dictionary_data = {
-              "data": list_data,
-              "time": list_time
+              "data": listData,
+              "time": listTime
             };
             return  dictionary_data
           }
   
-  function canvas()
+  function Canvas()
   {
-    let lines=datos_dic().data;
-    let delay=datos_dic().time;
+    let lines=DatosLocalStorage().data;
+    let delay=DatosLocalStorage().time;
     let last=lines.slice(-2)[0];
-    let tao_value;
+    let taoValue;
     let first=lines[0];
-    let tao=((last-first)*0.63)+first;
-    let delta_value = document.getElementById('idDeltaU').value;
-    let k=(last-first)/parseInt(delta_value);
+    let tao=((last-first)*deltaValue)+first;
+    let deltaValue = document.getElementById('idDeltaU').value;
+    let gain=(last-first)/parseInt(deltaValue);
     let tex;
 
     //Calculate delay
-    let pos_delay = function() {
+    let PositionDelay = function() {
       let position;
       for (let i=0; i<lines.length; i++) {   
-        if(lines[i]!=lines[0]){  
+        if (lines[i]!=lines[0]) {  
           first=lines[i-1]
           position=i-1
           break;
-        }
-        else{
+        } else {
           position=0;
         }
       }
       return position;
     }
-    let model_fit = function() {
+    let TransferFunctionOutput = function() {
       let result=[];
       for (let i = 0; i < lines.length; i++)
       { 
-          let value=(k*parseInt(delta_value)*(1-Math.exp(-delay[i]/parseInt(tao_value)))+first);
+          let value=(gain*parseInt(deltaValue)*(1-Math.exp(-delay[i]/parseInt(taoValue)))+first);
           result.push(value);
       }
       localStorage.setItem("modelo fit",result)
       return result;
       };
-    let tao_aproximate = function() {
+    let TaoAproximate = function() {
       let near=0;
       let difference=0;
-      let t=((last-first)*0.63)+first;
-      for (let i = 0; i < lines.length; i++)
-      {
-        if ( Math.abs(t -near) > Math.abs(lines[i] - t) && Math.abs(t -near) > Math.abs(lines[i-1] - t)) {
+      let tao=((last-first)*0.63)+first;
+      for (let i = 0; i < lines.length; i++) {
+        if (Math.abs(t -near) > Math.abs(lines[i] - tao) && Math.abs(t -near) > Math.abs(lines[i-1] - tao)) {
           near = lines[i];
           difference=i; 
         }
       }  
       return difference;
     }
-    let fit_model = function() {
-      let result_continuous=model_fit()
-      let list_difference=[];
+    let ModelFitting = function() {
+      let resultContinuous=TransferFunctionOutput()
+      let ListDifference=[];
       let difference;
       let sum;
       let fit;
-      for (let i = 0; i < lines.length; i++)
-      {
-        difference=result_continuous[i]-lines[i] 
+      for (let i = 0; i < lines.length; i++) {
+        difference=resultContinuous[i]-lines[i] 
         difference=Math.pow(difference,2)
         sum+=difference
-        list_difference.push(difference)
+        ListDifference.push(difference)
       }
       const reducer = (accumulator, currentValue) => accumulator + currentValue;
-      sum=list_difference.reduce(reducer);
+      sum=ListDifference.reduce(reducer);
       fit=Math.sqrt(sum/lines.length)
       return fit;
     }
-    let feedback_root = graph.getModel().getCell("control");
-    let childs = graph.getModel().getChildVertices(feedback_root);
+    let feedbackRoot = graph.getModel().getCell("control");
+    let childs = graph.getModel().getChildVertices(feedbackRoot);
     for (let i = 0; i < childs.length; i++) {
-      if ( childs[i].getAttribute("type") == "controlAction") { //change
+      if ( childs[i].getAttribute("type") == "controlAction") { 
           childs[i].setAttribute("Delay")==true;  
         }
     }
-      if(document.getElementById('idDelay').checked==false){
-       tao_value = delay[tao_aproximate()];
-       //var tex = "\\frac{"+ k.toFixed(2)+"}{"+tao_value+"+1}";
-       tex='K: '+k.toFixed(2)+" "+'Tao: '+tao_value;
-       localStorage.setItem("tao", tao_value);    
-        }
-      else{
-        first=lines[pos_delay()];
-        tao_value = delay[tao_aproximate()] - delay[pos_delay()]
-        tex = "Gp(s) = \\frac{"+ k.toFixed(2)+"* e^-"+ delay[pos_delay()]+"s}{"+tao_value+"+1}";
-        localStorage.setItem("k",k)
-        localStorage.setItem("delay",delay[pos_delay()])
-        localStorage.setItem("tao", tao_value)
+      if (document.getElementById('idDelay').checked==false) {
+       taoValue = delay[TaoAproximate()];
+       //var tex = "\\frac{"+ k.toFixed(2)+"}{"+taoValue+"+1}";
+       tex='K: '+gain.toFixed(2)+" "+'Tao: '+taoValue;
+       localStorage.setItem("tao", taoValue);    
+      } else {
+        first=lines[PositionDelay()];
+        taoValue = delay[TaoAproximate()] - delay[PositionDelay()]
+        tex = "Gp(s) = \\frac{"+ gain.toFixed(2)+"* e^-"+ delay[PositionDelay()]+"s}{"+taoValue+"+1}";
+        localStorage.setItem("k",gain)
+        localStorage.setItem("delay",delay[PositionDelay()])
+        localStorage.setItem("tao", taoValue)
       }    
      
-      let main_modal = document.getElementById("main_modal_body");
-      let c_header = modalH3("System Model");
-      let c_body=""
-      let c_footer = modalButton(("return"),function(){data_continuous();})
-      setupModal(c_header,c_body,c_footer);
+      let mainModal = document.getElementById("main_modal_body");
+      let header = modalH3("System Model");
+      let body=""
+      let footer = modalButton(("return"),function(){DataContinuous();})
+      setupModal(header,body,footer);
 
-      let transfer_function=document.createElement("div");
-      transfer_function.id="transfer";
-      main_modal.appendChild(transfer_function);
-      let ti=2*delay[pos_delay()];
+      let transferFunction=document.createElement("div");
+      transferFunction.id="transfer";
+      mainModal.appendChild(transferFunction);
+      let ti=2*delay[PositionDelay()];
       let td=ti/4;
-      let fit= (fit_model().toFixed(2)*100)/last;
+      let fit= (ModelFitting().toFixed(2)*100)/last;
       fit=(100-fit).toFixed(2);
-      transfer_function.innerHTML = "\\["+tex+"\\]";
-      MathJax.Hub.Queue(["Typeset",MathJax.Hub,transfer_function]);
+      transferFunction.innerHTML = "\\["+tex+"\\]";
+      MathJax.Hub.Queue(["Typeset",MathJax.Hub,transferFunction]);
 
       let div3=document.createElement("div");
       div3.id="formula3";
-      main_modal.appendChild(div3);
-      let cohen_proporti=  (1.35/0.018)*(1+((0.18*0.08)/1-0.08))*(61/12)
-      let cohe_inte=(2.5-(2.0*0.08)/(1-(0.39*0.08)))*6
-      div3.innerHTML = " \\[Cohen–Coon:  K:"+ cohen_proporti.toFixed(2)+"\\"+"   " +" Ti:"+cohe_inte.toFixed(2)+" \\]";
+      mainModal.appendChild(div3);
+      let cohenKP=  (1.35/gain)*(1+((gain*0.08)/1-0.08))*(61/12)
+      let cohenKI=(2.5-(2.0*0.08)/(1-(0.39*0.08)))*6
+      div3.innerHTML = " \\[Cohen–Coon:  K:"+ cohenKP.toFixed(2)+"\\"+"   " +" Ti:"+cohenKI.toFixed(2)+" \\]";
       MathJax.Hub.Queue(["Typeset",MathJax.Hub,div3]);
 
       let div4=document.createElement("div");
       div4.id="formula4";
-      main_modal.appendChild(div4);
-      let first_operation = 0.35-((54.1*9.5)/Math.pow(54.1+9.5, 2));
-      let kp_cohen = (1/0.018)*(0.15+((first_operation)*(54.1/9.5)))
-      let denominador_integral =(13*(Math.pow(54.1, 2))) / (Math.pow(54.1, 2)+ (12*54.1*9.5)+(7* Math.pow(9.5, 2)));
-      let integral_time=((0.35+denominador_integral)*9.5)
-      let consta_integral = kp_cohen/integral_time
-      div4.innerHTML = " \\[Amigo:  K:"+ kp_cohen.toFixed(2)+"\\"+"   " +" Ki:"+consta_integral.toFixed(2)+" \\]";
+      mainModal.appendChild(div4);
+      let firstOperation = 0.35-((54.1*9.5)/Math.pow(54.1+9.5, 2));
+      let amigoKP = (1/gain)*(0.15+((firstOperation)*(54.1/9.5)))
+      let denominador_integral =(13*(Math.pow(54.1, 2))) / (Math.pow(54.1, 2)
+      + (12*54.1*9.5)+(7* Math.pow(9.5, 2)));
+      let integralTime=((0.35+denominador_integral)*9.5)
+      let amigoKi = amigoKP/integralTime
+      div4.innerHTML = " \\[Amigo:  K:"+ amigoKP.toFixed(2)+"\\"+"   " +" Ki:"+amigoKi.toFixed(2)+" \\]";
       MathJax.Hub.Queue(["Typeset",MathJax.Hub,div4]); 
-
         
-      let control = function() {
+      let Control = function() {
         let sp=1
         let tm=301
         let error=0
         let error_acum=0;
         let controlador=0;
-        let salida_sistema=0;
-        let  errorant=0
+        let outputSystem=0;
+        let errorant=0
         let a=-Math.exp(-1/54.1)
         let b=0.018*(1+a)
         let controladores =[]
@@ -295,12 +281,12 @@ function modalControl(texts,inputs,default_vals){
         let errorp=0
         let controladorp=0;
         let salidap=0;
-       let salidas=[];
+        let salidas=[];
  
          for (let i = 0; i < tm; i++) {
            if(i<10){
-           salida_sistema=0;
-           error=(sp-salida_sistema);
+           outputSystem=0;
+           error=(sp-outputSystem);
            error_acum=error_acum+error;
            errores.push(error_acum);
            errorant = errorant-error
@@ -321,24 +307,24 @@ function modalControl(texts,inputs,default_vals){
          }
  
        }
-       control();
+       Control();
 
 
     // Modal Canvas Plant
     let canvas = document.createElement("canvas");
           canvas.id = "myChart";
           canvas.width = 500;
-          canvas.height = 300;
+          canvas.height = 280;
           canvas.className = "my-4 chartjs-render-monitor";
-          main_modal.appendChild(canvas);
+          mainModal.appendChild(canvas);
           let ctx = document.getElementById("myChart");
           let myChart = new Chart(ctx, {
             type: "line",
             data: {
-              labels: datos_dic().time,
+              labels: DatosLocalStorage().time,
               datasets: [
                 {
-                  data: lines,//setInterval(function(){ uploadData(); }, 3000),
+                  data: lines,//setInterval(function(){ UploadData(); }, 3000),
                   label: "Data Plant",
                   lineTension: 0,
                   backgroundColor: "transparent",
@@ -350,7 +336,7 @@ function modalControl(texts,inputs,default_vals){
                   pointBorderWidth: 0
                 },
                 {
-                  data: model_fit(),
+                  data: TransferFunctionOutput(),
                   label: "Data Transfer Function",
                   lineTension: 0,
                   backgroundColor: "transparent",
@@ -366,352 +352,299 @@ function modalControl(texts,inputs,default_vals){
             options: {
               title: {
                 display: true,
-                text: ['Proportional: '+ k.toFixed(2)+" "+"Integral: "+ti+" "+"Derivate: "+td+" ",'Best fits:'+fit+"%"],
+                text: [//'Proportional: '+ k.toFixed(2)+" "+"Integral: "+ti+" "+"Derivate: "+td+" ",//
+                'Best fits:'+fit+"%"],
               },
             }
           });
           return canvas
         }
-        canvas()
+        Canvas()
   }
 
   
-      function generate_graph() {
+      function GenerateGraph() {
       let controlAction =
       localStorage["adaptation_binding_state_hardware_controlAction"];
-      let c_header = modalH3("Controller Tuning");
-      let value_label = controlAction;
-      let c_body = modalSimpleText("");
-      let result_simple_plant = [];
+      let header = modalH3("Controller Tuning");
+      let valueLabel = controlAction;
+      let body = modalSimpleText("");
       let result_cascade_plant = [];
       let result = [];
       let names = [];
-      let feedback_root = graph.getModel().getCell("control");
+      let feedbackRoot = graph.getModel().getCell("control");
       let childs = graph
         .getModel()
-        .getChildVertices(feedback_root);
+        .getChildVertices(feedbackRoot);
       for (let i = 0; i < childs.length; i++) {
-        if ( childs[i].getAttribute("type") == "controlAction") { //change
+        if ( childs[i].getAttribute("type") == "controlAction") { 
           let target_sys = childs[i].getAttribute("label");
           names.push(target_sys);
-
-          }
+        }
       }
 
       //  target system variables
       let target; //
-      let target_system_id; // target system id
+      let targetSystemId; // target system id
       let proportional; // proportional value of the target system element
       let derivate; // derivate value of the target system element
       let integral; // integral value of the target system element
-      let target_system_relations; // relations target system
+      let targetSystemRelations; // relations target system
       // controller variables
       let id_controller; // controller id
-      let controller_relations; // controller relations
-      let id_controller_inner;
-      let controller_inner_relations;
-      let proportional_inner; // proportional value of the target system element
-      let derivate_inner; // derivate value of the target system element
-      let integral_inner; // integral value of the target system element
+      let controllerRelations; // controller relations
+      let ControllerInnerId;
+      let controllerInnerRelations;
+      let InnerKP; // proportional value of the target system element
+      let InnerKD; // derivate value of the target system element
+      let InnerKI; // integral value of the target system element
       // summing point variables
-      let id_summing; // summing point id
-      let summing_relations; // summing relations
-      let id_initial_summing; // summing initial id
-      let summing_relations2;
-      let summing_value; // value summing
-      let summing_value_inner; // value summing inner
-      let id_summing_plant; // id summing plant
+      let summingID; // summing point id
+      let summingRelations; // summing relations
+      let initialSummingID; // summing initial id
+      let summingRelationsTwo;
+      let summingValue; // value summing
+      let summingValueInner; // value summing inner
+      let summingPlantID; // id summing plant
       // filter variables
-      let id_filter; // filter relations
-      let filter_relations;
+      let filterID; // filter relations
+      let filterRelations;
       // set point variables
-      let setpoint_value; // value setpoint
-      let setpoint_time;
+      let setpointValue; // value setpoint
+      let setpointTime;
       let setpoints = []; // array
-      let id_set; // id setpoint
+      let setpointID; // id setpoint
       let times = [];
-      let id_set2 = false;
-      let sampling_time;
-
-
-      // subtraction
-      let id_subtraction;
-      let subtraction_relations;
-      let subraction_value;
+      let setpointTwoID = false;
+      let samplingTime;
 
       // branch variables
-      let id_branch; // id Branchpoint
-      let id_final_branch;
-      let branch_relations_targets; // target relations Branchpoint
-      let branch_relations_targets2; // target relations Branchpoint
-      let branch_relations; // source relations Branchpoint
-      let final_branch_relations; // source relations Branchpoint
+      let branchID; // id Branchpoint
+      let finalBranchID;
+      let branchRelationsTarget; // target relations Branchpoint
+      let branchRelations; // source relations Branchpoint
+      let finalBranchRelations; // source relations Branchpoint
+
       // output variables
-      let id_output; // id output
-      let currentoutput; // current output
+      let outputID; // id output
+
       // transducer variables
-      let value_transducer; // value transducer
-      let id_transducer; // id transducer
-      let transducer_relations; // transducer relations
+      let valueTransducer; // value transducer
+      let transducerID; // id transducer
+      let transdurcerRelations; // transducer relations
       // list elements
-      let list_elements = [];
-      let id_final;
+      let listElements = [];
+      let finalID;
 
       for (let i = 0; i < names.length; i++) {
-        if (value_label == names[i]) {
-          setupModal(c_header, c_body);
-          let main_modal = document.getElementById("main_modal_body");
+        if (valueLabel == names[i]) {
+          setupModal(header, body);
+          let mainModal = document.getElementById("main_modal_body");
           let canvas = document.createElement("canvas");
-
           for (let i = 0; i < childs.length; i++) {
-            if (childs[i].getAttribute("type") == "controlAction") { //change
-              //only selected concrete features are analyzed
-              
-             // if (childs[i].getAttribute("label") == value_label) {
-                target_system_id = childs[i].getId();
+            if (childs[i].getAttribute("type") == "controlAction") {
+             // if (childs[i].getAttribute("label") == valueLabel) {
+                targetSystemId = childs[i].getId();
                 proportional = childs[i].getAttribute("Proportional");
                 derivate = childs[i].getAttribute("Derivate");
                 integral = childs[i].getAttribute("Integral");
-                list_elements.push(target_system_id);
-             // }
-              
+                listElements.push(targetSystemId);
+             // }  
             }
-           
-
           }
-          target_system_relations = graph
-            .getModel()
-            .getIncomingEdges(
-              graph.getModel().getCell(target_system_id)
-            );
-          for (let i = 0; i < target_system_relations.length; i++) {
-            let source = target_system_relations[i].source;
+          targetSystemRelations = graph.getModel().getIncomingEdges(
+            graph.getModel().getCell(targetSystemId) );
+
+          for (let i = 0; i < targetSystemRelations.length; i++) {
+            let source = targetSystemRelations[i].source;
             if (source.getAttribute("type") == "controller") {
-              id_controller_inner = source.getId();
-              proportional_inner = source.getAttribute("Proportional");
-              derivate_inner = source.getAttribute("Derivate");
-              integral_inner = source.getAttribute("Integral");
-              list_elements.push(id_controller);
+              ControllerInnerId = source.getId();
+              InnerKP = source.getAttribute("Proportional");
+              InnerKD = source.getAttribute("Derivate");
+              InnerKI = source.getAttribute("Integral");
+              listElements.push(id_controller);
             }
-
-            if (source.getAttribute("type") == "summing_point") {
-              id_summing_plant = source.getId();
-
-              list_elements.push(id_summing);
+            if (source.getAttribute("type") == "summingPoint") {
+              summingPlantID = source.getId();
+              listElements.push(summingID);
             }
           }
-          controller_inner_relations = graph
-            .getModel()
-            .getIncomingEdges(
-              graph.getModel().getCell(id_summing_plant)
-            );
 
-          for (let i = 0; i < controller_inner_relations.length; i++) {
-            let source = controller_inner_relations[i].source;
+          controllerInnerRelations = graph.getModel().getIncomingEdges(
+              graph.getModel().getCell(summingPlantID));
+          for (let i = 0; i < controllerInnerRelations.length; i++) {
+            let source = controllerInnerRelations[i].source;
             if (source.getAttribute("type") == "controller") {
-              id_controller_inner = source.getId();
-              proportional_inner = source.getAttribute("Proportional");
-              derivate_inner = source.getAttribute("Derivate");
-              integral_inner = source.getAttribute("Integral");
-              list_elements.push(id_controller);
+              ControllerInnerId = source.getId();
+              InnerKP = source.getAttribute("Proportional");
+              InnerKD = source.getAttribute("Derivate");
+              InnerKI = source.getAttribute("Integral");
+              listElements.push(id_controller);
             }
           }
 
-          controller_inner_relations = graph
-            .getModel()
-            .getIncomingEdges(
-              graph.getModel().getCell(id_controller_inner)
-            );
-
-          for (let i = 0; i < controller_inner_relations.length; i++) {
-            let source = controller_inner_relations[i].source;
-            if (source.getAttribute("type") == "summing_point") {
-              id_summing = source.getId();
-              
-              list_elements.push(id_summing);
-              summing_value_inner = source.getAttribute("Direction");
+          controllerInnerRelations = graph.getModel().getIncomingEdges(
+              graph.getModel().getCell(ControllerInnerId) );
+          for (let i = 0; i < controllerInnerRelations.length; i++) {
+            let source = controllerInnerRelations[i].source;
+            if (source.getAttribute("type") == "summingPoint") {
+              summingID = source.getId();
+              listElements.push(summingID);
+              summingValueInner = source.getAttribute("Direction");
             }
           }
 
-          summing_relations = graph
-            .getModel()
-            .getIncomingEdges(
-              graph.getModel().getCell(id_summing)
-            );
-          for (let i = 0; i < summing_relations.length; i++) {
-            let source = summing_relations[i].source;
+          summingRelations = graph.getModel().getIncomingEdges(
+              graph.getModel().getCell(summingID) );
+          for (let i = 0; i < summingRelations.length; i++) {
+            let source = summingRelations[i].source;
             if (source.getAttribute("type") == "filter") {
-              id_filter = source.getId();
-              list_elements.push(id_filter);
+              filterID = source.getId();
+              listElements.push(filterID);
             }
-
-            if (source.getAttribute("type") == "Branchpoint") {
-              id_final_branch = source.getId();
-              
+            if (source.getAttribute("type") == "branchpoint") {
+              finalBranchID = source.getId();
             }
-            if (source.getAttribute("type") == "controlAction") { //change
-              target_system_id = source.getId();
+            if (source.getAttribute("type") == "controlAction") { 
+              targetSystemId = source.getId();
             }
             if (source.getAttribute("type") == "controller") {
-              id_set2 = true;
+              setpointTwoID = true;
               id_controller = source.getId();
               proportional = source.getAttribute("Proportional");
               derivate = source.getAttribute("Derivate");
               integral = source.getAttribute("Integral");
             }
-
-            if (source.getAttribute("type") == "set_point") {
-              id_set = source.getId();
-              setpoint_value = source.getAttribute("SetPoint");
-              setpoints.push(setpoint_value);
-              setpoint_time = source.getAttribute("Time");
-              times.push(setpoint_time);
-              sampling_time=source.getAttribute("Tm");
-
-              list_elements.push(id_set);
+            if (source.getAttribute("type") == "setpoint") {
+              setpointID = source.getId();
+              setpointValue = source.getAttribute("SetPoint");
+              setpoints.push(setpointValue);
+              setpointTime = source.getAttribute("Time");
+              times.push(setpointTime);
+              samplingTime=source.getAttribute("Tm");
+              listElements.push(setpointID);
             }
             if (source.getAttribute("type") == "transducer") {
-              id_transducer = source.getId();
+              transducerID = source.getId();
             }
           }
 
-          controller_relations = graph
-            .getModel()
-            .getIncomingEdges(
-              graph.getModel().getCell(id_controller)
-            );
-          for (let i = 0; i < controller_relations.length; i++) {
-            let source = controller_relations[i].source;
-            if (source.getAttribute("type") == "summing_point") {
-              id_initial_summing = source.getId();
-              list_elements.push(id_initial_summing);
-              summing_value = source.getAttribute("Direction");
+          controllerRelations = graph.getModel().getIncomingEdges(
+              graph.getModel().getCell(id_controller));
+          for (let i = 0; i < controllerRelations.length; i++) {
+            let source = controllerRelations[i].source;
+            if (source.getAttribute("type") == "summingPoint") {
+              initialSummingID = source.getId();
+              listElements.push(initialSummingID);
+              summingValue = source.getAttribute("Direction");
             }
           }
-          summing_relations2 = graph
-            .getModel()
-            .getIncomingEdges(
-              graph.getModel().getCell(id_initial_summing)
-            );
-          for (let i = 0; i < summing_relations2.length; i++) {
-            let source = summing_relations2[i].source;
 
-            if (source.getAttribute("type") == "set_point") {
-              id_set = source.getId();
-              setpoint_value = source.getAttribute("SetPoint");
-              setpoints.push(setpoint_value);
-              setpoint_time = source.getAttribute("Time");
-              times.push(setpoint_time);
-              list_elements.push(id_set);
-              sampling_time=source.getAttribute("Tm");
+          summingRelationsTwo = graph.getModel().getIncomingEdges(
+              graph.getModel().getCell(initialSummingID) );
+          for (let i = 0; i < summingRelationsTwo.length; i++) {
+            let source = summingRelationsTwo[i].source;
+            if (source.getAttribute("type") == "setpoint") {
+              setpointID = source.getId();
+              setpointValue = source.getAttribute("SetPoint");
+              setpoints.push(setpointValue);
+              setpointTime = source.getAttribute("Time");
+              times.push(setpointTime);
+              listElements.push(setpointID);
+              samplingTime=source.getAttribute("Tm");
             } else if (source.getAttribute("type") == "filter") {
-              id_filter = source.getId();
-              list_elements.push(id_filter);
-            } else if (source.getAttribute("type") == "Branchpoint") {
-              id_final_branch = source.getId();
+              filterID = source.getId();
+              listElements.push(filterID);
+            } else if (source.getAttribute("type") == "branchpoint") {
+              finalBranchID = source.getId();
             } else if (source.getAttribute("type") == "transducer") {
-              id_transducer = source.getId();
+              transducerID = source.getId();
             }
           }
-          filter_relations = graph
-            .getModel()
-            .getIncomingEdges(graph.getModel().getCell(id_filter));
-          for (let i = 0; i < filter_relations.length; i++) {
-            let source = filter_relations[i].source;
-            if (source.getAttribute("type") == "Branchpoint") {
-              id_final_branch = source.getId();
-              list_elements.push(id_branch);
+
+          filterRelations = graph.getModel().getIncomingEdges(graph.getModel().getCell(filterID));
+          for (let i = 0; i < filterRelations.length; i++) {
+            let source = filterRelations[i].source;
+            if (source.getAttribute("type") == "branchpoint") {
+              finalBranchID = source.getId();
+              listElements.push(branchID);
             } else if (source.getAttribute("type") == "transducer") {
-              id_transducer = source.getId();
-              value_transducer = source.getAttribute("InitialPosition");
-              list_elements.push(id_branch);
-            }
-          }
-          transducer_relations = graph
-            .getModel()
-            .getIncomingEdges(
-              graph.getModel().getCell(id_transducer)
-            );
-          for (let i = 0; i < transducer_relations.length; i++) {
-            let source = transducer_relations[i].source;
-            if (source.getAttribute("type") == "Branchpoint") {
-              id_final_branch = source.getId();
-              list_elements.push(id_branch);
-            }
-          }
-          branch_relations_targets = graph
-            .getModel()
-            .getOutgoingEdges(
-              graph.getModel().getCell(id_final_branch)
-            );
-          for (let i = 0; i < branch_relations_targets.length; i++) {
-            let target = branch_relations_targets[i].target;
-            if (target.getAttribute("type") == "measured_output") {
-              id_output = target.getId();
-              list_elements.push(id_output);
-            }
-          }
-          final_branch_relations = graph
-            .getModel()
-            .getIncomingEdges(
-              graph.getModel().getCell(id_final_branch)
-            );
-          for (let i = 0; i < final_branch_relations.length; i++) {
-            let source = final_branch_relations[i].source;
-
-            if (source.getAttribute("type") == "Branchpoint") {
-              id_branch = source.getId();
-
-              list_elements.push(id_branch);
+              transducerID = source.getId();
+              valueTransducer = source.getAttribute("InitialPosition");
+              listElements.push(branchID);
             }
           }
 
-          branch_relations = graph
-            .getModel()
-            .getIncomingEdges(graph.getModel().getCell(id_branch));
-          for (let i = 0; i < branch_relations.length; i++) {
-            let source = branch_relations[i].source;
+          transdurcerRelations = graph.getModel().getIncomingEdges(
+              graph.getModel().getCell(transducerID));
+          for (let i = 0; i < transdurcerRelations.length; i++) {
+            let source = transdurcerRelations[i].source;
+            if (source.getAttribute("type") == "branchpoint") {
+              finalBranchID = source.getId();
+              listElements.push(branchID);
+            }
+          }
+
+          branchRelationsTarget = graph.getModel().getOutgoingEdges(
+              graph.getModel().getCell(finalBranchID) );
+          for (let i = 0; i < branchRelationsTarget.length; i++) {
+            let target = branchRelationsTarget[i].target;
+            if (target.getAttribute("type") == "outputSystem") {
+              outputID = target.getId();
+              listElements.push(outputID);
+            }
+          }
+
+          finalBranchRelations = graph.getModel().getIncomingEdges(
+              graph.getModel().getCell(finalBranchID));
+          for (let i = 0; i < finalBranchRelations.length; i++) {
+            let source = finalBranchRelations[i].source;
+            if (source.getAttribute("type") == "branchpoint") {
+              branchID = source.getId();
+              listElements.push(branchID);
+            }
+          }
+
+          branchRelations = graph.getModel().getIncomingEdges(
+          graph.getModel().getCell(branchID));
+          for (let i = 0; i < branchRelations.length; i++) {
+            let source = branchRelations[i].source;
             if (
-              source.getId() == target_system_id &&
-              source.getAttribute("type") == "controlAction" //change
+              source.getId() == targetSystemId &&
+              source.getAttribute("type") == "controlAction" 
             ) {
-              id_final = source.getId();
+              finalID = source.getId();
             }
           }
-
-          let feedback_root = graph.getModel().getCell("control");
-          let childs2 = graph
-            .getModel()
-            .getChildVertices(feedback_root);
+          let feedbackRoot = graph.getModel().getCell("control");
+          let childs2 = graph.getModel().getChildVertices(feedbackRoot);
           for (let i = 0; i < childs2.length; i++) {
             if (
-              childs2[i].getId() != target_system_id &&
-              childs2[i].getId() != id_summing &&
-              childs2[i].getId() != id_set &&
-              childs2[i].getId() != id_filter &&
+              childs2[i].getId() != targetSystemId &&
+              childs2[i].getId() != summingID &&
+              childs2[i].getId() != setpointID &&
+              childs2[i].getId() != filterID &&
               childs2[i].getId() != id_controller &&
-              childs2[i].getId() != id_branch &&
-              childs2[i].getId() != id_output &&
-              childs2[i].getId() != id_controller_inner &&
-              childs2[i].getId() != id_initial_summing &&
-              childs2[i].getId() != id_final_branch &&
-              childs2[i].getId() != id_transducer &&
-              childs2[i].getId() != id_summing_plant
-            ) {
+              childs2[i].getId() != branchID &&
+              childs2[i].getId() != outputID &&
+              childs2[i].getId() != ControllerInnerId &&
+              childs2[i].getId() != initialSummingID &&
+              childs2[i].getId() != finalBranchID &&
+              childs2[i].getId() != transducerID &&
+              childs2[i].getId() != summingPlantID ) {
               graph.getModel().setVisible(childs2[i], false);
             } else {
               graph.getModel().setVisible(childs2[i], true);
             }
           }
          /***** Aqui va el codigo PID */
-
-          let control = function() {
-            let sp=setpoint_value
+          let Control = function() {
+            let sp=setpointValue
             let tm=1000
             let error=0
             let error_acum=0;
             let controlador=0;
-            let salida_sistema=0;
+            let outputSystem=0;
             let  errorant=0
             let a=-Math.exp(-1/54.1)
             let b=0.018*(1+a)
@@ -720,61 +653,57 @@ function modalControl(texts,inputs,default_vals){
             let errorp=0
             let controladorp=0;
             let salidap=0;
-           let salidas=[];
-           let tiempos=[];
-           let setpoints=[];
+            let salidas=[];
+            let tiempos=[];
+            let setpoints=[];
      
-             for (let i = 0; i < sampling_time; i++) {
-               if(i<10){
-               salida_sistema=0;
-               error=(sp-salida_sistema);
-               error_acum=error_acum+error;
-               errores.push(error_acum);
-               errorant = errorant-error
-               controlador=(78*error)+(error_acum/1.95)+(0*errorant)
-               controladores.push(controlador)
-               salidas.push(salida_sistema)
-               tiempos.push(i)
-               setpoints.push(sp)
-               }
-               else{
-               salidap=parseFloat((controladores[i-10]*b-(a*salidap)).toFixed(9))
-               error=sp-salidap;
-               errorp=error.toFixed(9)
-               error_acum=error_acum+parseFloat(errorp);
-               controlador=(78*errorp)+(error_acum/1.95)+(0*errorant)
-               controladorp=parseFloat(controlador.toFixed(9))
-               controladores.push(controladorp)
-               tiempos.push(i)
-               salidas.push(salidap)
-               setpoints.push(sp)
+            for (let i = 0; i < samplingTime; i++) {
+              if(i<10){
+              outputSystem=0;
+              error=(sp-outputSystem);
+              error_acum=error_acum+error;
+              errores.push(error_acum);
+              errorant = errorant-error
+              controlador=(78*error)+(error_acum/1)+(0*errorant)
+              controladores.push(controlador)
+              salidas.push(outputSystem)
+              tiempos.push(i)
+              setpoints.push(sp)
+              } else {
+              salidap=parseFloat((controladores[i-10]*b-(a*salidap)).toFixed(9))
+              error=sp-salidap;
+              errorp=error.toFixed(9)
+              error_acum=error_acum+parseFloat(errorp);
+              controlador=(78*errorp)+(error_acum/1)+(0*errorant)
+              controladorp=parseFloat(controlador.toFixed(9))
+              controladores.push(controladorp)
+              tiempos.push(i)
+              salidas.push(salidap)
+              setpoints.push(sp)
                //console.log("post ",i,"error",errorp, "controlador", controladorp,"salida sistema ", salidap, "acum", error_acum)
-                 }
-             }
-             let dictionary_data = {
+              }
+            }
+            let dictionary_data = {
               "data": salidas,
               "time": tiempos,
-              "set_point": setpoints
+              "setpoint": setpoints
             };
-
              return dictionary_data
      
-           }
-        
-
+          }
           canvas.id = "myChart";
           canvas.width = 800;
           canvas.height = 300;
           canvas.className = "my-4 chartjs-render-monitor";
-          main_modal.appendChild(canvas);
+          mainModal.appendChild(canvas);
           let ctx = document.getElementById("myChart");
           let myChart = new Chart(ctx, {
             type: "line",
             data: {
-              labels: control().time,
+              labels: Control().time,
               datasets: [
                 {
-                  data: control().data,
+                  data: Control().data,
                   label: "PV",
                   lineTension: 0,
                   backgroundColor: "transparent",
@@ -786,7 +715,7 @@ function modalControl(texts,inputs,default_vals){
                   pointBorderWidth: 0
                 },
                 {
-                  data: control().set_point,
+                  data: Control().setpoint,
                   label: "Set Point",
                   lineTension: 0,
                   backgroundColor: "transparent",
@@ -817,11 +746,9 @@ function modalControl(texts,inputs,default_vals){
         }
       }
     }
-  
-
 
   let controlAction = findControlAction(graph)
-  hide_control_elements(graph, controlAction);
+  HideControlElements(graph, controlAction);
   function findControlAction(graph){
     //se busca el control action en la url
     // let url = document.URL;  
@@ -831,10 +758,9 @@ function modalControl(texts,inputs,default_vals){
     //se busca el controlaction en el local storage y si no existe se muestra el primero
     let controlActionLS = localStorage['adaptation_binding_state_hardware_controlAction']; 
     let controlAction = "asdf";
-    let feedback_root = graph.getModel().getCell("control");
-    let childs = graph.getModel().getChildVertices(feedback_root); 
-    for (let i = 0; i < childs.length; i++)
-    {
+    let feedbackRoot = graph.getModel().getCell("control");
+    let childs = graph.getModel().getChildVertices(feedbackRoot); 
+    for (let i = 0; i < childs.length; i++) {
       if (childs[i].getAttribute("type") == "controlAction") {
         controlAction=childs[i].getAttribute("label");
         if (childs[i].getAttribute("label") == controlActionLS) {
@@ -845,294 +771,217 @@ function modalControl(texts,inputs,default_vals){
     return controlAction;
   };
 
-  function hide_control_elements(graph, controlActionLabel){
+  function HideControlElements(graph, controlActionLabel){
       //alert('escondiendo elementos ' + controlActionLabel);
-     let names_control_action = [];
-     let target_system_id; // target system id
-     let target_system_relations; // relations target system
+     let namesControlAction = [];
+     let targetSystemId; // target system id
+     let targetSystemRelations; // relations target system
      // controller variables
      let id_controller;// controller id
-     let controller_relations; // controller relations
-     let id_controller_inner;
-     let controller_inner_relations;
+     let controllerRelations; // controller relations
+     let ControllerInnerId;
+     let controllerInnerRelations;
      // summing point variables
-     let id_summing; // summing point id
-     let summing_relations; // summing relations
-     let id_initial_summing; // summing initial id
-     let summing_relations2;
-     let id_summing_plant // id summing plant
+     let summingID; // summing point id
+     let summingRelations; // summing relations
+     let initialSummingID; // summing initial id
+     let summingRelationsTwo;
+     let summingPlantID // id summing plant
      // filter variables
-     let id_filter; // filter relations
-     let filter_relations;
+     let filterID; // filter relations
+     let filterRelations;
      // set point variables
-     let id_set;// id setpoint
+     let setpointID;// id setpoint
      // branch variables
-     let id_branch// id Branchpoint
-     let id_final_branch
-     let branch_relations_targets// target relations Branchpoint
-     let branch_relations// source relations Branchpoint
-      let final_branch_relations// source relations Branchpoint
+     let branchID// id Branchpoint
+     let finalBranchID
+     let branchRelationsTarget// target relations Branchpoint
+     let branchRelations// source relations Branchpoint
+    let finalBranchRelations// source relations Branchpoint
      // output variables
-     let id_output// id output
+     let outputID// id output
      // transducer variables
-     let id_transducer// id transducer
-     let transducer_relations// transducer relations
+     let transducerID// id transducer
+     let transdurcerRelations// transducer relations
      // list elements
-     let list_elements=[];
-     let feedback_root = graph.getModel().getCell("control");
-     let childs = graph.getModel().getChildVertices(feedback_root);
+     let listElements=[];
+     let feedbackRoot = graph.getModel().getCell("control");
+     let childs = graph.getModel().getChildVertices(feedbackRoot);
      //navigates through the feature model childsld
-     for (let i = 0; i < childs.length; i++)
-      {
+     for (let i = 0; i < childs.length; i++) {
         if (childs[i].getAttribute("type") == "controlAction") {
          let target_sys = childs[i].getAttribute("label");
-         names_control_action.push(target_sys)
-       }
+         namesControlAction.push(target_sys)
+        }
      }
-     for (let i = 0; i < names_control_action.length; i++) 
-     {
-        if ( controlActionLabel== names_control_action[i]  )
-       {
-         
-          for (let i = 0; i < childs.length; i++)
-           {
-                 if (childs[i].getAttribute("type") == "controlAction")
-                 { //only selected concrete features are analyzed
-               
-                   if(childs[i].getAttribute("label")== controlActionLabel)
-                   {
-                     target_system_id = childs[i].getId(); 
-                     list_elements.push(target_system_id);
-                   }                 
-                 }   
+     for (let i = 0; i < namesControlAction.length; i++) {
+        if ( controlActionLabel== namesControlAction[i]) {
+          for (let i = 0; i < childs.length; i++) {
+            if (childs[i].getAttribute("type") == "controlAction") {
+                    //only selected concrete features are analyzed
+              if (childs[i].getAttribute("label")== controlActionLabel) {
+                     targetSystemId = childs[i].getId(); 
+                     listElements.push(targetSystemId);
+              }                 
+            }   
            }
 
-           target_system_relations = graph.getModel().getIncomingEdges
-           (graph.getModel().getCell(target_system_id));
-           for (let i = 0; i < target_system_relations.length; i++)
-           {
-           let source = target_system_relations[i].source;    
-           if(source.getAttribute("type")=="controller")
-             { 
-               
-               id_controller_inner= source.getId();
-               list_elements.push(id_controller);
-               
-                 
-                   
-             }
-        
-           
-             else if(source.getAttribute("type")=="summing_point")
-             { 
-                    id_summing_plant = source.getId();
-               
-               list_elements.push(id_summing);     
-             }
-        
-           }
-           controller_inner_relations = graph.getModel().getIncomingEdges
-           (graph.getModel().getCell(id_summing_plant));
-     
-           for (let i = 0; i < controller_inner_relations.length; i++)
-           {
-             let source = controller_inner_relations[i].source;
-            if(source.getAttribute("type")=="controller")
-             { 
-               
-               id_controller_inner= source.getId();
-               list_elements.push(id_controller);
-               
-                 
-                   
-             }
-             
-           }
+          targetSystemRelations = graph.getModel().getIncomingEdges
+          (graph.getModel().getCell(targetSystemId));
+          for (let i = 0; i < targetSystemRelations.length; i++) {
+            let source = targetSystemRelations[i].source;    
+            if (source.getAttribute("type")=="controller") {   
+              ControllerInnerId= source.getId();
+              listElements.push(id_controller);  
+            } else if (source.getAttribute("type")=="summingPoint") { 
+              summingPlantID = source.getId();
+              listElements.push(summingID);     
+            }
+          }
+
+          controllerInnerRelations = graph.getModel().getIncomingEdges
+          (graph.getModel().getCell(summingPlantID));
+          for (let i = 0; i < controllerInnerRelations.length; i++) {
+            let source = controllerInnerRelations[i].source;
+            if (source.getAttribute("type")=="controller") { 
+              ControllerInnerId= source.getId();
+              listElements.push(id_controller);    
+            }   
+          }
           
-          controller_inner_relations = graph.getModel().getIncomingEdges
-           (graph.getModel().getCell(id_controller_inner));
-     
-           for (let i = 0; i < controller_inner_relations.length; i++)
-           {
-             let source = controller_inner_relations[i].source;
-             if(source.getAttribute("type")=="summing_point"  )
-             {
-               id_summing = source.getId();
-               list_elements.push(id_summing);   
-             } 
-             
-           }
+          controllerInnerRelations = graph.getModel().getIncomingEdges
+          (graph.getModel().getCell(ControllerInnerId));
+          for (let i = 0; i < controllerInnerRelations.length; i++) {
+              let source = controllerInnerRelations[i].source;
+              if (source.getAttribute("type")=="summingPoint") {
+                summingID = source.getId();
+                listElements.push(summingID);   
+              }  
+            }
+        
+          summingRelations = graph.getModel().getIncomingEdges
+          (graph.getModel().getCell(summingID));
+          for (let i = 0; i < summingRelations.length; i++) {
+              let source = summingRelations[i].source;
+              if(source.getAttribute("type")=="filter") {
+                filterID = source.getId(); 
+                listElements.push(filterID); 
+              } else if (source.getAttribute("type")=="branchpoint") { 
+                finalBranchID = source.getId(); 
+              } else if(source.getAttribute("type")=="controlAction") { 
+                targetSystemId = source.getId();  
+              } else if(source.getAttribute("type")=="controller") {
+                id_controller = source.getId();
+              }  else if(source.getAttribute("type")=="setpoint") { 
+                setpointID = source.getId(); 
+                listElements.push(setpointID); 
+              } else if(source.getAttribute("type")=="transducer") { 
+               transducerID=source.getId();  
+              }   
+          }
            
-           summing_relations = graph.getModel().getIncomingEdges
-           (graph.getModel().getCell(id_summing));
-           for (let i = 0; i < summing_relations.length; i++)
-           {
-             let source = summing_relations[i].source;
-             if(source.getAttribute("type")=="filter")
-             {
-               id_filter = source.getId(); 
-                list_elements.push(id_filter); 
+          controllerRelations =  graph.getModel().getIncomingEdges
+          ( graph.getModel().getCell(id_controller));
+          for (let i = 0; i < controllerRelations.length; i++) {
+            let source = controllerRelations[i].source;
+            if (source.getAttribute("type")=="summingPoint") {
+              initialSummingID = source.getId(); 
+              listElements.push(initialSummingID);
              }
-               
-             else if(source.getAttribute("type")=="Branchpoint"  )
-             { 
-               id_final_branch = source.getId(); 
-               
-             } 
-             else if(source.getAttribute("type")=="controlAction"  )
-             { 
-               target_system_id = source.getId(); 
-               
-             } 
-             else if(source.getAttribute("type")=="controller"  )
-             {
-               id_controller = source.getId();
-            
-             
-             } 
-             
-             else if(source.getAttribute("type")=="set_point"  )
-             { 
-               id_set = source.getId(); 
-                list_elements.push(id_set); 
-             }
-            else if(source.getAttribute("type")=="transducer"  )
-             { 
-               id_transducer=source.getId();
+          }
+
+          summingRelationsTwo =  graph.getModel().getIncomingEdges
+          (graph.getModel().getCell(initialSummingID));
+          for (let i = 0; i < summingRelationsTwo.length; i++) {
+            let source = summingRelationsTwo[i].source; 
+            if (source.getAttribute("type")=="setpoint") { 
+              setpointID = source.getId(); 
+              listElements.push(setpointID); 
+            } else if (source.getAttribute("type")=="filter") {
+              filterID = source.getId(); 
+              listElements.push(filterID); 
+            } else if (source.getAttribute("type")=="branchpoint") { 
+              finalBranchID = source.getId();  
+            } else if(source.getAttribute("type")=="transducer") { 
+              transducerID = source.getId(); 
+            } 
+          }
               
-             }
-             
-           }
-           
-           controller_relations =  graph.getModel().getIncomingEdges
-             ( graph.getModel().getCell(id_controller));
-           for (let i = 0; i < controller_relations.length; i++)
-           {
-                   let source = controller_relations[i].source;
-                   if(source.getAttribute("type")=="summing_point")
-             {
-               id_initial_summing = source.getId(); 
-                list_elements.push(id_initial_summing);
+          filterRelations =  graph.getModel().getIncomingEdges
+          ( graph.getModel().getCell(filterID));
+          for (let i = 0; i < filterRelations.length; i++) {
+            let source = filterRelations[i].source;
+            if (source.getAttribute("type")=="branchpoint") {
+              finalBranchID = source.getId(); 
+              listElements.push(branchID); 
+            } else if (source.getAttribute("type")=="transducer") {
+              transducerID = source.getId();
+              listElements.push(branchID); 
+            }   
+          }
+        
+          transdurcerRelations =  graph.getModel().getIncomingEdges
+          ( graph.getModel().getCell(transducerID));
+          for (let i = 0; i < transdurcerRelations.length; i++) {
+              let source = transdurcerRelations[i].source;
+            if(source.getAttribute("type")=="branchpoint") {
+              finalBranchID = source.getId(); 
+              listElements.push(branchID); 
+            }    
+          }
+  
+          branchRelationsTarget =graph.getModel().getOutgoingEdges
+          (graph.getModel().getCell(finalBranchID));
+          for (let i = 0; i < branchRelationsTarget.length; i++) {
+            let target = branchRelationsTarget[i].target;
+            if(target.getAttribute("type")=="outputSystem") {
+              outputID= target.getId();
+              listElements.push(outputID); 
+            }
+          }
 
+          finalBranchRelations =graph.getModel().getIncomingEdges
+          (graph.getModel().getCell(finalBranchID));
+          for (let i = 0; i < finalBranchRelations.length; i++) {
+            let source = finalBranchRelations[i].source;
+            if(source.getAttribute("type")=="branchpoint") {
+              branchID= source.getId();
+              listElements.push(branchID); 
              }
-             
-           }
-           summing_relations2 =  graph.getModel().getIncomingEdges
-             ( graph.getModel().getCell(id_initial_summing));
-           for (let i = 0; i < summing_relations2.length; i++)
-           {
-                   let source = summing_relations2[i].source;
-                  
-                 if(source.getAttribute("type")=="set_point"  )
-             { 
-               id_set = source.getId(); 
-                list_elements.push(id_set); 
-             } 
-             else if(source.getAttribute("type")=="filter")
-             {
-               id_filter = source.getId(); 
-                list_elements.push(id_filter); 
-             }
-               
-            else if(source.getAttribute("type")=="Branchpoint"  )
-             { 
-               id_final_branch = source.getId(); 
-               
-             } 
-              else if(source.getAttribute("type")=="transducer"  )
-             { 
-               id_transducer = source.getId(); 
-               
-             } 
-           }
-              filter_relations =  graph.getModel().getIncomingEdges
-             ( graph.getModel().getCell(id_filter));
-           for (let i = 0; i < filter_relations.length; i++)
-           {
-              let source = filter_relations[i].source;
-             if(source.getAttribute("type")=="Branchpoint")
-             {
-               id_final_branch = source.getId(); 
-                list_elements.push(id_branch); 
-             }
-            else if(source.getAttribute("type")=="transducer")
-             {
-               id_transducer = source.getId();
-               list_elements.push(id_branch); 
-             }   
-           }
-            transducer_relations =  graph.getModel().getIncomingEdges
-             ( graph.getModel().getCell(id_transducer));
-           for (let i = 0; i < transducer_relations.length; i++)
-           {
-              let source = transducer_relations[i].source;
-             if(source.getAttribute("type")=="Branchpoint")
-             {
-               id_final_branch = source.getId(); 
-               list_elements.push(id_branch); 
-             }
-              
-           }
-             branch_relations_targets =graph.getModel().getOutgoingEdges
-           (graph.getModel().getCell(id_final_branch));
-           for (let i = 0; i < branch_relations_targets.length; i++)
-           {
-               let target = branch_relations_targets[i].target;
-             if(target.getAttribute("type")=="measured_output")
-             {
-               id_output= target.getId();
-                list_elements.push(id_output); 
-             }
-           }
-            final_branch_relations =graph.getModel().getIncomingEdges
-           (graph.getModel().getCell(id_final_branch));
-           for (let i = 0; i < final_branch_relations.length; i++)
-           {
-               let source = final_branch_relations[i].source;
-              
-             if(source.getAttribute("type")=="Branchpoint")
-             {
-               id_branch= source.getId();
-                list_elements.push(id_branch); 
-             }
-             
-           }
-          
-           branch_relations = graph.getModel().getIncomingEdges
-          (graph.getModel().getCell(id_branch));
-         for(let i = 0; i < branch_relations.length; i++)
-         {
-           let source = branch_relations[i].source;
-           if(source.getId() == target_system_id && source.getAttribute("type")=="controlAction")
-           {
-                id_final=source.getId();
-           }
-           
-           
-         }
-           
-         let feedback_root = graph.getModel().getCell("control");
-         let childs2 = graph.getModel().getChildVertices(feedback_root);
-         for (let i = 0; i < childs2.length; i++) 
-         {
-           if(childs2[i].getId()!= target_system_id && childs2[i].getId()!= id_summing && childs2[i].getId()!= id_set
-               && childs2[i].getId()!= id_filter && childs2[i].getId()!= id_controller && childs2[i].getId()!= id_branch
-               && childs2[i].getId()!= id_output && childs2[i].getId()!= id_controller_inner && childs2[i].getId()!= id_initial_summing
-               && childs2[i].getId()!= id_final_branch && childs2[i].getId()!=  id_transducer && childs2[i].getId()!=  id_summing_plant) 
-         {
-           
-          graph.getModel().setVisible(childs2[i], false)
-         }
-         else{
-           graph.getModel().setVisible(childs2[i], true)
-         }
-         }
+          }
 
-
-       }
-
-     }
-  };
-}
-
-export default setup_events
+          branchRelations = graph.getModel().getIncomingEdges
+          (graph.getModel().getCell(branchID));
+          for (let i = 0; i < branchRelations.length; i++) {
+            let source = branchRelations[i].source;
+            if(source.getId() == targetSystemId && source.getAttribute("type")=="controlAction") {
+              finalID=source.getId();
+            }
+          }
+           
+          let feedbackRoot = graph.getModel().getCell("control");
+          let childs2 = graph.getModel().getChildVertices(feedbackRoot);
+          for (let i = 0; i < childs2.length; i++) {
+            if (
+              childs2[i].getId() != targetSystemId &&
+              childs2[i].getId() != summingID &&
+              childs2[i].getId() != setpointID &&
+              childs2[i].getId() != filterID &&
+              childs2[i].getId() != id_controller &&
+              childs2[i].getId() != branchID &&
+              childs2[i].getId() != outputID &&
+              childs2[i].getId() != ControllerInnerId &&
+              childs2[i].getId() != initialSummingID &&
+              childs2[i].getId() != finalBranchID &&
+              childs2[i].getId() != transducerID &&
+              childs2[i].getId() != summingPlantID ) {
+              graph.getModel().setVisible(childs2[i], false);
+            } else {
+            graph.getModel().setVisible(childs2[i], true)
+            }
+          }
+        }
+      }
+    };
+  }
+export default setupEvents
