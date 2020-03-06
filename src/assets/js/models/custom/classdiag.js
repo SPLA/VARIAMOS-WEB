@@ -42,7 +42,11 @@ let classMain = function classMain(graph) {
 			}
 			
 			return cell;
-		};
+    };
+    
+    mxEdgeHandler.prototype.addEnabled = true;
+    mxEdgeHandler.prototype.removeEnabled = true;
+    mxEdgeHandler.prototype.virtualBendsEnabled = true;
   }
 
   function classConstraints(graph) {

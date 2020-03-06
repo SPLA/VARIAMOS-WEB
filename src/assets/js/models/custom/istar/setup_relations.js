@@ -95,40 +95,6 @@ let setup_istar_relations = function setup_istar_relations(graph,relations,relat
         
         const cell = graph.insertEdge(parent, id, node, source, target, style);
 
-        //Check if the edge belongs is connected to a dependum element.
-        if(dependum || restricts){
-            //Gather the state information of both the source and target elements.
-            const sourceState = graph.view.getState(source);
-            const targetState = graph.view.getState(target);
-            //Obtain the coordinates and offset to the center of the bounding rectangle.
-            const initX = sourceState.x + (sourceState.width/2);
-            const initY = sourceState.y + (sourceState.height/2);
-            const destX = targetState.x + (targetState.width/2);
-            const destY = targetState.y + (targetState.height/2);
-            //Calculate the angle given by the edge in its current orientation.
-            const angle = (Math.atan2(destY-initY,destX-initX) * (180/Math.PI)).toFixed(0);
-            //Insert a new element onto the the edge with the calculated angle.
-            const shape = 
-            dependum 
-            ? "capitald" 
-            : restricts 
-            ? "diamond" 
-            : satisfies 
-            ? "satisfies" 
-            : "file";
-            const capitald = graph.insertVertex(cell,null,null,0,0,20,20,'shape='+shape+';fillColor=#FFFFFF;rotation='+angle+';');
-            //Set the offset of the element so that it is centered. 
-            capitald.geometry.offset = new mxPoint(-10, -10);
-            capitald.geometry.relative = true;
-            //Set the element as unconnectable.
-            capitald.connectable = false;
-            /* console.log('initX :', initX);
-            console.log('initY :', initY);
-            console.log('destX :', destX);
-            console.log('destY :', destY);
-            console.log('angle :', angle); */
-        }
-
         return cell;
     };
 }

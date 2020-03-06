@@ -214,6 +214,7 @@ export default {
               node_field.setAttribute('label', depName);
               const field = this.current_graph.insertVertex(attr_fields, null, node_field, 1, (20 * n_children) + 1, 98, 18, 'fillColor=#FFFFFF;selectable=0;align=left;fontColor=black;strokeColor=none;');
               field.setConnectable(false);
+              this.current_graph.orderCells(true, [field]);
               this.handleResize(null, {getProperty(_string){return [sourceClass]}});
             } else if(depType === 'task-dependum'){
               const attr_fields = sourceClass.getChildAt(2);
@@ -224,6 +225,7 @@ export default {
               node_field.setAttribute('label', depName+'()');
               const field = this.current_graph.insertVertex(attr_fields, null, node_field, 1, (20 * n_children) + 1, 98, 18, 'fillColor=#FFFFFF;selectable=0;align=left;fontColor=black;strokeColor=none;');
               field.setConnectable(false);
+              this.current_graph.orderCells(true, [field]);
               this.handleResize(null, {getProperty(_string){return [sourceClass]}});
             }
           }
@@ -463,7 +465,7 @@ export default {
       //Go over all high level connections between actors and add the edges to
       //a map of relations.
       const relMap = this.analyzeTopLevelConnections(actors, classMap, classDiagRoot);
-      //Go over all dependums and construct the relationships between the actos
+      //Go over all dependums and construct the relationships between the actors
       this.analyzeDependumConnections(dependums, classMap, relMap, classDiagRoot, model);
       //Go over actor's internal structure and construct the corresponding
       //fields and map them in a fieldMap. Also identify resources and qualities

@@ -29,6 +29,12 @@ let istar_main = function istar_main(graph)
 
       return this.isCellsSelectable() && !this.isCellLocked(cell) && style['selectable'] != 0;
     };
+
+    mxEdgeHandler.prototype.addEnabled = true;
+    mxEdgeHandler.prototype.removeEnabled = true;
+    mxEdgeHandler.prototype.virtualBendsEnabled = true;
+    mxEdgeHandler.prototype.dblClickRemoveEnabled = true;
+    mxEdgeHandler.prototype.straightRemoveEnabled = true;
   }
 	
 	function istar_constraints(){
@@ -86,12 +92,82 @@ let istar_main = function istar_main(graph)
   }
   
   function istar_custom_markers(){
-    //It seems pe is the location where the "arrow" should begin.
-    //unitX and unitY seems to be the x,y value associated with the angle that would 
-    //be made on a unit circle if the edge were the hypothenuse of a triangle on a unit circle.
-    //Though still somewhat mysterious, this has been adapted from https://jgraph.github.io/mxgraph/javascript/examples/markers.html
-    //so that it creates a straight line through the arrow.
-    mxMarker.addMarker('dash', function(canvas, shape, type, pe, unitX, unitY, size, source, sw, filled){
+    mxMarker.addMarker('capitalD', function(canvas, _shape, _type, pe, unitX, unitY, _size, _source, _sw, _filled){
+			//unitX, unitY correspond to the representation of the orientation as a point
+			//on a unit circle. (It is essential to rememeber that the y axis increases towards the bottom of the page.)
+			//Size is constant defined by the library
+			//nx, ny are then the "augmented" vector on the unit circle by a given amount.
+			//Here d1 controls the distance by which the both the tips of the semicircle
+			//are separated from the endpoint of the edge within the same axis as the edge.
+			//d2 controls the distance by which the endpoints are separated on the axis
+			//perpendicular to the line given by the edge.
+			//
+			const d1 = 20;
+			const d2 = 10;
+			const nx = unitX * d1;
+			const ny = unitY * d1;
+			const m = (nx !== 0) ? ny / nx : 0;
+			const m_perp = (m !== 0) ? -1 * (1/m) : 0; 
+			const pe_d = new mxPoint(pe.x, pe.y);
+			const pe_anti_d = new mxPoint(pe.x - nx, pe.y - ny);
+
+			return function() {
+        const x1 = 
+          (
+            (m_perp !== 0) ? 
+              (d2/(Math.sqrt(Math.pow(m_perp,2) + 1))) : 
+              (
+                (nx !== 0) ? 
+                  0 : 
+                  d2
+              )
+          ) 
+          + pe_anti_d.x ;
+        const y1 = 
+          (
+            (m_perp !== 0) ? 
+              (m_perp * (x1 - pe_anti_d.x)) : 
+              (
+                (ny !== 0)? 
+                  0 : 
+                  d2
+              )
+          ) 
+          + pe_anti_d.y;
+			  const x2 = pe_d.x;
+			  const y2 = pe_d.y;
+        const x3 = 
+          (
+            (m_perp !== 0) ? 
+              (-d2/(Math.sqrt(Math.pow(m_perp,2) + 1))) : 
+              (
+                (nx !== 0) ? 
+                  0 : 
+                  -d2
+              )
+          ) 
+          + pe_anti_d.x;
+        const y3 = 
+          (
+            (m_perp !== 0) ? 
+              (m_perp * (x3 - pe_anti_d.x)) : 
+              (
+                (ny !== 0) ? 
+                  0 : 
+                  -d2
+              )
+          ) 
+          + pe_anti_d.y;
+        canvas.setFillColor('#FFFFFF');
+			  canvas.begin();
+			  canvas.moveTo(x1, y1);
+        canvas.quadTo(x2,y2,x3,y3);
+        canvas.lineTo(x1,y1);
+        canvas.fillAndStroke();
+			}
+    });
+    
+    mxMarker.addMarker('dash', function(canvas, _shape, _type, pe, unitX, unitY, _size, _source, _sw, _filled){
       let nx = unitX * (size + sw + 10);
       let ny = unitY * (size + sw + 10);
 
@@ -105,51 +181,11 @@ let istar_main = function istar_main(graph)
         canvas.lineTo(x2, y2);
         canvas.stroke();
       }
-    })
-
-    mxMarker.addMarker('capitald1', function(canvas, shape, type, pe, unitX, unitY, size, source, sw, filled){
-      let nx = unitX * (size + sw + 10);
-      let ny = unitY * (size + sw + 10);
-      let init = {x:shape.bounds.x, y:shape.bounds.y};
-      let midX = (init.x + pe.x)/2;
-      let midY = (init.y + pe.y)/2;
-      let count = 0;
-
-      return function() {
-        console.log("---CALLSTART----")
-        console.log('nx :', nx);
-        console.log('ny :', ny);
-        console.log('size :', size);
-        console.log('sw :', sw);
-        console.log('unitX :', unitX);
-        console.log('unitY :', unitY);
-        console.log('(size + sw + 10) :', (size + sw + 10));
-        console.log('init :', init);
-        console.log('pe :', pe);
-        console.log('midX :', midX);
-        console.log('midY :', midY);
-        console.log('shape :', shape.bounds);
-        console.log('++count :', ++count);
-        console.log("---CALLEND----")
-        canvas.begin();
-        let x1 = (pe.x - nx / 2 - ny / 2);
-        let y1 = (pe.y - ny / 2 + nx / 2);
-        canvas.moveTo(x1, y1);
-        let x2 = (pe.x + ny / 2 - nx / 2);
-        let y2 = (pe.y - ny / 2 - nx / 2);
-        canvas.lineTo(x2,y2);
-        canvas.moveTo(x2,y2);
-        canvas.lineTo(midX,midY);
-        canvas.stroke();
-        canvas.close();
-      }
-    })
+    });
   };
 
   //Temporary Workaround to the setup Events change...
   function istar_custom_events(){
-    //This function fires when a cell is moved and makes sure that the dependum custom icon is correctly oriented.
-    graph.addListener(mxEvent.MOVE_CELLS, reorientElement);
   };
 
 	function istar_elements(){
@@ -288,14 +324,14 @@ let istar_main = function istar_main(graph)
       "source":["actor","agent","role","goal","quality","task","resource"],
       "rel_source_target":"and",
       "target":["goal-dependum","quality-dependum","task-dependum","resource-dependum"],
-      "style":"endArrow=none;"
+      "style":"endArrow=capitalD;"
       /* "style":"endArrow=capitald;" */
     });
     relations.push({
       "source":["goal-dependum","quality-dependum","task-dependum","resource-dependum"],
       "rel_source_target":"and",
       "target":["actor","agent","role","goal","quality","task","resource"],
-      "style":"endArrow=none;"
+      "style":"endArrow=capitalD;"
       /* "style":"endArrow=capitald;" */
     });
     //Contribution  
@@ -661,28 +697,6 @@ let istar_main = function istar_main(graph)
                 console.log('sourceCell :', sourceCell);
                 console.log('targetCell :', targetCell);
                 const newEdge = graph.insertEdge(boundaryCell, uuidv1(), edge.value, sourceCell, targetCell, edge.style);
-                if(newEdge.getAttribute('type').includes('dependum')){
-                  //Gather the state information of both the source and target elements.
-                  const sourceState = graph.view.getState(sourceCell);
-                  const sourceGeo = sourceCell.getGeometry();
-                  const targetState = graph.view.getState(targetCell);
-                  const targetGeo = targetCell.getGeometry();
-                  //Obtain the coordinates and offset to the center of the bounding rectangle.
-                  //If the state is undefined, it is because it has just been created.
-                  const initX = sourceState !== undefined ? (sourceState.origin.x + (sourceGeo.width/2)) : (boundaryGeo.x + sourceGeo.getCenterX());
-                  const initY = sourceState !== undefined ? (sourceState.origin.y + (sourceGeo.height/2)) : (boundaryGeo.y + sourceGeo.getCenterY());
-                  const destX = targetState !== undefined ? (targetState.origin.x + (targetGeo.width/2)) : (boundaryGeo.x + targetGeo.getCenterX());
-                  const destY = targetState !== undefined ? (targetState.origin.y + (targetGeo.height/2)) : (boundaryGeo.y + targetGeo.getCenterY());
-                  //Calculate the angle given by the edge in its current orientation.
-                  const angle = (Math.atan2(destY-initY,destX-initX) * (180/Math.PI)).toFixed(0);
-                  //Insert a new element onto the the edge with the calculated angle.
-                  const capitald = graph.insertVertex(newEdge,uuidv1(),null,0,0,20,20,'shape=capitald;fillColor=#FFFFFF;rotation='+angle+';');
-                  //Set the offset of the element so that it is centered. 
-                  capitald.geometry.offset = new mxPoint(-10, -10);
-                  capitald.geometry.relative = true;
-                  //Set the element as unconnectable.
-                  capitald.connectable = false;
-                }
                 done.push({t1:sourceCell.getId(),t2:targetCell.getId()});
               }
             })
@@ -737,23 +751,6 @@ let istar_main = function istar_main(graph)
                 const targetCell = edge.isSource ? graph.getModel().getCell(edge.target) : currentCell;
                 const newEdge = graph.insertEdge(mainparent, uuidv1(), edge.value, sourceCell, targetCell, edge.style);
                 newEdge.promotedEdge = true;
-                //Gather the state information of both the source and target elements.
-                const sourceState = graph.view.getState(sourceCell);
-                const targetState = graph.view.getState(targetCell);
-                //Obtain the coordinates and offset to the center of the bounding rectangle.
-                const initX = sourceState.x + (sourceState.width/2);
-                const initY = sourceState.y + (sourceState.height/2);
-                const destX = targetState.x + (targetState.width/2);
-                const destY = targetState.y + (targetState.height/2);
-                //Calculate the angle given by the edge in its current orientation.
-                const angle = (Math.atan2(destY-initY,destX-initX) * (180/Math.PI)).toFixed(0);
-                //Insert a new element onto the the edge with the calculated angle.
-                const capitald = graph.insertVertex(newEdge,uuidv1(),null,0,0,20,20,'shape=capitald;fillColor=#FFFFFF;rotation='+angle+';');
-                //Set the offset of the element so that it is centered. 
-                capitald.geometry.offset = new mxPoint(-10, -10);
-                capitald.geometry.relative = true;
-                //Set the element as unconnectable.
-                capitald.connectable = false;
               }
             })
           }
@@ -784,12 +781,6 @@ let istar_main = function istar_main(graph)
         //graph.getModel().add(mainparent, currentCell);
         //Change the cell's properties so that it can move again.
         graph.setCellStyles(mxConstants.STYLE_MOVABLE, '1', [currentCell]);
-        //Make it so the edges, and promoted edges, are all correctly aligned.
-        reorientElement(null, {
-          getProperty: function(_type){
-            return [currentCell];
-          }
-        })
       }
     } finally {
       //console.log(currentCell.getAttribute('boundary'))
@@ -829,99 +820,6 @@ let istar_main = function istar_main(graph)
     } finally {
       graph.getModel().endUpdate();
     }
-  }
-
-  /**
-   * This function reorients the "D" elements that exist as children of dependum edges. 
-   * @param {Object} _sender This is the graph that generated the event.
-   * @param {Object} evt This is the event itself, it contains all the parameters of the associated MOVED_CELLS event.
-   */
-  function reorientElement(_sender, evt) {
-    //Obtain the moved cells.
-    const cells = evt.getProperty('cells');
-    //For each and every moved cell we must reorient the dependum edges leading into, out of them.
-    cells.forEach(cell => {
-      //If the cell we moved turns out to be bounday cell
-      //we must treat it differently and extract the elements within,
-      //since the boundary itself is of no interest as it cannot be
-      //connected to.
-      const childCount = cell.getChildCount();
-      //The elements array will either only contain the moved cell
-      //or the inner elements of the boundary cell.
-      let elements = [];
-      if(childCount > 0){
-        for(let i = 0; i < childCount; i++){
-          const child = cell.getChildAt(i);
-          elements.push(child);
-        }
-      } else {
-        elements.push(cell);
-      }
-      
-      elements.forEach(element => {
-        //Check if the cell has any connections, otherwise ignore it.
-        if(element.getEdgeCount() > 0){
-          element.edges.forEach(edge => {
-            //Check if the edge is a connection to a dependum element, otherwise ignore it.
-            if(edge.getAttribute('type').includes('dependum') && edge.getChildCount() > 0){
-              //These are the coordinates that will be used to calculate the angle to which
-              //the marker will be rotated to. init for the source, dest for the target.
-              let initX, initY, destX, destY;
-              //Get the reference to the dependum marker, it is always the only child of the edge.
-              let capitald = edge.getChildAt(0);
-              //Get all the information for the source cell and its parent.
-              const source = edge.getTerminal(true);
-              const sourceGeo = source.getGeometry();
-              const sourceParent = source.getParent();
-              const sourceParentGeo = sourceParent.getGeometry();
-              const sourceParentValue = sourceParent.getValue();
-              //Check if the cell is inside a boudary.
-              if(sourceParentValue !== undefined && sourceParentValue.type !== undefined && sourceParentValue.type  === 'boundary'){
-                //If the cell is inside a boudary, its position is then given by the 
-                //position of the boundary + its offset + the center of its bounding rectangle.
-                //The state allows us to calculate the current size of the element and
-                //thus we can obtain the center of the bounding rectangle.
-                //const sourceStateShape = graph.view.getState(source);
-                initX = sourceParentGeo.x + sourceGeo.x + (sourceGeo.width/2);
-                initY = sourceParentGeo.y + sourceGeo.y + (sourceGeo.height/2);
-              } else {
-                //If the cell is outside a boundary, its position is given by its geometry.
-                initX = sourceGeo.getCenterX();
-                initY = sourceGeo.getCenterY();
-              }
-              //Get all the information for the target cell and its parent.
-              const target = edge.getTerminal(false);
-              const targetGeo = target.getGeometry();
-              const targetParent = target.getParent();
-              const targetParentGeo = targetParent.getGeometry();
-              const targetParentValue = targetParent.getValue();
-              //Check if the target cell is inside a boudary.
-              if(targetParentValue !== undefined && targetParentValue.type !== undefined && targetParentValue.type  === 'boundary'){
-                //Same as above...
-                //const targetStateShape = graph.view.getState(target);
-                destX = targetParentGeo.x + targetGeo.x + (targetGeo.width/2);
-                destY = targetParentGeo.y + targetGeo.y + (targetGeo.height/2);
-              } else {
-                //Same as above...
-                destX = targetGeo.getCenterX();
-                destY = targetGeo.getCenterY();
-              }
-              /* console.log('dx :', dx);
-              console.log('dy :', dy);
-              console.log('initX :', initX);
-              console.log('initY :', initY);
-              console.log('destX :', destX);
-              console.log('destY :', destY); */
-              //Calculate the angle given by the line connecting the two points.
-              const angle = (Math.atan2(destY-initY,destX-initX) * (180/Math.PI)).toFixed(0);
-              /* console.log('angle :', angle); */
-              //Set the style of the element within the edge to the calculated rotation.
-              graph.setCellStyles(mxConstants.STYLE_ROTATION, angle, [capitald])
-            }
-          })
-        }
-      })
-    })
   }
   
   function istar_overlay(){
