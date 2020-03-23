@@ -54,6 +54,8 @@ export default {
       const class_methods = this.current_graph.insertVertex(element,null,node_methods,0,60,100,40,'fillColor=#FFFFFF;selectable=0;');
       class_methods.setConnectable(false);
       
+      this.current_graph.orderCells(true, [class_name, class_attributes, class_methods]);
+
       return element;
     },
     checkPresence(relMap, source, target){
@@ -350,10 +352,10 @@ export default {
                 const startP = txt.indexOf('(');
                 const endP = txt.indexOf(')');
                 const dif = endP - startP === 1;
-                let str = txt.slice(0,startP+1);
-                if(dif){
-                  str = str + resource.getAttribute('label') + ')';
-                }
+                let str = 
+                  txt.slice(0, endP) + 
+                  (dif ? '' : ', ') + 
+                  resource.getAttribute('label') + ')';
                 field.setAttribute('label', str);
               }
             } else {

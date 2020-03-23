@@ -29,10 +29,35 @@ export default {
     }
   },
   methods: {
+    createClass(elem) {
+      const nameContainer = elem.getChildAt(0);
+      const className = nameContainer.getAttribute('label');
+      const template = 
+      `public class ${className} {\n` +
+        `\n` +
+      `}\n`;
+      return template;
+    },
     generateCode() {
       const model = this.current_graph.getModel();
       const classDiagRoot = model.getCell("classdiag");
-      
+      const nChildren = classDiagRoot.getChildCount();
+      const classes = [];
+      //Go over the top-level elements of the model and extract classes
+      if(nChildren > 0){
+        for(let i = 0; i < nChildren; i++){
+          const child = classDiagRoot.getChildAt(i);
+          const childType = child.getAttribute('type');
+          if(childType === 'class'){
+            classes.push(child);
+          }
+        }
+      }
+      let genText = '';
+      classes.forEach(classElem => {
+        genText += this.createClass(classElem);
+      });
+      mxUtils.popup(genText, true);
     }
   }
 };

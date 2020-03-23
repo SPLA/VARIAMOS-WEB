@@ -167,7 +167,7 @@ let istar_main = function istar_main(graph)
 			}
     });
     
-    mxMarker.addMarker('dash', function(canvas, _shape, _type, pe, unitX, unitY, _size, _source, _sw, _filled){
+    mxMarker.addMarker('dash', function(canvas, _shape, _type, pe, unitX, unitY, size, _source, sw, _filled){
       let nx = unitX * (size + sw + 10);
       let ny = unitY * (size + sw + 10);
 

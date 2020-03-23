@@ -26,7 +26,7 @@ let classMain = function classMain(graph) {
 
     // Selects descendants before children selection mode
 		const graphHandlerGetInitialCellForEvent = mxGraphHandler.prototype.getInitialCellForEvent;
-		mxGraphHandler.prototype.getInitialCellForEvent = function(me)
+		mxGraphHandler.prototype.getInitialCellForEvent = function(_me)
 		{
       let cell = graphHandlerGetInitialCellForEvent.apply(this, arguments);
       const model = this.graph.getModel();
@@ -43,10 +43,34 @@ let classMain = function classMain(graph) {
 			
 			return cell;
     };
+
+    //TODO: ISOLATE OVERRIDES FOR ONLY THE PARTICULAR MODEL TO WHICH IT IS TIED.
+
+    const getCell = mxCellMarker.prototype.getCell;
+    mxCellMarker.prototype.getCell = function(_me){
+      let cell = getCell.apply(this, arguments);
+      if(cell !== undefined && cell !== null){
+        parent = cell.getParent();
+        const parentType = parent.getAttribute('type');
+        if (cell !== null && parent !== null) {
+          if (parentType === 'class'){
+            cell = parent;
+          } else if (['class_attributes', 'class_methods'].includes(parentType)) {
+            cell = parent.getParent();
+          }
+        }
+      }
+      return cell;
+    }
     
     mxEdgeHandler.prototype.addEnabled = true;
     mxEdgeHandler.prototype.removeEnabled = true;
     mxEdgeHandler.prototype.virtualBendsEnabled = true;
+    mxEdgeHandler.prototype.dblClickRemoveEnabled = true;
+    mxEdgeHandler.prototype.straightRemoveEnabled = true;
+
+    mxCellMarker.prototype.hotspotEnabled = true;
+    mxConstants.DEFAULT_HOTSPOT = 0.75;
   }
 
   function classConstraints(graph) {
