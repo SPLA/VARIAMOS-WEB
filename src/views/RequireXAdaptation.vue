@@ -473,7 +473,7 @@ export default {
     },
     saveRequirement() {
       let uri = localStorage["domain_implementation_main_path"] + "requirex/adaptations";
-      this.axios.post(uri, this.requirement).then(() => {
+      axios.post(uri, this.requirement).then(() => {
         $("#adaptationMessage span").text("Success!");
         $("#adaptationMessage").addClass("alert-success");
         $("#adaptationMessage").removeClass("alert-danger");
@@ -499,7 +499,7 @@ export default {
   mounted() {
     //Cargar lista de requerimientos de aplicacion
     let uri = localStorage["domain_implementation_main_path"] + "requirex/adaptations";
-    this.axios.get(uri).then(response => {
+    axios.get(uri).then(response => {
       this.listAdaptationRequirement = response.data;
       this.countAdaptation = this.listAdaptationRequirement.length;
     });

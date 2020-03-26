@@ -463,7 +463,7 @@ export default {
     },
     saveRequirement() {
       let uri = localStorage["domain_implementation_main_path"] + "requirex/domains";
-      this.axios.post(uri, this.requirement).then(() => {
+      axios.post(uri, this.requirement).then(() => {
         this.$Message.success("Success!");
         this.$router.push("/requirex");
       });
@@ -477,7 +477,7 @@ export default {
   created() {
     //Cargar lista de requerimientos de dominio
     let uri = localStorage["domain_implementation_main_path"] + "requirex/domains";
-    this.axios.get(uri).then(response => {
+    axios.get(uri).then(response => {
       this.listDomainRequirement = response.data;
       this.countDomain = this.listDomainRequirement.length;
       console.log("total dominio" + this.countDomain);

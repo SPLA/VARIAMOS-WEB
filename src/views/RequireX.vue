@@ -110,20 +110,20 @@ export default {
   mounted() {
     //Cargar lista de requerimientos de dominio
     let uri = localStorage["domain_implementation_main_path"] + "requirex/domains/bytotal/true";
-    this.axios.get(uri).then(response => {
+    axios.get(uri).then(response => {
       this.countDomain = response.data;
       console.log("tamaño : " + this.requirementsDomain );
     });
 
     //Cargar lista de requerimientos de aplicacion
     uri = localStorage["domain_implementation_main_path"] + "requirex/applications/bytotal/true";
-    this.axios.get(uri).then(response => {
+    axios.get(uri).then(response => {
       this.countApplication = response.data;
     });
 
     //Cargar lista de requerimientos de aplicacion
     uri = localStorage["domain_implementation_main_path"] + "requirex/adaptations/bytotal/true";
-    this.axios.get(uri).then(response => {
+    axios.get(uri).then(response => {
       this.countAdaptation = response.data;
     });
   },
