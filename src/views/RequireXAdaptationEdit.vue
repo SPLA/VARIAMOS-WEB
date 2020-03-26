@@ -447,7 +447,7 @@ export default {
     },
     updateRequirement() {
       let uri = localStorage["domain_implementation_main_path"] + `requirex/adaptations/${this.$route.params.id}`;
-      this.axios.put(uri, this.requirement).then(() => {
+      axios.put(uri, this.requirement).then(() => {
         $("#adaptationMessage span").text("Success!");
         $("#adaptationMessage").addClass("alert-success");
         $("#adaptationMessage").removeClass("alert-danger");
@@ -470,7 +470,7 @@ export default {
   },
   mounted() {
     let uri = localStorage["domain_implementation_main_path"] + `requirex/adaptations/${this.$route.params.id}`;
-    this.axios.get(uri).then(response => {
+    axios.get(uri).then(response => {
       this.requirement = response.data;
     });
   }

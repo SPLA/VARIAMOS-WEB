@@ -98,7 +98,7 @@ export default {
       requirement.estado = false;
 
       let uri = localStorage["domain_implementation_main_path"] + `requirex/domains/${requirement.id}`;
-      this.axios.delete(uri, requirement).then(() => {
+      axios.delete(uri, requirement).then(() => {
         //Eliminar item de la lista domains
         this.row.listRequirements.splice(
           this.row.listRequirements.indexOf(requirement.id),
@@ -202,7 +202,7 @@ export default {
   mounted() {
     //Cargar lista de requerimientos de dominio
     let uri = localStorage["domain_implementation_main_path"] + "requirex/domains";
-    this.axios.get(uri).then(response => {
+    axios.get(uri).then(response => {
       for (let i = 0; i < response.data.length; i++) {
         if (response.data[i].estado) {
           this.requirementsDomain.push(response.data[i]);

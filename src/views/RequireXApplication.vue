@@ -389,7 +389,7 @@ export default {
 
     saveRequirement() {
       let uri = localStorage["domain_implementation_main_path"] +  "requirex/applications";
-      this.axios.post(uri, this.requirement).then(() => {
+      axios.post(uri, this.requirement).then(() => {
         $("#applicationMessage span").text("Success!");
         $("#applicationMessage").addClass("alert-success");
         $("#applicationMessage").removeClass("alert-danger");
@@ -407,7 +407,7 @@ export default {
   mounted() {
     //Cargar lista de requerimientos de aplicacion
     let uri = localStorage["domain_implementation_main_path"] + "requirex/applications";
-    this.axios.get(uri).then(response => {
+    axios.get(uri).then(response => {
       this.listApplicationRequirement = response.data;
       this.countApplication = this.listApplicationRequirement.length;
     });
