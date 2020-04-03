@@ -49,32 +49,7 @@ let istar_main = function istar_main(graph)
 			"Only 1 target allowed",
       "Only shape targets allowed"));
     */
-   //Only allow one outgoing connection out of a dependum
-    graph.multiplicities.push(new mxMultiplicity(true,"goal","dependum","true",0,1,
-      ["actor","agent","role","goal","quality","task","resource"],
-      "Only 1 outgoing connection allowed","Only shape targets allowed"));
-    graph.multiplicities.push(new mxMultiplicity(true,"quality","dependum","true",0,1,
-      ["actor","agent","role","goal","quality","task","resource"],
-      "Only 1 outgoing connection allowed","Only shape targets allowed"));
-    graph.multiplicities.push(new mxMultiplicity(true,"task","dependum","true",0,1,
-      ["actor","agent","role","goal","quality","task","resource"],
-      "Only 1 outgoing connection allowed","Only shape targets allowed"));
-    graph.multiplicities.push(new mxMultiplicity(true,"resource","dependum","true",0,1,
-      ["actor","agent","role","goal","quality","task","resource"],
-      "Only 1 outgoing connection allowed","Only shape targets allowed"));
-    //Only allow one incoming connection into a dependum
-    graph.multiplicities.push(new mxMultiplicity(false,"goal","dependum","true",0,1,
-      ["actor","agent","role","goal","quality","task","resource"],
-      "Only 1 incoming connection allowed","Only shape targets allowed"));
-    graph.multiplicities.push(new mxMultiplicity(false,"quality","dependum","true",0,1,
-      ["actor","agent","role","goal","quality","task","resource"],
-      "Only 1 incoming connection allowed","Only shape targets allowed"));
-    graph.multiplicities.push(new mxMultiplicity(false,"task","dependum","true",0,1,
-      ["actor","agent","role","goal","quality","task","resource"],
-      "Only 1 incoming connection allowed","Only shape targets allowed"));
-    graph.multiplicities.push(new mxMultiplicity(false,"resource","dependum","true",0,1,
-      ["actor","agent","role","goal","quality","task","resource"],
-      "Only 1 incoming connection allowed","Only shape targets allowed"));
+
     //Disallow actors/roles/agents from connecting to things within their own boundaries
     //or into elements wihin the boundaries of others without passing through a dependum.
     /* graph.multiplicities.push(new mxMultiplicity(false,"goal","dependum","false",0,0,
@@ -189,13 +164,13 @@ let istar_main = function istar_main(graph)
   };
 
 	function istar_elements(){
-    let actor = {src:projectPath+"images/models/istar/Actor.png", wd:100, hg:100, style:"shape=actor;perimeter=ellipsePerimeter;html=1;whiteSpace=wrap;overflow=visible;fontColor=black;", type:"actor", pname:"Actor"};
-    let agent = {src:projectPath+"images/models/istar/Agent.png", wd:100, hg:100, style:"shape=agent;perimeter=ellipsePerimeter;html=1;whiteSpace=wrap;overflow=visible;fontColor=black;", type:"agent", pname:"Agent"};
-    let role = {src:projectPath+"images/models/istar/Role.png", wd:100, hg:100, style:"shape=role;perimeter=ellipsePerimeter;html=1;whiteSpace=wrap;overflow=visible;fontColor=black;", type:"role", pname:"Role"};
-    let goal = {src:projectPath+"images/models/istar/Goal.png", wd:125, hg:50, style:"shape=goal;html=1;whiteSpace=wrap;overflow=visible;fontColor=black;", type:"goal", pname:"Goal"};
-    let quality = {src:projectPath+"images/models/istar/Quality.png", wd:125, hg:50, style:"shape=quality;html=1;whiteSpace=wrap;overflow=visible;fontColor=black;", type:"quality", pname:"Quality"};
-		let task = {src:projectPath+"images/models/istar/Task.png", wd:125, hg:50, style:"shape=task;html=1;whiteSpace=wrap;;overflow=visible;fontColor=black;", type:"task", pname:"Task"};
-    let resource = {src:projectPath+"images/models/istar/Resource.png", wd:125, hg:50, style:"shape=resource;html=1;whiteSpace=wrap;overflow=visible;fontColor=black;", type:"resource", pname:"Resource"};
+    let actor = {src:projectPath+"images/models/istar/Actor.png", wd:100, hg:100, style:"shape=actor;perimeter=ellipsePerimeter;html=1;whiteSpace=wrap;overflow=visible;fontColor=black;spacingTop=15;spacingBottom=15;", type:"actor", pname:"Actor"};
+    let agent = {src:projectPath+"images/models/istar/Agent.png", wd:100, hg:100, style:"shape=agent;perimeter=ellipsePerimeter;html=1;whiteSpace=wrap;overflow=visible;fontColor=black;spacingTop=15;spacingBottom=15;", type:"agent", pname:"Agent"};
+    let role = {src:projectPath+"images/models/istar/Role.png", wd:100, hg:100, style:"shape=role;perimeter=ellipsePerimeter;html=1;whiteSpace=wrap;overflow=visible;fontColor=black;spacingTop=15;spacingBottom=15;", type:"role", pname:"Role"};
+    let goal = {src:projectPath+"images/models/istar/Goal.png", wd:125, hg:50, style:"shape=goal;html=1;whiteSpace=wrap;overflow=visible;fontColor=black;spacingTop=15;spacingBottom=15;", type:"goal", pname:"Goal"};
+    let quality = {src:projectPath+"images/models/istar/Quality.png", wd:125, hg:50, style:"shape=quality;html=1;whiteSpace=wrap;overflow=visible;fontColor=black;spacingTop=15;spacingBottom=15;", type:"quality", pname:"Quality"};
+		let task = {src:projectPath+"images/models/istar/Task.png", wd:125, hg:50, style:"shape=task;html=1;whiteSpace=wrap;;overflow=visible;fontColor=black;spacingTop=15;spacingBottom=15;", type:"task", pname:"Task"};
+    let resource = {src:projectPath+"images/models/istar/Resource.png", wd:125, hg:50, style:"shape=resource;html=1;whiteSpace=wrap;overflow=visible;fontColor=black;spacingTop=15;spacingBottom=15;", type:"resource", pname:"Resource"};
     
     /*
     const securityConstraint = {src:projectPath+"images/models/component/file.png", wd:100, hg:100, style:"shape=secconstraint;html=1;whiteSpace=wrap;overflow=visible;fontColor=black;", type:"secconstraint", pname:"Security Constraint"};
@@ -243,13 +218,13 @@ let istar_main = function istar_main(graph)
         }
       ]
     });
-    /* attributes.push({
-      "types":["goal","quality","task","resource"],
+    attributes.push({
+      "types":["goal", "goal-dependum", "quality", "quality-dependum", "task", "task-dependum", "resource", "resource-dependum"],
       "custom_attributes":[{
-        "name":"dependum",
-        "def_value":"true"
+        "name":"stereotype",
+        "def_value":"None"
       }]
-    }); */
+    });
 		return attributes;
   }
 
@@ -263,6 +238,21 @@ let istar_main = function istar_main(graph)
         "name":"relType",
         "def_value":"participates-in"
       }]
+    });
+    relations.push({
+      "source":["quality","task","resource"],
+      "rel_source_target":"and",
+      "target":["resource-dependum"],
+      "attributes":[
+        {
+          "name":"connectionType",
+          "def_value":"Dependum"
+        },
+        {
+          "name":"relType",
+          "def_value":""
+        }
+      ]
     });
     /* relations[1]={
       "source":["actor","agent","role"],
@@ -382,9 +372,10 @@ let istar_main = function istar_main(graph)
           "onchange":actorboundary
         },
         {
-          "attribute":"selected",
-					"input_type":"checkbox",
-					"onchange": set_selected_overlay
+          "attribute":"stereotype",
+          "input_type":"select",
+          "input_values":["None","Class"],
+          "onchange": changeStereotype
         }
       ],
       //Actor as source for a relation
@@ -432,9 +423,10 @@ let istar_main = function istar_main(graph)
           "onchange":actorboundary
         },
         {
-          "attribute":"selected",
-					"input_type":"checkbox",
-					"onchange": set_selected_overlay
+          "attribute":"stereotype",
+          "input_type":"select",
+          "input_values":["None","Class"],
+          "onchange": changeStereotype
         }
       ],
       //Agent as source for a relation
@@ -482,9 +474,10 @@ let istar_main = function istar_main(graph)
           "onchange":actorboundary
         },
         {
-          "attribute":"selected",
-					"input_type":"checkbox",
-					"onchange": set_selected_overlay
+          "attribute":"stereotype",
+          "input_type":"select",
+          "input_values":["None","Class"],
+          "onchange": changeStereotype
         }
       ],
       //Role as source for a relation
@@ -524,26 +517,58 @@ let istar_main = function istar_main(graph)
         "input_type": "select",
         "input_values":["D"]
       }], */
-      /* //Goal
+      //Goal
       "goal":[{
-        "attribute":"dependum",
-        "input_type":"checkbox",
+        "attribute":"stereotype",
+        "input_type":"select",
+        "input_values":["None"],
+        "onchange": changeStereotype
+      }],
+      "goal-dependum":[{
+        "attribute":"stereotype",
+        "input_type":"select",
+        "input_values":["None"],
+        "onchange": changeStereotype
       }],
       //Quality
       "quality":[{
-        "attribute":"dependum",
-        "input_type":"checkbox",
+        "attribute":"stereotype",
+        "input_type":"select",
+        "input_values":["None","Note"],
+        "onchange": changeStereotype
+      }],
+      "quality-dependum":[{
+        "attribute":"stereotype",
+        "input_type":"select",
+        "input_values":["None","Note"],
+        "onchange": changeStereotype
       }],
       //Task
       "task":[{
-        "attribute":"dependum",
-        "input_type":"checkbox",
+        "attribute":"stereotype",
+        "input_type":"select",
+        "input_values":["None","Method"],
+        "onchange": changeStereotype
+      }],
+      "task-dependum":[{
+        "attribute":"stereotype",
+        "input_type":"select",
+        "input_values":["None","Method"],
+        "onchange": changeStereotype
       }],
       //Resource
       "resource":[{
-        "attribute":"dependum",
-        "input_type":"checkbox",
-      }], */
+        "attribute":"stereotype",
+        "input_type":"select",
+        "input_values":["None","Class", "Attribute"],
+        "onchange": changeStereotype
+      }],
+      "resource-dependum":[{
+        "attribute":"stereotype",
+        "input_type":"select",
+        "input_values":["None","Class", "Attribute"],
+        "onchange": changeStereotype
+      }],
       //Contribution relations
       "rel_goal_quality":[{
         "attribute":"relType",
@@ -589,7 +614,27 @@ let istar_main = function istar_main(graph)
         "input_type":"select",
         "input_values":["and","or"],
         "onchange":refinementStyle
-      }] 
+      }],
+      //Connections from internal intentional elems to dependums
+      //FOR NOW only internal to resource dependums
+      "rel_task_resource-dependum":[{
+        "attribute":"connectionType",
+        "input_type":"select",
+        "input_values":["Dependum","belongs-to"],
+        "onchange":belongsToHandler
+      }],
+      "rel_resource_resource-dependum":[{
+        "attribute":"connectionType",
+        "input_type":"select",
+        "input_values":["Dependum","belongs-to"],
+        "onchange":belongsToHandler
+      }],
+      "rel_quality_resource-dependum":[{
+        "attribute":"connectionType",
+        "input_type":"select",
+        "input_values":["Dependum","belongs-to"],
+        "onchange":belongsToHandler
+      }]
     }
   }
 
@@ -799,24 +844,22 @@ let istar_main = function istar_main(graph)
     //this.value should carry the value that has been changed to
     graph.getModel().beginUpdate();
     try {
-      if (target.edges.length > 1){
-        target.edges.forEach(edge => {
-          const source = edge.getTerminal(true);
-          const sourceType = source.getAttribute('type');
-          const destination = edge.getTerminal(false);
-          const destType = destination.getAttribute('type');
-          if(source !== target && admittedTypes.includes(sourceType) && admittedTypes.includes(destType)){
-            //Set the arrow style based on the incoming value of the select
-            graph.setCellStyles(mxConstants.STYLE_ENDARROW, this.value === 'and' ? 'dash' : 'block', [edge]);
-            if(edge !== currentCell){
-              const edit = new mxCellAttributeChange(
-                edge, "refinement",
-                this.value);
-              graph.getModel().execute(edit);
-            }
+      target.edges.forEach(edge => {
+        const source = edge.getTerminal(true);
+        const sourceType = source.getAttribute('type');
+        const destination = edge.getTerminal(false);
+        const destType = destination.getAttribute('type');
+        if(source !== target && admittedTypes.includes(sourceType) && admittedTypes.includes(destType)){
+          //Set the arrow style based on the incoming value of the select
+          graph.setCellStyles(mxConstants.STYLE_ENDARROW, this.value === 'and' ? 'dash' : 'block', [edge]);
+          if(edge !== currentCell){
+            const edit = new mxCellAttributeChange(
+              edge, "refinement",
+              this.value);
+            graph.getModel().execute(edit);
           }
-        })
-      }
+        }
+      })
     } finally {
       graph.getModel().endUpdate();
     }
@@ -848,6 +891,56 @@ let istar_main = function istar_main(graph)
 				}
 			}
 		};
+  }
+
+  function changeStereotype() {
+    const model = graph.getModel();
+    const cell = model.getCell(this.name);
+    const childCount = cell.getChildCount();
+    const newValue = this.value;
+    if (newValue === 'None'){
+      if(childCount > 0){
+        const steroCell = cell.getChildAt(0);
+        model.remove(steroCell);
+      }
+    } else {
+      const stereoLabel = `<< ${this.value} >>`;
+      let stereoCell = null;
+      if(childCount > 0){
+        stereoCell = cell.getChildAt(0);
+        stereoCell.setAttribute('label', stereoLabel);
+      } else {
+        const type = "stereotypeContainer";
+        let doc = mxUtils.createXmlDocument();
+        let node = doc.createElement(type);
+        node.setAttribute('type', type);
+        node.setAttribute('label', stereoLabel);
+        const cellGeo = cell.getGeometry();
+        const width = cellGeo.width;
+        const height = cellGeo.height;
+        const labelWidth = 50;
+        const labelHeight = 10;
+        const r = width/height;
+        const xPos = (width - labelWidth) / 2;
+        const yPos = (r < 2.5) ? ((12.5*height) - (4*width))/25 : height/10;
+        stereoCell = graph.insertVertex(cell, null, node, xPos, yPos, labelWidth, labelHeight, "fillColor=none;strokeColor=None;fontColor=black;selectable=0;");
+        stereoCell.setConnectable(false);
+        graph.setCellStyles(mxConstants.STYLE_MOVABLE, '0', [stereoCell]); 
+      }
+    }
+  }
+
+  function belongsToHandler(){
+    const model = graph.getModel();
+    const cell = model.getCell(this.name);
+    const newValue = this.value;
+    if(newValue === 'Dependum'){
+      cell.setAttribute('relType', '');
+      cell.setStyle('endArrow=capitalD;');
+    } else {
+      cell.setAttribute('relType', 'belongs-to');
+      cell.setStyle('endArrow=block;dashed=1;strokeColor=red;');
+    }
   }
 
   function set_selected_overlay(){

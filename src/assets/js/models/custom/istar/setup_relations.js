@@ -22,12 +22,14 @@ let setup_istar_relations = function setup_istar_relations(graph,relations,relat
         let node = doc.createElement(relationType);
         node.setAttribute('type', relationType);
 
+        let bidirectional = false;
+
         //by default bidirectional edges are not allowed (disjoint)
         if(target.edges != null && target.edges.length>0){
             for (let i = 0; i < target.edges.length; i++) {
                 if(target.edges[i].target.getId()==source.getId()){
                     alert(global.messages["setup_relations_bidirectional"]);
-                    return null;
+                    bidirectional = true;
                 }
             }
         }
@@ -94,6 +96,29 @@ let setup_istar_relations = function setup_istar_relations(graph,relations,relat
         }
         
         const cell = graph.insertEdge(parent, id, node, source, target, style);
+        
+        const geo = cell.getGeometry();
+        //Avoid overlap of text handle with that to bend lines.
+        if(cell.hasAttribute('relType')){
+            geo.relative = true;
+            geo.x = 0;
+            geo.y = -15;
+        }
+
+        //Handle bidirectional edge
+        if(bidirectional){
+            const sourceState = graph.view.getState(source);
+            const sourceCenterX = (sourceState.x + (sourceState.width)/2);
+            const sourceCenterY = (sourceState.y + (sourceState.height)/2);
+            const targetState = graph.view.getState(target);
+            const targetCenterX = (targetState.x + (targetState.width)/2);
+            const targetCenterY = (targetState.y + (targetState.height)/2);
+            //Calc center point
+            const centerX = (sourceCenterX + targetCenterX)/2;
+            const centerY = (sourceCenterY + targetCenterY)/2;
+            const offsetPoint = new mxPoint(centerX+30, centerY+30);
+            geo.points = [offsetPoint];
+        }
 
         return cell;
     };

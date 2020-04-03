@@ -38,9 +38,12 @@ export default {
       `}\n`;
       return template;
     },
-    generateCode() {
-      const model = this.current_graph.getModel();
-      const classDiagRoot = model.getCell("classdiag");
+    getProperties(classElem, attributes){
+      const propContainer = classElem.getChildAt(attributes ? 1 : 2);
+      const propCount = propContainer.getChildCount();
+      const props = []; 
+    },
+    analyseClasses(model, classDiagRoot){
       const nChildren = classDiagRoot.getChildCount();
       const classes = [];
       //Go over the top-level elements of the model and extract classes
@@ -53,6 +56,14 @@ export default {
           }
         }
       }
+    },
+    //Can't be finished until class diagram semantics are fully defined.
+    generateCode() {
+      const model = this.current_graph.getModel();
+      const classDiagRoot = model.getCell("classdiag");
+
+      structuredClasses = this.analyseClasses(model, classDiagRoot);
+
       let genText = '';
       classes.forEach(classElem => {
         genText += this.createClass(classElem);
