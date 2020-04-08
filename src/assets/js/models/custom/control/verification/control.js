@@ -1,16 +1,16 @@
-let control_verification = function control_verification()
+let controlVerification = function controlVerification()
 {
+  
   //custom verification menu options and functions
   let data=[];
   data[0]={
       "label":"Check unique  control action",
-      "func":check_unique_ids
-  }
-
+      "func":checkUniqueIds
+}
   return data;
 
   //check that all the features (root, abstract and concrete) contain unique IDs
-  function check_unique_ids(graph,c_errors,c_overlays){
+  function checkUniqueIds(graph,c_errors,c_overlays){
     let control_root = graph.getModel().getCell("control");    
     let childs = graph.getModel().getChildVertices(control_root);
     let names = [];
@@ -31,14 +31,12 @@ let control_verification = function control_verification()
               }
             }
           }
-     
-
       if(result!=""){
         alert(result);
       }else{
         alert("No errors found");
       }
-    } 
+    }
 }
 
-export default control_verification
+export default controlVerification
