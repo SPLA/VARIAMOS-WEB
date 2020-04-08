@@ -259,7 +259,7 @@ export default {
       const field_type = 'attribute';
       const doc_field = mxUtils.createXmlDocument();
       const node_field = doc_field.createElement(field_type);
-      node_field.setAttribute('label', resource.getAttribute('label'));
+      node_field.setAttribute('label', '- ' + _.camelCase(resource.getAttribute('label')));
       const field = this.current_graph.insertVertex(attr_container, null, node_field, 1, (20 * n_children) + 1, 98, 18, 'fillColor=#FFFFFF;selectable=0;align=left;fontColor=black;strokeColor=none;');
       field.setConnectable(false);
       this.handleResize(null, {getProperty(_string){return [class_element]}});
@@ -302,7 +302,7 @@ export default {
       const field_type = 'method';
       const doc_field = mxUtils.createXmlDocument();
       const node_field = doc_field.createElement(field_type);
-      node_field.setAttribute('label', task.getAttribute('label'));
+      node_field.setAttribute('label', '+ ' + _.camelCase(task.getAttribute('label')) + '()');
       const field = this.current_graph.insertVertex(method_container, null, node_field, 1, (20 * n_children) + 1, 98, 18, 'fillColor=#FFFFFF;selectable=0;align=left;fontColor=black;strokeColor=none;');
       field.setConnectable(false);
       this.handleResize(null, {getProperty(_string){return [class_element]}});

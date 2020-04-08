@@ -17,6 +17,9 @@ Vue.config.productionTip = false
 //Set variable on the global object.
 global.messages = messages
 
+//Global lodash
+var _ = require('lodash');
+
 new Vue({
   store,
   router,
