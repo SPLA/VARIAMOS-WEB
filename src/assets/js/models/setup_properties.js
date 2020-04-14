@@ -47,6 +47,11 @@ let setupProperties = function setupProperties(graph, propertiesStyles){
 									}else if(propertiesStyles[type][j]["input_type"] == "checkbox"){
 										createCheckboxField(graph, form, cell, attrs[i], propertiesStyles[type][j]);
 										passed = true;
+									}else if(propertiesStyles[type][j]["input_type"] == "disabled"){
+										createTextField(graph, form, cell, attrs[i], propertiesStyles[type][j], true);
+										passed = true;
+									}else if(propertiesStyles[type][j]["input_type"] == "none"){ 
+										passed = true;
 									}
 								}
 							}
@@ -97,7 +102,7 @@ let setupProperties = function setupProperties(graph, propertiesStyles){
 	/**
 	 * Creates the textfield for the given property.
 	 */
-	function createTextField(graph, form, cell, attribute, custom){
+	function createTextField(graph, form, cell, attribute, custom, disabled){
 		// TO FIX -> MUST BE REMOVED FROM HERE - initialize the highrange when its value is '*'
 		if(attribute.nodeName === 'highRange' && attribute.nodeValue === '*'){
 			custom['input_text_type'] = 'text';
@@ -107,7 +112,7 @@ let setupProperties = function setupProperties(graph, propertiesStyles){
 		let input = form.addText(attribute.nodeName, attribute.nodeValue, "text", defDisplay);
 		
 		//attribute type can not be modified
-		if(attribute.nodeName=="type"){
+		if(attribute.nodeName=="type" || disabled){
 			input.disabled="disabled";
 		}
 

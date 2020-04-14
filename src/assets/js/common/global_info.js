@@ -6,7 +6,7 @@ export function getModelInfo(){
     let info = [];
     //list of graphical models
     info["gmodels"] = ["feature", "component", "binding_feature_component", "istar", "classdiag", "adap_architecture",
-        "adaptation_state", "adaptation_hardware", "adaptation_binding_state_hardware", "control"];
+        "adaptation_hardware","adaptation_behavior_hardware","adaptation_state","adaptation_behavior_states","adaptation_behavior_transitions","control"];
     //define feature model main info
     info["feature"] = {projFolders:["Domain"], label:"Feature"};
     //define component model main info
@@ -22,11 +22,15 @@ export function getModelInfo(){
     //define adaptation_state model main info
     info["adaptation_state"]={projFolders:["Application"],label:"State"};
     //define adaptation_hardware model main info
-    info["adaptation_hardware"] = {projFolders:["Application"], label:"Hardware"};
-    //define adaptation_binding_state_hardware model main info
-    info["adaptation_binding_state_hardware"] = {projFolders:["Application"], label:"Binding StateHardware"};
+    info["adaptation_hardware"]={projFolders:["Application"],label:"Hardware"};
+    //define adaptation_behavior_hardware model main info
+    info["adaptation_behavior_hardware"]={projFolders:["Application"],label:"Hardware behavior"};
+    //define adaptation_behavior_states model main info
+    info["adaptation_behavior_states"]={projFolders:["Application"],label:"States behavior"};
+    //define adaptation_behavior_transitions model main info
+    info["adaptation_behavior_transitions"]={projFolders:["Application"],label:"Transitions behavior"};
     //define control model main info
-    info["control"] = {projFolders:["Application"], label:"Control"};
+    info["control"]={projFolders:["Application"],label:"Control"};
     return info;
 }
 
