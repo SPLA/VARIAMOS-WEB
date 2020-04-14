@@ -108,6 +108,8 @@
   "backend_title":"BackEnd",
   "backend_setup":"BackEnd Setup",
   "backend_setup_path":"BackEnd Server Path",
+  "backend_setup_git_token":"GitHub PAT",
+  "backend_setup_git_user_login":"GitHub User Login",
 
   "verification":"Verification",
   "verification_root":"More than one root element",

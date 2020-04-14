@@ -23,13 +23,23 @@ export default {
       // modal header
       let c_header = modalH3(this.$t("backend_setup"));
       // modal body
-      let default_vals = "";
-      let texts = [this.$t("backend_setup_path")];
-      let inputs = ["server_main_path"];
+      let default_vals = [];
+      let texts = [this.$t("backend_setup_path"),this.$t("backend_setup_git_token"),this.$t("backend_setup_git_user_login")];
+      let inputs = ["server_main_path","server_git_token","server_git_user_login"];
       if (localStorage["domain_implementation_main_path"]) {
-        default_vals = [localStorage["domain_implementation_main_path"]];
+        default_vals[0]  = [localStorage["domain_implementation_main_path"]];
       }else{
-        default_vals = ["http://localhost:8090/VariaMosServices/"];
+        default_vals[0] = "[VARIAMOS SERVICE URL]";
+      }
+      if (localStorage["domain_implementation_git_token"]) {
+        default_vals[1] = [localStorage["domain_implementation_git_token"]];
+      }else{
+        default_vals[1] = "[GITHUB TOKEN]";
+      }
+      if (localStorage["domain_implementation_user_login"]) {
+        default_vals[2] = [localStorage["domain_implementation_user_login"]];
+      }else{
+        default_vals[2] = "[GIT USER LOGIN]";
       }
       let c_body = modalInputTexts(texts,inputs,default_vals);
       // modal footer
@@ -38,6 +48,8 @@ export default {
     },
     save_parameters(){
       localStorage["domain_implementation_main_path"] =  document.getElementById('server_main_path').value;
+      localStorage["domain_implementation_git_token"] =  document.getElementById('server_git_token').value;
+      localStorage["domain_implementation_user_login"] =  document.getElementById('server_git_user_login').value;
       document.getElementById('main_modal').style.display="none";
     }
   }
