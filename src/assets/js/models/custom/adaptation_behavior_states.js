@@ -51,10 +51,10 @@ let adaptation_behavior_states_main = function adaptation_behavior_states_main(g
 			"Only one connection allowed",
 			"The activityLifeLine only can be associated to actionLifeLine"));
 
-		graph.multiplicities.push(new mxMultiplicity(
-			false, "stateLifeLine", null, null, 0, 1, ["initialState", "state"],
-			"Only one connection allowed",
-			"The stateLifeLine requires a state"));
+		// graph.multiplicities.push(new mxMultiplicity(
+		// 	false, "stateLifeLine", null, null, 0, 1, ["initialState", "state"],
+		// 	"Only one connection allowed",
+		// 	"The stateLifeLine requires a state"));
 		// graph.multiplicities.push(new mxMultiplicity(
 		// 	false, "activityLifeLine", null, null, 0, 1, ["activity"],
 		// 	"Only one connection allowed",

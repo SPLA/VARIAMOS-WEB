@@ -16,11 +16,11 @@ let adaptation_state_main = function adaptation_state_main(graph) {
 	function adaptation_state_constraints(graph) {
 		graph.multiplicities = []; //reset multiplicities 
 		graph.multiplicities.push(new mxMultiplicity(
-			true, "initialState", null, null, 0, 1000000, ["transition"],
+			true, "initialState", null, null, 0, 1000000, ["transition", "stateLifeLine"],
 			"Only one connection allowed",
 			"The initialState only can be associated to transitions"));
 		graph.multiplicities.push(new mxMultiplicity(
-			true, "state", null, null, 0, 1000000, ["transition"],
+			true, "state", null, null, 0, 1000000, ["transition", "stateLifeLine"],
 			"Only one connection allowed",
 			"The state only can be associated to transitions"));
 		graph.multiplicities.push(new mxMultiplicity(
