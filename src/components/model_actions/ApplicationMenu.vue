@@ -483,7 +483,7 @@ export default {
           serverUrl += "/";
         }
         serverUrl += "json/test-api";
-        //alert(serverUrl);
+        alert(serverUrl);
         let directory = "MiProyecto"; // localStorage["domain_implementation_pool_path"];
         //alert(directory);
         let modelJson = adaptation_state_actions(
@@ -521,7 +521,7 @@ export default {
 
         xhr.onerror = function() {
           // Error code goes here.
-          // alert('Ha ocurrido un error en la solicitud.');
+          alert('Ha ocurrido un error en la solicitud.');
         };
 
         xhr.onreadystatechange = function() {
