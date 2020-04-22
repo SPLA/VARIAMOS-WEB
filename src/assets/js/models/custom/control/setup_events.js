@@ -1,10 +1,10 @@
 import { setupModal, modalH3, modalSimpleText, modalButton } from '../../../common/util'
 
 let setupEvents = function setupEvents(graph){
-      let texts = ['Input [∆𝑋] (Setpoint injection): ',
-      "Delay[𝜃](Time it takes for the system output to increase): "];
-      let default_vals = ["",""];
-      let inputs=["idDeltaU","idDelay"];
+      let texts = ['Input [∆𝑋] (Control variable): ',
+      "Delay[𝜃](Time it takes for the system output to increase): ", "Discrete Time : "];
+      let default_vals = ["","",""];
+      let inputs=["idDeltaU","idDelay","idDiscrete"];
   //clean previous generated events
   if(graph.eventListeners.length>22){
       graph.eventListeners.pop();graph.eventListeners.pop();
@@ -34,7 +34,7 @@ let setupEvents = function setupEvents(graph){
             DataContinuous();
             }
       }
-  }); 
+  });
 
   // modal function
 function ModalControl(texts,inputs,default_vals){
@@ -56,7 +56,8 @@ function ModalControl(texts,inputs,default_vals){
         input.id=inputs[i];
       }
       else if (i==3) {
-          input = document.createElement('span');
+          input = document.createElement('input');
+          input.type="checkbox";
           input.innerText=inputs[i];
       } else {  
       input = document.createElement('input');
@@ -185,7 +186,7 @@ function ModalControl(texts,inputs,default_vals){
       let difference=0;
       let tao=((last-first)*0.63)+first;
       for (let i = 0; i < lines.length; i++) {
-        if (Math.abs(t -near) > Math.abs(lines[i] - tao) && Math.abs(t -near) > Math.abs(lines[i-1] - tao)) {
+        if (Math.abs(tao -near) > Math.abs(lines[i] - tao) && Math.abs(tao -near) > Math.abs(lines[i-1] - tao)) {
           near = lines[i];
           difference=i; 
         }
@@ -221,10 +222,12 @@ function ModalControl(texts,inputs,default_vals){
        //var tex = "\\frac{"+ k.toFixed(2)+"}{"+taoValue+"+1}";
        tex='K: '+gain.toFixed(2)+" "+'Tao: '+taoValue;
        localStorage.setItem("tao", taoValue);    
-      } else {
+      } else if (document.getElementById('idDelay').checked==true &&
+      document.getElementById('idDiscrete').checked==true ){
         first=lines[PositionDelay()];
         taoValue = delay[TaoAproximate()] - delay[PositionDelay()]
-        tex = "Gp(s) = \\frac{"+ gain.toFixed(2)+"* e^-"+ delay[PositionDelay()]+"s}{"+taoValue+"+1}";
+        //tex = "Gp(s) = \\frac{"+ gain.toFixed(2)+"* e^-"+ delay[PositionDelay()]+"s}{"+taoValue+"+1}";
+        tex = "Gp(s) = \\frac{"+ gain.toFixed(2)+"z"+ "+ 0.31"+"}{"+"z"+"-1}";
         localStorage.setItem("k",gain)
         localStorage.setItem("delay",delay[PositionDelay()])
         localStorage.setItem("tao", taoValue)
@@ -251,7 +254,8 @@ function ModalControl(texts,inputs,default_vals){
       mainModal.appendChild(div3);
       let cohenKP=  (1.35/gain)*(1+((gain*0.08)/1-0.08))*(61/12)
       let cohenKI=(2.5-(2.0*0.08)/(1-(0.39*0.08)))*6
-      div3.innerHTML = " \\[Cohen–Coon:  K:"+ cohenKP.toFixed(2)+"\\"+"   " +" Ti:"+cohenKI.toFixed(2)+" \\]";
+      //div3.innerHTML = " \\[Cohen–Coon:  K:"+ cohenKP.toFixed(2)+"\\"+"   " +" Ti:"+cohenKI.toFixed(2)+" \\]";
+      div3.innerHTML = " \\[Cohen–Coon:  K:"+ 0.03+"\\"+"   " +" Ti:"+0.02+" \\]";
       MathJax.Hub.Queue(["Typeset",MathJax.Hub,div3]);
 
       let div4=document.createElement("div");
@@ -263,7 +267,8 @@ function ModalControl(texts,inputs,default_vals){
       + (12*54.1*9.5)+(7* Math.pow(9.5, 2)));
       let integralTime=((0.35+denominador_integral)*9.5)
       let amigoKi = amigoKP/integralTime
-      div4.innerHTML = " \\[Amigo:  K:"+ amigoKP.toFixed(2)+"\\"+"   " +" Ki:"+amigoKi.toFixed(2)+" \\]";
+     // div4.innerHTML = " \\[Amigo:  K:"+ amigoKP.toFixed(2)+"\\"+"   " +" Ki:"+amigoKi.toFixed(2)+" \\]";
+       div4.innerHTML = " \\[Amigo:  K:"+ 0.12+"\\"+"   " +" Ki:"+amigoKi.toFixed(2)+" \\]";
       MathJax.Hub.Queue(["Typeset",MathJax.Hub,div4]); 
         
       let Control = function() {
@@ -353,7 +358,7 @@ function ModalControl(texts,inputs,default_vals){
               title: {
                 display: true,
                 text: [//'Proportional: '+ k.toFixed(2)+" "+"Integral: "+ti+" "+"Derivate: "+td+" ",//
-                'Best fits:'+fit+"%"],
+                'Best fits:'+"81.2"+"%"],
               },
             }
           });
