@@ -841,7 +841,7 @@ let adapArchitectureMain = function adapArchitectureMain(graph)
 			overlayRigth.align = mxConstants.ALIGN_RIGTH;
 			overlayRigth.verticalAlign = mxConstants.ALIGN_TOP;	
 			overlayRigth.offset = new mxPoint(-10,10);
-
+	
 			//borde acomodable
 			let overlayFrame = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/devices.png', 16, 16), 'Overlay tooltip');
 
@@ -1108,66 +1108,71 @@ let adapArchitectureMain = function adapArchitectureMain(graph)
 	}
 
 	function adapArchitectureRelationStyles(){
+		let style_rel_ppl = "whiteSpace = wrap;aspect = fixed;fontFamily = Helvetica;fontSize = 8;fillColor = #000080;strokeColor = #000000;strokeWidth = 1;gradientColor = #c8e6c9;";
+		//let style_rel_add = "edgeStyle=elbowEdgeStyle;elbow=vertical;orthogonal=1;curved=0;" ;	
+		let style_rel_add = "edgeStyle=segmentEdgeStyle;elbow=vertical;orthogonal=1;segment=50;curved=0;" ;	
+		//let style_rel_add = "edgeStyle=orthogonalEdgeStyle;elbow=vertical;orthogonal=1;segment=50;curved=1;" ;	
+		
 		let relations = [];
 		relations[0] = {
 			"source":["layer"],
 			"rel_source_target":"and",
 			"target":["layer"],
-			"style": "whiteSpace = wrap;aspect = fixed;fontFamily = Helvetica;fontSize = 8;fillColor = #000080;strokeColor = #000000;strokeWidth = 1;gradientColor = #c8e6c9;"
+			"style": style_rel_add + style_rel_ppl
 		}
 		relations[1] = {
 			"source":["module"],
 			"rel_source_target":"and",
 			"target":["module"],
-			"style": "whiteSpace = wrap;aspect = fixed;fontFamily = Helvetica;fontSize = 8;fillColor = #000080;strokeColor = #000000;strokeWidth = 1;gradientColor = #c8e6c9;"
+			"style": style_rel_add + style_rel_ppl
 		}
 		relations[0] = {
 			"source":["package"],
 			"rel_source_target":"and",
 			"target":["package"],
-			"style": "whiteSpace = wrap;aspect = fixed;fontFamily = Helvetica;fontSize = 8;fillColor = #000080;strokeColor = #000000;strokeWidth = 1;gradientColor = #c8e6c9;"
+			"style": style_rel_add + style_rel_ppl
 		}
 		relations[2] = {
 			"source":["device"],
 			"rel_source_target":"and",
 			"target":["actuator","device","computer", "network"],
-			"style": "whiteSpace = wrap;aspect = fixed;fontFamily = Helvetica;fontSize = 8;fillColor = #000080;strokeColor = #000000;strokeWidth = 1;gradientColor = #c8e6c9;"
+			"style": style_rel_add + style_rel_ppl
 		}
 		relations[3] = {
 			"source":["software"],
 			"rel_source_target":"and",
 			"target":["software","device", "computer"],
-			"style": "whiteSpace = wrap;aspect = fixed;fontFamily = Helvetica;fontSize = 8;fillColor = #000080;strokeColor = #000000;strokeWidth = 1;gradientColor = #c8e6c9;"
+			"style": style_rel_add + style_rel_ppl
 		}
 		relations[4] = {
 			"source":["sensor"],
 			"rel_source_target":"and",
 			"target":["device","computer", "resource"],
-			"style": "whiteSpace = wrap;aspect = fixed;fontFamily = Helvetica;fontSize = 8;fillColor = #000080;strokeColor = #000000;strokeWidth = 1;gradientColor = #c8e6c9;"
+			"style": style_rel_add + style_rel_ppl
 		}
 		relations[5] = {
 			"source":["actuator"],
 			"rel_source_target":"and",
 			"target":["device","computer", "resource"],
-			"style": "whiteSpace = wrap;aspect = fixed;fontFamily = Helvetica;fontSize = 8;fillColor = #000080;strokeColor = #000000;strokeWidth = 1;gradientColor = #c8e6c9;"
+			"style": style_rel_add + style_rel_ppl
 		}
 		relations[6] = {
 			"source":["resource"],
 			"rel_source_target":"and",
 			"target":["resource"],
-			"style": "whiteSpace = wrap;aspect = fixed;fontFamily = Helvetica;fontSize = 8;fillColor = #000080;strokeColor = #000000;strokeWidth = 1;gradientColor = #c8e6c9;"
+			"style": style_rel_add + style_rel_ppl
 		}
 		relations[7] = {
 			"source":["computer"],
 			"rel_source_target":"and",
 			"target":["actuator", "network"],
-			"style": "whiteSpace = wrap;aspect = fixed;fontFamily = Helvetica;fontSize = 8;fillColor = #000080;strokeColor = #000000;strokeWidth = 1;gradientColor = #c8e6c9;"
+			"style": style_rel_add + style_rel_ppl
 		}
 		relations[8] = {
 			"source":["network"],
 			"rel_source_target":"and",
 			"target":["network"],
-			"style": "whiteSpace = wrap;aspect = fixed;fontFamily = Helvetica;fontSize = 8;fillColor = #000080;strokeColor = #000000;strokeWidth = 1;gradientColor = #c8e6c9;"
+			"style": style_rel_add + style_rel_ppl
 		}
 		return relations;
 	}

@@ -56,24 +56,22 @@ let setup_relations = function setup_relations(graph, relations, relation_styles
         
         let cell = graph.insertEdge(parent, id, node, source, target, style);
         let styles = null;
-        console.log(cell);
-        if(cell.value.attributes[2]){
-            node = doc.createElement(cell.value.attributes[2].nodeName)
-            node.setAttribute('label', cell.value.attributes[2].value);
-            styles = graph.insertVertex(cell, null, node , -0.7, 10, 20, 20,'fontSize=12;fontColor=black;fillColor=transparent;strokeColor=transparent', true);
-            styles.geometry.offset = new mxPoint(-styles.geometry.width / 2, -styles.geometry.height / 2);
-            styles.connectable = false;
 
-            node = doc.createElement(cell.value.attributes[3].nodeName)
-            node.setAttribute('label', cell.value.attributes[3].value);
-            styles = graph.insertVertex(cell, null, node , 0.7, 10, 20, 20,'fontSize=12;fontColor=black;fillColor=transparent;strokeColor=transparent;', true);
-            styles.geometry.offset = new mxPoint(-styles.geometry.width / 2, -styles.geometry.height / 2);
-            styles.connectable = false;
-        }
-        
+        node = doc.createElement(cell.value.attributes[2].nodeName)
+        node.setAttribute('label', cell.value.attributes[2].value);
+        styles = graph.insertVertex(cell, null, node , -0.7, 10, 20, 20,'fontSize=12;fontColor=black;fillColor=transparent;strokeColor=transparent', true);
+        styles.geometry.offset = new mxPoint(-styles.geometry.width / 2, -styles.geometry.height / 2);
+        styles.connectable = false;
+
+        node = doc.createElement(cell.value.attributes[3].nodeName)
+        node.setAttribute('label', cell.value.attributes[3].value);
+        styles = graph.insertVertex(cell, null, node , 0.7, 10, 20, 20,'fontSize=12;fontColor=black;fillColor=transparent;strokeColor=transparent;', true);
+        styles.geometry.offset = new mxPoint(-styles.geometry.width / 2, -styles.geometry.height / 2);
+        styles.connectable = false;
 
         if (cell.source.value.nodeName == "actuator" && cell.target.value.nodeName == "resource"){
             styles = graph.insertVertex(cell, null, 'Label', 0, 0, 20, 14,'shape=Resource_link;labelBackgroundColor=#ffffff;labelPosition=left;spacingRight=2;align=right;');
+
         }
         else if (cell.source.value.nodeName == "device" && cell.target.value.nodeName == "device"){
             styles = graph.insertVertex(cell, null, 'Label', 0, 0, 20, 14,'shape=Aggregation;labelBackgroundColor=#ffffff;labelPosition=left;spacingRight=2;align=right;');
