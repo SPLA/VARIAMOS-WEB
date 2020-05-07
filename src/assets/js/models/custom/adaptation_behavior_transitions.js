@@ -1,46 +1,50 @@
-let adaptation_binding_state_hardware_main = function adaptation_binding_state_hardware_main(graph) {
-	adaptation_binding_state_hardware_constraints(graph);
-	adaptation_binding_state_hardware_handlers(graph);
+let adaptation_behavior_transitions_main = function adaptation_behavior_transitions_main(graph) {
+	adaptation_behavior_transitions_constraints(graph);
+	adaptation_behavior_transitions_handlers(graph);
 
 	let data = {};
 	data["m_type"] = "binding"; //custom type
-	data["m_elements"] = adaptation_binding_state_hardware_elements(); //custom elements
-	data["m_attributes"] = adaptation_binding_state_hardware_attributes(); //custom attributes
-	data["m_relations"] = adaptation_binding_state_hardware_relations(); //custom relations
-	data["m_properties_styles"] = adaptation_binding_state_hardware_properties_styles(); //custom properties styles
-	data["m_labels"] = adaptation_binding_state_hardware_labels(); //custom labels
-	data["m_clon_cells"] = adaptation_binding_state_hardware_clon_cells(); //custom clon cells
-	data["m_constraints_ic"] = adaptation_binding_state_hardware_constraints_in_creation(); //custom constraints in element creation
-	data["m_overlay"] = adaptation_binding_state_hardware_overlay(); //custom overlay
-	data["m_relation_styles"] = adaptation_binding_state_hardware_relation_styles();
+	data["m_elements"] = adaptation_behavior_transitions_elements(); //custom elements
+	data["m_attributes"] = adaptation_behavior_transitions_attributes(); //custom attributes
+	data["m_relations"] = adaptation_behavior_transitions_relations(); //custom relations
+	data["m_properties_styles"] = adaptation_behavior_transitions_properties_styles(); //custom properties styles
+	data["m_labels"] = adaptation_behavior_transitions_labels(); //custom labels
+	data["m_clon_cells"] = adaptation_behavior_transitions_clon_cells(); //custom clon cells
+	data["m_constraints_ic"] = adaptation_behavior_transitions_constraints_in_creation(); //custom constraints in element creation
+	data["m_overlay"] = adaptation_behavior_transitions_overlay(); //custom overlay
+	data["m_relation_styles"] = adaptation_behavior_transitions_relation_styles();
 	return data;
 
-	function adaptation_binding_state_hardware_constraints(graph) {
-		graph.multiplicities = []; //reset multiplicities
-		// graph.multiplicities.push(new mxMultiplicity(
-		// 	true, "state", null, null, 0, 0, null,
-		// 	"Invalid connection",
-		// 	"Only shape targets allowed"));
+	function adaptation_behavior_transitions_constraints(graph) {
+		graph.multiplicities = []; //reset multiplicities 
 		graph.multiplicities.push(new mxMultiplicity(
-			true, "bundle", null, null, 0, 1, ["root", "abstract"],
-			"Only 1 target allowed",
-			"Only shape targets allowed"));
+			true, "logicalOperator", null, null, 0, 1, ["transition", "logicalOperator"],
+			"Only one connection allowed",
+			"The logicalOperator only can be associated to transition"));
+		graph.multiplicities.push(new mxMultiplicity(
+			true, "predicate", null, null, 0, 1, ["logicalOperator"],
+			"Only one connection allowed",
+			"The predicate only can be assigned to one logicalOperator"));
+		// graph.multiplicities.push(new mxMultiplicity(
+		// 	true, "variable", null, null, 0, 1000000, ["predicate"],
+		// 	"Only one connection allowed",
+		// 	"The variable only can be assigned to predicate"));
 	}
 
-	function adaptation_binding_state_hardware_handlers(graph) {
-		graph.removeListener(adaptation_binding_state_hardware_handlers_double_click, mxEvent.DOUBLE_CLICK);
-		graph.addListener(mxEvent.DOUBLE_CLICK, adaptation_binding_state_hardware_handlers_double_click);
+	function adaptation_behavior_transitions_handlers(graph) {
+		graph.removeListener(adaptation_behavior_transitions_handlers_double_click, mxEvent.DOUBLE_CLICK);
+		graph.addListener(mxEvent.DOUBLE_CLICK, adaptation_behavior_transitions_handlers_double_click);
 	}
 
-	function adaptation_binding_state_hardware_handlers_double_click(sender, evt) {
+	function adaptation_behavior_transitions_handlers_double_click(sender, evt) {
 		let cell = evt.getProperty("cell"); // cell may be null
 		if (cell != null) {
-			adaptation_binding_state_hardware_on_double_click(cell);
+			adaptation_behavior_transitions_on_double_click(cell);
 		}
 		evt.consume();
 	}
 
-	function adaptation_binding_state_hardware_elements() {
+	function adaptation_behavior_transitions_elements() {
 		let activity = { src: projectPath + "images/models/adaptation_binding_state_hardware/activity.png", wd: 100, hg: 35, type: "activity", style: "shape=activity", pname: "Activity" };
 		let digitalVariable = { src: projectPath + "images/models/adaptation_binding_state_hardware/digitalVariable.png", wd: 100, hg: 35, type: "digitalVariable", style: "shape=digitalVariable", pname: "Digital variable" };
 		let analogVariable = { src: projectPath + "images/models/adaptation_binding_state_hardware/analogVariable.png", wd: 100, hg: 35, type: "analogVariable", style: "shape=analogVariable", pname: "Analog variable" };
@@ -51,27 +55,27 @@ let adaptation_binding_state_hardware_main = function adaptation_binding_state_h
 		let controlAction = { src: projectPath + "images/models/adaptation_binding_state_hardware/controlAction.png", wd: 100, hg: 35, type: "controlAction", style: "shape=controlAction", pname: "Control action" };
 		let delayAction = { src: projectPath + "images/models/adaptation_binding_state_hardware/delayAction.png", wd: 100, hg: 35, type: "delayAction", style: "strokeWidth=2", pname: "Delay action" };
 		let customAction = { src: projectPath + "images/models/adaptation_binding_state_hardware/customAction.png", wd: 100, hg: 35, type: "customAction", style: "strokeWidth=2", pname: "Custom action" };
-		let logicalOperator = { src: projectPath + "images/models/adaptation_binding_state_hardware/logicalOperator.png", wd: 100, hg: 35, type: "logicalOperator", style: "shape=ellipse", pname: "Logical operator" };
+		let logicalOperator = { src: projectPath + "images/models/adaptation_binding_state_hardware/logicalOperator.png", wd: 35, hg: 35, type: "logicalOperator", style: "shape=logicalOperator", pname: "Logical operator" };
 		let predicate = { src: projectPath + "images/models/adaptation_binding_state_hardware/predicate.png", wd: 100, hg: 35, type: "predicate", style: "shape=predicate", pname: "Predicate" };
 
 		let elements = [];
-		elements[0] = activity;
-		elements[1] = timer;
-		elements[2] = writeAction;
-		elements[3] = readAction;
-		elements[4] = controlAction;
-		elements[5] = digitalVariable;
-		elements[6] = analogVariable;
-		elements[7] = stringVariable;
-		elements[8] = logicalOperator;
-		elements[9] = predicate;
+		elements[0] = logicalOperator;
+		elements[1] = predicate;
+		// elements[0] = activity;
+		// elements[1] = timer;
+		// elements[2] = writeAction;
+		// elements[3] = readAction;
+		// elements[4] = controlAction;
+		// elements[5] = digitalVariable;
+		// elements[6] = analogVariable;
+		// elements[7] = stringVariable;
 		//elements[7] = delayAction;
 		//elements[8] = customAction;
 
 		return elements;
 	}
 
-	function adaptation_binding_state_hardware_attributes() {
+	function adaptation_behavior_transitions_attributes() {
 		let attributes = [];
 		attributes[0] = {
 			"types": ["digitalAction"],
@@ -106,6 +110,9 @@ let adaptation_binding_state_hardware_main = function adaptation_binding_state_h
 			"custom_attributes": [{
 				"name": "value",
 				"def_value": "SINGLE"
+			},{
+				"name": "alias",
+				"def_value": "op"
 			}]
 		};
 		attributes[5] = {
@@ -147,7 +154,7 @@ let adaptation_binding_state_hardware_main = function adaptation_binding_state_h
 		return attributes;
 	}
 
-	function adaptation_binding_state_hardware_relations() {
+	function adaptation_behavior_transitions_relations() {
 		let relations = [];
 		relations[0] = {
 			"source": ["state", "initialState"],
@@ -162,7 +169,7 @@ let adaptation_binding_state_hardware_main = function adaptation_binding_state_h
 		return relations;
 	}
 
-	function adaptation_binding_state_hardware_properties_styles() {
+	function adaptation_behavior_transitions_properties_styles() {
 		let styles = {};
 		styles = {
 			"relation": [{
@@ -187,6 +194,12 @@ let adaptation_binding_state_hardware_main = function adaptation_binding_state_h
 				"attribute": "value",
 				"input_type": "select",
 				"input_values": ["SINGLE", "OR", "AND"]
+			},{
+				"attribute": "label",
+				"input_type": "disabled"
+			}, {
+				"attribute": "alias",
+				"input_type": "none"
 			}
 			],
 			"predicate": [{
@@ -200,7 +213,7 @@ let adaptation_binding_state_hardware_main = function adaptation_binding_state_h
 		return styles;
 	}
 
-	function adaptation_binding_state_hardware_custom_methods(pos) {
+	function adaptation_behavior_transitions_custom_methods(pos) {
 		let methods = [];
 		methods[0] = function () {
 			document.getElementById("tr-lowRange").style.display = "none";
@@ -215,18 +228,18 @@ let adaptation_binding_state_hardware_main = function adaptation_binding_state_h
 			let lowRange = document.getElementById("input-lowRange").value;
 			let highRange = document.getElementById("input-highRange").value;
 			if (lowRange > highRange) {
-				alert(global.messages["adaptation_binding_state_hardware_custom_range_check"]);
+				alert(global.messages["adaptation_behavior_transitions_custom_range_check"]);
 				return false;
 			}
 			return true;
 		};
 		methods[2] = function (graph) {
-			let adaptation_binding_state_hardware_root = graph.getModel().getCell("adaptation_binding_state_hardware");
-			let adaptation_binding_state_hardware_vertices = graph.getModel().getChildVertices(adaptation_binding_state_hardware_root);
+			let adaptation_behavior_transitions_root = graph.getModel().getCell("adaptation_behavior_transitions");
+			let adaptation_behavior_transitions_vertices = graph.getModel().getChildVertices(adaptation_behavior_transitions_root);
 
-			for (let i = 0; i < adaptation_binding_state_hardware_vertices.length; i++) {
-				if (adaptation_binding_state_hardware_vertices[i].getAttribute("type") == "root") {
-					alert(global.messages["adaptation_binding_state_hardware_custom_root_check"]);
+			for (let i = 0; i < adaptation_behavior_transitions_vertices.length; i++) {
+				if (adaptation_behavior_transitions_vertices[i].getAttribute("type") == "root") {
+					alert(global.messages["adaptation_behavior_transitions_custom_root_check"]);
 					return false;
 				}
 			}
@@ -245,7 +258,7 @@ let adaptation_binding_state_hardware_main = function adaptation_binding_state_h
 		return methods[pos];
 	}
 
-	function adaptation_binding_state_hardware_labels() {
+	function adaptation_behavior_transitions_labels() {
 		let labels = {};
 		labels = {
 			"bundle": "bundleType"
@@ -254,30 +267,30 @@ let adaptation_binding_state_hardware_main = function adaptation_binding_state_h
 		return labels;
 	}
 
-	function adaptation_binding_state_hardware_constraints_in_creation() {
+	function adaptation_behavior_transitions_constraints_in_creation() {
 		let constraints_ic = {};
 		constraints_ic = {
-			"root": adaptation_binding_state_hardware_custom_methods(2)
+			"root": adaptation_behavior_transitions_custom_methods(2)
 		};
 
 		return constraints_ic;
 	}
 
-	function adaptation_binding_state_hardware_clon_cells() {
+	function adaptation_behavior_transitions_clon_cells() {
 		let clons = {};
 		clons = {
-			"controlAction":"control"
+			"controlAction": "control"
 		};
 
 		return clons;
 	}
 
-	function adaptation_binding_state_hardware_overlay() {
+	function adaptation_behavior_transitions_overlay() {
 		let func1 = function () {
-			let adaptation_binding_state_hardware_root = graph.getModel().getCell("adaptation_binding_state_hardware");
-			let adaptation_binding_state_hardware_elements = graph.getModel().getChildEdges(adaptation_binding_state_hardware_root);
-			for (let i = 0; i < adaptation_binding_state_hardware_elements.length; i++) {
-				let source = adaptation_binding_state_hardware_elements[i].source;
+			let adaptation_behavior_transitions_root = graph.getModel().getCell("adaptation_behavior_transitions");
+			let adaptation_behavior_transitions_elements = graph.getModel().getChildEdges(adaptation_behavior_transitions_root);
+			for (let i = 0; i < adaptation_behavior_transitions_elements.length; i++) {
+				let source = adaptation_behavior_transitions_elements[i].source;
 				let type = source.getAttribute("type");
 				if (type == "concrete") {
 					let sel = source.getAttribute("selected");
@@ -292,24 +305,30 @@ let adaptation_binding_state_hardware_main = function adaptation_binding_state_h
 		return func1;
 	}
 
-	function adaptation_binding_state_hardware_relation_styles() {		
-		let relations = []; 
+	function adaptation_behavior_transitions_relation_styles() {
+		let relations = [];
 		relations[0] = {
-			"source": ["digitalVariable", "analogVariable", "timer", "analogActuator", "digitalActuator", "analogSensor", "digitalSensor"],
+			"source": ["logicalOperator"],
 			"rel_source_target": "and",
-			"target": ["readAction", "writeAction", "controlAction"],
-			"style": "dashed=1;endFill=0;"
-		} 
+			"target": ["transition", "logicalOperator"],
+			"style": "strokeColor=#333333;strokeWidth=2;dashed=0;endFill=1;"
+		}
 		relations[1] = {
-			"source": ["readAction", "writeAction", "controlAction"],
+			"source": ["predicate"],
 			"rel_source_target": "and",
-			"target": ["digitalVariable", "analogVariable", "timer", "analogActuator", "digitalActuator", "analogSensor", "digitalSensor"],
-			"style": "dashed=1;endFill=1"
-		} 
-		return relations; 
+			"target": ["logicalOperator"],
+			"style": "strokeColor=#333333;strokeWidth=2;dashed=0;endFill=1;"
+		}
+		relations[2] = {
+			"source": ["variable", "digitalVariable", "analogVariable", "stringVariable"],
+			"rel_source_target": "and",
+			"target": ["predicateArgument"],
+			"style": "strokeColor=#333333;strokeWidth=2;dashed=1;endFill=0;"
+		}
+		return relations;
 	}
 
-	function adaptation_binding_state_hardware_on_double_click(cell) {
+	function adaptation_behavior_transitions_on_double_click(cell) {
 		// var sourceType = cell.getAttribute("type");
 		// alert(sourceType)
 		// if (sourceType == "initialState" || sourceType == "state" || sourceType == "transition") {
@@ -329,4 +348,4 @@ let adaptation_binding_state_hardware_main = function adaptation_binding_state_h
 
 }
 
-export default adaptation_binding_state_hardware_main
+export default adaptation_behavior_transitions_main

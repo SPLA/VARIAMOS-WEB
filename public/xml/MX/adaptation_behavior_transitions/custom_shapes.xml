@@ -1,0 +1,114 @@
+<shapes>
+<shape name="transition" aspect="variable" strokewidth="7" >
+	<background>
+		<strokecolor color="#333333"/>
+		<fillcolor color="#ffffff"/>
+		<path>
+			<move x="0" y="0"/> 
+			<line x="90" y="0"/> 
+			<line x="100" y="50"/> 
+			<line x="90" y="100"/> 
+			<line x="0" y="100"/> 
+			<line x="10" y="50"/> 
+			<line x="0" y="0"/> 
+			<close/>
+		</path>		
+	</background>
+	<foreground>
+		<fillstroke/>
+	</foreground>
+</shape>
+<shape name="logicalOperator" aspect="variable" strokewidth="7" >
+	<background>
+		<strokecolor color="#333333"/>
+		<fillcolor color="#ffffff"/>
+		<ellipse x="0" y="0" w="100" h="100" />	
+		<fillstroke/>
+	</background>
+	<foreground>
+		<fillstroke/>
+	</foreground>
+</shape>
+<shape name="predicate" aspect="variable" strokewidth="7" >
+	<background>
+		<strokecolor color="#333333"/>
+		<fillcolor color="#ffffff"/>
+		<path>
+			<move x="50" y="0"/> 
+			<line x="100" y="50"/>  
+			<line x="50" y="100"/> 
+			<line x="0" y="50"/> 
+			<line x="50" y="0"/> 
+			<close/>
+		</path>		
+	</background>
+	<foreground>
+		<fillstroke/>
+	</foreground>
+</shape>
+<shape name="digitalVariable" aspect="variable" strokewidth="7" >
+	<background>
+		<strokecolor color="#333333"/>
+		<fillcolor color="#ffffff"/>
+		<path>
+			<move x="50" y="0"/>  
+			<line x="75" y="100"/> 
+			<line x="25" y="100"/> 
+			<line x="50" y="0"/> 
+			<close/> 
+			<move x="35" y="90"/>  
+			<line x="45" y="90"/>  
+			<line x="45" y="70"/>   
+			<line x="55" y="70"/>  
+			<line x="55" y="90"/> 
+			<line x="65" y="90"/>  
+		</path>		
+	</background>
+	<foreground>
+		<fillstroke/>
+	</foreground>
+</shape>
+
+<shape name="analogVariable" aspect="variable" strokewidth="7" >
+	<background>
+		<strokecolor color="#333333"/>
+		<fillcolor color="#ffffff"/>
+		<path>
+			<move x="50" y="0"/>  
+			<line x="75" y="100"/> 
+			<line x="25" y="100"/> 
+			<line x="50" y="0"/> 
+			<close/>
+			<move x="35" y="90"/>  
+			<line x="45" y="70"/>  
+			<line x="55" y="90"/>   
+			<move x="55" y="90"/>   
+			<line x="65" y="70"/>  
+		</path>		
+	</background>
+	<foreground>
+		<fillstroke/>
+	</foreground>
+</shape>
+
+<shape name="stringVariable" aspect="variable" strokewidth="7" >
+	<background>
+		<strokecolor color="#333333"/>
+		<fillcolor color="#ffffff"/>
+		<path>
+			<move x="50" y="0"/>  
+			<line x="75" y="100"/> 
+			<line x="25" y="100"/> 
+			<line x="50" y="0"/> 
+			<close/>
+			<move x="45" y="70"/>   
+			<line x="55" y="70"/>  
+			<move x="50" y="70"/>   
+			<line x="50" y="90"/>  
+		</path>		
+	</background>
+	<foreground>
+		<fillstroke/>
+	</foreground>
+</shape>
+</shapes>

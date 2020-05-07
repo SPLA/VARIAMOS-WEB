@@ -255,7 +255,7 @@ export default {
   },
   created() {
     let uri = localStorage["domain_implementation_main_path"] + `requirex/applications/${this.$route.params.id}`;
-    this.axios.get(uri).then(response => {
+    axios.get(uri).then(response => {
       this.requirement = response.data;
     });
   },
@@ -348,7 +348,7 @@ export default {
     },
     updateRequirement() {
       let uri = localStorage["domain_implementation_main_path"] + `requirex/applications/${this.$route.params.id}`;
-      this.axios.put(uri, this.requirement).then(() => {
+      axios.put(uri, this.requirement).then(() => {
         $("#applicationMessage span").text("Success!");
         $("#applicationMessage").addClass("alert-success");
         $("#applicationMessage").removeClass("alert-danger");
