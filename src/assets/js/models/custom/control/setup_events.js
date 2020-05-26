@@ -696,11 +696,8 @@ function ModalControl(texts,inputs,default_vals){
     let sp=1;
     let tm=1000;
     let controlador=0;
-    //let a=-Math.exp(-1/parseFloat(localStorage.getItem("tao")));
-    //let b=parseFloat(localStorage.getItem("gain"))*(1+a);
-    let a=-Math.exp(-1/2.3)
-            let b=(1.32)*(1+a)
-    let output=(0.52)*(1-Math.exp(-1/2))
+    let a=-Math.exp(-1/parseFloat(localStorage.getItem("tao")));
+    let b=parseFloat(localStorage.getItem("gain"))*(1+a);
     let controladores =[];
     let salidap=0;
     let salidas=[];
@@ -728,7 +725,7 @@ function ModalControl(texts,inputs,default_vals){
 
     function control(){
       const mainModal = document.getElementById("main_modal_body");
-      let header = modalH3("test");
+      let header = modalH3("Step Response");
       let body=""
       let footer = modalButton(("return"),function(){DataContinuous();}) 
       setupModal(header,body,footer);

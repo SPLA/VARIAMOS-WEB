@@ -33,29 +33,26 @@ export default {
     test_micro(){
       axios.post(localStorage["domain_implementation_main_path"]+'Control/saveBD', 0)
       let mainModal = document.getElementById("main_modal_body");
-      let header = modalH3("Test ");
+      let header = modalH3(this.$t("control_data_acquisition"));
+      
       let default_vals = "0";
       let texts = [("Setpoint: ")];
       const inputs = ["setpoint"];
       let body = modalInputTexts(texts, inputs, default_vals);
       let footer = [];
       let name;
-      footer.push(modalButton("iniciar", function() { 
+      footer.push(modalButton("start", function() { 
         setInterval(getData, 500);
         document.getElementById("iniciar").disabled = true;
         }));
-      footer.push(modalButton("enviar", function(){
-      enviar();
-      }));
-      footer.push(modalButton("exportar", function() { 
-       exportCsv();
-        
-        }));
-      footer.push(modalButton("enviar", function(){
-      enviar();
-      }));
-      footer.push(modalButton("enviar", function(){
+      footer.push(modalButton("reset", function(){
       reset();
+      }));
+      footer.push(modalButton("export", function() { 
+       exportCsv();  
+      }));
+      footer.push(modalButton("send", function(){
+      enviar();
       }));
      // let footer = modalButton(("Send"),function(){enviar()}) 
       setupModal(header,body,footer);
@@ -105,7 +102,11 @@ export default {
     });
       function reset()
       {
+        axios.post(localStorage["domain_implementation_main_path"]+'Control/saveBD', 0)
         myChart.destroy();
+        myChart.data.datasets[0].data=[];
+        myChart.data.datasets[1].data=[];
+        myChart.data.labels=[]
         myChart = new Chart(ctx, {
         type: 'line',
           data: {
