@@ -97,8 +97,7 @@
   "domain_implementation_pool_path":"Server Component Pool Path",
   "domain_implementation_derived_path":"Server Derived Project Path",
   "domain_implementation_path_problem":"Please setup BackEnd and Derivation parameters first",
-  "generate_graph":"Generate Feedback Graph",
-  "generate_graph_title":"Feedback Graph ",
+  "control_data_acquisition":"Data Acquisition",
 
   "application_menu":"Application Menu",
   "application_menu_set_app":"Set Application Folder",
