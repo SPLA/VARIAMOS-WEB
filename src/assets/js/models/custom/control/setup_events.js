@@ -1,10 +1,10 @@
-import { setupModal, modalH3, modalSimpleText, modalButton } from '../../../common/util'
+import { setupModal, modalH3, modalButton } from '../../../common/util'
 
 let setupEvents = function setupEvents(graph){
-      let texts = ['Input [∆𝑋] (Control variable): ',
-      "Delay[𝜃](Time it takes for the system output to increase): ", "Discrete Time : "];
-      let default_vals = ["","",""];
-      let inputs=["idDeltaU","idDelay","idDiscrete"];
+    const texts = ['Adjustment variable: ',
+    "Delay[𝜃](Time it takes for the system output to increase): ", "Discrete Time : "];
+    const default_vals = ["","",""];
+    const inputs=["idDeltaU",'idDelay',"idDiscrete"];
   //clean previous generated events
   if(graph.eventListeners.length>22){
       graph.eventListeners.pop();graph.eventListeners.pop();
@@ -28,7 +28,7 @@ let setupEvents = function setupEvents(graph){
           }
           let type = cell.getAttribute("type");
             if (type == "controller") {
-              GenerateGraph();
+              control();
             } 
             if (type == "plant") {
             DataContinuous();
@@ -85,11 +85,7 @@ function ModalControl(texts,inputs,default_vals){
         UploadData()
     }));
     footer.push(modalButton("Estimate", function(){
-      if (document.getElementById('idDeltaU').value =="") {
-          alert("Incomplete information")
-      } else {
-          SistemIdentification();
-      }
+      (document.getElementById('idDeltaU').value =="") ?  alert("Incomplete information") : SistemIdentification();
     }));
     setupModal(header, body, footer);  
   }
@@ -107,7 +103,8 @@ function ModalControl(texts,inputs,default_vals){
           fileReader.onload = function(fileLoadedEvent) {   
                 let textload = fileLoadedEvent.target.result;
                 localStorage["control_data"]=textload; 
-                alert("Successfully stored data")
+                alert("Successfully stored data");
+                alert(textload);
           }
         fileReader.readAsText(fileToLoad, "UTF-8");
         });
@@ -116,649 +113,679 @@ function ModalControl(texts,inputs,default_vals){
       }  
     }
     function SistemIdentification(){
-    
-    let DatosLocalStorage = function(){
+      let dataList=CollectDataCsv().data;
+      dataList =zoomData(dataList)
+      let timeList=CollectDataCsv().time;  
+      timeList =zoomData(timeList);
+      let nuevo=[0];
+      let sum=0;
+      for(var i=0,j=timeList.length-1;i<j;i++){
+        nuevo.push(parseFloat((sum += 0.5).toFixed(2)))
+      }
+      timeList=nuevo;
+
+      const deltaValue = document.getElementById('idDeltaU').value;
+      const idDelay= document.getElementById('idDelay').checked;
+      const idDiscrete= document.getElementById('idDiscrete').checked;
+      const mainModal = document.getElementById("main_modal_body");
+      
+    function CollectDataCsv(){
       let text=localStorage["control_data"];
       let allTextLines = text.split(/\r\n|\n/); 
       let listData = [];
       let listTime = [];
+      let listSetpoint=[];
       let firstColumn;
       let secondColumn;
+      let threeColumn;
             for (let i=0; i<allTextLines.length; i++) {
               firstColumn = allTextLines[i].split(";")[1];
               secondColumn = allTextLines[i].split(";")[0];
-              if (firstColumn!=null && secondColumn!=null) {
-                firstColumn = firstColumn.replace(",", ".");
-                secondColumn = secondColumn.replace(",", ".");
-                firstColumn= parseFloat(firstColumn);
-                secondColumn= parseFloat(secondColumn)
-                listData.push(firstColumn);
-                listTime.push(secondColumn);
+              threeColumn = allTextLines[i].split(";")[2];
+              if (firstColumn!=null && secondColumn!=null  && threeColumn!=null) {
+                listData.push(parseFloat(firstColumn.replace(",", ".")));
+                listTime.push(parseFloat(secondColumn.replace(",", ".")));
+               listSetpoint.push(parseFloat(threeColumn.replace(",", ".")));
               }
             }
-            listData.pop();
-            listTime.push(secondColumn);
-            let dictionary_data = {
+            let dictionaryData = {
               "data": listData,
-              "time": listTime
+              "time": listTime,
+              "setpoint":listSetpoint,
+              listTime:listData,
             };
-            return  dictionary_data
+            return  dictionaryData
           }
-  
-  function Canvas()
-  {
-    let lines=DatosLocalStorage().data;
-    let delay=DatosLocalStorage().time;
-    let last=lines.slice(-2)[0];
-    let taoValue;
-    let first=lines[0];
-    let tao=((last-first)*deltaValue)+first;
-    let deltaValue = document.getElementById('idDeltaU').value;
-    let gain=(last-first)/parseInt(deltaValue);
-    let tex;
 
-    //Calculate delay
-    let PositionDelay = function() {
-      let position;
-      for (let i=0; i<lines.length; i++) {   
-        if (lines[i]!=lines[0]) {  
-          first=lines[i-1]
-          position=i-1
+    function zoomData(list){
+      let sets=CollectDataCsv().setpoint;
+      let value=sets[sets.length - 1];  
+      var item=  (sets.indexOf(value))-1;
+      var masculinos = list.slice(item);
+
+      return masculinos;
+    }   
+   
+    function positionData(){
+      let result;
+      for (let i=1; i<dataList.length; i++) {   
+        if (dataList[i]!=dataList[0]) {  
+          result= i-1;
           break;
         } else {
-          position=0;
+          dataList[0];
         }
       }
-      return position;
-    }
-    let TransferFunctionOutput = function() {
-      let result=[];
-      for (let i = 0; i < lines.length; i++)
-      { 
-          let value=(gain*parseInt(deltaValue)*(1-Math.exp(-delay[i]/parseInt(taoValue)))+first);
-          result.push(value);
-      }
-      localStorage.setItem("modelo fit",result)
       return result;
-      };
-    let TaoAproximate = function() {
-      let near=0;
-      let difference=0;
-      let tao=((last-first)*0.63)+first;
-      for (let i = 0; i < lines.length; i++) {
-        if (Math.abs(tao -near) > Math.abs(lines[i] - tao) && Math.abs(tao -near) > Math.abs(lines[i-1] - tao)) {
-          near = lines[i];
-          difference=i; 
-        }
-      }  
-      return difference;
     }
-    let ModelFitting = function() {
-      let resultContinuous=TransferFunctionOutput()
-      let ListDifference=[];
-      let difference;
-      let sum;
-      let fit;
-      for (let i = 0; i < lines.length; i++) {
-        difference=resultContinuous[i]-lines[i] 
-        difference=Math.pow(difference,2)
-        sum+=difference
-        ListDifference.push(difference)
-      }
-      const reducer = (accumulator, currentValue) => accumulator + currentValue;
-      sum=ListDifference.reduce(reducer);
-      fit=Math.sqrt(sum/lines.length)
-      return fit;
-    }
-    let feedbackRoot = graph.getModel().getCell("control");
-    let childs = graph.getModel().getChildVertices(feedbackRoot);
-    for (let i = 0; i < childs.length; i++) {
-      if ( childs[i].getAttribute("type") == "controlAction") { 
-          childs[i].setAttribute("Delay")==true;  
-        }
-    }
-      if (document.getElementById('idDelay').checked==false) {
-       taoValue = delay[TaoAproximate()];
-       //var tex = "\\frac{"+ k.toFixed(2)+"}{"+taoValue+"+1}";
-       tex='K: '+gain.toFixed(2)+" "+'Tao: '+taoValue;
-       localStorage.setItem("tao", taoValue);    
-      } else if (document.getElementById('idDelay').checked==true &&
-      document.getElementById('idDiscrete').checked==true ){
-        first=lines[PositionDelay()];
-        taoValue = delay[TaoAproximate()] - delay[PositionDelay()]
-        //tex = "Gp(s) = \\frac{"+ gain.toFixed(2)+"* e^-"+ delay[PositionDelay()]+"s}{"+taoValue+"+1}";
-        tex = "Gp(s) = \\frac{"+ gain.toFixed(2)+"z"+ "+ 0.31"+"}{"+"z"+"-1}";
-        localStorage.setItem("k",gain)
-        localStorage.setItem("delay",delay[PositionDelay()])
-        localStorage.setItem("tao", taoValue)
-      }    
-     
-      let mainModal = document.getElementById("main_modal_body");
-      let header = modalH3("System Model");
-      let body=""
-      let footer = modalButton(("return"),function(){DataContinuous();})
-      setupModal(header,body,footer);
-
-      let transferFunction=document.createElement("div");
-      transferFunction.id="transfer";
-      mainModal.appendChild(transferFunction);
-      let ti=2*delay[PositionDelay()];
-      let td=ti/4;
-      let fit= (ModelFitting().toFixed(2)*100)/last;
-      fit=(100-fit).toFixed(2);
-      transferFunction.innerHTML = "\\["+tex+"\\]";
-      MathJax.Hub.Queue(["Typeset",MathJax.Hub,transferFunction]);
-
-      let div3=document.createElement("div");
-      div3.id="formula3";
-      mainModal.appendChild(div3);
-      let cohenKP=  (1.35/gain)*(1+((gain*0.08)/1-0.08))*(61/12)
-      let cohenKI=(2.5-(2.0*0.08)/(1-(0.39*0.08)))*6
-      //div3.innerHTML = " \\[Cohen–Coon:  K:"+ cohenKP.toFixed(2)+"\\"+"   " +" Ti:"+cohenKI.toFixed(2)+" \\]";
-      div3.innerHTML = " \\[Cohen–Coon:  K:"+ 0.03+"\\"+"   " +" Ti:"+0.02+" \\]";
-      MathJax.Hub.Queue(["Typeset",MathJax.Hub,div3]);
-
-      let div4=document.createElement("div");
-      div4.id="formula4";
-      mainModal.appendChild(div4);
-      let firstOperation = 0.35-((54.1*9.5)/Math.pow(54.1+9.5, 2));
-      let amigoKP = (1/gain)*(0.15+((firstOperation)*(54.1/9.5)))
-      let denominador_integral =(13*(Math.pow(54.1, 2))) / (Math.pow(54.1, 2)
-      + (12*54.1*9.5)+(7* Math.pow(9.5, 2)));
-      let integralTime=((0.35+denominador_integral)*9.5)
-      let amigoKi = amigoKP/integralTime
-     // div4.innerHTML = " \\[Amigo:  K:"+ amigoKP.toFixed(2)+"\\"+"   " +" Ki:"+amigoKi.toFixed(2)+" \\]";
-       div4.innerHTML = " \\[Amigo:  K:"+ 0.12+"\\"+"   " +" Ki:"+amigoKi.toFixed(2)+" \\]";
-      MathJax.Hub.Queue(["Typeset",MathJax.Hub,div4]); 
-        
-      let Control = function() {
-        let sp=1
-        let tm=301
-        let error=0
-        let error_acum=0;
-        let controlador=0;
-        let outputSystem=0;
-        let errorant=0
-        let a=-Math.exp(-1/54.1)
-        let b=0.018*(1+a)
-        let controladores =[]
-        let errores=[]
-        let errorp=0
-        let controladorp=0;
-        let salidap=0;
-        let salidas=[];
- 
-         for (let i = 0; i < tm; i++) {
-           if(i<10){
-           outputSystem=0;
-           error=(sp-outputSystem);
-           error_acum=error_acum+error;
-           errores.push(error_acum);
-           errorant = errorant-error
-           controlador=(270*error)+(error_acum/7.5)+(0*errorant)
-           controladores.push(controlador)
-           }
-           else{
-           salidap=parseFloat((controladores[i-10]*b-(a*salidap)).toFixed(9))
-           error=sp-salidap;
-           errorp=error.toFixed(9)
-           error_acum=error_acum+parseFloat(errorp);
-           controlador=(270*errorp)+(error_acum/7.5)+(0*errorant)
-           controladorp=parseFloat(controlador.toFixed(9))
-           controladores.push(controladorp)
-           salidas.push(salidap)
-           //console.log("post ",i,"error",errorp, "controlador", controladorp,"salida sistema ", salidap, "acum", error_acum)
-             }
-         }
- 
+   
+    function ConstantsFirstOrder() {
+      let lastData=dataList[dataList.length - 1];
+      let firstData=dataList[0];
+      let taoData =(((lastData-firstData)*63.2)/100)+firstData;
+      let taoData28 =(((lastData-firstData)*28)/100)+firstData;      
+      let gain=(lastData-firstData)/ deltaValue;
+      let delayValue
+      if(positionData()==0){
+        delayValue=0
+      }else {
+      delayValue =timeList[positionData()];
        }
-       Control();
+      
 
+      let dictionaryParameters = {
+        "taoData": taoData,
+        "TaoData28": taoData28,
+        "gain": gain,
+        "delayValue" : delayValue
+      };
+      return dictionaryParameters;
+    }
 
-    // Modal Canvas Plant
-    let canvas = document.createElement("canvas");
-          canvas.id = "myChart";
-          canvas.width = 500;
-          canvas.height = 280;
-          canvas.className = "my-4 chartjs-render-monitor";
-          mainModal.appendChild(canvas);
-          let ctx = document.getElementById("myChart");
-          let myChart = new Chart(ctx, {
-            type: "line",
-            data: {
-              labels: DatosLocalStorage().time,
-              datasets: [
-                {
-                  data: lines,//setInterval(function(){ UploadData(); }, 3000),
-                  label: "Data Plant",
-                  lineTension: 0,
-                  backgroundColor: "transparent",
-                  borderColor: "#D83A18",
-                  borderWidth: 2,
-                  pointBackgroundColor: "#D83A18",
-                  pointBorderColor: "transparent",
-                  pointBackgroundColor: "transparent",
-                  pointBorderWidth: 0
-                },
-                {
-                  data: TransferFunctionOutput(),
-                  label: "Data Transfer Function",
-                  lineTension: 0,
-                  backgroundColor: "transparent",
-                  borderColor: "#007bff",
-                  borderWidth: 2,
-                  pointBackgroundColor: "#007bff",
-                  pointBorderColor: "transparent",
-                  pointBackgroundColor: "transparent",
-                  pointBorderWidth: 0
-                }
-              ]
-            },
-            options: {
-              title: {
-                display: true,
-                text: [//'Proportional: '+ k.toFixed(2)+" "+"Integral: "+ti+" "+"Derivate: "+td+" ",//
-                'Best fits:'+"81.2"+"%"],
-              },
-            }
-          });
-          return canvas
-        }
-        Canvas()
-  }
+    // Search for the nearest number in a list 
+    function indexOfClosests(num){
+   const d= dataList.reduce((a, b) => {
+      return Math.abs(b - num) < Math.abs(a - num) ? b : a;
+  });
+  return d;    
+}
+
 
   
-      function GenerateGraph() {
-      let controlAction =
-      localStorage["adaptation_binding_state_hardware_controlAction"];
-      let header = modalH3("Controller Tuning");
-      let valueLabel = controlAction;
-      let body = modalSimpleText("");
-      let result_cascade_plant = [];
-      let result = [];
-      let names = [];
-      let feedbackRoot = graph.getModel().getCell("control");
-      let childs = graph
-        .getModel()
-        .getChildVertices(feedbackRoot);
-      for (let i = 0; i < childs.length; i++) {
-        if ( childs[i].getAttribute("type") == "controlAction") { 
-          let target_sys = childs[i].getAttribute("label");
-          names.push(target_sys);
+// Promedia los valores del eje x que representa el 63% de la salida de una funcion
+  function taoValue(){   
+    let jarray=[];
+    let Smit28=[];
+      for (let i=1; i<dataList.length; i++) { 
+        if(dataList[i]==indexOfClosests(ConstantsFirstOrder().taoData)) {
+          jarray.push(timeList[i])
+        
+        }
+        else if (dataList[i]==indexOfClosests(ConstantsFirstOrder().TaoData28)) {
+        Smit28.push(timeList[i])
         }
       }
+    let sum = jarray.reduce(function(a,b){
+      return a+b
+    },0 );
+    let sum28 = Smit28.reduce(function(a,b){
+      return a+b
+    },0 );
+    let result={
+      "Smith63":sum/jarray.length,
+      "Smith28": sum28/Smit28.length
+    }
+    return result;
+  }
 
-      //  target system variables
-      let target; //
-      let targetSystemId; // target system id
-      let proportional; // proportional value of the target system element
-      let derivate; // derivate value of the target system element
-      let integral; // integral value of the target system element
-      let targetSystemRelations; // relations target system
-      // controller variables
-      let id_controller; // controller id
-      let controllerRelations; // controller relations
-      let ControllerInnerId;
-      let controllerInnerRelations;
-      let InnerKP; // proportional value of the target system element
-      let InnerKD; // derivate value of the target system element
-      let InnerKI; // integral value of the target system element
-      // summing point variables
-      let summingID; // summing point id
-      let summingRelations; // summing relations
-      let initialSummingID; // summing initial id
-      let summingRelationsTwo;
-      let summingValue; // value summing
-      let summingValueInner; // value summing inner
-      let summingPlantID; // id summing plant
-      // filter variables
-      let filterID; // filter relations
-      let filterRelations;
-      // set point variables
-      let setpointValue; // value setpoint
-      let setpointTime;
-      let setpoints = []; // array
-      let setpointID; // id setpoint
-      let times = [];
-      let setpointTwoID = false;
-      let samplingTime;
+    //Curve Fitting//
+  function nolinearProcess(){  
+    let Pi=Math.PI; let PID2=Pi/2; let Pi2=2*Pi 
+    let funcionFirOrder=  "(( "+ConstantsFirstOrder().gain+"  * "+deltaValue +") * (1-Exp( - (t-"+ConstantsFirstOrder().delayValue+" ) / a )))+ D " 
+   // let funcionFirOrder=  "(( "+ConstantsFirstOrder().gain+"  * "+deltaValue +") * (1-Exp(  -t/ a )))+ D " 
+   
+  
+    // Basic operations
+    function EXP(x) { 
+      return Math.exp(x) 
+    }
+    function Abs(x) { 
+      return Math.abs(x)
+     }
+    function SQRT(x) { 
+      return Math.sqrt(x)
+    }
+    function Fmt(x) { let v;
+      if(Abs(x)<0.00005) { x=0 }
+        if(x>=0) { 
+        v='          '+(x+0.00005) } 
+        else {
+        v='          '+(x-0.00005) }
+      v = v.substring(0,v.indexOf('.')+5)
+      return v.substring(v.length-10,v.length)
+      }
+        
+    function StudT(t,n) {
+      t=Math.abs(t); let w=t/Math.sqrt(n); let th=Math.atan(w)
+      if(n==1) { 
+        return 1-th/Pi2 
+      }
+      let sth=Math.sin(th); let cth=Math.cos(th)
+        if((n%2)==1) {
+        return 1-(th+sth*cth*StatCom(cth*cth,2,n-3,-1))/PID2 }
+        else { 
+        return 1-sth*StatCom(cth*cth,1,n-3,-1) 
+        }
+      }
+    
+    function StatCom(q,i,j,b) {
+        let zz=1; let z=zz; let k=i; 
+        while(k<=j) { 
+        zz=zz*q*k/(k-b); 
+        z=z+zz; k=k+2 
+        }
+        return z
+    }
+    
+    function AStudT(p,n) { 
+      let v=0.5; let dv=0.5; let t=0
+        while(dv>1e-6) {
+        t=1/v-1; dv=dv/2; 
+          if(StudT(t,n)>p) {
+          v=v-dv 
+          } 
+          else { 
+          v=v+dv 
+          }  
+        }
+      return t
+    }
 
-      // branch variables
-      let branchID; // id Branchpoint
-      let finalBranchID;
-      let branchRelationsTarget; // target relations Branchpoint
-      let branchRelations; // source relations Branchpoint
-      let finalBranchRelations; // source relations Branchpoint
+    function STUDT(t,n) {
+      t=Math.abs(t); let w=t/SQRT(n); let th=Math.atan(w)
+      if(n==1) {
+        return 1-th/PiD2
+      }
+      let sth=Math.sin(th); let cth=Math.cos(th)
+      if((n%2)==1){
+        return 1-(th+sth*cth*STATCOM(cth*cth,2,n-3,-1))/PID2
+      }
+      else {  
+        return 1-sth*STATCOM(cth*cth,1,n-3,-1) 
+      }
+    } 
 
-      // output variables
-      let outputID; // id output
+    function STATCOM(q,i,j,b) {
+    let zz=1; let z=zz; let k=i; 
+    while(k<=j) { 
+      zz=zz*q*k/(k-b); z=z+zz; k=k+2
+    }
+    return z
+    }
+  
+    function Xlate(s,from,to) { 
+      let v = s;
+      let l=v.indexOf(from);
+      while(l>-1) {
+        v = v.substring(0,l) + to + v.substring(l+1,v.length);
+        l=v.indexOf(from)
+      }
+      return v
+    }
 
-      // transducer variables
-      let valueTransducer; // value transducer
-      let transducerID; // id transducer
-      let transdurcerRelations; // transducer relations
-      // list elements
-      let listElements = [];
-      let finalID;
+    function vFmt(x) { 
+      let v;
+      if(Math.abs(x)<0.0000005) { 
+        x=0 
+      }
+      if(x>=0) {
+        v=' '+(x+0.0000005) 
+        } else {
+        v=' '+(x-0.0000005) 
+        }
+      v = v.substring(0,v.indexOf('.')+7)
+      return v.substring(v.length-18,v.length)
+    }
 
-      for (let i = 0; i < names.length; i++) {
-        if (valueLabel == names[i]) {
-          setupModal(header, body);
-          let mainModal = document.getElementById("main_modal_body");
-          let canvas = document.createElement("canvas");
-          for (let i = 0; i < childs.length; i++) {
-            if (childs[i].getAttribute("type") == "controlAction") {
-             // if (childs[i].getAttribute("label") == valueLabel) {
-                targetSystemId = childs[i].getId();
-                proportional = childs[i].getAttribute("Proportional");
-                derivate = childs[i].getAttribute("Derivate");
-                integral = childs[i].getAttribute("Integral");
-                listElements.push(targetSystemId);
-             // }  
-            }
-          }
-          targetSystemRelations = graph.getModel().getIncomingEdges(
-            graph.getModel().getCell(targetSystemId) );
+    function createArray() {
+      this.length = arguments.length
+      for (let i = 0; i < this.length; i++) {
+         this[i] = arguments[i] 
+      }
+    }
+            
+    function ix(j,k) { 
+    return j*(nPar+1)+k 
+    }
+            
+    let Par = new createArray(0,0,0,0,0,0,0,0);
+    let SEP = new createArray(1,1,1,1,1,1,1,1);
+    let Der = new createArray(0,0,0,0,0,0,0,0,0);
+    let Arr = new createArray(0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0);
+    let Cov = new createArray(0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0 );
+    let xArr = new createArray(0,0,0,0,0,0,0,0,0);
+    let CR = unescape("%0D");
+    let LF = unescape("%0A");
+    let Tb = unescape("%09");
+    let NL = CR + LF;
 
-          for (let i = 0; i < targetSystemRelations.length; i++) {
-            let source = targetSystemRelations[i].source;
-            if (source.getAttribute("type") == "controller") {
-              ControllerInnerId = source.getId();
-              InnerKP = source.getAttribute("Proportional");
-              InnerKD = source.getAttribute("Derivate");
-              InnerKI = source.getAttribute("Integral");
-              listElements.push(id_controller);
-            }
-            if (source.getAttribute("type") == "summingPoint") {
-              summingPlantID = source.getId();
-              listElements.push(summingID);
-            }
-          }
+    let i = 0; let j = 0; let k = 0; let l = 0; 
 
-          controllerInnerRelations = graph.getModel().getIncomingEdges(
-              graph.getModel().getCell(summingPlantID));
-          for (let i = 0; i < controllerInnerRelations.length; i++) {
-            let source = controllerInnerRelations[i].source;
-            if (source.getAttribute("type") == "controller") {
-              ControllerInnerId = source.getId();
-              InnerKP = source.getAttribute("Proportional");
-              InnerKD = source.getAttribute("Derivate");
-              InnerKI = source.getAttribute("Integral");
-              listElements.push(id_controller);
-            }
-          }
+    let nPar = 1;
+    let nVar = 1;
+    let nPts = (dataList.length)-1;
+    let ccSW = 1;
+    let ccAv = 0;
+    let ccSD = 1;
+    let cccSW = 0;
+    let cccAv = 0;
+    let cccSD = 0;
 
-          controllerInnerRelations = graph.getModel().getIncomingEdges(
-              graph.getModel().getCell(ControllerInnerId) );
-          for (let i = 0; i < controllerInnerRelations.length; i++) {
-            let source = controllerInnerRelations[i].source;
-            if (source.getAttribute("type") == "summingPoint") {
-              summingID = source.getId();
-              listElements.push(summingID);
-              summingValueInner = source.getAttribute("Direction");
-            }
-          }
+    let dgfr = nPts - nPar;
+    let St95 = AStudT( 0.05 , dgfr );
+    let A = taoValue().Smith63;
+    
+    //cunado la funcion de logaritmo es muy pronunuciada no hay retraso
+    /*if(ConstantsFirstOrder().delayValue==0){
+      A=1.85;
+    }*/
+    var D= dataList[0];
+    //let A = 74; 
+    let P1 = A; Par[0] = A;
+    let text=localStorage["control_data"];
+    let da = Xlate(text,Tb,";");
+    text = da;
+    if( da.indexOf(NL)==-1 ) { 
+     /* if( da.indexOf(CR)>-1 ) { 
+        NL = CR }  
+      else { 
+        NL = LF } */
+        NL = (da.indexOf(CR)>-1) ? NL = CR : NL = LF;    
+    }
 
-          summingRelations = graph.getModel().getIncomingEdges(
-              graph.getModel().getCell(summingID) );
-          for (let i = 0; i < summingRelations.length; i++) {
-            let source = summingRelations[i].source;
-            if (source.getAttribute("type") == "filter") {
-              filterID = source.getId();
-              listElements.push(filterID);
-            }
-            if (source.getAttribute("type") == "branchpoint") {
-              finalBranchID = source.getId();
-            }
-            if (source.getAttribute("type") == "controlAction") { 
-              targetSystemId = source.getId();
-            }
-            if (source.getAttribute("type") == "controller") {
-              setpointTwoID = true;
-              id_controller = source.getId();
-              proportional = source.getAttribute("Proportional");
-              derivate = source.getAttribute("Derivate");
-              integral = source.getAttribute("Integral");
-            }
-            if (source.getAttribute("type") == "setpoint") {
-              setpointID = source.getId();
-              setpointValue = source.getAttribute("SetPoint");
-              setpoints.push(setpointValue);
-              setpointTime = source.getAttribute("Time");
-              times.push(setpointTime);
-              samplingTime=source.getAttribute("Tm");
-              listElements.push(setpointID);
-            }
-            if (source.getAttribute("type") == "transducer") {
-              transducerID = source.getId();
-            }
-          }
-
-          controllerRelations = graph.getModel().getIncomingEdges(
-              graph.getModel().getCell(id_controller));
-          for (let i = 0; i < controllerRelations.length; i++) {
-            let source = controllerRelations[i].source;
-            if (source.getAttribute("type") == "summingPoint") {
-              initialSummingID = source.getId();
-              listElements.push(initialSummingID);
-              summingValue = source.getAttribute("Direction");
-            }
-          }
-
-          summingRelationsTwo = graph.getModel().getIncomingEdges(
-              graph.getModel().getCell(initialSummingID) );
-          for (let i = 0; i < summingRelationsTwo.length; i++) {
-            let source = summingRelationsTwo[i].source;
-            if (source.getAttribute("type") == "setpoint") {
-              setpointID = source.getId();
-              setpointValue = source.getAttribute("SetPoint");
-              setpoints.push(setpointValue);
-              setpointTime = source.getAttribute("Time");
-              times.push(setpointTime);
-              listElements.push(setpointID);
-              samplingTime=source.getAttribute("Tm");
-            } else if (source.getAttribute("type") == "filter") {
-              filterID = source.getId();
-              listElements.push(filterID);
-            } else if (source.getAttribute("type") == "branchpoint") {
-              finalBranchID = source.getId();
-            } else if (source.getAttribute("type") == "transducer") {
-              transducerID = source.getId();
-            }
-          }
-
-          filterRelations = graph.getModel().getIncomingEdges(graph.getModel().getCell(filterID));
-          for (let i = 0; i < filterRelations.length; i++) {
-            let source = filterRelations[i].source;
-            if (source.getAttribute("type") == "branchpoint") {
-              finalBranchID = source.getId();
-              listElements.push(branchID);
-            } else if (source.getAttribute("type") == "transducer") {
-              transducerID = source.getId();
-              valueTransducer = source.getAttribute("InitialPosition");
-              listElements.push(branchID);
-            }
-          }
-
-          transdurcerRelations = graph.getModel().getIncomingEdges(
-              graph.getModel().getCell(transducerID));
-          for (let i = 0; i < transdurcerRelations.length; i++) {
-            let source = transdurcerRelations[i].source;
-            if (source.getAttribute("type") == "branchpoint") {
-              finalBranchID = source.getId();
-              listElements.push(branchID);
-            }
-          }
-
-          branchRelationsTarget = graph.getModel().getOutgoingEdges(
-              graph.getModel().getCell(finalBranchID) );
-          for (let i = 0; i < branchRelationsTarget.length; i++) {
-            let target = branchRelationsTarget[i].target;
-            if (target.getAttribute("type") == "outputSystem") {
-              outputID = target.getId();
-              listElements.push(outputID);
-            }
-          }
-
-          finalBranchRelations = graph.getModel().getIncomingEdges(
-              graph.getModel().getCell(finalBranchID));
-          for (let i = 0; i < finalBranchRelations.length; i++) {
-            let source = finalBranchRelations[i].source;
-            if (source.getAttribute("type") == "branchpoint") {
-              branchID = source.getId();
-              listElements.push(branchID);
-            }
-          }
-
-          branchRelations = graph.getModel().getIncomingEdges(
-          graph.getModel().getCell(branchID));
-          for (let i = 0; i < branchRelations.length; i++) {
-            let source = branchRelations[i].source;
-            if (
-              source.getId() == targetSystemId &&
-              source.getAttribute("type") == "controlAction" 
-            ) {
-              finalID = source.getId();
-            }
-          }
-          let feedbackRoot = graph.getModel().getCell("control");
-          let childs2 = graph.getModel().getChildVertices(feedbackRoot);
-          for (let i = 0; i < childs2.length; i++) {
-            if (
-              childs2[i].getId() != targetSystemId &&
-              childs2[i].getId() != summingID &&
-              childs2[i].getId() != setpointID &&
-              childs2[i].getId() != filterID &&
-              childs2[i].getId() != id_controller &&
-              childs2[i].getId() != branchID &&
-              childs2[i].getId() != outputID &&
-              childs2[i].getId() != ControllerInnerId &&
-              childs2[i].getId() != initialSummingID &&
-              childs2[i].getId() != finalBranchID &&
-              childs2[i].getId() != transducerID &&
-              childs2[i].getId() != summingPlantID ) {
-              graph.getModel().setVisible(childs2[i], false);
-            } else {
-              graph.getModel().setVisible(childs2[i], true);
-            }
-          }
-         /***** Aqui va el codigo PID */
-          let Control = function() {
-            let sp=setpointValue
-            let tm=1000
-            let error=0
-            let error_acum=0;
-            let controlador=0;
-            let outputSystem=0;
-            let  errorant=0
-            let a=-Math.exp(-1/54.1)
-            let b=0.018*(1+a)
-            let controladores =[]
-            let errores=[]
-            let errorp=0
-            let controladorp=0;
-            let salidap=0;
-            let salidas=[];
-            let tiempos=[];
-            let setpoints=[];
+    let datos=[];
+    datos.push(dataList[0]);
+    let o = "Y = " + funcionFirOrder  + NL
+    for (i=1; i<=nVar; i++) {
+          o = o + "     x" + i + "   "       
+    }
+    o = o + " Y yc Y-yc SEest YcLo YcHi " + NL
+    let SSq = 0;
+    let w=1;
+    let Y;
+    for (j = 0; j<nPar*(nPar+1); j++) {
+       Arr[j] = 0;
+    }
+    for (i = 1; i<=nPts; i++) {
+      l = da.indexOf(NL);
+      let v = da.substring(0,l);
+      for (j = 0; j<nVar; j++) {
+        l = v.indexOf(";"); 
+        if( l==-1 ) { 
+          l = v.length 
+        };
+        xArr[j] = timeList[i];
+        o = o + Fmt(xArr[j])
+        v = v.substring(l+1,v.length);
+      }
+    
+      let X = xArr[0]; let X1= X
+		  X = X1; let T = X;
+      let yc = eval( funcionFirOrder.toUpperCase());
+      /*if(yc<=0) {
+        datos.push(0)
+      }
+      else {
+        datos.push(yc);
+      }*/
+      (yc<=0) ? datos.push(0) : datos.push(yc);;
+      l = v.indexOf(";"); if( l==-1 ) { l = v.length };
+      Y = dataList[i]
+      v = v.substring(l+1,v.length);
      
-            for (let i = 0; i < samplingTime; i++) {
-              if(i<10){
-              outputSystem=0;
-              error=(sp-outputSystem);
-              error_acum=error_acum+error;
-              errores.push(error_acum);
-              errorant = errorant-error
-              controlador=(78*error)+(error_acum/1)+(0*errorant)
-              controladores.push(controlador)
-              salidas.push(outputSystem)
-              tiempos.push(i)
-              setpoints.push(sp)
-              } else {
-              salidap=parseFloat((controladores[i-10]*b-(a*salidap)).toFixed(9))
-              error=sp-salidap;
-              errorp=error.toFixed(9)
-              error_acum=error_acum+parseFloat(errorp);
-              controlador=(78*errorp)+(error_acum/1)+(0*errorant)
-              controladorp=parseFloat(controlador.toFixed(9))
-              controladores.push(controladorp)
-              tiempos.push(i)
-              salidas.push(salidap)
-              setpoints.push(sp)
-               //console.log("post ",i,"error",errorp, "controlador", controladorp,"salida sistema ", salidap, "acum", error_acum)
-              }
-            }
-            let dictionary_data = {
-              "data": salidas,
-              "time": tiempos,
-              "setpoint": setpoints
-            };
-             return dictionary_data
-     
+  
+      let vSEy =1;
+      let yTr = "Y"; yTr = yTr.toUpperCase()
+      let yT = eval( yTr );
+      let ycIncr;
+
+      cccSW = cccSW + 1 / ( w * w );
+      cccAv = cccAv + yc / ( w * w );
+      cccSD = cccSD + ( Y - ccAv ) * ( Y - ccAv ) / ( w * w );
+  
+      for (let j=0; j<nPar; j++) {
+        let Save = Par[j]; if(Save==0) {var Del = 0.0001} else {var Del = Save/1000}
+        Par[j] = Save + Del;
+       
+        A=Par[0]; 
+        P1=A; 
+        ycIncr = eval( funcionFirOrder.toUpperCase() )
+        Der[j] = ( ycIncr - yc ) / ( Del * w );
+        Par[j] = Save;  
+        A=Par[0];
+        P1=A; 
+      }
+      Der[nPar] = (Y - yc) / w;
+      SSq = SSq + Der[nPar]*Der[nPar];
+      for (j=0; j<nPar; j++) {
+        for (k=0; k<=nPar; k++) {
+          Arr[ix(j,k)] = Arr[ix(j,k)] + Der[j] * Der[k]
+        } 
+      }
+
+      let SEest = 0;
+      for (j=0; j<nPar; j++) {
+        SEest = SEest + Cov[ix(j,j)] * Der[j] * Der[j];
+        for (k=j+1; k<nPar; k++) {
+          SEest = SEest + 2 * Cov[ix(j,k)] * Der[j] * Der[k];
+        } 
+      }
+      SEest=w*SQRT(SEest);
+      let yco=yc; let ycl=yc-St95*SEest; let ych=yc+St95*SEest;
+      //o = o + (Fmt(yo)+Fmt(yco)+Fmt(yo-yco)+Fmt(SEest)+Fmt(ycl)+Fmt(ych)+NL)
+      
+    }
+    ccSW = cccSW;
+    ccAv = cccAv / ccSW;
+    ccSD = cccSD / ccSW;
+   
+    let GenR2 = (ccSD-(SSq/ccSW))/ccSD;
+    
+    let GenR = SQRT(GenR2);
+    
+    let RMS = SQRT(SSq/Math.max(1,dgfr));
+
+   /* console.log("Corr. Coeff. = " + vFmt(GenR) + "; r*r = " + vFmt(GenR2))
+    console.log( NL + "RMS Error = " + vFmt(RMS) + "; d.f = " + dgfr + "; SSq = " + vFmt(SSq) + NL); */
+    localStorage.setItem("coeff",vFmt(GenR));
+    localStorage.setItem("RMS",vFmt(RMS));
+
+
+    for (i=0; i<nPar; i++) { 
+      let s = Arr[ix(i,i)]; Arr[ix(i,i)] = 1;
+      for (k=0; k<=nPar; k++) { 
+        Arr[ix(i,k)] = Arr[ix(i,k)] / s; 
+      }
+      for (j=0; j<nPar; j++) {
+        if (i!=j) {
+          s = Arr[ix(j,i)]; Arr[ix(j,i)] = 0;
+          for (k=0; k<=nPar; k++) {
+            Arr[ix(j,k)] = Arr[ix(j,k)] - s * Arr[ix(i,k)];
           }
-          canvas.id = "myChart";
-          canvas.width = 800;
-          canvas.height = 300;
-          canvas.className = "my-4 chartjs-render-monitor";
-          mainModal.appendChild(canvas);
-          let ctx = document.getElementById("myChart");
-          let myChart = new Chart(ctx, {
-            type: "line",
-            data: {
-              labels: Control().time,
-              datasets: [
-                {
-                  data: Control().data,
-                  label: "PV",
-                  lineTension: 0,
-                  backgroundColor: "transparent",
-                  borderColor: "#D83A18",
-                  borderWidth: 2,
-                  pointBackgroundColor: "#D83A18",
-                  pointBorderColor: "transparent",
-                  pointBackgroundColor: "transparent",
-                  pointBorderWidth: 0
-                },
-                {
-                  data: Control().setpoint,
-                  label: "Set Point",
-                  lineTension: 0,
-                  backgroundColor: "transparent",
-                  borderColor: "#007bff",
-                  borderWidth: 2,
-                  pointBackgroundColor: "#007bff",
-                  pointBorderColor: "transparent",
-                  pointBackgroundColor: "transparent",
-                  pointBorderWidth: 0
-                }
-              ]
-            },
-            options: {
-              scales: {
-                yAxes: [
-                  {
-                    ticks: {
-                      beginAtZero: result_cascade_plant
-                    }
-                  }
-                ]
-              },
-              legend: {
-                display: true
-              }
-            }
-          });
+        } 
+      } 
+    }
+  
+    let FRelax =1
+    o = o + ( NL + "Parameter Estimates..." + NL );
+    for( i=0; i<nPar; i++) {
+      Par[i] = Par[i] + FRelax * Arr[ix(i,nPar)];
+      SEP[i] = RMS * SQRT(Arr[ix(i,i)]);
+      localStorage.setItem("tao",vFmt(Par[i]));
+      o = o + ("p"+(i+1)+"="+vFmt(Par[i])+" +/- "+vFmt(SEP[i])+"; p="+Fmt(STUDT(Par[i]/SEP[i],dgfr))+NL)
+    }
+
+  return datos;
+  }
+    //const tao=1.5*(parseFloat(localStorage.getItem("tao"))-taoValue().Smith28);
+    const tao=parseFloat(localStorage.getItem("tao"));
+    const gain=ConstantsFirstOrder().gain;
+    localStorage.setItem("gain",gain);
+    //const delay= taoValue().Smith63 -tao;
+    const delay= ConstantsFirstOrder().delayValue;
+
+    function parametersZiegler() {
+      let parameter={
+        "Kp": Math.abs( 1.2*(tao/(gain*delay))),
+        "Ti": Math.abs(2*delay),
+        "Td":Math.abs(0.5*delay)    
+      }
+      localStorage.setItem("zieglerkp",parameter.Kp);
+      localStorage.setItem("zieglerti",parameter.Ti);
+      localStorage.setItem("zieglertd",parameter.Td);
+      return parameter;
+    }
+
+    function parametersCohen() {
+      let parameter={
+        "Kp": Math.abs((1.35/gain)*((tao/delay)+0.185)),
+        "Ti": Math.abs((2.5*delay) *((tao+0.185*delay)/(tao+0.611*delay))),
+        "Td":Math.abs(0.370 *(tao/(tao+0.185*delay)))    
+      }
+      localStorage.setItem("cohenkp",parameter.Kp);
+      localStorage.setItem("cohenti",parameter.Ti);
+      localStorage.setItem("cohentd",parameter.Td);
+      return parameter;
+    }
+
+    function parametersAmigo() {
+      let parameter={
+        "Kp": Math.abs((1/gain)*(0.2+0.45*(tao/delay))),
+        "Ti": Math.abs(((0.4*delay+0.8*tao)/(delay+0.1*tao))),
+        "Td":Math.abs(((0.5 *tao)/((0.3*delay)+tao))*delay)   
+      }
+      localStorage.setItem("amigokp",parameter.Kp);
+      localStorage.setItem("amigoti",parameter.Ti);
+      localStorage.setItem("amigotd",parameter.Td);
+      return parameter;
+    }
+
+    function Transformz() {
+      let parameter={
+        "qo": parametersZiegler().Kp*(1+(1/(2*parametersZiegler().Ti))+(parametersZiegler().Td/1)),
+        "q1": - parametersZiegler().Kp*(1-(1/(2*parametersZiegler().Ti))+((parametersZiegler().Td*2)/1)),
+        "q2":(parametersZiegler().Kp*parametersZiegler().Td )/1  
+      }
+      return parameter;
+
+    }
+    function updateEdge(){
+      let ControlRoot = graph.getModel().getCell("control");
+			let ControlEdges = graph.getModel().getChildVertices(ControlRoot);
+			for (let i = 0; i < ControlEdges.length; i++) {
+				let source = ControlEdges[i];
+        let type = source.getAttribute("type");
+				if(type == "controller"){
+          source.setAttribute("Proportional",parametersZiegler().Kp.toFixed(2))
+          source.setAttribute("Integral",parametersZiegler().Ti.toFixed(2))
+          source.setAttribute("Derivate",parametersZiegler().Td.toFixed(2))
         }
       }
     }
+    
+    function canvasGraph (titleHeader,labels,datacsv,output){
+      updateEdge();
+      let header = modalH3(titleHeader);
+      let body=""
+      let footer = modalButton(("return"),function(){DataContinuous();}) 
+      setupModal(header,body,footer);
+      let transferFuncion; 
+      localStorage.setItem("tiempos",timeList);
+
+      if(idDelay==true && idDiscrete==false ) {
+        transferFuncion="Gp(s) = \\frac{"+ gain.toFixed(2)+"* e^-"+ delay+"s}{"+tao.toFixed(2)+"s  "+"  +1}"
+      }
+      else if (idDelay==false && idDiscrete==false) {
+        transferFuncion="Gp(s) = \\frac{"+ gain.toFixed(2)+"s}{"+tao.toFixed(2)+"s  "+"  +1}"
+      }
+      if(idDiscrete==true){
+        transferFuncion="D(z) = \\frac{"+ Transformz().qo.toFixed(2)+" z^2"+" " +Transformz().q1.toFixed(2)+" z" +" + "+ 
+        Transformz().q2.toFixed(2)+"}{"+"z"+"(z-1)"+"}"
+      }
+
+      var DataDisplay = [transferFuncion,"Ziegler–Nichols:  K:"+ parametersZiegler().Kp.toFixed(2)+"\\"+"   " +
+      " Ti:"+ parametersZiegler().Ti.toFixed(2)+" "+" Td:"+ parametersZiegler().Td.toFixed(2)+" ",
+      "Cohen-Coon:  K:"+ parametersCohen().Kp.toFixed(2)+"\\"+"   " +
+      " Ti:"+ parametersCohen().Ti.toFixed(2)+" "+" Td:"+ parametersCohen().Td.toFixed(2)+" ",
+      "Amigo:  K:"+ parametersAmigo().Kp.toFixed(2)+"   " +
+      " Ti:"+ parametersAmigo().Ti.toFixed(2)+" "+" Td:"+ parametersAmigo().Td.toFixed(2),
+        ];
+       DataDisplay.forEach(myFunction);
+
+     function myFunction(item, index) {
+          let transferFunction=  document.createElement("div");
+          mainModal.appendChild(transferFunction);
+          transferFunction.id=index;
+          transferFunction.style.height = "23px";
+          transferFunction.innerHTML = "\\["+item+"\\]";
+          MathJax.Hub.Queue(["Typeset",MathJax.Hub,transferFunction]);
+          }
+
+
+      let canvas = document.createElement("canvas");
+      canvas.id = "myChart";
+      canvas.width = 500;
+      canvas.height = 250;
+      canvas.className = "my-4 chartjs-render-monitor";
+      mainModal.appendChild(canvas);
+      let ctx = document.getElementById("myChart");
+      let myChart = new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              data: datacsv,//setInterval(function(){ UploadData(); }, 3000),
+              label: "Data Plant",
+              lineTension: 0,
+              backgroundColor: "transparent",
+              borderColor: "#D83A18",
+              borderWidth: 2,
+              pointBackgroundColor: "#D83A18",
+              pointBorderColor: "transparent",
+              pointBackgroundColor: "transparent",
+              pointBorderWidth: 0
+            },
+            {
+              data: output,
+              label: "Data Transfer Function",
+              lineTension: 0,
+              backgroundColor: "transparent",
+              borderColor: "#007bff",
+              borderWidth: 2,
+              pointBackgroundColor: "#007bff",
+              pointBorderColor: "transparent",
+              pointBackgroundColor: "transparent",
+              pointBorderWidth: 0
+            }
+          ]
+        },
+        options: {
+          title: {
+            display: true,
+            text: ['Corr. Coeff :'+localStorage.getItem("coeff")/*+'  RMS :'+localStorage.getItem("RMS")*/],
+          },
+        }
+      });
+      return setupModal;
+      }
+
+    return canvasGraph("Experimental Result",timeList,dataList,nolinearProcess());
+  }
+          
+  function controlllerOutput(){
+    let tiemposlocal=[];
+    tiemposlocal=localStorage.getItem("tiempos")
+    var bx = tiemposlocal.split(',').map(function(item) {
+      return parseFloat(item);
+    });
+   
+    let error;
+    let errorant=0;
+    let error_acum=0;
+    let sp=1;
+    let tm=1000;
+    let controlador=0;
+    //let a=-Math.exp(-1/parseFloat(localStorage.getItem("tao")));
+    //let b=parseFloat(localStorage.getItem("gain"))*(1+a);
+    let a=-Math.exp(-1/2.3)
+            let b=(1.32)*(1+a)
+    let output=(0.52)*(1-Math.exp(-1/2))
+    let controladores =[];
+    let salidap=0;
+    let salidas=[];
+    let tiempos=[];
+    let setpoints=[];
+
+   
+    for (let i = 0; i < 200; i++) {
+      (i<1) ? salidap=0 : salidap=parseFloat((controladores[i-1]*b-(a*salidap)));
+        error=sp-salidap;
+        error_acum=error_acum+parseFloat(error);
+        controlador=(0.1*error)+(error_acum*(1/parseFloat(localStorage.getItem("zieglerti"))))+(0*(errorant-error));
+        controladores.push(controlador);
+        tiempos.push(i);
+        salidas.push(salidap);
+        setpoints.push(sp);
+    }
+    let param={
+      "time":tiempos,
+      "output":salidas,
+      "setpoint":setpoints
+    }
+  return param;
+}
+
+    function control(){
+      const mainModal = document.getElementById("main_modal_body");
+      let header = modalH3("test");
+      let body=""
+      let footer = modalButton(("return"),function(){DataContinuous();}) 
+      setupModal(header,body,footer);
+      let canvas = document.createElement("canvas");
+      canvas.id = "myChart";
+      canvas.width = 500;
+      canvas.height = 250;
+      canvas.className = "my-4 chartjs-render-monitor";
+      mainModal.appendChild(canvas);
+      let ctx = document.getElementById("myChart");
+      let myChart = new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: controlllerOutput().time,
+          datasets: [
+            {
+              data: controlllerOutput().output,//setInterval(function(){ UploadData(); }, 3000),
+              label: "Step Response",
+              lineTension: 0,
+              backgroundColor: "transparent",
+              borderColor: "#D83A18",
+              borderWidth: 2,
+              pointBackgroundColor: "#D83A18",
+              pointBorderColor: "transparent",
+              pointBackgroundColor: "transparent",
+              pointBorderWidth: 0
+            },
+            {
+              data: controlllerOutput().setpoint,
+              label: "Setpoint",
+              lineTension: 0,
+              backgroundColor: "transparent",
+              borderColor: "#007bff",
+              borderWidth: 2,
+              pointBackgroundColor: "#007bff",
+              pointBorderColor: "transparent",
+              pointBackgroundColor: "transparent",
+              pointBorderWidth: 0
+            }
+          ]
+        },
+        options: {
+          title: {
+            display: true,
+          },
+        }
+      });
+      return setupModal;
+      }
 
   let controlAction = findControlAction(graph)
   HideControlElements(graph, controlAction);
   function findControlAction(graph){
     //se busca el control action en la url
     // let url = document.URL;  
-    // var captured = /controlAction=([^&]+)/.exec(url)[1]; // Value is in [1] ('384' in our case)
-    // var controlAction = captured ? captured : 'myDefaultValue'; 
+    // let captured = /controlAction=([^&]+)/.exec(url)[1]; // Value is in [1] ('384' in our case)
+    // let controlAction = captured ? captured : 'myDefaultValue'; 
  
     //se busca el controlaction en el local storage y si no existe se muestra el primero
     let controlActionLS = localStorage['adaptation_binding_state_hardware_controlAction']; 

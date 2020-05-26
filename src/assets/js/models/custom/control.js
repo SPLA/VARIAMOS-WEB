@@ -157,6 +157,7 @@ let controlMain = function controlMain(graph)
 		let labels={};
 		labels={
             "summingPoint":"Direction",
+            "branchpoint":"Direction",
 		};
 		return labels;
 	}

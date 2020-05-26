@@ -1,8 +1,6 @@
 <template>
   <div>
-    <a @click="test_micro()" class="dropdown-item">{{ $t("test_micro") }}</a>
-    <a @click="websocket_test()" class="dropdown-item">{{ $t("websocket_test") }}</a>
-    <a @click="send_message()" class="dropdown-item">{{ $t("send_message") }}</a>
+    <a @click="test_micro()" class="dropdown-item">{{ $t("control_data_acquisition") }}</a>
   </div>
 </template>
 <script>
@@ -32,12 +30,34 @@ export default {
     }
   },
   methods: {
-
     test_micro(){
-       let mainModal = document.getElementById("main_modal_body");
-        let header = modalH3("Test ");
-      let body=""
-      let footer = modalButton(("Send"),function(){enviar()}) 
+      axios.post(localStorage["domain_implementation_main_path"]+'Control/saveBD', 0)
+      let mainModal = document.getElementById("main_modal_body");
+      let header = modalH3("Test ");
+      let default_vals = "0";
+      let texts = [("Setpoint: ")];
+      const inputs = ["setpoint"];
+      let body = modalInputTexts(texts, inputs, default_vals);
+      let footer = [];
+      let name;
+      footer.push(modalButton("iniciar", function() { 
+        setInterval(getData, 500);
+        document.getElementById("iniciar").disabled = true;
+        }));
+      footer.push(modalButton("enviar", function(){
+      enviar();
+      }));
+      footer.push(modalButton("exportar", function() { 
+       exportCsv();
+        
+        }));
+      footer.push(modalButton("enviar", function(){
+      enviar();
+      }));
+      footer.push(modalButton("enviar", function(){
+      reset();
+      }));
+     // let footer = modalButton(("Send"),function(){enviar()}) 
       setupModal(header,body,footer);
       let canvas = document.createElement("canvas");
       canvas.id = "myChart";
@@ -45,122 +65,198 @@ export default {
       canvas.height = 280;
       canvas.className = "my-4 chartjs-render-monitor";
       mainModal.appendChild(canvas);
-     let ctx = document.getElementById("myChart");
-    let myChart = new Chart(ctx, {
-    type: 'line',
-      data: {
-    labels: [],
-    datasets: [{
-      data: [],
-      borderWidth: 1,
-      borderColor:'#00c0ef',
-      label: 'liveCount',
-    }]
-  },
-  options: {
-    responsive: true,
-    title: {
-      display: true,
-      text: "Chart.js - Dynamically Update Chart Via Axios Requests",
-    },
-    legend: {
-      display: false
-    },
-    scales: {
-      yAxes: [{
-        ticks: {
-          beginAtZero: true,
-        }
-      }]
-    }
-  }
-});
-
-    var getData = function() {
-      if (localStorage["domain_implementation_main_path"]) {
-       this.errors=[];
-       axios.get(localStorage["domain_implementation_main_path"]+'NewMicro/getData')
-       .then(response => {
-         console.log(response.data)
-         myChart.data.labels.push("Post " + response.data);
-          myChart.data.datasets[0].data.push(response.data);
-          myChart.update();
-       })
-       .catch(e => {
-         this.errors.push(e);
-         var c_header = modalH3(this.$t("modal_error"),"error");
-         var c_body = modalSimpleText(e + this.$t("model_actions_backend_problem"));
-         setupModal(c_header,c_body);
-       });
-     }else{
-       var c_header = modalH3(this.$t("modal_error"),"error");
-       var c_body = modalSimpleText(this.$t("verification_path_problem"));
-       setupModal(c_header,c_body);
-     }
-};
-  setInterval(getData, 3000);
-
-  function  enviar()
-  {
-    let errors=[] //errors
-     if (localStorage["domain_implementation_main_path"]) {
-       errors=[];
-       axios.post(localStorage["domain_implementation_main_path"]+'NewMicro/sendData', {
-      data: "dato desde variamos Web"})
-       .then(response => {
-         console.log("enviado");
-       })
-       .catch(e => {
-         this.errors.push(e);
-         var c_header = modalH3(this.$t("modal_error"),"error");
-         var c_body = modalSimpleText(e + this.$t("model_actions_backend_problem"));
-         setupModal(c_header,c_body);
-       });
-     }else{
-       var c_header = modalH3(this.$t("modal_error"),"error");
-       var c_body = modalSimpleText(this.$t("verification_path_problem"));
-       setupModal(c_header,c_body);
-     }
-  }
-    
-   },
-   websocket_test(){
-      this.socket = new SockJS("http://localhost:8080/gs-guide-websocket");
-      this.stompClient = Stomp.over(this.socket);
-      this.stompClient.connect(
-        {},
-        frame => {
-          this.connected = true;
-         // console.log(frame);
-          this.stompClient.subscribe("/topic/greetings", tick => {
-            //console.log(this.stompClient);
-           alert(JSON.parse(tick.body).content);
-          
-          });
+      let ctx = document.getElementById("myChart");
+      let myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: [],
+          datasets: [{
+            data: [],
+            label: "PV",
+            borderWidth: 1,
+            borderColor:'#00c0ef',
+            label: 'liveCount',
+          },
+          {
+            data: [],
+            label: "Setpoint",
+            borderWidth: 1,
+            borderColor:'#FF3333',
+            label: 'liveCount',
+          }]
         },
-        error => {
-          console.log(error);
-          this.connected = false;
+        options: {
+          responsive: true,
+        title: {
+          display: true,
+          text: "",
+        },
+        legend: {
+          display: false
+        },
+        scales: {
+          yAxes: [{
+            ticks: {
+              beginAtZero: true,
+            }
+          }]
         }
-      );
-   },
-   send_message(){
+      }
+    });
+      function reset()
+      {
+        myChart.destroy();
+        myChart = new Chart(ctx, {
+        type: 'line',
+          data: {
+            labels: [],
+            datasets: [{
+              data: [],
+              label: "PV",
+              borderWidth: 1,
+              borderColor:'#00c0ef',
+              label: 'liveCount',
+            },
+            {
+              data: [],
+              label: "Setpoint",
+              borderWidth: 1,
+              borderColor:'#FF3333',
+              label: 'liveCount',
+            }]
+          },
+            options: {
+              responsive: true,
+              title: {
+                display: true,
+                text: "",
+              },
+              legend: {
+                display: false
+              },
+              scales: {
+                yAxes: [{
+                  ticks: {
+                    beginAtZero: true,
+                  }
+                }]
+              }
+            }
+        });
+      }
+      var getData = function() {
+        if (localStorage["domain_implementation_main_path"]) {
+        this.errors=[];
+        axios.get(localStorage["domain_implementation_main_path"]+'Control/getData')
+        .then(response => {
+          myChart.data.labels.push((response.data.times));
+            myChart.data.datasets[0].data.push(response.data.data);
+            myChart.data.datasets[1].data.push(response.data.set);
+            name=response.data.name;
+              myChart.update();        
+          })
+        }
+      };
+  
+    function  enviar()
+    {
+      const setpoint = document.getElementById('setpoint').value;
+      let errors=[] //errors
+      if (localStorage["domain_implementation_main_path"]) {
+        errors=[];
+        axios.post(localStorage["domain_implementation_main_path"]+'Control/saveBD', setpoint)
+        .then(response => {
+          console.log("enviado");
+        })
+        .catch(e => {
+          this.errors.push(e);
+          var c_header = modalH3(this.$t("modal_error"),"error");
+          var c_body = modalSimpleText(e + this.$t("model_actions_backend_problem"));
+          setupModal(c_header,c_body);
+        });
+      }else{
+        var c_header = modalH3(this.$t("modal_error"),"error");
+        var c_body = modalSimpleText(this.$t("verification_path_problem"));
+        setupModal(c_header,c_body);
+      }
+      }
+    function exportCsv(){
+      let sets=myChart.data.datasets[1].data;
+      let output=myChart.data.datasets[0].data;
+      let times=myChart.data.labels;
+      let itemSet=sets.indexOf( parseInt(document.getElementById('setpoint').value));
+      let multiples=[0];
+      let datacsv;
+      let setcsv;
+
+      function stedyState(list){
+      let responseItems=list.length-itemSet
+      // from the change of setpoint you bring the previous 6 items
+      var result = list.slice(-(6+responseItems),itemSet);
+      return result;
+      }
+        
+      let previousData=stedyState(output);
+      let previousSet=stedyState(sets);
+      try{
+        let removeOffset=function ( )
+        { 
+          const average= previousData.reduce((a, b) => (a + b)) / output.length;
+
+          const nearValue= previousData.reduce((a, b) => {
+          return Math.abs(b - average) < Math.abs(a - average) ? b : a;
+          });
+
+          const initialScope= previousData.map(item => item=0 );
+
+        return initialScope;
+        }
+        let outputLas=output.slice(itemSet);
+        let setsLas=sets.slice(itemSet);
+
+        setcsv = previousSet.concat(setsLas)  
+        const simu= outputLas.map(item => item - outputLas[0] );
+        datacsv=removeOffset().concat(simu);
 
       
-     if (this.stompClient && this.stompClient.connected) {
-       
-        const msg = "Andres";
-        //console.log(JSON.stringify(msg));
-        this.stompClient.send("/app/hello", JSON.stringify(msg), {});
+        let sum=0;
+          for(var i=0,j=output.length;i<j;i++){
+            multiples.push((sum += 0.5).toFixed(2))
+          }
+
+        var rows = [];
+        for(var i=0, j=datacsv.length;i<j;i++){
+            rows.push([multiples[i],datacsv[i],setcsv[i] ]);
+          }
+      
+        let csvContent = "data:text/csv;charset=utf-8," 
+          + rows.map(e => e.join(";")).join("\n");
+          var encodedUri = encodeURI(csvContent);
+          var link = document.createElement("a");
+          link.setAttribute("href", encodedUri);
+          link.setAttribute("download", "my_data.csv");
+          document.body.appendChild(link); // Required for FF
+
+          link.click(); 
       }
-
-    
-   }
-
-   
-
-
-  }
+      catch  {
+        alert('Error: Setpoint already registered, restart data acquisition');
+      } 
+      let dictionaryData = {
+                "time": multiples,
+                "data": datacsv,
+                "setpoint":setcsv,
+                "name": name
+              };
+      if (localStorage["domain_implementation_main_path"]) {
+        errors=[];
+        axios.post(localStorage["domain_implementation_main_path"]+'Control/saveBD', dictionaryData)
+        .then(response => {
+          console.log("enviado");
+        })}      
+      }  
+    }, 
+  }  
 };
 </script>
 
