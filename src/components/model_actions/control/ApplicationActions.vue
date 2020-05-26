@@ -11,10 +11,6 @@ import {
   modalButton,
   modalSimpleText
 } from "@/assets/js/common/util.js";
-import SockJS from "sockjs-client";
-import Stomp from "webstomp-client";
-import axios from "axios";
-
 
 export default {
   data: function() {
