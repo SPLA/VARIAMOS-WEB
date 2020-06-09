@@ -114,15 +114,18 @@ function ModalControl(texts,inputs,default_vals){
     }
     function SistemIdentification(){
       let dataList=CollectDataCsv().data;
-      dataList =zoomData(dataList)
       let timeList=CollectDataCsv().time;  
-      timeList =zoomData(timeList);
-      let nuevo=[0];
-      let sum=0;
-      for(var i=0,j=timeList.length-1;i<j;i++){
-        nuevo.push(parseFloat((sum += 0.5).toFixed(2)))
+      if(CollectDataCsv().setpoint.length>0)
+      {
+        dataList =zoomData(dataList)
+        timeList =zoomData(timeList);
+        let nuevo=[0];
+        let sum=0;
+          for(var i=0,j=timeList.length-1;i<j;i++){
+            nuevo.push(parseFloat((sum += 0.5).toFixed(2)))
+          }
+        timeList=nuevo;
       }
-      timeList=nuevo;
 
       const deltaValue = document.getElementById('idDeltaU').value;
       const idDelay= document.getElementById('idDelay').checked;
@@ -142,12 +145,19 @@ function ModalControl(texts,inputs,default_vals){
               firstColumn = allTextLines[i].split(";")[1];
               secondColumn = allTextLines[i].split(";")[0];
               threeColumn = allTextLines[i].split(";")[2];
-              if (firstColumn!=null && secondColumn!=null  && threeColumn!=null) {
+              if (firstColumn!=null && secondColumn!=null && threeColumn!=null ) {
                 listData.push(parseFloat(firstColumn.replace(",", ".")));
                 listTime.push(parseFloat(secondColumn.replace(",", ".")));
                listSetpoint.push(parseFloat(threeColumn.replace(",", ".")));
               }
+              else{
+                listData.push(parseFloat(firstColumn.replace(",", ".")));
+                listTime.push(parseFloat(secondColumn.replace(",", ".")));
+              }
             }
+
+         
+            
             let dictionaryData = {
               "data": listData,
               "time": listTime,
@@ -164,7 +174,7 @@ function ModalControl(texts,inputs,default_vals){
       var masculinos = list.slice(item);
 
       return masculinos;
-    }   
+    } 
    
     function positionData(){
       let result;
@@ -241,7 +251,8 @@ function ModalControl(texts,inputs,default_vals){
     //Curve Fitting//
   function nolinearProcess(){  
     let Pi=Math.PI; let PID2=Pi/2; let Pi2=2*Pi 
-    let funcionFirOrder=  "(( "+ConstantsFirstOrder().gain+"  * "+deltaValue +") * (1-Exp( - (t-"+ConstantsFirstOrder().delayValue+" ) / a )))+ D " 
+    let g=ConstantsFirstOrder().gain+0.5
+    let funcionFirOrder=  "(( "+ConstantsFirstOrder().gain+"  * "+deltaValue +") * (1-Exp( - (t-"+ConstantsFirstOrder().delayValue+" ) / a )))+ D "  
    // let funcionFirOrder=  "(( "+ConstantsFirstOrder().gain+"  * "+deltaValue +") * (1-Exp(  -t/ a )))+ D " 
    
   
@@ -534,11 +545,14 @@ function ModalControl(texts,inputs,default_vals){
     //const delay= taoValue().Smith63 -tao;
     const delay= ConstantsFirstOrder().delayValue;
 
+    let lastData=dataList[dataList.length - 1];
+    let firstData=dataList[0];
+
     function parametersZiegler() {
       let parameter={
         "Kp": Math.abs( 1.2*(tao/(gain*delay))),
         "Ti": Math.abs(2*delay),
-        "Td":Math.abs(0.5*delay)    
+        "Td":Math.abs(0.5*delay)
       }
       localStorage.setItem("zieglerkp",parameter.Kp);
       localStorage.setItem("zieglerti",parameter.Ti);
@@ -547,17 +561,22 @@ function ModalControl(texts,inputs,default_vals){
     }
 
     function parametersCohen() {
-      let parameter={
+     /* let parameter={
         "Kp": Math.abs((1.35/gain)*((tao/delay)+0.185)),
         "Ti": Math.abs((2.5*delay) *((tao+0.185*delay)/(tao+0.611*delay))),
         "Td":Math.abs(0.370 *(tao/(tao+0.185*delay)))    
+      }*/
+      let parameter={
+        "Kp": (deltaValue/(lastData-firstData))*0.5,
+        "Ti": (deltaValue/(lastData-firstData))*0.25,
+      //"Ti": Math.abs(2*delay),
+        "Td":Math.abs(0.5*delay) 
       }
       localStorage.setItem("cohenkp",parameter.Kp);
       localStorage.setItem("cohenti",parameter.Ti);
       localStorage.setItem("cohentd",parameter.Td);
       return parameter;
     }
-
     function parametersAmigo() {
       let parameter={
         "Kp": Math.abs((1/gain)*(0.2+0.45*(tao/delay))),
@@ -586,9 +605,9 @@ function ModalControl(texts,inputs,default_vals){
 				let source = ControlEdges[i];
         let type = source.getAttribute("type");
 				if(type == "controller"){
-          source.setAttribute("Proportional",parametersZiegler().Kp.toFixed(2))
-          source.setAttribute("Integral",parametersZiegler().Ti.toFixed(2))
-          source.setAttribute("Derivate",parametersZiegler().Td.toFixed(2))
+          source.setAttribute("Proportional",parametersCohen().Kp.toFixed(2))
+          source.setAttribute("Integral",(parametersCohen().Ti.toFixed(2)))
+          source.setAttribute("Derivate",parametersCohen().Td.toFixed(2))
         }
       }
     }
@@ -646,7 +665,7 @@ function ModalControl(texts,inputs,default_vals){
           datasets: [
             {
               data: datacsv,//setInterval(function(){ UploadData(); }, 3000),
-              label: "Data Plant",
+              label: "Process Data",
               lineTension: 0,
               backgroundColor: "transparent",
               borderColor: "#D83A18",
@@ -658,7 +677,7 @@ function ModalControl(texts,inputs,default_vals){
             },
             {
               data: output,
-              label: "Data Transfer Function",
+              label: "Estimated Data",
               lineTension: 0,
               backgroundColor: "transparent",
               borderColor: "#007bff",
@@ -703,13 +722,34 @@ function ModalControl(texts,inputs,default_vals){
     let salidas=[];
     let tiempos=[];
     let setpoints=[];
+    let propor=0
+   let  Integral=0;
 
+
+    let ControlRoot = graph.getModel().getCell("control");
+			let ControlEdges = graph.getModel().getChildVertices(ControlRoot);
+			for (let i = 0; i < ControlEdges.length; i++) {
+				let source = ControlEdges[i];
+        let type = source.getAttribute("type");
+				if(type == "controller"){
+          propor= source.getAttribute("Proportional")
+         Integral= source.getAttribute("Integral")
+          source.getAttribute("Derivate")
+           }
+
+      }
+     
+      let ran=getRndInteger();
+      function getRndInteger() {
+        return Math.floor(Math.random() * (0.4 - 0.01 + 1) ) + 0.01;
+      }
+      console.log(ran)
    
-    for (let i = 0; i < 200; i++) {
+    for (let i = 0; i < 50; i++) {
       (i<1) ? salidap=0 : salidap=parseFloat((controladores[i-1]*b-(a*salidap)));
         error=sp-salidap;
         error_acum=error_acum+parseFloat(error);
-        controlador=(0.1*error)+(error_acum*(1/parseFloat(localStorage.getItem("zieglerti"))))+(0*(errorant-error));
+        controlador=propor*error+(error_acum*Integral)+(0*(errorant-error));
         controladores.push(controlador);
         tiempos.push(i);
         salidas.push(salidap);
