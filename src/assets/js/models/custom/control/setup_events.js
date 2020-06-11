@@ -631,7 +631,6 @@ function ModalControl(texts,inputs,default_vals){
         transferFuncion="D(z) = \\frac{"+ Transformz().qo.toFixed(2)+" z^2"+" " +Transformz().q1.toFixed(2)+" z" +" + "+ 
         Transformz().q2.toFixed(2)+"}{"+"z"+"(z-1)"+"}"
       }
-
       var DataDisplay = [transferFuncion,"Ziegler–Nichols:  K:"+ parametersZiegler().Kp.toFixed(2)+"\\"+"   " +
       " Ti:"+ parametersZiegler().Ti.toFixed(2)+" "+" Td:"+ parametersZiegler().Td.toFixed(2)+" ",
       "Cohen-Coon:  K:"+ parametersCohen().Kp.toFixed(2)+"\\"+"   " +
@@ -709,7 +708,7 @@ function ModalControl(texts,inputs,default_vals){
       return parseFloat(item);
     });
    
-    let error;
+    let error=0;
     let errorant=0;
     let error_acum=0;
     let sp=1;
@@ -718,6 +717,7 @@ function ModalControl(texts,inputs,default_vals){
     let a=-Math.exp(-1/parseFloat(localStorage.getItem("tao")));
     let b=parseFloat(localStorage.getItem("gain"))*(1+a);
     let controladores =[];
+    console.log("b",b,"a",a)
     let salidap=0;
     let salidas=[];
     let tiempos=[];
@@ -746,11 +746,11 @@ function ModalControl(texts,inputs,default_vals){
       console.log(ran)
    
     for (let i = 0; i < 50; i++) {
-      (i<1) ? salidap=0 : salidap=parseFloat((controladores[i-1]*b-(a*salidap)));
         error=sp-salidap;
         error_acum=error_acum+parseFloat(error);
-        controlador=propor*error+(error_acum*Integral)+(0*(errorant-error));
+        controlador=0.03*error+(error_acum*0)+(0*(errorant-error));
         controladores.push(controlador);
+        (i<2) ? salidap=0 : salidap=parseFloat((controladores[i-1]*b-(a*salidap)));
         tiempos.push(i);
         salidas.push(salidap);
         setpoints.push(sp);
