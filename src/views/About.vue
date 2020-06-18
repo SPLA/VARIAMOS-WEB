@@ -62,6 +62,14 @@
         <span class="team-post"><a href="https://sites.google.com/view/yanwang/introduction" target="_blank">https://sites.google.com/view/yanwang/introduction</a></span>
       </div>
     </div>
+    <div class="team-info">
+      <img alt="" src="../assets/images/team/jasotov.jpg" class="pull-left">
+      <div class="pull-left">
+        <span class="team-name">{{ $t("about_team_jasotov") }}</span>
+        <span class="team-post">{{ $t("about_team_jasotov_desc") }}</span>
+        <span class="team-post"><a href="https://www.linkedin.com/in/jsoto25/" target="_blank">https://www.linkedin.com/in/jsoto25/</a></span>
+      </div>
+    </div>
 <!--
 
     <div class="team-info">
