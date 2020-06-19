@@ -11,7 +11,6 @@ import store from './store'
 import messages from './assets/js/common/messages'
 
 Vue.use(VueI18n)
-
 Vue.config.productionTip = false
 
 //Set variable on the global object.

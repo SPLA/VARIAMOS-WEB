@@ -1,7 +1,30 @@
 <shapes>
-<!-- begin adaptation states model -->
-<shape name="transition" aspect="variable">
+<shape name="state" aspect="variable" strokewidth="7" >
 	<background>
+		<strokecolor color="#333333"/>
+		<fillcolor color="#ffffff"/>
+		<ellipse x="0" y="0" w="100" h="100" />	
+		<fillstroke/>
+	</background>
+	<foreground>
+		<fillstroke/>
+	</foreground>
+</shape>
+<shape name="initialState" aspect="variable" strokewidth="14" >
+	<background>
+		<strokecolor color="#333333"/>
+		<fillcolor color="#ffffff"/>
+		<ellipse x="0" y="0" w="100" h="100" />	
+		<fillstroke/> 
+	</background>
+	<foreground>
+		<fillstroke/>
+	</foreground>
+</shape>
+<shape name="transition" aspect="variable" strokewidth="7" >
+	<background>
+		<strokecolor color="#333333"/>
+		<fillcolor color="#ffffff"/>
 		<path>
 			<move x="0" y="0"/> 
 			<line x="90" y="0"/> 
