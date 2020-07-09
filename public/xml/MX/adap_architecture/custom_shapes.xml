@@ -65,4 +65,12 @@
 		</foreground>
 	</shape>
 
+	<shape name="Perceive" aspect="fixed" strokewidth="inherit">
+		<background>
+		</background>
+		<foreground>
+			<image src="../images/models/adap_architecture/icons/perceive.png" x="-25" y="-25" w="150" h="150" />
+		</foreground>
+	</shape>
+
 </shapes>

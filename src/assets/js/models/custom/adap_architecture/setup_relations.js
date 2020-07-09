@@ -112,6 +112,9 @@ let setup_relations = function setup_relations(graph, relations, relation_styles
         else if (cell.source.value.nodeName == "sensor" && cell.target.value.nodeName == "resource"){
             styles = graph.insertVertex(cell, null, 'Label', 0, 0, 20, 14,'shape=Aggregation;labelBackgroundColor=#ffffff;labelPosition=left;spacingRight=2;align=right;');
         }
+        else if (cell.source.value.nodeName == "sensor" && cell.target.value.nodeName == "environment"){
+            styles = graph.insertVertex(cell, null, 'Label', 0, 0, 20, 14,'shape=Perceive;labelBackgroundColor=#ffffff;labelPosition=left;spacingRight=2;align=right;');
+        }
         else if (cell.source.value.nodeName == "actuator" && cell.target.value.nodeName == "device"){
             styles = graph.insertVertex(cell, null, 'Label', 0, 0, 20, 14,'shape=DataIn;labelBackgroundColor=#ffffff;labelPosition=left;spacingRight=2;align=right;');
         }

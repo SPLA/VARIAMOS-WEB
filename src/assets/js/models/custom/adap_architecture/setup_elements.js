@@ -91,6 +91,9 @@ let setupElements = function setupElements(graph, elements, customAttributes, cC
                     case "computer":
                         personalShapes(graph, 9, newCells[0]);
                         break;
+                    case "environment":
+                        personalShapes(graph, 10, newCells[0]);
+                        break;                        
                     default:
                         break;
                 }
@@ -208,6 +211,14 @@ let setupElements = function setupElements(graph, elements, customAttributes, cC
             graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, '#CCFFCC', [newCells]);
             overlayLeft = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/computer.png', 16, 16), 'Overlay tooltip');
             overlayRigth = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/cloudComputer.png', 16, 16), 'Overlay tooltip');
+            overlayLeft.offset = new mxPoint(10,10);
+
+        }
+        if(pos == 10 ){
+            //image frame
+            graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, '#CCFFBB', [newCells]);
+            overlayLeft = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/environment.png', 16, 16), 'Overlay tooltip');
+            overlayRigth = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/natural.png', 16, 16), 'Overlay tooltip');
             overlayLeft.offset = new mxPoint(10,10);
 
         }
