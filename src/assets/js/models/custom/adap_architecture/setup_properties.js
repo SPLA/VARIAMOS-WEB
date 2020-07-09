@@ -193,6 +193,9 @@ let setupProperties = function setupProperties(graph, properties_styles){
 									case 'wireless':
 										graph.getModel().setStyle(cell.children[i], 'shape=Wirless_comunication;labelBackgroundColor=#ffffff;labelPosition=left;spacingRight=2;align=right;fontStyle=0;');
 										break;
+									case 'perceive':
+										graph.getModel().setStyle(cell.children[i], 'shape=Perceive;labelBackgroundColor=#ffffff;labelPosition=left;spacingRight=2;align=right;fontStyle=0;');
+										break;										
 									default:
 										let edit = new mxCellAttributeChange(cell, attribute.nodeName,newValue);
 										graph.getModel().execute(edit);

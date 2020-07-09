@@ -20,11 +20,11 @@ let adapArchitectureMain = function adapArchitectureMain(graph)
 		graph.multiplicities = []; //reset multiplicities
 		graph.multiplicities.push(new mxMultiplicity(
 			true, 'layer', null, null, 1, 100, ['layer'],
-			'Only 2 targets allowed',
+			'Only 1 targets allowed',
 			'Invalid connection'));
 		graph.multiplicities.push(new mxMultiplicity(
 			true, 'device', null, null, 1, 100, ['device', 'computer', 'actuator', 'network'],
-			'Only 2 targets allowed',
+			'Only 4 targets allowed',
 			'Invalid connection'));
 		graph.multiplicities.push(new mxMultiplicity(
 			true, 'package', null, null, 1, 100, ['package'],
@@ -32,33 +32,36 @@ let adapArchitectureMain = function adapArchitectureMain(graph)
 			'Invalid connection'));
 		graph.multiplicities.push(new mxMultiplicity(
 			true, 'module', null, null, 1, 100, ['module'],
-			'Only 2 targets allowed',
+			'Only 1 targets allowed',
 			'Invalid connection'));	
 		graph.multiplicities.push(new mxMultiplicity(
 			true, 'software', null, null, 1, 100, ['software', 'computer','device'],
-			'Only 2 targets allowed',
+			'Only 3 targets allowed',
 			'Invalid connection'));	
 		graph.multiplicities.push(new mxMultiplicity(
-			true, 'sensor', null, null, 1, 100, ['actuator','device', 'computer', 'resource'],
-			'Only 2 targets allowed',
+			true, 'sensor', null, null, 1, 100, ['actuator','device', 'computer', 'resource', 'environment'],
+			'Only 4 targets allowed',
 			'Invalid connection'));	
 		graph.multiplicities.push(new mxMultiplicity(
 			true, 'actuator', null, null, 1, 100, ['device', 'computer', 'resource'],
-			'Only 2 targets allowed',
+			'Only 3 targets allowed',
 			'Invalid connection'));
 		graph.multiplicities.push(new mxMultiplicity(
 			true, 'resource', null, null, 1, 100, ['resource'],
-			'Only 2 targets allowed',
+			'Only 1 targets allowed',
 			'Invalid connection'));
 		graph.multiplicities.push(new mxMultiplicity(
 			true, 'computer', null, null, 1, 100, ['computer','actuator', 'network'],
-			'Only 2 targets allowed',
+			'Only 3 targets allowed',
 			'Invalid connection'));
 		graph.multiplicities.push(new mxMultiplicity(
 			true, 'network', null, null, 1, 100, ['network'],
+			'Only 1 targets allowed',
+			'Invalid connection'));
+		graph.multiplicities.push(new mxMultiplicity(
+			true, 'environment', null, null, 1, 100, [''],
 			'Only 2 targets allowed',
 			'Invalid connection'));
-
 	}
 
 	function adapArchitectureElements(){
@@ -74,7 +77,7 @@ let adapArchitectureMain = function adapArchitectureMain(graph)
 		let network = {src:paths+"network.png", wd:100, hg:40, style:"", type:"network", pname:"network"};
 		let computer = {src:paths+"computer.png", wd:100, hg:40, style:"", type:"computer", pname:"computer"};
 		let resource = {src:paths+"resource.png", wd:100, hg:40, style:"", type:"resource", pname:"resource"};
-		
+		let environment = {src:paths+"environment.png", wd:100, hg:40, style:"", type:"environment", pname:"environment"};	
 		let elements=[];
 
 		elements[0] = layer;
@@ -87,7 +90,7 @@ let adapArchitectureMain = function adapArchitectureMain(graph)
 		elements[7] = resource;
 		elements[8] = network;
 		elements[9] = computer;
-	
+		elements[10] = environment;
 		return elements;
 	}
 
@@ -169,6 +172,14 @@ let adapArchitectureMain = function adapArchitectureMain(graph)
 				"def_value":"false"
 			}]
 		};
+		attributes[9] = {
+			"types":["environment"],
+			"custom_attributes":[
+			{
+				"name":"environmentType",
+				"def_value":""
+			}]
+		};		
 		return attributes;
 	}
 
@@ -548,6 +559,23 @@ let adapArchitectureMain = function adapArchitectureMain(graph)
 				"def_value":"1"
 			}]
 		}
+		relations[22] = {
+			"source":["sensor"],
+			"rel_source_target":"and",
+			"target":["environment"],
+			"attributes":[{
+				"name":"relType_SS2E",
+				"def_value":""
+			},
+			{
+				"name":"sourceCardinality",
+				"def_value":"1"
+			},
+			{
+				"name":"destinationCardinality",
+				"def_value":"1"
+			}]
+		}		
 		return relations;
 	}
 
@@ -636,6 +664,15 @@ let adapArchitectureMain = function adapArchitectureMain(graph)
 					"onchange": adapArchitectureCustomMethods(6)
 				}
 			],
+			"environment":[
+				{
+					"name":"environmentType",
+					"attribute":"environmentType",
+					"input_type":"select",
+					"input_values":["System", "Natural", "Physical"],
+					"onchange": adapArchitectureCustomMethods(7)
+				}
+			],
 			"relation":[
 				{
 					"attribute":"sourceCardinality",
@@ -715,7 +752,7 @@ let adapArchitectureMain = function adapArchitectureMain(graph)
 				{
 					"attribute":"relType_R2R",
 					"input_type":"select",
-					"input_values":["resourcelink"]
+					"input_values":["resourcelink", "aggregation"]
 				},
 				{
 					"attribute":"relType_A2R",
@@ -743,9 +780,9 @@ let adapArchitectureMain = function adapArchitectureMain(graph)
 					"input_values":["aggregation"]
 				},
 				{
-					"attribute":"relType_R2R",
+					"attribute":"relType_SS2E",
 					"input_type":"select",
-					"input_values":["aggregation"]
+					"input_values":["perceive"]
 				},
 				{
 					"attribute":"relType_N2N",
@@ -1104,6 +1141,50 @@ let adapArchitectureMain = function adapArchitectureMain(graph)
 			graph.addCellOverlay(graph.getModel().getCell(this.name), overlayFrame);
 	
 		};
+		methods[7]=function(){
+			let select = document.getElementById('select-environmentType');
+			let overlayRigth = null;
+			switch (select.value) {
+				case "Natural":
+					graph.removeCellOverlay(graph.getModel().getCell(this.name));
+					overlayRigth = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/natural.png', 16, 16), 'Overlay tooltip');
+					break;
+				case "System":
+					graph.removeCellOverlay(graph.getModel().getCell(this.name));
+					overlayRigth = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/system.png', 16, 16), 'Overlay tooltip');
+					break;
+				case "Physical":
+					graph.removeCellOverlay(graph.getModel().getCell(this.name));
+					overlayRigth = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/physical.png', 16, 16), 'Overlay tooltip');
+					break;
+				default:
+					//overlayRigth = new mxCellOverlay(new mxImage('images/MX/check.png', 16, 16), 'Overlay tooltip');	
+					break;
+			}
+
+			//Coloco la imagen de la derecha
+			overlayRigth.align = mxConstants.ALIGN_RIGTH;
+			overlayRigth.verticalAlign = mxConstants.ALIGN_TOP;	
+			overlayRigth.offset = new mxPoint(-10,10);
+
+			//borde acomodable
+			let overlayFrame = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/environment.png', 16, 16), 'Overlay tooltip');
+
+			//Coloco la borde a la izquierda
+			overlayFrame.align = mxConstants.ALIGN_LEFT;
+			overlayFrame.verticalAlign = mxConstants.ALIGN_TOP;	
+			overlayFrame.offset = new mxPoint(10,10);
+
+			//pintar en la parte de arriba
+			graph.setCellStyles(mxConstants.STYLE_ALIGN, mxConstants.ALIGN_CENTER, [graph.getModel().getCell(this.name)]);
+			graph.setCellStyles(mxConstants.STYLE_VERTICAL_ALIGN, mxConstants.ALIGN_TOP, [graph.getModel().getCell(this.name)]);
+			graph.setCellStyles(mxConstants.STYLE_VERTICAL_LABEL_POSITION, mxConstants.ALIGN_top, [graph.getModel().getCell(this.name)]);
+
+			//agrego la imagen dentro de la celula en el overlay
+			graph.addCellOverlay(graph.getModel().getCell(this.name), overlayRigth);
+			graph.addCellOverlay(graph.getModel().getCell(this.name), overlayFrame);
+	
+		};		
 		return methods[pos];
 	}
 
@@ -1126,49 +1207,49 @@ let adapArchitectureMain = function adapArchitectureMain(graph)
 			"target":["module"],
 			"style": style_rel_add + style_rel_ppl
 		}
-		relations[0] = {
+		relations[2] = {
 			"source":["package"],
 			"rel_source_target":"and",
 			"target":["package"],
 			"style": style_rel_add + style_rel_ppl
 		}
-		relations[2] = {
+		relations[3] = {
 			"source":["device"],
 			"rel_source_target":"and",
 			"target":["actuator","device","computer", "network"],
 			"style": style_rel_add + style_rel_ppl
 		}
-		relations[3] = {
+		relations[4] = {
 			"source":["software"],
 			"rel_source_target":"and",
 			"target":["software","device", "computer"],
 			"style": style_rel_add + style_rel_ppl
 		}
-		relations[4] = {
+		relations[5] = {
 			"source":["sensor"],
 			"rel_source_target":"and",
-			"target":["device","computer", "resource"],
+			"target":["device","computer", "resource", "environment"],
 			"style": style_rel_add + style_rel_ppl
 		}
-		relations[5] = {
+		relations[6] = {
 			"source":["actuator"],
 			"rel_source_target":"and",
 			"target":["device","computer", "resource"],
 			"style": style_rel_add + style_rel_ppl
 		}
-		relations[6] = {
+		relations[7] = {
 			"source":["resource"],
 			"rel_source_target":"and",
 			"target":["resource"],
 			"style": style_rel_add + style_rel_ppl
 		}
-		relations[7] = {
+		relations[8] = {
 			"source":["computer"],
 			"rel_source_target":"and",
 			"target":["actuator", "network"],
 			"style": style_rel_add + style_rel_ppl
 		}
-		relations[8] = {
+		relations[9] = {
 			"source":["network"],
 			"rel_source_target":"and",
 			"target":["network"],
@@ -1646,7 +1727,6 @@ let adapArchitectureMain = function adapArchitectureMain(graph)
 						case "Analog":
 							overlayRigth = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/analog.png', 16, 16), 'Overlay tooltip');
 							break;
-		
 						default:
 							overlayRigth = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/digital.png', 16, 16), 'Overlay tooltip');
 							break;
@@ -1668,7 +1748,6 @@ let adapArchitectureMain = function adapArchitectureMain(graph)
 						case "Physical":
 							overlayRigth = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/physical.png', 16, 16), 'Overlay tooltip');
 							break;
-
 						default:
 							overlayRigth = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/cyber.png', 16, 16), 'Overlay tooltip');
 							break;
@@ -1722,6 +1801,25 @@ let adapArchitectureMain = function adapArchitectureMain(graph)
 							break;
 					}
 					break;
+				case "environment":
+					graph.removeCellOverlay(adap);
+					overlayLeft = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/environment.png', 16, 16), 'Overlay tooltip');
+					overlayLeft.offset = new mxPoint(10,10);
+					switch (adap.value.attributes[3].nodeValue) {
+						case "Natural":
+							overlayRigth = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/natural.png', 16, 16), 'Overlay tooltip');
+							break;
+						case "System":
+							overlayRigth = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/system.png', 16, 16), 'Overlay tooltip');
+							break;
+						case "Physical":
+							overlayRigth = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/physical.png', 16, 16), 'Overlay tooltip');
+							break;
+						default:
+							overlayRigth = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/natural.png', 16, 16), 'Overlay tooltip');	
+							break;
+					}
+					break;					
 				default:
 					break;
 			}	
