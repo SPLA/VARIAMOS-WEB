@@ -223,7 +223,11 @@ export default {
 
         var rows = [];
         for(var i=0, j=datacsv.length;i<j;i++){
-            rows.push([multiples[i],datacsv[i],setcsv[i] ]);
+          rows.push([multiples[i],datacsv[i],setcsv[i] ]);
+             /*multiples=multiples[i].toFixed(2).toString().replace(".", ",");
+             datacsv=multiples[i].toFixed(2).toString().replace(".", ",");
+             setcsv=multiples[i].toFixed(2).toString().replace(".", ",");
+            rows.push([multiples,datacsv,setcsv]);*/
           }
       
         let csvContent = "data:text/csv;charset=utf-8," 

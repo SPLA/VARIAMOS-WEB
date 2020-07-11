@@ -1,8 +1,8 @@
 import { setupModal, modalH3, modalButton } from '../../../common/util'
 
 let setupEvents = function setupEvents(graph){
-    const texts = ['Adjustment variable: ',
-    "Delay[𝜃](Time it takes for the system output to increase): ", "Discrete Time : "];
+    const texts = ['Input change applied (Corresponds to "control input" or "manipulated variable".This is a quantity that influences the behavior of the controlled system): ',
+    "Delay[𝜃] (This is the time interval during which no response to an input change is visible in a system’s output): ", "Discrete Time : "];
     const default_vals = ["","",""];
     const inputs=["idDeltaU",'idDelay',"idDiscrete"];
   //clean previous generated events
@@ -142,22 +142,20 @@ function ModalControl(texts,inputs,default_vals){
       let secondColumn;
       let threeColumn;
             for (let i=0; i<allTextLines.length; i++) {
-              firstColumn = allTextLines[i].split(";")[1];
-              secondColumn = allTextLines[i].split(";")[0];
-              threeColumn = allTextLines[i].split(";")[2];
-              if (firstColumn!=null && secondColumn!=null && threeColumn!=null ) {
-                listData.push(parseFloat(firstColumn.replace(",", ".")));
-                listTime.push(parseFloat(secondColumn.replace(",", ".")));
-               listSetpoint.push(parseFloat(threeColumn.replace(",", ".")));
+              firstColumn = parseFloat(allTextLines[i].split(";")[1]);
+              secondColumn = parseFloat(allTextLines[i].split(";")[0]);
+              threeColumn = parseFloat(allTextLines[i].split(";")[2]);
+
+              if(!isNaN(firstColumn) && !isNaN(secondColumn) )
+              {
+                listData.push(parseFloat(firstColumn.toFixed(2).toString().replace(",", ".")));
+                listTime.push(parseFloat(secondColumn.toFixed(2).toString().replace(",", ".")));
               }
-              else{
-                listData.push(parseFloat(firstColumn.replace(",", ".")));
-                listTime.push(parseFloat(secondColumn.replace(",", ".")));
+              if (!isNaN(threeColumn) ) {
+               listSetpoint.push(parseFloat(threeColumn.toFixed(2).toString().replace(",", ".")));
               }
             }
 
-         
-            
             let dictionaryData = {
               "data": listData,
               "time": listTime,
@@ -251,7 +249,7 @@ function ModalControl(texts,inputs,default_vals){
     //Curve Fitting//
   function nolinearProcess(){  
     let Pi=Math.PI; let PID2=Pi/2; let Pi2=2*Pi 
-    let g=ConstantsFirstOrder().gain+0.5
+    //let g=ConstantsFirstOrder().gain+0.5
     let funcionFirOrder=  "(( "+ConstantsFirstOrder().gain+"  * "+deltaValue +") * (1-Exp( - (t-"+ConstantsFirstOrder().delayValue+" ) / a )))+ D "  
    // let funcionFirOrder=  "(( "+ConstantsFirstOrder().gain+"  * "+deltaValue +") * (1-Exp(  -t/ a )))+ D " 
    
@@ -544,6 +542,7 @@ function ModalControl(texts,inputs,default_vals){
     localStorage.setItem("gain",gain);
     //const delay= taoValue().Smith63 -tao;
     const delay= ConstantsFirstOrder().delayValue;
+    console.log(delay)
 
     let lastData=dataList[dataList.length - 1];
     let firstData=dataList[0];
@@ -567,7 +566,7 @@ function ModalControl(texts,inputs,default_vals){
         "Td":Math.abs(0.370 *(tao/(tao+0.185*delay)))    
       }*/
       let parameter={
-        "Kp": (deltaValue/(lastData-firstData))*0.5,
+        "Kp": (deltaValue/(lastData-firstData))*0.2,
         "Ti": (deltaValue/(lastData-firstData))*0.25,
       //"Ti": Math.abs(2*delay),
         "Td":Math.abs(0.5*delay) 
@@ -738,17 +737,10 @@ function ModalControl(texts,inputs,default_vals){
            }
 
       }
-     
-      let ran=getRndInteger();
-      function getRndInteger() {
-        return Math.floor(Math.random() * (0.4 - 0.01 + 1) ) + 0.01;
-      }
-      console.log(ran)
-   
-    for (let i = 0; i < 50; i++) {
+    for (let i = 0; i < 100; i++) {
         error=sp-salidap;
         error_acum=error_acum+parseFloat(error);
-        controlador=0.03*error+(error_acum*0)+(0*(errorant-error));
+        controlador=propor*error+(error_acum*Integral)+(0*(errorant-error));
         controladores.push(controlador);
         (i<2) ? salidap=0 : salidap=parseFloat((controladores[i-1]*b-(a*salidap)));
         tiempos.push(i);
