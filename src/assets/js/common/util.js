@@ -69,6 +69,30 @@ export function modalInputTexts(texts, inputs, defaultVals){
     return table;
 }
 
+export function modalInputRadios(texts, inputs, defaultVals,name){
+    let table = document.createElement('table');
+    for(let i = 0; i < texts.length; i++){
+        let tr = document.createElement('tr');
+        let td = document.createElement('td');
+        td.innerHTML=texts[i];
+        tr.appendChild(td);
+        
+        let input = document.createElement('input');
+        //input.value = defaultVals[i];
+        input.value = inputs[i];
+        input.type = "radio";
+        input.id = texts[i];
+        input.size = 40;
+        //input.name = inputs[i];
+        input.name = name;
+        let td2 = document.createElement('td');
+        td2.appendChild(input);
+        tr.appendChild(td2);
+        table.appendChild(tr);
+    }
+    return table;
+}
+
 export function modalCustomization(texts, inputs, defaultVals){
     let table = document.createElement('table');
     for(let i = 0; i < texts.length; i++){

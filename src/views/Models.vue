@@ -12,6 +12,7 @@
                       {{ $t("models_area") }} - {{ $route.params.type }} {{ $t("models_model") }}</a></li>
                       <!-- model actions -->
                       <BackEnd /> 
+                      <VersionControlMenu /> 
                       <DomainMenu :current_graph="graph" :model_type="modelType" />
                       <ApplicationMenu :current_graph="graph" :model_type="modelType" /> 
                       <Verification :current_graph="graph" /> 
@@ -83,6 +84,7 @@ import DomainMenu from '../components/model_actions/DomainMenu'
 import ApplicationMenu from '../components/model_actions/ApplicationMenu'
 import Verification from '../components/model_actions/Verification'
 import BackEnd from '../components/model_actions/BackEnd'
+import VersionControlMenu from '../components/model_actions/VersionControlMenu'
 
 export default{
   data: function(){
@@ -104,7 +106,8 @@ export default{
     BackEnd,
     DomainMenu,
     ApplicationMenu,
-    Verification
+    Verification,
+    VersionControlMenu
   },
   mounted: function(){
     /**
