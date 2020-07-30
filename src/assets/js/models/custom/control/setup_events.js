@@ -864,6 +864,7 @@ function ModalControl(texts,inputs,default_vals){
      // transducer variables
      let transducerID// id transducer
      let transdurcerRelations// transducer relations
+     let plantID//
      // list elements
      let listElements=[];
      let feedbackRoot = graph.getModel().getCell("control");
@@ -1034,6 +1035,7 @@ function ModalControl(texts,inputs,default_vals){
               childs2[i].getId() != ControllerInnerId &&
               childs2[i].getId() != initialSummingID &&
               childs2[i].getId() != finalBranchID &&
+              //childs2[i].getId() != plantID &&
               childs2[i].getId() != transducerID &&
               childs2[i].getId() != summingPlantID ) {
               graph.getModel().setVisible(childs2[i], false);

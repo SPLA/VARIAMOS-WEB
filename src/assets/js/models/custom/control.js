@@ -150,7 +150,7 @@ let controlMain = function controlMain(graph)
 					"attribute":"Delay",
                     "input_type":"checkbox",
 				}
-			]    	
+			]
         }      
 		return styles;
     }
