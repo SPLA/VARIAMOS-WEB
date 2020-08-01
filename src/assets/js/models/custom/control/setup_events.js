@@ -806,7 +806,7 @@ function ModalControl(texts,inputs,default_vals){
         }
       });
       return setupModal;
-      }
+    }
 
   let controlAction = findControlAction(graph)
   HideControlElements(graph, controlAction);
@@ -833,218 +833,64 @@ function ModalControl(texts,inputs,default_vals){
   };
 
   function HideControlElements(graph, controlActionLabel){
-      //alert('escondiendo elementos ' + controlActionLabel);
-     let namesControlAction = [];
-     let targetSystemId; // target system id
-     let targetSystemRelations; // relations target system
-     // controller variables
-     let id_controller;// controller id
-     let controllerRelations; // controller relations
-     let ControllerInnerId;
-     let controllerInnerRelations;
-     // summing point variables
-     let summingID; // summing point id
-     let summingRelations; // summing relations
-     let initialSummingID; // summing initial id
-     let summingRelationsTwo;
-     let summingPlantID // id summing plant
-     // filter variables
-     let filterID; // filter relations
-     let filterRelations;
-     // set point variables
-     let setpointID;// id setpoint
-     // branch variables
-     let branchID// id Branchpoint
-     let finalBranchID
-     let branchRelationsTarget// target relations Branchpoint
-     let branchRelations// source relations Branchpoint
-    let finalBranchRelations// source relations Branchpoint
-     // output variables
-     let outputID// id output
-     // transducer variables
-     let transducerID// id transducer
-     let transdurcerRelations// transducer relations
-     let plantID//
-     // list elements
-     let listElements=[];
-     let feedbackRoot = graph.getModel().getCell("control");
-     let childs = graph.getModel().getChildVertices(feedbackRoot);
-     //navigates through the feature model childsld
-     for (let i = 0; i < childs.length; i++) {
-        if (childs[i].getAttribute("type") == "controlAction") {
-         let target_sys = childs[i].getAttribute("label");
-         namesControlAction.push(target_sys)
+    let namesControlAction = [];
+    let targetSystemId; 
+    let feedbackRoot = graph.getModel().getCell("control");
+    let childs = graph.getModel().getChildVertices(feedbackRoot);
+    for (let i = 0; i < childs.length; i++) {
+      if (childs[i].getAttribute("type") == "controlAction") {
+        let target_sys = childs[i].getAttribute("label");
+        namesControlAction.push(target_sys)
+      }
+    }    
+    for (let i = 0; i < namesControlAction.length; i++) {
+      if ( controlActionLabel== namesControlAction[i]) {
+        for (let i = 0; i < childs.length; i++) {
+          if (childs[i].getAttribute("type") == "controlAction") {
+            if (childs[i].getAttribute("label")== controlActionLabel) {
+                targetSystemId = childs[i].getId(); 
+            }                 
+          }   
         }
-     }
-     for (let i = 0; i < namesControlAction.length; i++) {
-        if ( controlActionLabel== namesControlAction[i]) {
-          for (let i = 0; i < childs.length; i++) {
-            if (childs[i].getAttribute("type") == "controlAction") {
-                    //only selected concrete features are analyzed
-              if (childs[i].getAttribute("label")== controlActionLabel) {
-                     targetSystemId = childs[i].getId(); 
-                     listElements.push(targetSystemId);
-              }                 
-            }   
-           }
 
-          targetSystemRelations = graph.getModel().getIncomingEdges
-          (graph.getModel().getCell(targetSystemId));
-          for (let i = 0; i < targetSystemRelations.length; i++) {
-            let source = targetSystemRelations[i].source;    
-            if (source.getAttribute("type")=="controller") {   
-              ControllerInnerId= source.getId();
-              listElements.push(id_controller);  
-            } else if (source.getAttribute("type")=="summingPoint") { 
-              summingPlantID = source.getId();
-              listElements.push(summingID);     
+        const relatedEdges = () => {
+          let actualEdge=targetSystemId;
+          let idActual;
+          let listEdges=[]
+          let relations=["0"]
+          while(idActual!=targetSystemId && relations.length >0 ) {
+            relations = graph.getModel().getIncomingEdges(graph.getModel().getCell(actualEdge));
+            for (let i = 0; i < relations.length; i++) {
+              let source = relations[i].source;
+              if(source.getAttribute("type")=="branchpoint") {
+                let salida=source.getId()
+                relations =graph.getModel().getOutgoingEdges(graph.getModel().getCell(salida));
+                for (let i = 0; i < relations.length; i++) {
+                  let target = relations[i].target;
+                  listEdges.push(target.getId())
+                }
+              }
+              idActual=source.getId();
+              actualEdge=idActual
+              listEdges.push(idActual)   
             }
           }
-
-          controllerInnerRelations = graph.getModel().getIncomingEdges
-          (graph.getModel().getCell(summingPlantID));
-          for (let i = 0; i < controllerInnerRelations.length; i++) {
-            let source = controllerInnerRelations[i].source;
-            if (source.getAttribute("type")=="controller") { 
-              ControllerInnerId= source.getId();
-              listElements.push(id_controller);    
-            }   
-          }
-          
-          controllerInnerRelations = graph.getModel().getIncomingEdges
-          (graph.getModel().getCell(ControllerInnerId));
-          for (let i = 0; i < controllerInnerRelations.length; i++) {
-              let source = controllerInnerRelations[i].source;
-              if (source.getAttribute("type")=="summingPoint") {
-                summingID = source.getId();
-                listElements.push(summingID);   
-              }  
-            }
-        
-          summingRelations = graph.getModel().getIncomingEdges
-          (graph.getModel().getCell(summingID));
-          for (let i = 0; i < summingRelations.length; i++) {
-              let source = summingRelations[i].source;
-              if(source.getAttribute("type")=="filter") {
-                filterID = source.getId(); 
-                listElements.push(filterID); 
-              } else if (source.getAttribute("type")=="branchpoint") { 
-                finalBranchID = source.getId(); 
-              } else if(source.getAttribute("type")=="controlAction") { 
-                targetSystemId = source.getId();  
-              } else if(source.getAttribute("type")=="controller") {
-                id_controller = source.getId();
-              }  else if(source.getAttribute("type")=="setpoint") { 
-                setpointID = source.getId(); 
-                listElements.push(setpointID); 
-              } else if(source.getAttribute("type")=="transducer") { 
-               transducerID=source.getId();  
-              }   
-          }
-           
-          controllerRelations =  graph.getModel().getIncomingEdges
-          ( graph.getModel().getCell(id_controller));
-          for (let i = 0; i < controllerRelations.length; i++) {
-            let source = controllerRelations[i].source;
-            if (source.getAttribute("type")=="summingPoint") {
-              initialSummingID = source.getId(); 
-              listElements.push(initialSummingID);
-             }
-          }
-
-          summingRelationsTwo =  graph.getModel().getIncomingEdges
-          (graph.getModel().getCell(initialSummingID));
-          for (let i = 0; i < summingRelationsTwo.length; i++) {
-            let source = summingRelationsTwo[i].source; 
-            if (source.getAttribute("type")=="setpoint") { 
-              setpointID = source.getId(); 
-              listElements.push(setpointID); 
-            } else if (source.getAttribute("type")=="filter") {
-              filterID = source.getId(); 
-              listElements.push(filterID); 
-            } else if (source.getAttribute("type")=="branchpoint") { 
-              finalBranchID = source.getId();  
-            } else if(source.getAttribute("type")=="transducer") { 
-              transducerID = source.getId(); 
-            } 
-          }
-              
-          filterRelations =  graph.getModel().getIncomingEdges
-          ( graph.getModel().getCell(filterID));
-          for (let i = 0; i < filterRelations.length; i++) {
-            let source = filterRelations[i].source;
-            if (source.getAttribute("type")=="branchpoint") {
-              finalBranchID = source.getId(); 
-              listElements.push(branchID); 
-            } else if (source.getAttribute("type")=="transducer") {
-              transducerID = source.getId();
-              listElements.push(branchID); 
-            }   
-          }
-        
-          transdurcerRelations =  graph.getModel().getIncomingEdges
-          ( graph.getModel().getCell(transducerID));
-          for (let i = 0; i < transdurcerRelations.length; i++) {
-              let source = transdurcerRelations[i].source;
-            if(source.getAttribute("type")=="branchpoint") {
-              finalBranchID = source.getId(); 
-              listElements.push(branchID); 
-            }    
-          }
-  
-          branchRelationsTarget =graph.getModel().getOutgoingEdges
-          (graph.getModel().getCell(finalBranchID));
-          for (let i = 0; i < branchRelationsTarget.length; i++) {
-            let target = branchRelationsTarget[i].target;
-            if(target.getAttribute("type")=="outputSystem") {
-              outputID= target.getId();
-              listElements.push(outputID); 
-            }
-          }
-
-          finalBranchRelations =graph.getModel().getIncomingEdges
-          (graph.getModel().getCell(finalBranchID));
-          for (let i = 0; i < finalBranchRelations.length; i++) {
-            let source = finalBranchRelations[i].source;
-            if(source.getAttribute("type")=="branchpoint") {
-              branchID= source.getId();
-              listElements.push(branchID); 
-             }
-          }
-
-          branchRelations = graph.getModel().getIncomingEdges
-          (graph.getModel().getCell(branchID));
-          for (let i = 0; i < branchRelations.length; i++) {
-            let source = branchRelations[i].source;
-            if(source.getId() == targetSystemId && source.getAttribute("type")=="controlAction") {
-              finalID=source.getId();
-            }
-          }
-           
+          return listEdges;
+        }
+        const ocultarElementos = () => {
           let feedbackRoot = graph.getModel().getCell("control");
           let childs2 = graph.getModel().getChildVertices(feedbackRoot);
           for (let i = 0; i < childs2.length; i++) {
-            if (
-              childs2[i].getId() != targetSystemId &&
-              childs2[i].getId() != summingID &&
-              childs2[i].getId() != setpointID &&
-              childs2[i].getId() != filterID &&
-              childs2[i].getId() != id_controller &&
-              childs2[i].getId() != branchID &&
-              childs2[i].getId() != outputID &&
-              childs2[i].getId() != ControllerInnerId &&
-              childs2[i].getId() != initialSummingID &&
-              childs2[i].getId() != finalBranchID &&
-              //childs2[i].getId() != plantID &&
-              childs2[i].getId() != transducerID &&
-              childs2[i].getId() != summingPlantID ) {
-              graph.getModel().setVisible(childs2[i], false);
+            if ( relatedEdges().indexOf( childs2[i].getId() ) == -1 ) {
+                graph.getModel().setVisible(childs2[i], false);
             } else {
-            graph.getModel().setVisible(childs2[i], true)
+                graph.getModel().setVisible(childs2[i], true);
             }
           }
-        }
+        }   
+        ocultarElementos();
       }
-    };
-  }
+    }
+  };
+}
 export default setupEvents
