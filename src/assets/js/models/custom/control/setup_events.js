@@ -27,7 +27,7 @@ let setupEvents = function setupEvents(graph){
   });
 
   // modal function
-function ModalControl(texts,inputs,default_vals){
+const ModalControl =(texts,inputs,default_vals) => {
   let table = document.createElement('table');
   for (let i=0;i<texts.length;i++) {
       let tr = document.createElement('tr');
@@ -76,11 +76,10 @@ const generateCanvas= () =>
 }
 
   // Modal Identifying transfer function  
-    let DataContinuous = function() {
+  const DataContinuous = () =>{
     let header = modalH3(("System model"));
     let body = ModalControl(texts,inputs,default_vals);
     let footer = [];
-
     footer.push(modalButton("Import Data", function() { 
         UploadData()
     }));
@@ -90,90 +89,84 @@ const generateCanvas= () =>
     setupModal(header, body, footer);  
   }
 
-  function UploadData()
-  {
+  const UploadData = () => {
       let hidden = document.getElementById("hidden_elements");
       let input=document.createElement('input');
       input.type="file";
       input.style.display="none";           
       hidden.appendChild(input);
-        input.addEventListener('change', function(event) {
+      input.addEventListener('change', function(event) {
         let fileToLoad = input.files[0];
         let fileReader = new FileReader();
-          fileReader.onload = function(fileLoadedEvent) {   
+        fileReader.onload = function(fileLoadedEvent) {   
                 let textload = fileLoadedEvent.target.result;
                 localStorage["control_data"]=textload; 
                 alert("Successfully stored data");
                 alert(textload);
-          }
-        fileReader.readAsText(fileToLoad, "UTF-8");
-        });
+        }
+      fileReader.readAsText(fileToLoad, "UTF-8");
+      });
       if (input) {
       input.click();
       }  
     }
-    function SistemIdentification(){
-      let dataList=CollectDataCsv().data;
-      let timeList=CollectDataCsv().time;  
-      if(CollectDataCsv().setpoint.length>0)
-      {
-        dataList =zoomData(dataList)
-        timeList =zoomData(timeList);
-        let nuevo=[0];
-        let sum=0;
-          for(var i=0,j=timeList.length-1;i<j;i++){
-            nuevo.push(parseFloat((sum += 0.5).toFixed(2)))
+  const CollectDataCsv = () =>{
+    let text=localStorage["control_data"];
+    let allTextLines = text.split(/\r\n|\n/); 
+    let listData = [];
+    let listTime = [];
+    let listSetpoint=[];
+    let firstColumn;
+    let secondColumn;
+    let threeColumn;
+      for (let i=0; i<allTextLines.length; i++) {
+        firstColumn = parseFloat(allTextLines[i].split(";")[1]);
+        secondColumn = parseFloat(allTextLines[i].split(";")[0]);
+        threeColumn = parseFloat(allTextLines[i].split(";")[2]);
+        if(!isNaN(firstColumn) && !isNaN(secondColumn) ) {
+          listData.push(parseFloat(firstColumn.toFixed(2).toString().replace(",", ".")));
+          listTime.push(parseFloat(secondColumn.toFixed(2).toString().replace(",", ".")));
+        }
+        if (!isNaN(threeColumn) ) {
+          listSetpoint.push(parseFloat(threeColumn.toFixed(2).toString().replace(",", ".")));
           }
-        timeList=nuevo;
       }
+      let dictionaryData = {
+        "data": listData,
+        "time": listTime,
+        "setpoint":listSetpoint,
+        listTime:listData,
+      };
+    return  dictionaryData;
+  }
 
-      const deltaValue = document.getElementById('idDeltaU').value;
-      const idDelay= document.getElementById('idDelay').checked;
-      const idDiscrete= document.getElementById('idDiscrete').checked;
-      const mainModal = document.getElementById("main_modal_body");
-      
-    function CollectDataCsv(){
-      let text=localStorage["control_data"];
-      let allTextLines = text.split(/\r\n|\n/); 
-      let listData = [];
-      let listTime = [];
-      let listSetpoint=[];
-      let firstColumn;
-      let secondColumn;
-      let threeColumn;
-            for (let i=0; i<allTextLines.length; i++) {
-              firstColumn = parseFloat(allTextLines[i].split(";")[1]);
-              secondColumn = parseFloat(allTextLines[i].split(";")[0]);
-              threeColumn = parseFloat(allTextLines[i].split(";")[2]);
+  const zoomData = (list) => {
+    let sets=CollectDataCsv().setpoint;
+    let value=sets[sets.length - 1];  
+    var item=  (sets.indexOf(value))-1;
+    var masculinos = list.slice(item);
+    return masculinos;
+  }
 
-              if(!isNaN(firstColumn) && !isNaN(secondColumn) )
-              {
-                listData.push(parseFloat(firstColumn.toFixed(2).toString().replace(",", ".")));
-                listTime.push(parseFloat(secondColumn.toFixed(2).toString().replace(",", ".")));
-              }
-              if (!isNaN(threeColumn) ) {
-               listSetpoint.push(parseFloat(threeColumn.toFixed(2).toString().replace(",", ".")));
-              }
-            }
+  const SistemIdentification =() =>{
+    let dataList=CollectDataCsv().data;
+    let timeList=CollectDataCsv().time;  
+    if(CollectDataCsv().setpoint.length>0) {
+      dataList =zoomData(dataList)
+      timeList =zoomData(timeList);
+      let nuevo=[0];
+      let sum=0;
+        for(var i=0,j=timeList.length-1;i<j;i++){
+          nuevo.push(parseFloat((sum += 0.5).toFixed(2)))
+        }
+      timeList=nuevo;
+    }
 
-            let dictionaryData = {
-              "data": listData,
-              "time": listTime,
-              "setpoint":listSetpoint,
-              listTime:listData,
-            };
-            return  dictionaryData
-          }
-
-    function zoomData(list){
-      let sets=CollectDataCsv().setpoint;
-      let value=sets[sets.length - 1];  
-      var item=  (sets.indexOf(value))-1;
-      var masculinos = list.slice(item);
-
-      return masculinos;
-    } 
-   
+    const deltaValue = document.getElementById('idDeltaU').value;
+    const idDelay= document.getElementById('idDelay').checked;
+    const idDiscrete= document.getElementById('idDiscrete').checked;
+    const mainModal = document.getElementById("main_modal_body");
+       
     function positionData(){
       let result;
       for (let i=1; i<dataList.length; i++) {   
@@ -298,15 +291,10 @@ const generateCanvas= () =>
     
     function AStudT(p,n) { 
       let v=0.5; let dv=0.5; let t=0
-        while(dv>1e-6) {
+      while(dv>1e-6) {
         t=1/v-1; dv=dv/2; 
-          if(StudT(t,n)>p) {
-          v=v-dv 
-          } 
-          else { 
-          v=v+dv 
-          }  
-        }
+        (StudT(t,n)>p) ? v=v-dv: v=v+dv  
+      }
       return t
     }
 
