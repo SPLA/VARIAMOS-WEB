@@ -239,24 +239,23 @@ const generateCanvas= () =>
     return result;
   }
 
-    //Curve Fitting//
   function nolinearProcess(){  
     let Pi=Math.PI; let PID2=Pi/2; let Pi2=2*Pi 
     //let g=ConstantsFirstOrder().gain+0.5
     let funcionFirOrder=  "(( "+ConstantsFirstOrder().gain+"  * "+deltaValue +") * (1-Exp( - (t-"+ConstantsFirstOrder().delayValue+" ) / a )))+ D "  
    // let funcionFirOrder=  "(( "+ConstantsFirstOrder().gain+"  * "+deltaValue +") * (1-Exp(  -t/ a )))+ D " 
-   
-  
-    // Basic operations
     function EXP(x) { 
       return Math.exp(x) 
     }
+
     function Abs(x) { 
       return Math.abs(x)
-     }
+    }
+
     function SQRT(x) { 
       return Math.sqrt(x)
     }
+
     function Fmt(x) { let v;
       if(Abs(x)<0.00005) { x=0 }
         if(x>=0) { 
@@ -265,7 +264,7 @@ const generateCanvas= () =>
         v='          '+(x-0.00005) }
       v = v.substring(0,v.indexOf('.')+5)
       return v.substring(v.length-10,v.length)
-      }
+    }
         
     function StudT(t,n) {
       t=Math.abs(t); let w=t/Math.sqrt(n); let th=Math.atan(w)
@@ -313,11 +312,11 @@ const generateCanvas= () =>
     } 
 
     function STATCOM(q,i,j,b) {
-    let zz=1; let z=zz; let k=i; 
-    while(k<=j) { 
-      zz=zz*q*k/(k-b); z=z+zz; k=k+2
-    }
-    return z
+      let zz=1; let z=zz; let k=i; 
+      while(k<=j) { 
+        zz=zz*q*k/(k-b); z=z+zz; k=k+2
+      }
+      return z
     }
   
     function Xlate(s,from,to) { 
@@ -440,7 +439,6 @@ const generateCanvas= () =>
       Y = dataList[i]
       v = v.substring(l+1,v.length);
      
-  
       let vSEy =1;
       let yTr = "Y"; yTr = yTr.toUpperCase()
       let yT = eval( yTr );
@@ -451,9 +449,13 @@ const generateCanvas= () =>
       cccSD = cccSD + ( Y - ccAv ) * ( Y - ccAv ) / ( w * w );
   
       for (let j=0; j<nPar; j++) {
-        let Save = Par[j]; if(Save==0) {var Del = 0.0001} else {var Del = Save/1000}
+        let Save = Par[j]; 
+        if(Save==0) {
+          var Del = 0.0001
+        } else {
+          var Del = Save/1000
+        }
         Par[j] = Save + Del;
-       
         A=Par[0]; 
         P1=A; 
         ycIncr = eval( funcionFirOrder.toUpperCase() )
@@ -480,23 +482,18 @@ const generateCanvas= () =>
       SEest=w*SQRT(SEest);
       let yco=yc; let ycl=yc-St95*SEest; let ych=yc+St95*SEest;
       //o = o + (Fmt(yo)+Fmt(yco)+Fmt(yo-yco)+Fmt(SEest)+Fmt(ycl)+Fmt(ych)+NL)
-      
     }
     ccSW = cccSW;
     ccAv = cccAv / ccSW;
     ccSD = cccSD / ccSW;
    
     let GenR2 = (ccSD-(SSq/ccSW))/ccSD;
-    
     let GenR = SQRT(GenR2);
-    
     let RMS = SQRT(SSq/Math.max(1,dgfr));
-
    /* console.log("Corr. Coeff. = " + vFmt(GenR) + "; r*r = " + vFmt(GenR2))
     console.log( NL + "RMS Error = " + vFmt(RMS) + "; d.f = " + dgfr + "; SSq = " + vFmt(SSq) + NL); */
     localStorage.setItem("coeff",vFmt(GenR));
     localStorage.setItem("RMS",vFmt(RMS));
-
 
     for (i=0; i<nPar; i++) { 
       let s = Arr[ix(i,i)]; Arr[ix(i,i)] = 1;
@@ -521,7 +518,6 @@ const generateCanvas= () =>
       localStorage.setItem("tao",vFmt(Par[i]));
       o = o + ("p"+(i+1)+"="+vFmt(Par[i])+" +/- "+vFmt(SEP[i])+"; p="+Fmt(STUDT(Par[i]/SEP[i],dgfr))+NL)
     }
-
   return datos;
   }
     //const tao=1.5*(parseFloat(localStorage.getItem("tao"))-taoValue().Smith28);
@@ -531,7 +527,6 @@ const generateCanvas= () =>
     //const delay= taoValue().Smith63 -tao;
     const delay= ConstantsFirstOrder().delayValue;
     console.log(delay)
-
     let lastData=dataList[dataList.length - 1];
     let firstData=dataList[0];
 
@@ -564,6 +559,7 @@ const generateCanvas= () =>
       localStorage.setItem("cohentd",parameter.Td);
       return parameter;
     }
+
     function parametersAmigo() {
       let parameter={
         "Kp": Math.abs((1/gain)*(0.2+0.45*(tao/delay))),
@@ -585,6 +581,7 @@ const generateCanvas= () =>
       return parameter;
 
     }
+
     function updateEdge(){
       let ControlRoot = graph.getModel().getCell("control");
 			let ControlEdges = graph.getModel().getChildVertices(ControlRoot);
@@ -607,7 +604,6 @@ const generateCanvas= () =>
       setupModal(header,body,footer);
       let transferFuncion; 
       localStorage.setItem("tiempos",timeList);
-
       if(idDelay==true && idDiscrete==false ) {
         transferFuncion="Gp(s) = \\frac{"+ gain.toFixed(2)+"* e^-"+ delay+"s}{"+tao.toFixed(2)+"s  "+"  +1}"
       }
@@ -627,7 +623,7 @@ const generateCanvas= () =>
         ];
        DataDisplay.forEach(myFunction);
 
-     function myFunction(item, index) {
+    function myFunction(item, index) {
           let transferFunction=  document.createElement("div");
           mainModal.appendChild(transferFunction);
           transferFunction.id=index;
@@ -682,58 +678,67 @@ const generateCanvas= () =>
   }
           
   function controlllerOutput(){
-    let tiemposlocal=[];
-    tiemposlocal=localStorage.getItem("tiempos")
-    var bx = tiemposlocal.split(',').map(function(item) {
-      return parseFloat(item);
-    });
-   
-    let error=0;
-    let errorant=0;
-    let error_acum=0;
-    let sp=1;
-    let tm=1000;
-    let controlador=0;
-    let a=-Math.exp(-1/parseFloat(localStorage.getItem("tao")));
-    let b=parseFloat(localStorage.getItem("gain"))*(1+a);
-    let controladores =[];
-    console.log("b",b,"a",a)
-    let salidap=0;
-    let salidas=[];
-    let tiempos=[];
-    let setpoints=[];
-    let propor=0
-   let  Integral=0;
 
-
-    let ControlRoot = graph.getModel().getCell("control");
+    const controllerValues = () =>
+    {
+      let controller={}
+      let ControlRoot = graph.getModel().getCell("control");
 			let ControlEdges = graph.getModel().getChildVertices(ControlRoot);
 			for (let i = 0; i < ControlEdges.length; i++) {
 				let source = ControlEdges[i];
         let type = source.getAttribute("type");
 				if(type == "controller"){
-          propor= source.getAttribute("Proportional")
-         Integral= source.getAttribute("Integral")
-          source.getAttribute("Derivate")
-           }
-
+          controller={
+            "kp": source.getAttribute("Proportional"),
+            "ki":  source.getAttribute("Integral"),
+            "kd": source.getAttribute("Derivate")
+          }
+        }
       }
-    for (let i = 0; i < 100; i++) {
+      return controller;
+    }
+
+    const constantsFirtsOrder = () => { 
+      let result = {}
+      let numerator=-Math.exp(-1/parseFloat(localStorage.getItem("tao")));
+      let denominator=parseFloat(localStorage.getItem("gain"))*(1+a);
+      result={
+        "a": numerator,
+        "b": denominator
+      }
+      return result
+    }
+      let error;
+      let errorant=0;
+      let error_acum=0;
+      let sp=1;
+      let controladores =[];
+      let salidap=0;
+      let salidas=[];
+      let tiempos=[];
+
+      // Edge Values
+      let kp=controllerValues().kp;
+      let ki=controllerValues().ki;
+
+      // solution transfer function
+      let a= constantsFirtsOrder().a;
+      let b= constantsFirtsOrder().b;
+      for (let i = 0; i < 100; i++) {
         error=sp-salidap;
         error_acum=error_acum+parseFloat(error);
-        controlador=propor*error+(error_acum*Integral)+(0*(errorant-error));
-        controladores.push(controlador);
+        controladores.push(kp*error+(error_acum*ki)+(0*(errorant-error)));
         (i<2) ? salidap=0 : salidap=parseFloat((controladores[i-1]*b-(a*salidap)));
         tiempos.push(i);
         salidas.push(salidap);
-        setpoints.push(sp);
-    }
-    let param={
-      "time":tiempos,
-      "output":salidas,
-      "setpoint":setpoints
-    }
-  return param;
+      }
+      let setpoints = salidas.map(current => (current*0)+sp)
+      let param={
+        "time":tiempos,
+        "output":salidas,
+        "setpoint":setpoints
+      }
+    return param; 
 }
 
     function control(){
