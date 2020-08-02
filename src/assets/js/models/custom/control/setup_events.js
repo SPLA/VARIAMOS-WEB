@@ -16,24 +16,14 @@ let setupEvents = function setupEvents(graph){
   graph.addListener(mxEvent.DOUBLE_CLICK, function(sender, evt){
     let cell = evt.getProperty('cell');
     if (cell!=null){ 
-        if(cell.getId().includes("clon")){
-            let url = document.URL;
-            let n = url.lastIndexOf('/');
-            let result_url = url.substring(0,n);
-            let originalCellId = cell.getId().substring(4);
-            let originalCell = graph.getModel().getCell(originalCellId);
-            let parent = originalCell.getParent();
-          /* window.location.href = result_url+"/"+parent.getId();*/
-           DataContinuous()
-          }
-          let type = cell.getAttribute("type");
-            if (type == "controller") {
-              control();
-            } 
-            if (type == "plant") {
-            DataContinuous();
-            }
+      let type = cell.getAttribute("type");
+      if (type == "controller") {
+        control();
+      } 
+      if (type == "plant") {
+        DataContinuous();
       }
+    }
   });
 
   // modal function
@@ -73,6 +63,16 @@ function ModalControl(texts,inputs,default_vals){
       table.appendChild(tr);
   }
   return table;
+}
+
+const generateCanvas= () =>
+{
+  let canvas = document.createElement("canvas");
+  canvas.id = "myChart";
+  canvas.width = 500;
+  canvas.height = 250;
+  canvas.className = "my-4 chartjs-render-monitor";
+  return canvas;
 }
 
   // Modal Identifying transfer function  
@@ -647,14 +647,7 @@ function ModalControl(texts,inputs,default_vals){
           transferFunction.innerHTML = "\\["+item+"\\]";
           MathJax.Hub.Queue(["Typeset",MathJax.Hub,transferFunction]);
           }
-
-
-      let canvas = document.createElement("canvas");
-      canvas.id = "myChart";
-      canvas.width = 500;
-      canvas.height = 250;
-      canvas.className = "my-4 chartjs-render-monitor";
-      mainModal.appendChild(canvas);
+      mainModal.appendChild(generateCanvas());
       let ctx = document.getElementById("myChart");
       let myChart = new Chart(ctx, {
         type: "line",
@@ -761,12 +754,7 @@ function ModalControl(texts,inputs,default_vals){
       let body=""
       let footer = modalButton(("return"),function(){DataContinuous();}) 
       setupModal(header,body,footer);
-      let canvas = document.createElement("canvas");
-      canvas.id = "myChart";
-      canvas.width = 500;
-      canvas.height = 250;
-      canvas.className = "my-4 chartjs-render-monitor";
-      mainModal.appendChild(canvas);
+      mainModal.appendChild(generateCanvas());
       let ctx = document.getElementById("myChart");
       let myChart = new Chart(ctx, {
         type: "line",
