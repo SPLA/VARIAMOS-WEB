@@ -5,6 +5,7 @@ let setupEvents = function setupEvents(graph){
     "Delay[𝜃] (This is the time interval during which no response to an input change is visible in a system’s output): ", "Discrete Time : "];
     const default_vals = ["","",""];
     const inputs=["idDeltaU",'idDelay',"idDiscrete"];
+    
   //clean previous generated events
   if(graph.eventListeners.length>22){
       graph.eventListeners.pop();graph.eventListeners.pop();
@@ -241,8 +242,8 @@ const generateCanvas= () =>
 
   function nolinearProcess(){  
     let Pi=Math.PI; let PID2=Pi/2; let Pi2=2*Pi 
-    //let g=ConstantsFirstOrder().gain+0.5
-    let funcionFirOrder=  "(( "+ConstantsFirstOrder().gain+"  * "+deltaValue +") * (1-Exp( - (t-"+ConstantsFirstOrder().delayValue+" ) / a )))+ D "  
+    //let funcionFirOrder=  "(( "+ConstantsFirstOrder().gain+"  * "+deltaValue +") * (1-Exp( - (t-"+ConstantsFirstOrder().delayValue+" ) / a )))+ D "
+    let funcionFirOrder=  "(( b * "+deltaValue +") * (1-Exp( - (t-"+ConstantsFirstOrder().delayValue+" ) / a )))+ D "  
    // let funcionFirOrder=  "(( "+ConstantsFirstOrder().gain+"  * "+deltaValue +") * (1-Exp(  -t/ a )))+ D " 
     function EXP(x) { 
       return Math.exp(x) 
@@ -380,6 +381,7 @@ const generateCanvas= () =>
     let dgfr = nPts - nPar;
     let St95 = AStudT( 0.05 , dgfr );
     let A = taoValue().Smith63;
+    let B = ConstantsFirstOrder().gain;
     
     //cunado la funcion de logaritmo es muy pronunuciada no hay retraso
     /*if(ConstantsFirstOrder().delayValue==0){
@@ -388,6 +390,7 @@ const generateCanvas= () =>
     var D= dataList[0];
     //let A = 74; 
     let P1 = A; Par[0] = A;
+    var P2 = B; Par[1] = B;
     let text=localStorage["control_data"];
     let da = Xlate(text,Tb,";");
     text = da;
@@ -457,12 +460,16 @@ const generateCanvas= () =>
         }
         Par[j] = Save + Del;
         A=Par[0]; 
-        P1=A; 
+        B=Par[1];
+        P1=A;
+        P2=B; 
         ycIncr = eval( funcionFirOrder.toUpperCase() )
         Der[j] = ( ycIncr - yc ) / ( Del * w );
         Par[j] = Save;  
         A=Par[0];
+        B=Par[1];
         P1=A; 
+        P2=B;
       }
       Der[nPar] = (Y - yc) / w;
       SSq = SSq + Der[nPar]*Der[nPar];
