@@ -1,11 +1,11 @@
 import { setupModal, modalH3, modalButton } from '../../../common/util'
 
 let setupEvents = function setupEvents(graph){
-    const texts = ['Input change applied (Corresponds to "control input" or "manipulated variable".This is a quantity that influences the behavior of the controlled system): ',
-    "Delay[𝜃] (This is the time interval during which no response to an input change is visible in a system’s output): ", "Discrete Time : "];
+    const texts = ['Input change applied :  ',
+    'Delay[𝜃] :    ','Discrete Time :   '];
     const default_vals = ["","",""];
     const inputs=["idDeltaU",'idDelay',"idDiscrete"];
-    
+
   //clean previous generated events
   if(graph.eventListeners.length>22){
       graph.eventListeners.pop();graph.eventListeners.pop();
@@ -27,41 +27,49 @@ let setupEvents = function setupEvents(graph){
     }
   });
 
-  // modal function
 const ModalControl =(texts,inputs,default_vals) => {
   let table = document.createElement('table');
+  let tr = document.createElement('tr');
   for (let i=0;i<texts.length;i++) {
-      let tr = document.createElement('tr');
       let td = document.createElement('td');
-      td.innerHTML=texts[i];
-      let input={}
-      tr.appendChild(td);
-      if (i==1) {
-          input = document.createElement('input');
-          input.type="checkbox";
-          input.id=inputs[i];
-      }
-      else if (i==2) {
-        input = document.createElement('input');
-        input.type="checkbox";
-        input.id=inputs[i];
-      }
-      else if (i==3) {
-          input = document.createElement('input');
-          input.type="checkbox";
-          input.innerText=inputs[i];
-      } else {  
-      input = document.createElement('input');
-      input.value=default_vals[i];
-      input.type="text";
-      input.id=inputs[i];
-      input.size=10;
-      input.name=inputs[i];
-      }
       let td2 = document.createElement('td');
-      td2.appendChild(input);
+      td.innerHTML=texts[i];
+      td.style.textAlign= "center"
+      let texto = document.createElement("div");
+      for (let i=0;i<7;i++) {
+        texto.innerHTML += ' &nbsp;';
+      }
+      td2.appendChild(texto)
+      tr.appendChild(td);
       tr.appendChild(td2);
       table.appendChild(tr);
+  }
+  let tr2 = document.createElement('tr');
+  for (let i=0;i<texts.length;i++) {
+      let input={}
+      let td = document.createElement('td');
+      let td2 = document.createElement('td');
+      input = document.createElement('input');
+      if (i==1) {
+        input.type="checkbox";
+        input.id=inputs[i];
+      } else if (i==2) {
+        input.type="checkbox";
+        input.id=inputs[i];
+      } else if (i==3) {
+        input.type="checkbox";
+        input.innerText=inputs[i];
+      } else {  
+        input.value=default_vals[i];
+        input.type="text";
+        input.id=inputs[i];
+        input.size=20;
+        input.name=inputs[i];
+      }
+      td.appendChild(input);
+      tr2.appendChild(td);
+      tr2.appendChild(td2);
+      table.appendChild(tr2);
   }
   return table;
 }
@@ -87,8 +95,42 @@ const generateCanvas= () =>
     footer.push(modalButton("Estimate", function(){
       (document.getElementById('idDeltaU').value =="") ?  alert("Incomplete information") : SistemIdentification();
     }));
-    setupModal(header, body, footer);  
+    footer.push(modalButton("?", function() { 
+      setupModalInformation()
+    }));
+    setupModal(header, body, footer);
   }
+
+  const setupModalInformation =()=>{
+    let texts = ["Input change applied: ", "Delay[𝜃] "]
+    const default_vals = [`Corresponds to "control input" or "manipulated variable".This is a quantity
+    that influences the behavior of the controlled system. `,
+    " This is the time interval during which no response to an input change is visible in a system’s output. "];
+    //const inputs=["idDeltaU",'idDelay',"idDiscrete"];
+    let header = modalH3(("Concepts"));
+    let body = modalInformation(texts, default_vals)
+    let footer = [];
+    setupModal(header, body, footer);  
+
+  }
+
+  const  modalInformation = (texts, defaultVals) =>{
+    let table = document.createElement('table');
+    for(let i = 0; i < texts.length; i++){
+        let tr = document.createElement('tr');
+        let td = document.createElement('td');
+        td.innerHTML=texts[i];;
+        td.style.color = "crimson"
+        tr.appendChild(td);
+
+        var textoCelda = document.createTextNode(defaultVals[i]);
+        let td2 = document.createElement('td');
+        td2.appendChild(textoCelda);
+        tr.appendChild(td2);
+        table.appendChild(tr);
+    }
+    return table;
+}
 
   const UploadData = () => {
       let hidden = document.getElementById("hidden_elements");
@@ -844,7 +886,7 @@ const generateCanvas= () =>
         const relatedEdges = () => {
           let actualEdge=targetSystemId;
           let idActual;
-          let listEdges=[]
+          let listEdges=[targetSystemId]
           let relations=["0"]
           while(idActual!=targetSystemId && relations.length >0 ) {
             relations = graph.getModel().getIncomingEdges(graph.getModel().getCell(actualEdge));
