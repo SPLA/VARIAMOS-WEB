@@ -13,6 +13,7 @@ let setupEvents = function setupEvents(graph){
       graph.eventListeners.pop();graph.eventListeners.pop();
       graph.eventListeners.pop();graph.eventListeners.pop();
   }
+  graph.removeListener(mxEvent.DOUBLE_CLICK);
   //redirect to the original model when double click on a clon cell
   graph.addListener(mxEvent.DOUBLE_CLICK, function(sender, evt){
     let cell = evt.getProperty('cell');
@@ -606,7 +607,6 @@ const generateCanvas= () =>
       localStorage.setItem("cohentd",parameter.Td);
       return parameter;
     }
-
     function parametersAmigo() {
       let parameter={
         "Kp": Math.abs((1/gain)*(0.2+0.45*(tao/delay))),
@@ -890,6 +890,14 @@ const generateCanvas= () =>
             relations = graph.getModel().getIncomingEdges(graph.getModel().getCell(actualEdge));
             for (let i = 0; i < relations.length; i++) {
               let source = relations[i].source;
+              if(source.getAttribute("type")=="setpoint") {
+                idActual=source.getId();
+                listEdges.push(idActual);
+              } else{
+                idActual=source.getId();
+                actualEdge=idActual;
+                listEdges.push(idActual); 
+              } 
               if(source.getAttribute("type")=="branchpoint") {
                 let salida=source.getId()
                 relations =graph.getModel().getOutgoingEdges(graph.getModel().getCell(salida));
@@ -898,9 +906,6 @@ const generateCanvas= () =>
                   listEdges.push(target.getId())
                 }
               }
-              idActual=source.getId();
-              actualEdge=idActual
-              listEdges.push(idActual)   
             }
           }
           return listEdges;
