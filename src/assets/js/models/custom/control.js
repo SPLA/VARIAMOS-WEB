@@ -27,7 +27,7 @@ let controlMain = function controlMain(graph)
             'Target Must Have 1 incoming connection ',
             'Target Must Connect From controller or summing point'));
         graph.multiplicities.push(new mxMultiplicity(
-            false, 'branchpoint', null, null, 1, 1, ['controlAction'],
+            false, 'branchpoint', null, null, 1, 1, ['controlAction','plant'],
             'Branchpoint Must Have 1 Target system',
             'Branchpoint Must Connect From Target system'));
             graph.multiplicities.push(new mxMultiplicity(
@@ -38,6 +38,7 @@ let controlMain = function controlMain(graph)
 
     function controlElements(){
         let  controller = {src:projectPath+"images/models/control/controller.png", wd:100, hg:40, style:"shape=rectangle", type:"controller", pname:"Controller"};
+        let  plant = {src:projectPath+"images/models/control/controller.png", wd:100, hg:40, style:"shape=rectangle", type:"plant", pname:"Plant"};
         let  transducer = {src:projectPath+"images/models/control/transducer.png", wd:100, hg:40, style:"shape=transducer", type:"transducer", pname:"Sensor"};
         let  summingPoint   = {src:projectPath+"images/models/control/summing_point.PNG", wd:100, hg:40, style:"shape=ellipse", type:"summingPoint", pname:"Summing point"};
         let  setpoint   = {src:projectPath+"images/models/control/setpoint.png", wd:100, hg:40, style:"shape=setpoint", type:"setpoint", pname:"Setpoint "};
@@ -53,7 +54,8 @@ let controlMain = function controlMain(graph)
         elements[3]=setpoint;
         elements[4]=outputSystem;
         elements[5]=branchpoint;
-        elements[6]=filter;         
+        elements[6]=filter;  
+        elements[7]=plant;       
         
         return elements;
     }
@@ -148,7 +150,7 @@ let controlMain = function controlMain(graph)
 					"attribute":"Delay",
                     "input_type":"checkbox",
 				}
-			]    	
+			]
         }      
 		return styles;
     }

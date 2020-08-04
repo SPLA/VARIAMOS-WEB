@@ -4,6 +4,7 @@
   </div>
 </template>
 <script>
+import axios from "axios";
 import {
   setupModal,
   modalH3,
@@ -39,7 +40,7 @@ export default {
       let name;
       footer.push(modalButton("start", function() { 
         setInterval(getData, 500);
-        document.getElementById("iniciar").disabled = true;
+        document.getElementById("start").disabled = true;
         }));
       footer.push(modalButton("reset", function(){
       reset();
@@ -65,17 +66,16 @@ export default {
           labels: [],
           datasets: [{
             data: [],
-            label: "PV",
             borderWidth: 1,
             borderColor:'#00c0ef',
-            label: 'liveCount',
+            label: 'Response',
           },
           {
             data: [],
             label: "Setpoint",
             borderWidth: 1,
             borderColor:'#FF3333',
-            label: 'liveCount',
+            label: 'Setpoint',
           }]
         },
         options: {
@@ -85,7 +85,7 @@ export default {
           text: "",
         },
         legend: {
-          display: false
+          display: true
         },
         scales: {
           yAxes: [{
@@ -223,7 +223,11 @@ export default {
 
         var rows = [];
         for(var i=0, j=datacsv.length;i<j;i++){
-            rows.push([multiples[i],datacsv[i],setcsv[i] ]);
+          rows.push([multiples[i],datacsv[i],setcsv[i] ]);
+             /*multiples=multiples[i].toFixed(2).toString().replace(".", ",");
+             datacsv=multiples[i].toFixed(2).toString().replace(".", ",");
+             setcsv=multiples[i].toFixed(2).toString().replace(".", ",");
+            rows.push([multiples,datacsv,setcsv]);*/
           }
       
         let csvContent = "data:text/csv;charset=utf-8," 

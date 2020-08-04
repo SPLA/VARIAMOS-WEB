@@ -1,8 +1,8 @@
 import { setupModal, modalH3, modalButton } from '../../../common/util'
 
 let setupEvents = function setupEvents(graph){
-    const texts = ['Adjustment variable: ',
-    "Delay[𝜃](Time it takes for the system output to increase): ", "Discrete Time : "];
+    const texts = ['Input change applied (Corresponds to "control input" or "manipulated variable".This is a quantity that influences the behavior of the controlled system): ',
+    "Delay[𝜃] (This is the time interval during which no response to an input change is visible in a system’s output): ", "Discrete Time : "];
     const default_vals = ["","",""];
     const inputs=["idDeltaU",'idDelay',"idDiscrete"];
   //clean previous generated events
@@ -12,6 +12,7 @@ let setupEvents = function setupEvents(graph){
       graph.eventListeners.pop();graph.eventListeners.pop();
       graph.eventListeners.pop();graph.eventListeners.pop();
   }
+  graph.removeListener(mxEvent.DOUBLE_CLICK);
   //redirect to the original model when double click on a clon cell
   graph.addListener(mxEvent.DOUBLE_CLICK, function(sender, evt){
     let cell = evt.getProperty('cell');
@@ -23,7 +24,7 @@ let setupEvents = function setupEvents(graph){
             let originalCellId = cell.getId().substring(4);
             let originalCell = graph.getModel().getCell(originalCellId);
             let parent = originalCell.getParent();
-          /* window.location.href = result_url+"/"+parent.getId();*/
+           /* window.location.href = result_url+"/"+parent.getId();*/
            DataContinuous()
           }
           let type = cell.getAttribute("type");
@@ -114,15 +115,18 @@ function ModalControl(texts,inputs,default_vals){
     }
     function SistemIdentification(){
       let dataList=CollectDataCsv().data;
-      dataList =zoomData(dataList)
       let timeList=CollectDataCsv().time;  
-      timeList =zoomData(timeList);
-      let nuevo=[0];
-      let sum=0;
-      for(var i=0,j=timeList.length-1;i<j;i++){
-        nuevo.push(parseFloat((sum += 0.5).toFixed(2)))
+      if(CollectDataCsv().setpoint.length>0)
+      {
+        dataList =zoomData(dataList)
+        timeList =zoomData(timeList);
+        let nuevo=[0];
+        let sum=0;
+          for(var i=0,j=timeList.length-1;i<j;i++){
+            nuevo.push(parseFloat((sum += 0.5).toFixed(2)))
+          }
+        timeList=nuevo;
       }
-      timeList=nuevo;
 
       const deltaValue = document.getElementById('idDeltaU').value;
       const idDelay= document.getElementById('idDelay').checked;
@@ -139,15 +143,20 @@ function ModalControl(texts,inputs,default_vals){
       let secondColumn;
       let threeColumn;
             for (let i=0; i<allTextLines.length; i++) {
-              firstColumn = allTextLines[i].split(";")[1];
-              secondColumn = allTextLines[i].split(";")[0];
-              threeColumn = allTextLines[i].split(";")[2];
-              if (firstColumn!=null && secondColumn!=null  && threeColumn!=null) {
-                listData.push(parseFloat(firstColumn.replace(",", ".")));
-                listTime.push(parseFloat(secondColumn.replace(",", ".")));
-               listSetpoint.push(parseFloat(threeColumn.replace(",", ".")));
+              firstColumn = parseFloat(allTextLines[i].split(";")[1]);
+              secondColumn = parseFloat(allTextLines[i].split(";")[0]);
+              threeColumn = parseFloat(allTextLines[i].split(";")[2]);
+
+              if(!isNaN(firstColumn) && !isNaN(secondColumn) )
+              {
+                listData.push(parseFloat(firstColumn.toFixed(2).toString().replace(",", ".")));
+                listTime.push(parseFloat(secondColumn.toFixed(2).toString().replace(",", ".")));
+              }
+              if (!isNaN(threeColumn) ) {
+               listSetpoint.push(parseFloat(threeColumn.toFixed(2).toString().replace(",", ".")));
               }
             }
+
             let dictionaryData = {
               "data": listData,
               "time": listTime,
@@ -164,7 +173,7 @@ function ModalControl(texts,inputs,default_vals){
       var masculinos = list.slice(item);
 
       return masculinos;
-    }   
+    } 
    
     function positionData(){
       let result;
@@ -241,7 +250,8 @@ function ModalControl(texts,inputs,default_vals){
     //Curve Fitting//
   function nolinearProcess(){  
     let Pi=Math.PI; let PID2=Pi/2; let Pi2=2*Pi 
-    let funcionFirOrder=  "(( "+ConstantsFirstOrder().gain+"  * "+deltaValue +") * (1-Exp( - (t-"+ConstantsFirstOrder().delayValue+" ) / a )))+ D " 
+    //let g=ConstantsFirstOrder().gain+0.5
+    let funcionFirOrder=  "(( "+ConstantsFirstOrder().gain+"  * "+deltaValue +") * (1-Exp( - (t-"+ConstantsFirstOrder().delayValue+" ) / a )))+ D "  
    // let funcionFirOrder=  "(( "+ConstantsFirstOrder().gain+"  * "+deltaValue +") * (1-Exp(  -t/ a )))+ D " 
    
   
@@ -533,12 +543,16 @@ function ModalControl(texts,inputs,default_vals){
     localStorage.setItem("gain",gain);
     //const delay= taoValue().Smith63 -tao;
     const delay= ConstantsFirstOrder().delayValue;
+    console.log(delay)
+
+    let lastData=dataList[dataList.length - 1];
+    let firstData=dataList[0];
 
     function parametersZiegler() {
       let parameter={
         "Kp": Math.abs( 1.2*(tao/(gain*delay))),
         "Ti": Math.abs(2*delay),
-        "Td":Math.abs(0.5*delay)    
+        "Td":Math.abs(0.5*delay)
       }
       localStorage.setItem("zieglerkp",parameter.Kp);
       localStorage.setItem("zieglerti",parameter.Ti);
@@ -547,17 +561,22 @@ function ModalControl(texts,inputs,default_vals){
     }
 
     function parametersCohen() {
-      let parameter={
+     /* let parameter={
         "Kp": Math.abs((1.35/gain)*((tao/delay)+0.185)),
         "Ti": Math.abs((2.5*delay) *((tao+0.185*delay)/(tao+0.611*delay))),
         "Td":Math.abs(0.370 *(tao/(tao+0.185*delay)))    
+      }*/
+      let parameter={
+        "Kp": (deltaValue/(lastData-firstData))*0.2,
+        "Ti": (deltaValue/(lastData-firstData))*0.25,
+      //"Ti": Math.abs(2*delay),
+        "Td":Math.abs(0.5*delay) 
       }
       localStorage.setItem("cohenkp",parameter.Kp);
       localStorage.setItem("cohenti",parameter.Ti);
       localStorage.setItem("cohentd",parameter.Td);
       return parameter;
     }
-
     function parametersAmigo() {
       let parameter={
         "Kp": Math.abs((1/gain)*(0.2+0.45*(tao/delay))),
@@ -586,9 +605,9 @@ function ModalControl(texts,inputs,default_vals){
 				let source = ControlEdges[i];
         let type = source.getAttribute("type");
 				if(type == "controller"){
-          source.setAttribute("Proportional",parametersZiegler().Kp.toFixed(2))
-          source.setAttribute("Integral",parametersZiegler().Ti.toFixed(2))
-          source.setAttribute("Derivate",parametersZiegler().Td.toFixed(2))
+          source.setAttribute("Proportional",parametersCohen().Kp.toFixed(2))
+          source.setAttribute("Integral",(parametersCohen().Ti.toFixed(2)))
+          source.setAttribute("Derivate",parametersCohen().Td.toFixed(2))
         }
       }
     }
@@ -612,7 +631,6 @@ function ModalControl(texts,inputs,default_vals){
         transferFuncion="D(z) = \\frac{"+ Transformz().qo.toFixed(2)+" z^2"+" " +Transformz().q1.toFixed(2)+" z" +" + "+ 
         Transformz().q2.toFixed(2)+"}{"+"z"+"(z-1)"+"}"
       }
-
       var DataDisplay = [transferFuncion,"Ziegler–Nichols:  K:"+ parametersZiegler().Kp.toFixed(2)+"\\"+"   " +
       " Ti:"+ parametersZiegler().Ti.toFixed(2)+" "+" Td:"+ parametersZiegler().Td.toFixed(2)+" ",
       "Cohen-Coon:  K:"+ parametersCohen().Kp.toFixed(2)+"\\"+"   " +
@@ -646,7 +664,7 @@ function ModalControl(texts,inputs,default_vals){
           datasets: [
             {
               data: datacsv,//setInterval(function(){ UploadData(); }, 3000),
-              label: "Data Plant",
+              label: "Process Data",
               lineTension: 0,
               backgroundColor: "transparent",
               borderColor: "#D83A18",
@@ -658,7 +676,7 @@ function ModalControl(texts,inputs,default_vals){
             },
             {
               data: output,
-              label: "Data Transfer Function",
+              label: "Estimated Data",
               lineTension: 0,
               backgroundColor: "transparent",
               borderColor: "#007bff",
@@ -690,7 +708,7 @@ function ModalControl(texts,inputs,default_vals){
       return parseFloat(item);
     });
    
-    let error;
+    let error=0;
     let errorant=0;
     let error_acum=0;
     let sp=1;
@@ -699,18 +717,33 @@ function ModalControl(texts,inputs,default_vals){
     let a=-Math.exp(-1/parseFloat(localStorage.getItem("tao")));
     let b=parseFloat(localStorage.getItem("gain"))*(1+a);
     let controladores =[];
+    console.log("b",b,"a",a)
     let salidap=0;
     let salidas=[];
     let tiempos=[];
     let setpoints=[];
+    let propor=0
+   let  Integral=0;
 
-   
-    for (let i = 0; i < 200; i++) {
-      (i<1) ? salidap=0 : salidap=parseFloat((controladores[i-1]*b-(a*salidap)));
+
+    let ControlRoot = graph.getModel().getCell("control");
+			let ControlEdges = graph.getModel().getChildVertices(ControlRoot);
+			for (let i = 0; i < ControlEdges.length; i++) {
+				let source = ControlEdges[i];
+        let type = source.getAttribute("type");
+				if(type == "controller"){
+          propor= source.getAttribute("Proportional")
+         Integral= source.getAttribute("Integral")
+          source.getAttribute("Derivate")
+           }
+
+      }
+    for (let i = 0; i < 100; i++) {
         error=sp-salidap;
         error_acum=error_acum+parseFloat(error);
-        controlador=(0.1*error)+(error_acum*(1/parseFloat(localStorage.getItem("zieglerti"))))+(0*(errorant-error));
+        controlador=propor*error+(error_acum*Integral)+(0*(errorant-error));
         controladores.push(controlador);
+        (i<2) ? salidap=0 : salidap=parseFloat((controladores[i-1]*b-(a*salidap)));
         tiempos.push(i);
         salidas.push(salidap);
         setpoints.push(sp);
@@ -832,6 +865,7 @@ function ModalControl(texts,inputs,default_vals){
      // transducer variables
      let transducerID// id transducer
      let transdurcerRelations// transducer relations
+     let plantID//
      // list elements
      let listElements=[];
      let feedbackRoot = graph.getModel().getCell("control");
@@ -1002,6 +1036,7 @@ function ModalControl(texts,inputs,default_vals){
               childs2[i].getId() != ControllerInnerId &&
               childs2[i].getId() != initialSummingID &&
               childs2[i].getId() != finalBranchID &&
+              //childs2[i].getId() != plantID &&
               childs2[i].getId() != transducerID &&
               childs2[i].getId() != summingPlantID ) {
               graph.getModel().setVisible(childs2[i], false);
