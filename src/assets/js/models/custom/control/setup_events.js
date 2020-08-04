@@ -254,8 +254,6 @@ const generateCanvas= () =>
   return d;    
 }
 
-
-  
 // Promedia los valores del eje x que representa el 63% de la salida de una funcion
   function taoValue(){   
     let jarray=[];
@@ -573,15 +571,15 @@ const generateCanvas= () =>
     const tao=parseFloat(localStorage.getItem("tao"));
     const gain=ConstantsFirstOrder().gain;
     localStorage.setItem("gain",gain);
+    taoValue().Smith28
     //const delay= taoValue().Smith63 -tao;
     const delay= ConstantsFirstOrder().delayValue;
-    console.log(delay)
     let lastData=dataList[dataList.length - 1];
     let firstData=dataList[0];
 
     function parametersZiegler() {
       let parameter={
-        "Kp": Math.abs( 1.2*(tao/(gain*delay))),
+        "Kp": Math.abs( ((1.2*tao)/(gain*delay))),
         "Ti": Math.abs(2*delay),
         "Td":Math.abs(0.5*delay)
       }
