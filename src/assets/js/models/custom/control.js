@@ -38,7 +38,7 @@ let controlMain = function controlMain(graph)
 
     function controlElements(){
         let  controller = {src:projectPath+"images/models/control/controller.png", wd:100, hg:40, style:"shape=rectangle", type:"controller", pname:"Controller"};
-        let  plant = {src:projectPath+"images/models/control/controller.png", wd:100, hg:40, style:"shape=rectangle", type:"plant", pname:"Plant"};
+        let  plant = {src:projectPath+"images/models/control/plantControl.png", wd:100, hg:40, style:"shape=plant", type:"plant", pname:"Plant"};
         let  transducer = {src:projectPath+"images/models/control/transducer.png", wd:100, hg:40, style:"shape=transducer", type:"transducer", pname:"Sensor"};
         let  summingPoint   = {src:projectPath+"images/models/control/summing_point.PNG", wd:100, hg:40, style:"shape=ellipse", type:"summingPoint", pname:"Summing point"};
         let  setpoint   = {src:projectPath+"images/models/control/setpoint.png", wd:100, hg:40, style:"shape=setpoint", type:"setpoint", pname:"Setpoint "};
