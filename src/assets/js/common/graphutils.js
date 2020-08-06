@@ -154,3 +154,38 @@ export function renameElementByType(graph, modelName, element) {
   element.setAttribute('label', label);
   graph.refresh();
 }
+
+export function createElement(graph,prototype, cell, x, y){
+  let onCreationAllowed = true;
+
+  // if(cConstraintsIc != ""){
+  //     onCreationAllowed = cConstraintsIc(graph);
+  // }
+
+  if(onCreationAllowed){
+      graph.stopEditing(false); 
+      let vertex = graph.getModel().cloneCell(prototype);
+      vertex.geometry.x = x;
+      vertex.geometry.y = y;
+
+      let newCells = graph.importCells([vertex], 0, 0, cell);
+      graph.setSelectionCells(newCells);
+
+      // //execute if there are clons for the current element
+      // if(cClonCells != null){
+      //     let type = newCells[0].getAttribute("type");
+      //     if(cClonCells[type]){ //clon cell in a new model
+      //         graph.getModel().prefix="clon"; //cloned cell contains clon prefix
+      //         graph.getModel().nextId=graph.getModel().nextId-1;
+      //         let vertex2 = graph.getModel().cloneCell(newCells[0]);
+      //         let parent2 = graph.getModel().getCell(cClonCells[type]);
+      //         graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#DCDCDC", [vertex2]); //different background for a cloned cell
+      //         graph.importCells([vertex2], 0, 0, parent2);
+      //         graph.getModel().prefix = ""; //restart prefix
+      //     }
+      // }
+
+      return newCells;
+  }
+
+}

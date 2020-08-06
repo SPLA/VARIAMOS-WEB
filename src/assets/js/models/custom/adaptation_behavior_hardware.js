@@ -1,4 +1,4 @@
-import {getDevices} from './adaptation_hardware/devices'
+import { getDevices } from './adaptation_hardware/devices'
 
 let adaptation_behavior_hardware_main = function adaptation_behavior_hardware_main(graph) {
 	adaptation_behavior_hardware_constraints(graph);
@@ -20,7 +20,7 @@ let adaptation_behavior_hardware_main = function adaptation_behavior_hardware_ma
 	function adaptation_behavior_hardware_constraints(graph) {
 		graph.multiplicities = []; //reset multiplicities 
 		graph.multiplicities.push(new mxMultiplicity(
-			true, "device", null, null, 0, 10000, ["writeAction","readAction"],
+			true, "device", null, null, 0, 10000, ["writeAction", "readAction"],
 			"Only one connection allowed",
 			"The device only can be associated to writeAction or readAction"));
 		graph.multiplicities.push(new mxMultiplicity(
@@ -32,9 +32,9 @@ let adaptation_behavior_hardware_main = function adaptation_behavior_hardware_ma
 			"No connections allowed",
 			"the writeAction does not return a value"));
 		graph.multiplicities.push(new mxMultiplicity(
-			true, "controlAction", null, null, 0, 1, ["noseque"],
-			"No connections allowed",
-			"No connections allowed"));
+			true, "controlAction", null, null, 0, 1, ["variable"],
+			"Only one connection allowed",
+			"The result only can be assigned to one variable"));
 		// graph.multiplicities.push(new mxMultiplicity(  
 		// 	true, "variable", null, null, 0, 10000, ["controlAction","actionArgument"], //no funciona con actionArgument
 		// 	"Only one connection allowed",
@@ -43,14 +43,14 @@ let adaptation_behavior_hardware_main = function adaptation_behavior_hardware_ma
 			true, "actionArgument", null, null, 0, 0, ["actionArgument"],
 			"No connections allowed",
 			"No connections allowed"));
-			graph.multiplicities.push(new mxMultiplicity(
-				false, "writeAction", null, null, 0, 1, ["device"],
-				"Only one connection allowed",
-				"Only one connection allowed"));
-				graph.multiplicities.push(new mxMultiplicity(
-					false, "readAction", null, null, 0, 1, ["device"],
-					"Only one connection allowed",
-					"Only one connection allowed"));
+		graph.multiplicities.push(new mxMultiplicity(
+			false, "writeAction", null, null, 0, 1, ["device"],
+			"Only one connection allowed",
+			"Only one connection allowed"));
+		graph.multiplicities.push(new mxMultiplicity(
+			false, "readAction", null, null, 0, 1, ["device"],
+			"Only one connection allowed",
+			"Only one connection allowed"));
 	}
 
 	function adaptation_behavior_hardware_handlers(graph) {
@@ -83,7 +83,7 @@ let adaptation_behavior_hardware_main = function adaptation_behavior_hardware_ma
 
 		let elements = [];
 		let index = 0;
-		
+
 		elements[index++] = variable;
 		//elements[index++] = digitalVariable;
 		//elements[index++] = analogVariable;
@@ -102,39 +102,39 @@ let adaptation_behavior_hardware_main = function adaptation_behavior_hardware_ma
 
 		let customDevices = getDevices();
 
-		for(let device of customDevices) {
-			let customWriteActions=device.writeActions;
-			if(customWriteActions!=null){
-				for(let action of customWriteActions) { 
+		for (let device of customDevices) {
+			let customWriteActions = device.writeActions;
+			if (customWriteActions != null) {
+				for (let action of customWriteActions) {
 					let devicePath = projectPath + "images/models/adaptation_binding_state_hardware/";
-					let shapeImagePath = devicePath + "writeAction.png";  
+					let shapeImagePath = devicePath + "writeAction.png";
 					let deviceComposition = {
 						src: shapeImagePath,
 						wd: 100,
 						hg: 35,
 						type: "writeAction", //para poder clonarlo y bindearlo 
 						style: "shape=writeAction",
-						pname: action.name, 
-						attributes:[{
-							"name":"subtype",
-							"def_value":action.name
-						},{
-							"name":"device",
-							"def_value":device.name
-						},{ 
-							"name":"parameters",
-							"def_value":action.parameters
+						pname: action.name,
+						attributes: [{
+							"name": "subtype",
+							"def_value": action.name
+						}, {
+							"name": "device",
+							"def_value": device.name
+						}, {
+							"name": "parameters",
+							"def_value": action.parameters
 						}]
-					}; 
-					elements[index++] = deviceComposition; 
+					};
+					elements[index++] = deviceComposition;
 				}
 			}
 
-			let customReadActions=device.readActions;
-			if(customReadActions!=null){
-				for(let action of customReadActions) { 
+			let customReadActions = device.readActions;
+			if (customReadActions != null) {
+				for (let action of customReadActions) {
 					let devicePath = projectPath + "images/models/adaptation_binding_state_hardware/";
-					let shapeImagePath = devicePath + "readAction.png"; 
+					let shapeImagePath = devicePath + "readAction.png";
 
 					let deviceComposition = {
 						src: shapeImagePath,
@@ -142,23 +142,23 @@ let adaptation_behavior_hardware_main = function adaptation_behavior_hardware_ma
 						hg: 35,
 						type: "readAction", //para poder clonarlo y bindearlo 
 						style: "shape=readAction",
-						pname: action.name, 
-						attributes:[{
-							"name":"subtype",
-							"def_value":action.name
-						},{
-							"name":"device",
-							"def_value":device.name
-						},{ 
-							"name":"parameters",
-							"def_value":action.parameters
+						pname: action.name,
+						attributes: [{
+							"name": "subtype",
+							"def_value": action.name
+						}, {
+							"name": "device",
+							"def_value": device.name
+						}, {
+							"name": "parameters",
+							"def_value": action.parameters
 						}]
-					}; 
-					elements[index++] = deviceComposition; 
+					};
+					elements[index++] = deviceComposition;
 				}
-			} 
+			}
 		}
- 
+
 		return elements;
 	}
 
@@ -239,10 +239,17 @@ let adaptation_behavior_hardware_main = function adaptation_behavior_hardware_ma
 			"types": ["variable"],
 			"custom_attributes": [{
 				"name": "dataType",
-				"def_value": "float"
-			},{
+				"def_value": "double"
+			}, {
 				"name": "value",
 				"def_value": "0"
+			}]
+		};
+		attributes[11] = {
+			"types": ["controlAction"],
+			"custom_attributes": [{
+				"name": "controlType",
+				"def_value": "continuous"
 			}]
 		};
 		return attributes;
@@ -258,7 +265,7 @@ let adaptation_behavior_hardware_main = function adaptation_behavior_hardware_ma
 				"name": "phase",
 				"def_value": "begin"
 			}]
-		} 
+		}
 
 		return relations;
 	}
@@ -281,7 +288,7 @@ let adaptation_behavior_hardware_main = function adaptation_behavior_hardware_ma
 			"variable": [{
 				"attribute": "dataType",
 				"input_type": "select",
-				"input_values": ["float", "int", "digital", "string"]
+				"input_values": ["double", "float", "int", "digital", "string"]
 			}
 			],
 			"digitalVariable": [{
@@ -302,43 +309,50 @@ let adaptation_behavior_hardware_main = function adaptation_behavior_hardware_ma
 				"input_values": ["=", ">", "<", ">=", "<=", "!="]
 			}
 			],
-			"writeAction":[
+			"writeAction": [
 				{
 					"attribute": "subtype",
-					"input_type":"disabled" 
+					"input_type": "disabled"
 				},
 				{
 					"attribute": "parameters",
-					"input_type":"none" 
+					"input_type": "none"
 				},
 				{
 					"attribute": "device",
 					"input_type": "disabled"
-				} 
+				}
 			],
-			"readAction":[
+			"readAction": [
 				{
 					"attribute": "subtype",
-					"input_type":"disabled" 
+					"input_type": "disabled"
 				},
 				{
 					"attribute": "parameters",
-					"input_type":"none" 
+					"input_type": "none"
 				},
 				{
 					"attribute": "device",
 					"input_type": "disabled"
-				} 
+				}
 			],
-			"actionArgument":[
+			"controlAction": [
+				{
+					"attribute": "controlType",
+					"input_type": "select",
+					"input_values": ["continuous", "discrete"]
+				}
+			],
+			"actionArgument": [
 				{
 					"attribute": "label",
-					"input_type":"disabled" 
+					"input_type": "disabled"
 				},
 				{
 					"attribute": "dataType",
-					"input_type":"disabled" 
-				} 
+					"input_type": "disabled"
+				}
 			]
 		}
 
@@ -411,13 +425,13 @@ let adaptation_behavior_hardware_main = function adaptation_behavior_hardware_ma
 	function adaptation_behavior_hardware_clon_cells() {
 		let clons = {};
 		clons = {
-			"controlAction":"control",
-			"readAction":"adaptation_behavior_states",
-			"writeAction":"adaptation_behavior_states",
-			"variable":"adaptation_behavior_transitions",
-			"digitalVariable":"adaptation_behavior_transitions",
-			"analogVariable":"adaptation_behavior_transitions",
-			"stringVariable":"adaptation_behavior_transitions"
+			"controlAction": "control",
+			"readAction": "adaptation_behavior_states",
+			"writeAction": "adaptation_behavior_states",
+			"variable": "adaptation_behavior_transitions",
+			"digitalVariable": "adaptation_behavior_transitions",
+			"analogVariable": "adaptation_behavior_transitions",
+			"stringVariable": "adaptation_behavior_transitions"
 		};
 
 		return clons;
@@ -443,33 +457,33 @@ let adaptation_behavior_hardware_main = function adaptation_behavior_hardware_ma
 		return func1;
 	}
 
-	function adaptation_behavior_hardware_relation_styles() {		
-		let relations = []; 
+	function adaptation_behavior_hardware_relation_styles() {
+		let relations = [];
 		relations[0] = {
 			"source": ["variable", "digitalVariable", "analogVariable", "timer", "analogActuator", "digitalActuator", "analogSensor", "digitalSensor"],
 			"rel_source_target": "and",
 			"target": ["readAction", "writeAction", "controlAction"],
 			"style": "strokeColor=#333333;strokeWidth=2;dashed=1;endFill=0;"
-		} 
+		}
 		relations[1] = {
 			"source": ["readAction", "writeAction", "controlAction"],
 			"rel_source_target": "and",
 			"target": ["variable", "digitalVariable", "analogVariable", "timer", "analogActuator", "digitalActuator", "analogSensor", "digitalSensor"],
 			"style": "strokeColor=#333333;strokeWidth=2;dashed=1;endFill=1"
-		} 
+		}
 		relations[2] = {
 			"source": ["device"],
 			"rel_source_target": "and",
 			"target": ["readAction", "writeAction", "controlAction"],
 			"style": "strokeColor=#333333;strokeWidth=2;"
-		} 
+		}
 		relations[3] = {
 			"source": ["variable", "digitalVariable", "analogVariable"],
 			"rel_source_target": "and",
 			"target": ["actionArgument"],
 			"style": "strokeColor=#333333;strokeWidth=2;dashed=1;endFill=1"
-		} 
-		return relations; 
+		}
+		return relations;
 	}
 
 	function adaptation_behavior_hardware_on_double_click(cell) {

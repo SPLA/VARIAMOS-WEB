@@ -288,6 +288,50 @@ let customDevices = [
                 ]
             } 
         ]
+    },
+    {
+        name: "wifiHttpErazo",
+        digitalPins: [],
+        analogPins: [],
+        pwmPins: [], 
+        readActions:[
+            {
+                name:"process",
+                "parameters":[
+                    {
+                        "name":"url",
+                        "type":"string"
+                    },
+                    {
+                        "name":"project",
+                        "type":"string"
+                    },
+                    {
+                        "name":"sp",
+                        "type":"double"
+                    },
+                    {
+                        "name":"y",
+                        "type":"double"
+                    }
+                ]
+            }
+        ] ,
+        writeActions:[
+            {
+                name:"init",
+                "parameters":[
+                    {
+                        "name":"ssid",
+                        "type":"string"
+                    },
+                    {
+                        "name":"pass",
+                        "type":"string"
+                    }
+                ]
+            } 
+        ]
     }
 ];
 
