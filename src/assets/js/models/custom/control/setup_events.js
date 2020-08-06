@@ -597,10 +597,10 @@ const generateCanvas= () =>
         "Td":Math.abs(0.370 *(tao/(tao+0.185*delay)))    
       }*/
       let parameter={
-        "Kp": (deltaValue/(lastData-firstData))*0.2,
-        "Ti": (deltaValue/(lastData-firstData))*0.25,
+        "Kp": ((tao/(gain*delay))*(0.9+(delay/(12*tao)))),
+        "Ti": (delay*(((30*tao)+(3*delay))/((9*tao)+(20*delay)))),
       //"Ti": Math.abs(2*delay),
-        "Td":Math.abs(0.5*delay) 
+        "Td": ((40*delay*tao)/((11*tao)+(2*delay)))
       }
       localStorage.setItem("cohenkp",parameter.Kp);
       localStorage.setItem("cohenti",parameter.Ti);
@@ -609,9 +609,12 @@ const generateCanvas= () =>
     }
     function parametersAmigo() {
       let parameter={
-        "Kp": Math.abs((1/gain)*(0.2+0.45*(tao/delay))),
+        "Kp": (deltaValue/(lastData-firstData))*0.2,
+        "Ti": (deltaValue/(lastData-firstData))*0.25,
+        "Td":Math.abs(0.5*delay) 
+        /*"Kp": Math.abs((1/gain)*(0.2+0.45*(tao/delay))),
         "Ti": Math.abs(((0.4*delay+0.8*tao)/(delay+0.1*tao))),
-        "Td":Math.abs(((0.5 *tao)/((0.3*delay)+tao))*delay)   
+        "Td":Math.abs(((0.5 *tao)/((0.3*delay)+tao))*delay) */  
       }
       localStorage.setItem("amigokp",parameter.Kp);
       localStorage.setItem("amigoti",parameter.Ti);
@@ -910,7 +913,7 @@ const generateCanvas= () =>
           }
           return listEdges;
         }
-        const ocultarElementos = () => {
+        const hideElements = () => {
           let feedbackRoot = graph.getModel().getCell("control");
           let childs2 = graph.getModel().getChildVertices(feedbackRoot);
           for (let i = 0; i < childs2.length; i++) {
@@ -921,7 +924,7 @@ const generateCanvas= () =>
             }
           }
         }   
-        ocultarElementos();
+        hideElements();
       }
     }
   };
