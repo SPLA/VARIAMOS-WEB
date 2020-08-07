@@ -1,5 +1,21 @@
 <shapes>
 <!-- begin control states model -->
+<shape name="plant" aspect="variable">
+	<background>
+		<path>
+			<move x="0" y="0"/>
+			<line x="100" y="0"/>
+			<line x="100" y="100"/>
+			<line x="0" y="100"/>
+			<close/>
+			<fillstroke/>
+		</path>		
+	</background>
+	<foreground>
+		<image src="./images/models/control/plant.png" x="84" y="3" w="15" h="35" />
+	</foreground>
+</shape>
+
 <shape name="setpoint" aspect="variable">
 	<background>
 		<path>
