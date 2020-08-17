@@ -442,6 +442,7 @@ const generateCanvas= () =>
         NL = LF } */
         NL = (da.indexOf(CR)>-1) ? NL = CR : NL = LF;    
     }
+    let resultado={}
 
     let datos=[];
     datos.push(dataList[0]);
@@ -559,17 +560,23 @@ const generateCanvas= () =>
     }
   
     let FRelax =1
+    let tao;
     o = o + ( NL + "Parameter Estimates..." + NL );
     for( i=0; i<nPar; i++) {
       Par[i] = Par[i] + FRelax * Arr[ix(i,nPar)];
       SEP[i] = RMS * SQRT(Arr[ix(i,i)]);
       localStorage.setItem("tao",vFmt(Par[i]));
+      tao=vFmt(Par[i]);
       o = o + ("p"+(i+1)+"="+vFmt(Par[i])+" +/- "+vFmt(SEP[i])+"; p="+Fmt(STUDT(Par[i]/SEP[i],dgfr))+NL)
     }
-  return datos;
+    resultado= {
+    'datos': datos,
+    'tao': tao
+    }
+  return resultado;
   }
     //const tao=1.5*(parseFloat(localStorage.getItem("tao"))-taoValue().Smith28);
-    const tao=parseFloat(localStorage.getItem("tao"));
+    const tao=parseFloat(nolinearProcess().tao);
     const gain=ConstantsFirstOrder().gain;
     localStorage.setItem("gain",gain);
     taoValue().Smith28
@@ -639,9 +646,9 @@ const generateCanvas= () =>
 				let source = ControlEdges[i];
         let type = source.getAttribute("type");
 				if(type == "controller"){
-          source.setAttribute("Proportional",parametersCohen().Kp.toFixed(2))
-          source.setAttribute("Integral",(parametersCohen().Ti.toFixed(2)))
-          source.setAttribute("Derivate",parametersCohen().Td.toFixed(2))
+          source.setAttribute("Proportional",parametersAmigo().Kp.toFixed(2));
+          source.setAttribute("Integral",parametersAmigo().Ti.toFixed(2));
+          source.setAttribute("Derivate",parametersAmigo().Td.toFixed(2));
         }
       }
     }
@@ -724,7 +731,7 @@ const generateCanvas= () =>
       return setupModal;
       }
 
-    return canvasGraph("Experimental Result",timeList,dataList,nolinearProcess());
+    return canvasGraph("Experimental Result",timeList,dataList,nolinearProcess().datos);
   }
           
   function controlllerOutput(){
@@ -748,6 +755,24 @@ const generateCanvas= () =>
       return controller;
     }
 
+    const getSetpointTm = () =>
+    {
+      let setpoint={}
+      let ControlRoot = graph.getModel().getCell("control");
+			let ControlEdges = graph.getModel().getChildVertices(ControlRoot);
+			for (let i = 0; i < ControlEdges.length; i++) {
+				let source = ControlEdges[i];
+        let type = source.getAttribute("type");
+				if(type == "setpoint"){
+          setpoint={
+            "sp": source.getAttribute("SetPoint"),
+            "tm":  source.getAttribute("Tm"),
+          }
+        }
+      }
+      return setpoint;
+    }
+
     const constantsFirtsOrder = () => { 
       let result = {}
       let numerator=-Math.exp(-1/parseFloat(localStorage.getItem("tao")));
@@ -758,14 +783,18 @@ const generateCanvas= () =>
       }
       return result
     }
+
       let error;
       let errorant=0;
       let error_acum=0;
-      let sp=1;
+      let sp=parseInt(getSetpointTm().sp);
+      let tm=parseInt(getSetpointTm().tm);
       let controladores =[];
       let salidap=0;
       let salidas=[];
       let tiempos=[];
+
+      console.log(sp,tm)
 
       // Edge Values
       let kp=controllerValues().kp;
@@ -774,7 +803,7 @@ const generateCanvas= () =>
       // solution transfer function
       let a= constantsFirtsOrder().a;
       let b= constantsFirtsOrder().b;
-      for (let i = 0; i < 100; i++) {
+      for (let i = 0; i < tm; i++) {
         error=sp-salidap;
         error_acum=error_acum+parseFloat(error);
         controladores.push(kp*error+(error_acum*ki)+(0*(errorant-error)));
@@ -913,7 +942,8 @@ const generateCanvas= () =>
           }
           return listEdges;
         }
-        const hideElements = () => {
+
+        (function () {
           let feedbackRoot = graph.getModel().getCell("control");
           let childs2 = graph.getModel().getChildVertices(feedbackRoot);
           for (let i = 0; i < childs2.length; i++) {
@@ -923,8 +953,7 @@ const generateCanvas= () =>
                 graph.getModel().setVisible(childs2[i], true);
             }
           }
-        }   
-        hideElements();
+        })();   
       }
     }
   };
