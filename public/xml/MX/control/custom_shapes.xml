@@ -16,6 +16,22 @@
 	</foreground>
 </shape>
 
+<shape name="controller" aspect="variable">
+	<background>
+		<path>
+			<move x="0" y="0"/>
+			<line x="100" y="0"/>
+			<line x="100" y="100"/>
+			<line x="0" y="100"/>
+			<close/>
+			<fillstroke/>
+		</path>		
+	</background>
+	<foreground>
+		<image src="./images/models/control/controller_ico.png" x="84" y="3" w="15" h="35" />
+	</foreground>
+</shape>
+
 <shape name="setpoint" aspect="variable">
 	<background>
 		<path>
@@ -23,17 +39,12 @@
 			<line x="100" y="0"/>
 			<line x="100" y="100"/>
 			<line x="0" y="100"/>
-		
 			<close/>
-			<move x="100" y="10"/>  
-			<line x="85" y="10"/>
-			<move x="85" y="10"/>
-			<line x="85" y="25"/> 
-			<line x="70" y="25"/>   
-		</path>		
+		</path>	
+		<fillstroke/>	
 	</background>
 	<foreground>
-		<fillstroke/>
+		<image src="./images/models/control/set_ico.png" x="84" y="3" w="15" h="35" />
 	</foreground>
 </shape>
 
@@ -43,22 +54,13 @@
 			<move x="0" y="0"/>
 			<line x="100" y="0"/>
 			<line x="100" y="100"/>
-			<line x="0" y="100"/>
-		
+			<line x="0" y="100"/>		
 			<close/>
-			<move x="85" y="10"/>  
-			<line x="15" y="10"/>
-			<move x="15" y="10"/>
-			<line x="15" y="25"/>
-			<move x="15" y="25"/>
-			<line x="85" y="25"/>
-			<move x="85" y="25"/>
-			<line x="85" y="10"/>
-	
+		<fillstroke/>
 		</path>		
 	</background>
 	<foreground>
-		<fillstroke/>
+		<image src="./images/models/control/output.png" x="25" y="3" w="50" h="30" />
 	</foreground>
 </shape>
 
@@ -69,21 +71,12 @@
 			<line x="100" y="0"/>
 			<line x="100" y="100"/>
 			<line x="0" y="100"/>
-		
 			<close/>
-			<move x="75" y="30"/>  
-			<line x="80" y="10"/>
-			<move x="80" y="10"/>
-			<line x="85" y="30"/>
-			<move x="85" y="30"/>
-			<line x="90" y="10"/>
-			<move x="90" y="10"/>
-			<close/>
-
+		<fillstroke/>	
 		</path>		
 	</background>
 	<foreground>
-		<fillstroke/>
+	<image src="./images/models/control/sensor_ico.png" x="84" y="3" w="15" h="35" />	
 	</foreground>
 </shape>
 
@@ -94,22 +87,12 @@
 			<line x="100" y="0"/>
 			<line x="100" y="100"/>
 			<line x="0" y="100"/>
-		
 			<close/>
-			<move x="80" y="10"/>  
-			<line x="96" y="10"/>
-			<move x="96" y="10"/>
-			<line x="90" y="25"/>
-			<move x="90" y="25"/>
-			<line x="90" y="38"/>
-			<line x="86" y="43"/>
-			<line x="86" y="25"/>
-			<line x="80" y="10"/>
-
+		<fillstroke/>
 		</path>		
 	</background>
 	<foreground>
-		<fillstroke/>
+	<image src="./images/models/control/filter_ico.png" x="84" y="3" w="15" h="35" />
 	</foreground>
 </shape>
 <!-- end control model -->
