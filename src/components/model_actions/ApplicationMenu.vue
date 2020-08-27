@@ -32,17 +32,34 @@
       <a
         data-menudisplay="['adaptation_state','adaptation_hardware','adaptation_behavior_hardware','adaptation_behavior_states','adaptation_behavior_transitions','control']"
         @click="adaptation_state_source_code_generation()"
+        class="dropdown-item">Source code generation</a>
+      <a
+        data-menudisplay="['adaptation_architecture']"
+        @click="adaptation_state_import_from_architecture()"
         class="dropdown-item"
-      >Source code generation</a>
+      >Import from domain architecture model</a>
+      <a
+        data-menudisplay="['adaptation_hardware']"
+        @click="adaptation_state_generate_hardware_from_architecture()"
+        class="dropdown-item"
+      >Generate from architecture</a>
       <component :is="dynamicComponent" :current_graph="current_graph"></component>
     </div>
+	<vue-snotify></vue-snotify>
   </li>
 </template>
 
 <script>
+
+import Vue from 'vue';
 import axios from "axios";
+
+import Snotify, { SnotifyPosition, SnotifyToast } from 'vue-snotify';
+import VueClipboard from 'vue-clipboard2'
+
 import di_actions from "@/assets/js/models/actions/domain_implementation/di_actions.js";
 import "@/assets/js/chart/Chart.min.js";
+
 import {
   setupModal,
   modalH3,
@@ -52,7 +69,14 @@ import {
   modalButton,
   downloadFile
 } from "../../assets/js/common/util.js";
+
+import 'vue-snotify/styles/material.css';
 import adaptation_state_actions from "@/assets/js/models/actions/domain_implementation/adaptation_state_actions.js";
+
+VueClipboard.config.autoSetContainer = true;
+Vue.config.productionTip = false;
+Vue.use(Snotify);
+Vue.use(VueClipboard);
 
 export default {
   data: function() {
@@ -103,6 +127,14 @@ export default {
     }
   },
   methods: {
+	// clipboard copy
+	doCopy(text) {
+      this.$copyText(text).then(function (e) {
+        console.log(e)
+      }, function (e) {
+        console.log(e)
+      })
+	},
     //Start set parameters
     set_parameters() {
       let c_header = modalH3(this.$t("application_menu_set_app"));
@@ -479,20 +511,24 @@ export default {
       try {
         ///let serverUrl = localStorage["domain_implementation_main_path"] + "AdaptationStateImplementation/generateSourceCode";
         let serverUrl = localStorage["domain_implementation_main_path"];
-        if (!serverUrl.endsWith("/")) {
+        
+		if (!serverUrl.endsWith("/")) {
           serverUrl += "/";
         }
+		
         serverUrl += "json/test-api";
-        alert(serverUrl);
+        // alert(serverUrl);
+		
         let directory = "MiProyecto"; // localStorage["domain_implementation_pool_path"];
         //alert(directory);
         let modelJson = adaptation_state_actions(
           this.current_graph,
           "serializeJson"
         );
+		
         var strModelJson = JSON.stringify(modelJson);
-        //alert(strModelJson);
-        downloadFile("BindingStateHardwareModel.json", strModelJson);
+        // alert(strModelJson);
+        // downloadFile("BindingStateHardwareModel.json", strModelJson);
 
         var createCORSRequest = function(method, url) {
           var xhr = new XMLHttpRequest();
@@ -506,36 +542,70 @@ export default {
           } else {
             // CORS not supported.
             xhr = null;
+            return;
           }
-          return xhr;
+          return new Promise((resolve, reject) => {
+            xhr.onreadystatechange = function () {
+              if (xhr.readyState !== 4) return;
+              if (xhr.status >= 200 && xhr.status < 300) {
+                resolve(xhr);
+              } else {
+                reject({
+                  status: xhr.status,
+                  statusText: xhr.statusText
+                });
+              }
+            };
+            xhr.send(strModelJson); 
+          });
         };
-
-        var url = serverUrl;
-        var method = "POST";
-        var xhr = createCORSRequest(method, url);
-
-        xhr.onload = function() {
-          // Success code goes here.
-          //alert('bien');
-        };
-
-        xhr.onerror = function() {
-          // Error code goes here.
-          alert('Ha ocurrido un error en la solicitud.');
-        };
-
-        xhr.onreadystatechange = function() {
-          if (xhr.readyState == 4 && xhr.status == 200) {
-            //alert("Respuesta: " + xhr.responseText);
-            downloadFile("Arduino.ino", xhr.responseText);
-          }
-        };
-
-        xhr.send(strModelJson);
+		
+		var url = serverUrl;
+        var method = 'POST';
+		let vm = this;
+		
+		let snotifyPromise = new Promise((resolve, reject) => {
+          createCORSRequest(method, url, snotifyPromise)
+            .then((xhr) => resolve({
+                title: 'Completed',
+                body: 'The code has been generated.',
+                config: {
+                  closeOnClick: true,
+                  timeout: 10000,
+                  showProgressBar: true,
+                  closeOnClick: false,
+                  pauseOnHover: true,
+                  buttons: [
+                    {text: 'Copy', action: () => vm.doCopy(xhr.responseText), bold: true},
+					{text: 'Get INO', action: () => downloadFile("Arduino.ino", xhr.responseText), bold: true},
+					{text: 'Get JSON', action: () => downloadFile("Arduino.json", strModelJson), bold: true},
+                    {text: 'Close', action: (toast) => vm.$snotify.remove(toast.id)}
+                  ]
+                }
+              })
+            ).catch(
+              () => reject({
+                title: 'Error',
+                body: 'We got an error!',
+                config: {
+                  closeOnClick: true
+                }
+              })
+            )
+        });
+		
+		vm.$snotify.async('Generating code...', 'Task', () => snotifyPromise);
+		
       } catch (ex) {
         alert(ex);
       }
       return "";
+    },
+    adaptation_state_import_from_architecture(){
+      adaptation_state_actions( this.current_graph, "importFromArchitecture");
+    },
+    adaptation_state_generate_hardware_from_architecture(){
+      adaptation_state_actions( this.current_graph, "generateHardwareFromArchitecture");
     }
   }
 };
