@@ -8,7 +8,16 @@ var application_creator = function application_creator(graph) {
 }
 
 application_creator.prototype.createFromReferenceArchitecture = function (graph, cell) {
-    this.createLocalModel(graph, cell);
+    // this.createLocalModel(graph, cell);
+    let newApplication= {
+        index: 0,
+        id:null,
+        parentId: null,
+        applicationName: '2',
+        parentFolder: 'Lámpara' 
+    };
+    //graph.currentVueInstance.$store.dispatch('createapplication', newApplication);
+    graph.currentVueInstance.$store.dispatch('createapplication', null);
 };   
 
 application_creator.prototype.createLocalModel = function (graph, cell) {

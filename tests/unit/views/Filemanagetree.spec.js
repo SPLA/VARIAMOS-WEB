@@ -233,6 +233,16 @@ describe('Filemanagetree', () => {
     __rewire_reset_all__();
   })
 
+  it('Bus.$on("cloneadaption")(sic) shows modal correctly', () => {
+    Filemanagetree.__Rewire__('Bus', localBus)
+    const emptyState = false
+    const wrapper = wrapperFactory(emptyState)
+    const data = wrapper.vm.getdata[5]
+    localBus.$emit('cloneadaption', data)
+    expect(wrapper.vm.newAdaptation.isshow).to.be.ok
+    __rewire_reset_all__();
+  })
+
   it('Bus.$on("deletedire") deletes the folder', () => {
     Filemanagetree.__Rewire__('Bus', localBus)
     const emptyState = false

@@ -577,7 +577,7 @@ var adaptation_state_actions = function adaptation_state_actions(graph, selected
           dataType: "double",
           value:vertice.getAttribute("Proportional")
         };
-        item.id = dicElements.add("dummy", "control_configuration", action.label + "_" + "proportional", argument); 
+        item.id = dicElements.add("dummy", "control_configuration", action.label + "_" + "proportional", item); 
         action.configuration.push(item);
 
         var item = {
@@ -586,7 +586,7 @@ var adaptation_state_actions = function adaptation_state_actions(graph, selected
           dataType: "double",
           value:vertice.getAttribute("Integral")
         };
-        item.id = dicElements.add("dummy", "control_configuration", action.label + "_" + "integral", argument); 
+        item.id = dicElements.add("dummy", "control_configuration", action.label + "_" + "integral", item); 
         action.configuration.push(item);
 
         var item = {
@@ -595,7 +595,7 @@ var adaptation_state_actions = function adaptation_state_actions(graph, selected
           dataType: "double",
           value:vertice.getAttribute("Derivate")
         };
-        item.id = dicElements.add("dummy", "control_configuration", action.label + "_" + "derivate", argument);
+        item.id = dicElements.add("dummy", "control_configuration", action.label + "_" + "derivate", item);
         action.configuration.push(item);
       } 
     } 

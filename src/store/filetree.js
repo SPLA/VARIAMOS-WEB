@@ -180,8 +180,35 @@ export const mutations = {
     createnewapplication (state, {app, getters}) {
         let temp = getters.getnewnodeid;
 		let tempindex = 0;
+		if (!app) {
+			app = {
+				index: 0,
+				id:null,
+				parentId: null,
+				applicationName: null,
+				parentFolder: null 
+			};
+			let data=state.data[0].data;
+			app.parentFolder = data.nodeName; 
+			var nid=0;
+			for(let i = 0; i < state.data.length; i++)
+			{
+				let nodeName =state.data[i].data.nodeName;
+				if (nodeName.includes("Application")) {
+				  var id=nodeName.split('- ')[2];
+				  if (!isNaN(id)) {
+					if (nid<Number(id)) {
+						nid=Number(id);
+					}
+				  }
+				}
+			}
+			app.applicationName=nid+1;
+		}
 		for(let i = 0; i < state.data.length; i++)
 		{
+			let v1=state.data[i].data.projectId;
+			let v2=state.data[app.index].data.nodeId;
 			if(state.data[i].data.projectId === state.data[app.index].data.nodeId)
 				tempindex++;
 		}
