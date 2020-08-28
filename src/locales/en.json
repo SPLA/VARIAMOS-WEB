@@ -110,6 +110,8 @@
   "backend_setup_git_token":"GitHub PAT",
   "backend_setup_git_user_login":"GitHub User Login",
 
+  "samples_title":"Examples Loader",
+
   "verification":"Verification",
   "verification_root":"More than one root element",
   "verification_dead":"Dead elements",
