@@ -11,8 +11,9 @@
                      <li class="nav-item"><a class="nav-link nav-text"><i class="fas fa-chart-area"></i>
                       {{ $t("models_area") }} - {{ $route.params.type }} {{ $t("models_model") }}</a></li>
                       <!-- model actions -->
-                      <BackEnd /> 
+                      <BackEnd />
                       <VersionControlMenu /> 
+					            <Samples /> 
                       <DomainMenu :current_graph="graph" :model_type="modelType" />
                       <ApplicationMenu :current_graph="graph" :model_type="modelType" /> 
                       <Verification :current_graph="graph" /> 
@@ -85,6 +86,7 @@ import ApplicationMenu from '../components/model_actions/ApplicationMenu'
 import Verification from '../components/model_actions/Verification'
 import BackEnd from '../components/model_actions/BackEnd'
 import VersionControlMenu from '../components/model_actions/VersionControlMenu'
+import Samples from '../components/model_actions/Samples'
 
 export default{
   data: function(){
@@ -104,6 +106,7 @@ export default{
   },
   components: {
     BackEnd,
+	  Samples,
     DomainMenu,
     ApplicationMenu,
     Verification,
