@@ -1,6 +1,6 @@
 import { getBoard } from "./boards";
 import { getDevice } from "./devices";
-import {renameElementByType} from '@/assets/js/common/graphutils'
+import { renameElementByType } from '@/assets/js/common/graphutils'
 
 let setup_elements = function setup_elements(graph, elements, custom_attributes, c_clon_cells, c_constraints_ic, toolbar, c_type) {
     if (elements == null) {
@@ -264,7 +264,7 @@ let setup_elements = function setup_elements(graph, elements, custom_attributes,
         // Function that is executed when the image is dropped on
         // the graph. The cell argument points to the cell under
         // the mousepointer if there is one.
-        let funct = function (graph, evt, cell) {
+        let funct = function(graph, evt, cell) {
             let oncreation_allowed = true;
 
             if (c_constraints_ic != "") {
@@ -282,20 +282,20 @@ let setup_elements = function setup_elements(graph, elements, custom_attributes,
 
                 new_cells.forEach(element => {
                     renameElementByType(graph, "adaptation_hardware", element);
-                    
-                    const type = element.getAttribute("type");  
+
+                    const type = element.getAttribute("type");
                     if (["board", "device"].includes(type)) {
                         let digitalPins = [];
                         let analogPins = [];
                         let pwmPins = [];
- 
+
                         if (["board"].includes(type)) {
                             let boardName = element.getAttribute("subtype");
                             let board = getBoard(boardName);
                             digitalPins = board.digitalPins;
                             analogPins = board.analogPins;
                             pwmPins = board.pwmPins;
-                        } 
+                        }
                         if (["device"].includes(type)) {
                             let deviceName = element.getAttribute("subtype");
                             let device = getDevice(deviceName);
@@ -304,9 +304,9 @@ let setup_elements = function setup_elements(graph, elements, custom_attributes,
                             pwmPins = device.pwmPins;
                         }
 
-                        
+
                         let x = 10;
-                        let y = 24; 
+                        let y = 24;
                         if (digitalPins) {
                             //x = 10;
                             //y += 20;
