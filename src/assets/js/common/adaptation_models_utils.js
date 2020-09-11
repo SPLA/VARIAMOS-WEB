@@ -1,4 +1,4 @@
-import { getRelationsToTarget } from "@/assets/js/common/graphutils";
+import { GraphUtil } from "@/assets/js/common/graphutil";
 
 export function createAdaptationModelsFromReferenceArchitecture(app) {
   let adapname =
@@ -32,32 +32,62 @@ function generateAdaptationArchitectureXml(app) {
     mxUtils.getXml(result);
   xml = xml.replace("adap_architecture", "adaptation_architecture");
 
-  let relations = getRelationsToTarget(
-    app.graph,
-    "adap_architecture",
-    app.cell,
-    "sensor"
-  );
+  let graputil=new GraphUtil();
+   
+  let nose=graputil.getElementsByTagName(app.graph, "adap_architecture", "sourceCardinality");
+
+  let relations = graputil.getRelationsToTarget( app.graph, "adap_architecture", app.cell,  "sensor");
   for (let index = 0; index < relations.length; index++) {
     const relation = relations[index];
     let sensor = relation.source;
 
     result = encoder.encode(sensor);
     let xmlAux = mxUtils.getXml(result);
-    xmlAux = xmlAux.replace(
-      "adap_architecture",
-      "adaptation_architecture"
-    ); 
+    xmlAux = xmlAux.replace("adap_architecture", "adaptation_architecture");
     xml += xmlAux;
 
     result = encoder.encode(relation);
     xmlAux = mxUtils.getXml(result);
-    xmlAux = xmlAux.replace(
-      "adap_architecture",
-      "adaptation_architecture"
-    ); 
+    xmlAux = xmlAux.replace("adap_architecture", "adaptation_architecture");
     xml += xmlAux;
-  } 
+  }
+
+  relations = graputil.getRelationsToTarget( app.graph, "adap_architecture", app.cell,  "actuator");
+  for (let index = 0; index < relations.length; index++) {
+    const relation = relations[index];
+    let sensor = relation.source;
+
+    result = encoder.encode(sensor);
+    let xmlAux = mxUtils.getXml(result);
+    xmlAux = xmlAux.replace("adap_architecture", "adaptation_architecture");
+    xml += xmlAux;
+
+    result = encoder.encode(relation);
+    xmlAux = mxUtils.getXml(result);
+    xmlAux = xmlAux.replace("adap_architecture", "adaptation_architecture");
+    xml += xmlAux;
+  }
+
+  relations = graputil.getRelationsToTarget( app.graph, "adap_architecture", app.cell,  "device");
+  for (let index = 0; index < relations.length; index++) {
+    const relation = relations[index];
+    let sensor = relation.source;
+
+    result = encoder.encode(sensor);
+    let xmlAux = mxUtils.getXml(result);
+    xmlAux = xmlAux.replace("adap_architecture", "adaptation_architecture");
+    xml += xmlAux;
+
+    result = encoder.encode(relation);
+    xmlAux = mxUtils.getXml(result);
+    alert(xmlAux);
+    xmlAux = xmlAux.replace("adap_architecture", "adaptation_architecture");
+    xml += xmlAux;
+  }
+
+
+
+
   return xml;
 
   // let ret='<mxCell id="adaptation_architecture" parent="0"/>' +

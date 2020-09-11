@@ -1,4 +1,31 @@
-export function getElementById(graph, modelName, id) {
+export function GraphUtil() { 
+}
+
+//Busca los vértices por el tag xml
+GraphUtil.prototype.getElementsByTagName = function(graph, modelName, tag) {
+  let ret = [];
+  var graphModel = graph.getModel();
+  var mainCell = graphModel.getCell(modelName);
+  var vertices = graphModel.getChildVertices(mainCell);
+  var edges = graphModel.getChildEdges(mainCell);
+  let encoder = new mxCodec();
+
+  for (var i = 0; i < vertices.length; i++) {
+    var vertice = vertices[i]; 
+    let result = encoder.encode(vertice);
+
+
+
+    var str=vertice.toString();
+    var type = vertice.getAttribute("type");
+    if (type == tag) {
+      ret.push(vertice);
+    }
+  }
+  return ret;
+};
+
+GraphUtil.prototype.getElementById = function(graph, modelName, id) {
   var graphModel = graph.getModel();
   var mainCell = graphModel.getCell(modelName);
   var vertices = graphModel.getChildVertices(mainCell);
@@ -14,7 +41,7 @@ export function getElementById(graph, modelName, id) {
   return null;
 } 
 
-export function getElementsByType(graph, modelName, elementType) {
+GraphUtil.prototype.getElementsByType = function(graph, modelName, elementType) {
   let ret = [];
   var graphModel = graph.getModel();
   var mainCell = graphModel.getCell(modelName);
@@ -31,7 +58,7 @@ export function getElementsByType(graph, modelName, elementType) {
   return ret;
 }
 
-export function getRelationsFromTypes(graph, modelName, sourceTypes, targetTypes) {
+GraphUtil.prototype.getRelationsFromTypes = function(graph, modelName, sourceTypes, targetTypes) {
   var ret = [];
   var graphModel = graph.getModel();
   var mainCell = graphModel.getCell(modelName);
@@ -50,7 +77,7 @@ export function getRelationsFromTypes(graph, modelName, sourceTypes, targetTypes
   return ret;
 }
 
-export function getRelationsFromSource(graph, modelName, sourceBase, targetTypes) {
+GraphUtil.prototype.getRelationsFromSource = function(graph, modelName, sourceBase, targetTypes) {
   // var graphModel = graph.getModel();
   // var mainCell = graphModel.getCell(modelName);
   // var vertices = graphModel.getChildVertices(mainCell);
@@ -68,7 +95,7 @@ export function getRelationsFromSource(graph, modelName, sourceBase, targetTypes
   return ret;
 }
 
-export function getRelationsToTarget(graph, modelName, targetBase, sourceTypes) {
+GraphUtil.prototype.getRelationsToTarget = function(graph, modelName, targetBase, sourceTypes) {
   var graphModel = graph.getModel();
   var mainCell = graphModel.getCell(modelName);
   var vertices = graphModel.getChildVertices(mainCell);
@@ -85,7 +112,7 @@ export function getRelationsToTarget(graph, modelName, targetBase, sourceTypes) 
   return ret;
 }
 
-export function getAvailableElementName(graph, modelName, elementType, name, originalId) {
+GraphUtil.prototype.getAvailableElementName = function(graph, modelName, elementType, name, originalId) {
   let ret = [];
   var graphModel = graph.getModel();
   var mainCell = graphModel.getCell(modelName);
@@ -139,7 +166,7 @@ export function getAvailableElementName(graph, modelName, elementType, name, ori
   }
 }
 
-export function renameElementByType(graph, modelName, element) {
+GraphUtil.prototype.renameElementByType = function(graph, modelName, element) {
   let type = element.getAttribute("type");
   let subtype = element.getAttribute("subtype");
   let alias = element.getAttribute("alias");
@@ -155,7 +182,7 @@ export function renameElementByType(graph, modelName, element) {
   graph.refresh();
 }
 
-export function createElement(graph,prototype, cell, x, y){
+GraphUtil.prototype.createElement = function(graph,prototype, cell, x, y){
   let onCreationAllowed = true;
 
   // if(cConstraintsIc != ""){
