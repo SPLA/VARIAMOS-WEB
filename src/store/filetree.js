@@ -1,4 +1,5 @@
 import {insertmodel} from '../assets/js/common/global_info'
+import {createAdaptationModelsFromReferenceArchitecture} from '../assets/js/common/adaptation_models_utils'
 
 /**
  * the state of the tree component using Vuex
@@ -180,14 +181,13 @@ export const mutations = {
     createnewapplication (state, {app, getters}) {
         let temp = getters.getnewnodeid;
 		let tempindex = 0;
-		if (!app) {
-			app = {
-				index: 0,
-				id:null,
-				parentId: null,
-				applicationName: null,
-				parentFolder: null 
-			};
+		if (!app.applicationName) { 
+			app.index= 0;
+			app.id=null;
+			app.parentId= null;
+			app.applicationName= null;
+			app.parentFolder= null ; 
+
 			let data=state.data[0].data;
 			app.parentFolder = data.nodeName; 
 			var nid=0;
@@ -204,6 +204,8 @@ export const mutations = {
 				}
 			}
 			app.applicationName=nid+1;
+
+			createAdaptationModelsFromReferenceArchitecture(app); 
 		}
 		for(let i = 0; i < state.data.length; i++)
 		{
@@ -327,7 +329,7 @@ export const mutations = {
             item.data.isSelected = false;
         });
         state.data[index].data.isSelected = true;	
-    }
+	}
 }
 
 export default {
