@@ -291,9 +291,9 @@ export default {
         }
       }
     },
-    addPaletteItem(label, image){ 
+    addPaletteItem(group, label, image){ 
       let item={
-          id: "3",
+          group: group,
           label: label,
           image: image
       };

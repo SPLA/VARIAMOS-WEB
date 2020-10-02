@@ -621,7 +621,7 @@ let setup_elements = function setup_elements(graph, elements, custom_attributes,
         // // mdiv.appendChild(img);
         // // tbContainer.appendChild(mdiv);
 
-        graph.currentVueInstance.addPaletteItem(namepalette, img);
+        graph.currentVueInstance.addPaletteItem("Grupo general", namepalette, img);
 
         //graph.currentVueInstance.palette.test2();
     }
