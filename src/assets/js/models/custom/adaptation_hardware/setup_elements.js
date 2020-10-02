@@ -1,3 +1,4 @@
+import "vue";
 import { getBoard } from "./boards";
 import { getDevice } from "./devices";
 import { renameElementByType } from '@/assets/js/common/graphutils'
@@ -264,7 +265,7 @@ let setup_elements = function setup_elements(graph, elements, custom_attributes,
         // Function that is executed when the image is dropped on
         // the graph. The cell argument points to the cell under
         // the mousepointer if there is one.
-        let funct = function(graph, evt, cell) {
+        let funct = function (graph, evt, cell) {
             let oncreation_allowed = true;
 
             if (c_constraints_ic != "") {
@@ -584,6 +585,29 @@ let setup_elements = function setup_elements(graph, elements, custom_attributes,
 
         }
 
+        // let data = [
+        //     {
+        //         name: "Arduino UNO",
+        //         url:
+        //             "https://cdn.pixabay.com/photo/2017/03/23/12/32/arduino-2168193_1280.png",
+        //         imgWidth: 100,
+        //         selected: false,
+        //     },
+        //     {
+        //         name: "Arduino MEGA",
+        //         url:
+        //             "https://www.pngkey.com/png/full/207-2079814_bustedtheory-servo-motor-arduino-mega.png",
+        //         imgWidth: 50,
+        //         selected: true,
+        //     },
+        // ];
+
+        // document.getElementById("tbContainer").innerHTML +=
+        //     `<div class="col-6">
+        //         <p align="center">${data[1].name}</p>
+        //         <img src="${data[1].url}" alt="Arduino image" width="${data[1].imgWidth}" />
+        //     </div>`;
+
         let tbContainer = document.getElementById('tbContainer');
         let mdiv = document.createElement('div');
         let span = document.createElement('span');
@@ -594,7 +618,7 @@ let setup_elements = function setup_elements(graph, elements, custom_attributes,
         let img = toolbar.addMode(namepalette, image, funct);
         mxUtils.makeDraggable(img, graph, funct);
 
-        mdiv.classList.add("pallete-div");
+        mdiv.classList.add("col-6");
         mdiv.appendChild(img);
         tbContainer.appendChild(mdiv);
     }
