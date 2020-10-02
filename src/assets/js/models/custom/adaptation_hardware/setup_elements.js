@@ -608,19 +608,22 @@ let setup_elements = function setup_elements(graph, elements, custom_attributes,
         //         <img src="${data[1].url}" alt="Arduino image" width="${data[1].imgWidth}" />
         //     </div>`;
 
-        let tbContainer = document.getElementById('tbContainer');
-        let mdiv = document.createElement('div');
-        let span = document.createElement('span');
-        span.innerHTML = namepalette + "<br />";
-        mdiv.appendChild(span);
-
         // Creates the image which is used as the drag icon (preview)
         let img = toolbar.addMode(namepalette, image, funct);
-        mxUtils.makeDraggable(img, graph, funct);
+        mxUtils.makeDraggable(img, graph, funct); 
+        
+        // // let tbContainer = document.getElementById('tbContainer');
+        // // let mdiv = document.createElement('div');
+        // // let span = document.createElement('span');
+        // // span.innerHTML = namepalette + "<br />";
+        // // mdiv.appendChild(span); 
+        // // mdiv.classList.add("col-6");
+        // // mdiv.appendChild(img);
+        // // tbContainer.appendChild(mdiv);
 
-        mdiv.classList.add("col-6");
-        mdiv.appendChild(img);
-        tbContainer.appendChild(mdiv);
+        graph.currentVueInstance.addPaletteItem(namepalette, img);
+
+        //graph.currentVueInstance.palette.test2();
     }
 
 

@@ -68,6 +68,7 @@
                     :selected="item.selected"
                   />
                 </div> -->
+              <palette label="desde models" :items=paletteItems />
               </div>
             </div>
             <div class="other-area">
@@ -119,8 +120,9 @@ import BackEnd from "../components/model_actions/BackEnd";
 import VersionControlMenu from "../components/model_actions/VersionControlMenu";
 import Samples from "../components/model_actions/Samples";
 import selectableItem from "../components/SelectableItem";
+import palette from "../components/palette/Palette"
 
-export default {
+export default { 
   data: function () {
     return {
       modelCode: "", //stores the model code when saved
@@ -147,7 +149,17 @@ export default {
           "https://www.pngkey.com/png/full/207-2079814_bustedtheory-servo-motor-arduino-mega.png",
         imgWidth: 50,
         selected: true,
-      },
+      }, 
+      paletteItems:[
+          // {
+          //   id: "1",
+          //   label: "Element 1"
+          // },
+          // {
+          //   id: "2",
+          //   label: "Element 2"
+          // }
+        ]
     };
   },
   components: {
@@ -158,6 +170,7 @@ export default {
     Verification,
     VersionControlMenu,
     selectableItem,
+    palette
   },
   mounted: function () {
     /**
@@ -174,6 +187,7 @@ export default {
       this.modelCode = localStorage[temp];
     }
     this.graph = new mxGraph(document.getElementById("graphContainer"));
+    this.graph.currentVueInstance = this;
     //load saved model into the graph if exists, and return layers
     this.layers = model_load(this.graph, this.models, this.modelCode);
     this.modelType = this.$route.params.type; //based on URL Route
@@ -277,6 +291,15 @@ export default {
         }
       }
     },
+    addPaletteItem(label, image){ 
+      let item={
+          id: "3",
+          label: label,
+          image: image
+      };
+      let items=this.paletteItems;
+      items.push(item);
+    }
   },
   beforeRouteLeave(to, from, next) {
     //destroy the window key events before leaving
