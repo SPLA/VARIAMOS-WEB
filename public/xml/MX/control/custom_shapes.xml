@@ -1,8 +1,11 @@
 <shapes>
 <!-- begin control states model -->
-<shape name="plant" aspect="variable">
+<shape name="plant" aspect="variable" strokewidth="3">
 	<background>
+		<strokecolor color="#040404"/>
+		<fillcolor color="#FFFFFF"/>\
 		<path>
+		
 			<move x="0" y="0"/>
 			<line x="100" y="0"/>
 			<line x="100" y="100"/>
@@ -16,8 +19,34 @@
 	</foreground>
 </shape>
 
+<shape name="summing" aspect="variable" strokewidth="3">
+	<background >
+		<strokecolor color="#040404"/>
+		<fillcolor color="#ffffff"/>
+		<ellipse x="0" y="0" w="100" h="100" />
+		<fillstroke/>
+	</background>
+</shape>
+
+<shape name="bifurcation" aspect="variable" strokewidth="3">
+	<background >
+		<strokecolor color="#040404"/>
+		<fillcolor color="#ffffff"/>
+		<path>
+			<move x="50" y="0"/>
+			<line x="0" y="50"/>
+			<line x="50" y="100"/>
+			<line x="100" y="50"/>
+			<close/>
+		</path>	
+		<fillstroke/>
+	</background>
+</shape>
+
 <shape name="controller" aspect="variable">
 	<background>
+		<strokecolor color="#040404"/>
+		<fillcolor color="#FFFFFF"/>\
 		<path>
 			<move x="0" y="0"/>
 			<line x="100" y="0"/>
@@ -28,44 +57,60 @@
 		</path>		
 	</background>
 	<foreground>
-		<image src="./images/models/control/controller_ico.png" x="84" y="3" w="15" h="35" />
+		<image src="./images/models/control/control.png" x="84" y="3" w="15" h="35" />
 	</foreground>
 </shape>
 
 <shape name="setpoint" aspect="variable">
 	<background>
+		<strokecolor color="#040404"/>
+		<fillcolor color="#FFFFFF"/>\
 		<path>
 			<move x="0" y="0"/>
 			<line x="100" y="0"/>
 			<line x="100" y="100"/>
 			<line x="0" y="100"/>
 			<close/>
+
+			<move x="83" y="40"/>
+			<line x="90" y="40"/>
+			<line x="90" y="10"/>
+			<line x="97" y="10"/>
+
 		</path>	
 		<fillstroke/>	
 	</background>
 	<foreground>
-		<image src="./images/models/control/set_ico.png" x="84" y="3" w="15" h="35" />
 	</foreground>
 </shape>
 
 <shape name="measured_output" aspect="variable">
 	<background>
+		<strokecolor color="#040404"/>
+		<fillcolor color="#FFFFFF"/>\
 		<path>
 			<move x="0" y="0"/>
 			<line x="100" y="0"/>
 			<line x="100" y="100"/>
 			<line x="0" y="100"/>		
 			<close/>
+
+			<move x="20" y="10"/>
+			<line x="80" y="10"/>
+			<line x="80" y="30"/>
+			<line x="20" y="30"/>		
+			<close/>
 		<fillstroke/>
 		</path>		
 	</background>
 	<foreground>
-		<image src="./images/models/control/output.png" x="25" y="3" w="50" h="30" />
 	</foreground>
 </shape>
 
 <shape name="transducer" aspect="variable">
 	<background>
+		<strokecolor color="#040404"/>
+		<fillcolor color="#FFFFFF"/>\
 		<path>
 			<move x="0" y="0"/>
 			<line x="100" y="0"/>
@@ -82,6 +127,8 @@
 
 <shape name="filter" aspect="variable">
 	<background>
+		<strokecolor color="#040404"/>
+		<fillcolor color="#FFFFFF"/>\
 		<path>
 			<move x="0" y="0"/>
 			<line x="100" y="0"/>

@@ -40,10 +40,10 @@ let controlMain = function controlMain(graph)
         let  controller = {src:projectPath+"images/models/control/controller.png", wd:100, hg:40, style:"shape=controller", type:"controller", pname:"Controller"};
         let  plant = {src:projectPath+"images/models/control/plantControl.png", wd:100, hg:40, style:"shape=plant", type:"plant", pname:"Plant"};
         let  transducer = {src:projectPath+"images/models/control/sensor.png", wd:100, hg:40, style:"shape=transducer", type:"transducer", pname:"Sensor"};
-        let  summingPoint   = {src:projectPath+"images/models/control/summing_point.PNG", wd:100, hg:40, style:"shape=ellipse", type:"summingPoint", pname:"Summing point"};
+        let  summingPoint   = {src:projectPath+"images/models/control/summing_point.PNG", wd:100, hg:40, style:"shape=summing", type:"summingPoint", pname:"Summing point"};
         let  setpoint   = {src:projectPath+"images/models/control/setpoint.png", wd:100, hg:40, style:"shape=setpoint", type:"setpoint", pname:"Setpoint "};
         let  outputSystem   = {src:projectPath+"images/models/control/measured.png", wd:100, hg:40, style:"shape=measured_output", type:"outputSystem", pname:"Process output "};
-        let  branchpoint   = {src:projectPath+"images/models/control/bifurcation.png", wd:100, hg:40, style:"shape=rhombus", type:"branchpoint", pname:"Branchpoint"};
+        let  branchpoint   = {src:projectPath+"images/models/control/bifurcation.png", wd:100, hg:40, style:"shape=bifurcation", type:"branchpoint", pname:"Branchpoint"};
         let  filter = {src:projectPath+"images/models/control/filter.png", wd:100, hg:40, style:"shape=filter", type:"filter", pname:"Filter"};
 
 
