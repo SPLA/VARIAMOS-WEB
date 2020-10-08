@@ -527,8 +527,14 @@ export default {
     },
     adaptation_state_source_code_generation() {
       try {
+        let vm = this;
         ///let serverUrl = localStorage["domain_implementation_main_path"] + "AdaptationStateImplementation/generateSourceCode";
         let serverUrl = localStorage["domain_implementation_main_path"];
+
+        if(serverUrl == undefined) {
+          vm.$snotify.error("Please set backend URL", "Error");
+          return;
+        }
 
         if (!serverUrl.endsWith("/")) {
           serverUrl += "/";
@@ -580,7 +586,6 @@ export default {
 
         var url = serverUrl;
         var method = "POST";
-        let vm = this;
 
         let snotifyPromise = new Promise((resolve, reject) => {
           createCORSRequest(method, url, snotifyPromise)

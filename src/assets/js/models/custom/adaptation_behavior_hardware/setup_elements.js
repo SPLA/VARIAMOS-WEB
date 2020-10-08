@@ -211,6 +211,7 @@ let setup_elements = function setup_elements(graph, elements, custom_attributes,
                         if (args) {
                             let x = 25;
                             for (let a = 0; a < args.length; a++) {
+
                                 let arg = args[a];
                                 const doc = mxUtils.createXmlDocument();
                                 const node = doc.createElement(arg.name);
@@ -229,6 +230,7 @@ let setup_elements = function setup_elements(graph, elements, custom_attributes,
 
                                 graph.addCell(connector, element);
                                 x += 15;
+                                
                             }
                         }
 
@@ -295,6 +297,7 @@ let setup_elements = function setup_elements(graph, elements, custom_attributes,
         mdiv.classList.add("pallete-div");
         mdiv.appendChild(img);
         tbContainer.appendChild(mdiv);
+
     }
 }
 
