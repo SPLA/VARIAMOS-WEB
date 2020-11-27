@@ -45,6 +45,12 @@
         >Source code generation</a
       >
       <a
+        data-menudisplay="['adaptation_state','adaptation_hardware','adaptation_behavior_hardware','adaptation_behavior_states','adaptation_behavior_transitions','control']"
+        @click="adaptation_organize()"
+        class="dropdown-item"
+        >Organize Diagrams</a
+      >
+      <a
         data-menudisplay="['adaptation_architecture']"
         @click="adaptation_state_import_from_architecture()"
         class="dropdown-item"
@@ -69,6 +75,7 @@
 import Vue from "vue";
 import axios from "axios";
 
+import { GraphUtil } from "@/assets/js/common/graphutil";
 import Snotify, { SnotifyPosition, SnotifyToast } from "vue-snotify";
 import VueClipboard from "vue-clipboard2";
 
@@ -527,8 +534,14 @@ export default {
     },
     adaptation_state_source_code_generation() {
       try {
+        let vm = this;
         ///let serverUrl = localStorage["domain_implementation_main_path"] + "AdaptationStateImplementation/generateSourceCode";
         let serverUrl = localStorage["domain_implementation_main_path"];
+
+        if(serverUrl == undefined) {
+          vm.$snotify.error("Please set backend URL", "Error");
+          return;
+        }
 
         if (!serverUrl.endsWith("/")) {
           serverUrl += "/";
@@ -580,7 +593,6 @@ export default {
 
         var url = serverUrl;
         var method = "POST";
-        let vm = this;
 
         let snotifyPromise = new Promise((resolve, reject) => {
           createCORSRequest(method, url, snotifyPromise)
@@ -631,10 +643,40 @@ export default {
         });
 
         vm.$snotify.async("Generating code...", "Task", () => snotifyPromise);
+
       } catch (ex) {
         alert(ex);
       }
+
       return "";
+
+    },
+
+    adaptation_organize() {
+
+      try {
+
+        console.log(this.current_graph);
+
+        let graphUtil = new GraphUtil();
+        var arr = graphUtil.getElementsByType(this.current_graph, "adaptation_behavior_states", "stateLifeLine");
+
+        arr.forEach(vertex => {
+
+          let geometry = vertex.getGeometry();
+          geometry.x = 15;
+
+          vertex.setStyle("dashed=1;fillColor=#000080;strokeColor=#aaaaaa;");
+          this.current_graph.refresh();
+
+        });
+
+      } catch (ex) {
+        alert(ex);
+      }
+
+      return "";
+
     },
     adaptation_state_import_from_architecture() {
       adaptation_state_actions(this.current_graph, "importFromArchitecture");
