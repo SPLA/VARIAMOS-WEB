@@ -123,6 +123,9 @@ let adaptation_hardware_main = function adaptation_hardware_main(graph) {
                 }, {
                     "name": "pwmPins",
                     "def_value": device.pwmPins
+                }, {
+                    "name": "promptName",
+                    "def_value": true
                 }]
             };
 
@@ -273,6 +276,10 @@ let adaptation_hardware_main = function adaptation_hardware_main(graph) {
                 {
                     "attribute": "pwmPins",
                     "input_type": "none"
+                },
+                {
+                    "attribute": "promptName",
+                    "input_type": "none"
                 }
             ],
             "device": [{
@@ -289,6 +296,10 @@ let adaptation_hardware_main = function adaptation_hardware_main(graph) {
                 },
                 {
                     "attribute": "pwmPins",
+                    "input_type": "none"
+                },
+                {
+                    "attribute": "promptName",
                     "input_type": "none"
                 }
             ],

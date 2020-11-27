@@ -55,7 +55,7 @@
         @click="adaptation_state_generate_hardware_from_architecture()"
         class="dropdown-item"
         >Generate from architecture</a
-      >
+      >    
       <component
         :is="dynamicComponent"
         :current_graph="current_graph"

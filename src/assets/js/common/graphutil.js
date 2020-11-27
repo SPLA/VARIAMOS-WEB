@@ -1,5 +1,7 @@
-export function GraphUtil() { 
-}
+
+import { OrganizerFabric } from "@/assets/js/common/organizers/organizerFabric"; 
+
+export function GraphUtil() {}
 
 //Busca los vértices por el tag xml
 GraphUtil.prototype.getElementsByTagName = function(graph, modelName, tag) {
@@ -11,12 +13,10 @@ GraphUtil.prototype.getElementsByTagName = function(graph, modelName, tag) {
   let encoder = new mxCodec();
 
   for (var i = 0; i < vertices.length; i++) {
-    var vertice = vertices[i]; 
+    var vertice = vertices[i];
     let result = encoder.encode(vertice);
 
-
-
-    var str=vertice.toString();
+    var str = vertice.toString();
     var type = vertice.getAttribute("type");
     if (type == tag) {
       ret.push(vertice);
@@ -39,9 +39,13 @@ GraphUtil.prototype.getElementById = function(graph, modelName, id) {
     }
   }
   return null;
-} 
+};
 
-GraphUtil.prototype.getElementsByType = function(graph, modelName, elementType) {
+GraphUtil.prototype.getElementsByType = function(
+  graph,
+  modelName,
+  elementType
+) {
   let ret = [];
   var graphModel = graph.getModel();
   var mainCell = graphModel.getCell(modelName);
@@ -56,9 +60,14 @@ GraphUtil.prototype.getElementsByType = function(graph, modelName, elementType) 
     }
   }
   return ret;
-}
+};
 
-GraphUtil.prototype.getRelationsFromTypes = function(graph, modelName, sourceTypes, targetTypes) {
+GraphUtil.prototype.getRelationsFromTypes = function(
+  graph,
+  modelName,
+  sourceTypes,
+  targetTypes
+) {
   var ret = [];
   var graphModel = graph.getModel();
   var mainCell = graphModel.getCell(modelName);
@@ -75,44 +84,72 @@ GraphUtil.prototype.getRelationsFromTypes = function(graph, modelName, sourceTyp
     }
   }
   return ret;
-}
+};
 
-GraphUtil.prototype.getRelationsFromSource = function(graph, modelName, sourceBase, targetTypes) {
+GraphUtil.prototype.getRelationsFromSource = function(
+  graph,
+  modelName,
+  sourceBase,
+  targetTypes
+) {
   // var graphModel = graph.getModel();
   // var mainCell = graphModel.getCell(modelName);
   // var vertices = graphModel.getChildVertices(mainCell);
   // var edges = graphModel.getChildEdges(mainCell);
-  var edges = sourceBase.edges;
   var ret = [];
-  for (var i = 0; i < edges.length; i++) {
-    var edge = edges[i];
-    var source = edge.source;
-    var target = edge.target;
-    if (source == sourceBase && targetTypes.includes(target.getAttribute("type"))) {
-      ret.push(edge);
+  var edges = sourceBase.edges;
+  if(edges){
+    for (var i = 0; i < edges.length; i++) {
+      var edge = edges[i];
+      var source = edge.source;
+      var target = edge.target;
+      if (
+        source == sourceBase &&
+        targetTypes.includes(target.getAttribute("type"))
+      ) {
+        ret.push(edge);
+      }
     }
   }
   return ret;
-}
+};
 
-GraphUtil.prototype.getRelationsToTarget = function(graph, modelName, targetBase, sourceTypes) {
+GraphUtil.prototype.getRelationsToTarget = function(
+  graph,
+  modelName,
+  targetBase,
+  sourceTypes
+) {
   var graphModel = graph.getModel();
   var mainCell = graphModel.getCell(modelName);
   var vertices = graphModel.getChildVertices(mainCell);
-  var edges = graphModel.getChildEdges(mainCell);
   var ret = [];
-  for (var i = 0; i < edges.length; i++) {
-    var edge = edges[i];
-    var source = edge.source;
-    var target = edge.target;
-    if (target == targetBase && sourceTypes.includes(source.getAttribute("type"))) {
-      ret.push(edge);
+  var edges = graphModel.getChildEdges(mainCell);
+  if(edges){
+    for (var i = 0; i < edges.length; i++) {
+      var edge = edges[i];
+      var source = edge.source;
+      var target = edge.target;
+      if (target == targetBase) {
+        if(sourceTypes){
+          if(!sourceTypes.includes(source.getAttribute("type"))){
+            continue;
+          }
+        }
+        ret.push(edge);
+      }
     }
   }
   return ret;
-}
+};
 
-GraphUtil.prototype.getAvailableElementName = function(graph, modelName, elementType, name, originalId) {
+GraphUtil.prototype.getAvailableElementName = function(
+  graph,
+  modelName,
+  elementType,
+  name,
+  originalId
+) {
   let ret = [];
   var graphModel = graph.getModel();
   var mainCell = graphModel.getCell(modelName);
@@ -134,13 +171,13 @@ GraphUtil.prototype.getAvailableElementName = function(graph, modelName, element
     var vertice = elements[i];
     var vlabel = vertice.getAttribute("label");
     if (tmp == vlabel) {
-      if (vertice.getId()!=originalId) {
+      if (vertice.getId() != originalId) {
         exist = true;
         break;
       }
     }
   }
-  if (!exist) { 
+  if (!exist) {
     return tmp;
   }
 
@@ -152,7 +189,7 @@ GraphUtil.prototype.getAvailableElementName = function(graph, modelName, element
       var vertice = elements[i];
       var vlabel = vertice.getAttribute("label");
       if (tmp == vlabel) {
-        if (vertice.getId()!=originalId) {
+        if (vertice.getId() != originalId) {
           exist = true;
           break;
         }
@@ -164,7 +201,7 @@ GraphUtil.prototype.getAvailableElementName = function(graph, modelName, element
       return tmp;
     }
   }
-}
+};
 
 GraphUtil.prototype.renameElementByType = function(graph, modelName, element) {
   let type = element.getAttribute("type");
@@ -177,42 +214,109 @@ GraphUtil.prototype.renameElementByType = function(graph, modelName, element) {
   if (alias) {
     labelByType = alias;
   }
-  let label = getAvailableElementName(graph, modelName, type, labelByType, element.getId());
-  element.setAttribute('label', label);
+  let label = this.getAvailableElementName(
+    graph,
+    modelName,
+    type,
+    labelByType,
+    element.getId()
+  );
+  element.setAttribute("label", label);
   graph.refresh();
-}
+};
 
-GraphUtil.prototype.createElement = function(graph,prototype, cell, x, y){
-  let onCreationAllowed = true;
+GraphUtil.prototype.createComponent = function(graph, prototype, modelName, x, y, label) {
+  graph.stopEditing(false); 
+  let modelCell = graph.getModel().getCell(modelName);  
+  let vertex = graph.getModel().cloneCell(prototype);
+  vertex.geometry.x = x;
+  vertex.geometry.y = y;
 
-  // if(cConstraintsIc != ""){
-  //     onCreationAllowed = cConstraintsIc(graph);
-  // }
-
-  if(onCreationAllowed){
-      graph.stopEditing(false); 
-      let vertex = graph.getModel().cloneCell(prototype);
-      vertex.geometry.x = x;
-      vertex.geometry.y = y;
-
-      let newCells = graph.importCells([vertex], 0, 0, cell);
-      graph.setSelectionCells(newCells);
-
-      // //execute if there are clons for the current element
-      // if(cClonCells != null){
-      //     let type = newCells[0].getAttribute("type");
-      //     if(cClonCells[type]){ //clon cell in a new model
-      //         graph.getModel().prefix="clon"; //cloned cell contains clon prefix
-      //         graph.getModel().nextId=graph.getModel().nextId-1;
-      //         let vertex2 = graph.getModel().cloneCell(newCells[0]);
-      //         let parent2 = graph.getModel().getCell(cClonCells[type]);
-      //         graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#DCDCDC", [vertex2]); //different background for a cloned cell
-      //         graph.importCells([vertex2], 0, 0, parent2);
-      //         graph.getModel().prefix = ""; //restart prefix
-      //     }
-      // }
-
-      return newCells;
+  let newCells = graph.importCells([vertex], 0, 0, modelCell);
+  graph.setSelectionCells(newCells); 
+  let modelId=modelCell.getId();  
+  if(!label){
+    this.renameElementByType(graph, modelName, newCells[0]);
+  }else{
+    this.renameElement(graph, newCells[0], label);
   }
 
-}
+  // //execute if there are clons for the current element
+  // if(cClonCells != null){
+  //     let type = newCells[0].getAttribute("type");
+  //     if(cClonCells[type]){ //clon cell in a new model
+  //         graph.getModel().prefix="clon"; //cloned cell contains clon prefix
+  //         graph.getModel().nextId=graph.getModel().nextId-1;
+  //         let vertex2 = graph.getModel().cloneCell(newCells[0]);
+  //         let parent2 = graph.getModel().getCell(cClonCells[type]);
+  //         graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#DCDCDC", [vertex2]); //different background for a cloned cell
+  //         graph.importCells([vertex2], 0, 0, parent2);
+  //         graph.getModel().prefix = ""; //restart prefix
+  //     }
+  // }
+
+  return newCells;
+};
+
+GraphUtil.prototype.cloneComponent = function(graph, componentCells, modelName) {
+   //clon cell in a new model
+   graph.getModel().prefix = "clon"; //cloned cell contains clon prefix
+   graph.getModel().nextId = graph.getModel().nextId - 1;
+   let vertex2 = graph.getModel().cloneCell(componentCells[0]);
+   let parent2 = graph.getModel().getCell(modelName);
+   graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#DCDCDC", [
+     vertex2,
+   ]); //different background for a cloned cell
+   let importedCells=graph.importCells([vertex2], 0, 0, parent2);
+   graph.getModel().prefix = ""; //restart prefix 
+   return importedCells;
+};
+
+GraphUtil.prototype.createRelationship = function(
+  graph,
+  modelName,
+  sourceComponent,
+  tarjetComponent,
+  graphRelationship
+) {
+  // graph.stopEditing(false);
+  // graph.addEdge(sourceComponent, tarjetComponent);
+  // var e1 = graph.insertEdge(model, null, '', sourceComponent, tarjetComponent, 'dashed=1;startArrow=oval;endArrow=block;sourcePerimeterSpacing=4;startFill=0;endFill=0;');
+  
+  var type = graphRelationship.type;
+  let doc = mxUtils.createXmlDocument();
+  let node = doc.createElement('rel_' + sourceComponent.getAttribute("type") + '_' + tarjetComponent.getAttribute("type"));
+  node.setAttribute('type', "relation");
+  if(graphRelationship.definition){
+    if(graphRelationship.definition.attributes){ 
+      for(let j = 0; j < graphRelationship.definition.attributes.length; j++){
+        let attribute=graphRelationship.definition.attributes[j];
+        node.setAttribute(attribute["name"], attribute["def_value"]);
+      }
+    }
+  }
+
+  let modelCell = graph.getModel().getCell(modelName);  
+  var e1 = graph.insertEdge(
+    modelCell,
+    null,
+    node,
+    sourceComponent,
+    tarjetComponent,
+    graphRelationship.definition.style
+  );
+  return e1;
+};
+
+GraphUtil.prototype.renameElement = function(graph, element, name) {
+  element.setAttribute('label', name);
+  graph.refresh();
+};
+
+
+
+GraphUtil.prototype.organizeModel = function(graph, modelName) {
+  let fabric=new OrganizerFabric();
+  let organizer = fabric.create(graph, modelName);
+  organizer.organizeComponents(); 
+};

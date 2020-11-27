@@ -2,6 +2,7 @@ import "vue";
 import { getBoard } from "./boards";
 import { getDevice } from "./devices";
 import { renameElementByType } from '@/assets/js/common/graphutils'
+import { GraphUtil } from "@/assets/js/common/graphutil";
 
 let setup_elements = function setup_elements(graph, elements, custom_attributes, c_clon_cells, c_constraints_ic, toolbar, c_type) {
     if (elements == null) {
@@ -266,6 +267,7 @@ let setup_elements = function setup_elements(graph, elements, custom_attributes,
         // the graph. The cell argument points to the cell under
         // the mousepointer if there is one.
         let funct = function (graph, evt, cell) {
+
             let oncreation_allowed = true;
 
             if (c_constraints_ic != "") {
@@ -273,6 +275,15 @@ let setup_elements = function setup_elements(graph, elements, custom_attributes,
             }
 
             if (oncreation_allowed) {
+                var name="";
+                let promptName=prototype.getAttribute("promptName");
+                if(promptName=='true'){
+                  var name = prompt("Please enter element name", ""); 
+                  if (name == "") { 
+                      return;
+                  }
+                } 
+
                 graph.stopEditing(false);
                 let pt = graph.getPointForEvent(evt);
                 let vertex = graph.getModel().cloneCell(prototype);
@@ -282,7 +293,12 @@ let setup_elements = function setup_elements(graph, elements, custom_attributes,
                 let new_cells = graph.importCells([vertex], 0, 0, cell);
 
                 new_cells.forEach(element => {
-                    renameElementByType(graph, "adaptation_hardware", element);
+                    if(name==""){
+                      renameElementByType(graph, "adaptation_hardware", element);
+                    }else{
+                      element.setAttribute('label', name);
+                      graph.refresh();
+                    } 
 
                     const type = element.getAttribute("type");
                     if (["board", "device"].includes(type)) {
@@ -579,6 +595,12 @@ let setup_elements = function setup_elements(graph, elements, custom_attributes,
                         graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#DCDCDC", [vertex2]); //different background for a cloned cell
                         graph.importCells([vertex2], 0, 0, parent2);
                         graph.getModel().prefix = ""; //restart prefix
+
+                        if (type == "device") {
+                            let graphUtil = new GraphUtil();
+                            let modelName = "adaptation_behavior_hardware"; 
+                            graphUtil.organizeModel(graph, modelName);
+                        }
                     }
                 }
             }
@@ -612,16 +634,16 @@ let setup_elements = function setup_elements(graph, elements, custom_attributes,
         let img = toolbar.addMode(namepalette, image, funct);
         mxUtils.makeDraggable(img, graph, funct); 
         
-        // // let tbContainer = document.getElementById('tbContainer');
-        // // let mdiv = document.createElement('div');
-        // // let span = document.createElement('span');
-        // // span.innerHTML = namepalette + "<br />";
-        // // mdiv.appendChild(span); 
-        // // mdiv.classList.add("col-6");
-        // // mdiv.appendChild(img);
-        // // tbContainer.appendChild(mdiv);
+        let tbContainer = document.getElementById('tbContainer');
+        let mdiv = document.createElement('div');
+        let span = document.createElement('span');
+        span.innerHTML = namepalette + "<br />";
+        mdiv.appendChild(span); 
+        mdiv.classList.add("col-6");
+        mdiv.appendChild(img);
+        tbContainer.appendChild(mdiv);
 
-        graph.currentVueInstance.addPaletteItem("Grupo general", namepalette, img);
+        //graph.currentVueInstance.addPaletteItem("Grupo general", namepalette, img);
 
         //graph.currentVueInstance.palette.test2();
     }

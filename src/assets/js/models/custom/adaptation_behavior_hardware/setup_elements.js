@@ -1,11 +1,24 @@
-import { getAction } from '../adaptation_hardware/devices'
-import { renameElementByType } from '@/assets/js/common/graphutils'
+import { getAction } from "../adaptation_hardware/devices";
+import { renameElementByType } from "@/assets/js/common/graphutils";
+import { GraphUtil } from "@/assets/js/common/graphutil";
+import { ActionLifeLine } from "@/assets/js/models/custom/adaptation_behavior_states/components/actionLifeLine";
+import { State_stateLifeLineRelationship } from "@/assets/js/models/custom/adaptation_behavior_states/relationships/state_stateLifeLineRelationship";
+import { LogicalOperator_transitionRelationship } from "@/assets/js/models/custom/adaptation_behavior_transitions/relationships/logicalOperator_transitionRelationship";
 
-let setup_elements = function setup_elements(graph, elements, custom_attributes, c_clon_cells, c_constraints_ic, toolbar, c_type) {
+
+let setup_elements = function setup_elements(
+    graph,
+    elements,
+    custom_attributes,
+    c_clon_cells,
+    c_constraints_ic,
+    toolbar,
+    c_type
+) {
     if (elements == null) {
         //disable palette for "binding" models
-        let tbContainer = document.getElementById('tbContainer');
-        let span = document.createElement('span');
+        let tbContainer = document.getElementById("tbContainer");
+        let span = document.createElement("span");
         span.innerHTML = global.messages["setup_elements_palette_no_elements"];
         tbContainer.appendChild(span);
     } else {
@@ -20,7 +33,7 @@ let setup_elements = function setup_elements(graph, elements, custom_attributes,
             let attributes = [];
             if (custom_attributes) {
                 for (let z = 0; z < custom_attributes.length; z++) {
-                    if ((custom_attributes[z]["types"].indexOf(type) > -1)) {
+                    if (custom_attributes[z]["types"].indexOf(type) > -1) {
                         attributes = custom_attributes[z]["custom_attributes"];
                     }
                 }
@@ -39,22 +52,46 @@ let setup_elements = function setup_elements(graph, elements, custom_attributes,
                     }
                     if (!exists) {
                         attributes.push({
-                            "name": name,
-                            "def_value": value
+                            name: name,
+                            def_value: value,
                         });
                     }
                 }
             }
 
-            addVertex(graph, toolbar, elements[i].src, elements[i].wd, elements[i].hg, elements[i].style, elements[i].type, elements[i].pname, attributes, c_clon_cells, c_constraints_ic);
+            addVertex(
+                graph,
+                toolbar,
+                elements[i].src,
+                elements[i].wd,
+                elements[i].hg,
+                elements[i].style,
+                elements[i].type,
+                elements[i].pname,
+                attributes,
+                c_clon_cells,
+                c_constraints_ic
+            );
         }
     }
 
-    function addVertex(graph, toolbar, icon, w, h, style, type, namepalette, custom_attributes, c_clon_cells, c_constraints_ic) {
+    function addVertex(
+        graph,
+        toolbar,
+        icon,
+        w,
+        h,
+        style,
+        type,
+        namepalette,
+        custom_attributes,
+        c_clon_cells,
+        c_constraints_ic
+    ) {
         let doc = mxUtils.createXmlDocument();
         let node = doc.createElement(type);
-        node.setAttribute('type', type);
-        node.setAttribute('label', type);
+        node.setAttribute("type", type);
+        node.setAttribute("label", type);
 
         //include custom attributes
         // if(custom_attributes){
@@ -68,10 +105,13 @@ let setup_elements = function setup_elements(graph, elements, custom_attributes,
         // }
         if (custom_attributes) {
             for (let j = 0; j < custom_attributes.length; j++) {
-                node.setAttribute(custom_attributes[j]["name"], custom_attributes[j]["def_value"]);
+                node.setAttribute(
+                    custom_attributes[j]["name"],
+                    custom_attributes[j]["def_value"]
+                );
                 if (custom_attributes[j]["name"] == "subtype") {
                     if (["writeAction", "readAction"].includes(type)) {
-                        node.setAttribute('label', custom_attributes[j]["def_value"]);
+                        node.setAttribute("label", custom_attributes[j]["def_value"]);
                     }
                 }
             }
@@ -82,7 +122,7 @@ let setup_elements = function setup_elements(graph, elements, custom_attributes,
         vertex.setVertex(true);
 
         // if(["writeAction", "readAction"].includes(type)){
-        //     try{ 
+        //     try{
         //         // if(type=="writeAction"){
         //         //     vertex.setConnectable(false);
         //         // }
@@ -92,20 +132,20 @@ let setup_elements = function setup_elements(graph, elements, custom_attributes,
         //                     let args=custom_attributes[j]["def_value"];
         //                     let x=10;
         //                     for(let a = 0; a < args.length; a++){
-        //                         let arg=args[a]; 
+        //                         let arg=args[a];
         //                         let doc = mxUtils.createXmlDocument();
-        //                         let node = doc.createElement(arg.name); 
+        //                         let node = doc.createElement(arg.name);
         //                         node.setAttribute('label', arg.name);
         //                         //node.setAttribute('parent', type + '_' + );
 
-        //                         let geometry = new mxGeometry(x, 22, 10, 10);  
+        //                         let geometry = new mxGeometry(x, 22, 10, 10);
         //                         geometry.offset = new mxPoint(0, 0);
-        //                         geometry.relative = false; 
+        //                         geometry.relative = false;
         //                         let connector = new mxCell(node, geometry, "shape=triangle;perimeter=trianglePerimeter;direction=north");
         //                         graph.setCellStyles(mxConstants.STYLE_MOVABLE, '0', [connector]);
         //                         graph.setCellStyles(mxConstants.STYLE_RESIZABLE, '0', [connector]);
         //                         connector.setConnectable(true);
-        //                         connector.setVertex(true); 
+        //                         connector.setVertex(true);
         //                         vertex.insert(connector, 0);
         //                         x+=15;
 
@@ -113,23 +153,44 @@ let setup_elements = function setup_elements(graph, elements, custom_attributes,
         //                     break;
         //                 }
         //             }
-        //         } 
+        //         }
         //     }catch(error){
         //         alert(error);
-        //     } 
+        //     }
         // }
 
-
-
-
         if (c_constraints_ic != null && c_constraints_ic[type]) {
-            addToolbarItem(graph, toolbar, vertex, icon, namepalette, c_clon_cells, c_constraints_ic[type]);
+            addToolbarItem(
+                graph,
+                toolbar,
+                vertex,
+                icon,
+                namepalette,
+                c_clon_cells,
+                c_constraints_ic[type]
+            );
         } else {
-            addToolbarItem(graph, toolbar, vertex, icon, namepalette, c_clon_cells, "");
+            addToolbarItem(
+                graph,
+                toolbar,
+                vertex,
+                icon,
+                namepalette,
+                c_clon_cells,
+                ""
+            );
         }
     }
 
-    function addToolbarItem(graph, toolbar, prototype, image, namepalette, c_clon_cells, c_constraints_ic) {
+    function addToolbarItem(
+        graph,
+        toolbar,
+        prototype,
+        image,
+        namepalette,
+        c_clon_cells,
+        c_constraints_ic
+    ) {
         // Function that is executed when the image is dropped on
         // the graph. The cell argument points to the cell under
         // the mousepointer if there is one.
@@ -141,6 +202,16 @@ let setup_elements = function setup_elements(graph, elements, custom_attributes,
             }
 
             if (oncreation_allowed) {
+                
+                var name="";
+                let type = prototype.getAttribute("type");
+                let promptName=prototype.getAttribute("promptName");
+                if(promptName=='true'){
+                    var name = prompt("Please enter element name", ""); 
+                    if (!name || name == "") { 
+                        return;
+                    }
+                } 
                 graph.stopEditing(false);
                 let pt = graph.getPointForEvent(evt);
                 let vertex = graph.getModel().cloneCell(prototype);
@@ -149,8 +220,13 @@ let setup_elements = function setup_elements(graph, elements, custom_attributes,
 
                 let new_cells = graph.importCells([vertex], 0, 0, cell);
                 //Set up handling of new classes.
-                new_cells.forEach(element => {
-                    renameElementByType(graph, "adaptation_behavior_hardware", element);
+                new_cells.forEach((element) => {
+                    if(name==""){
+                      renameElementByType(graph, "adaptation_behavior_hardware", element);
+                    }else{
+                      element.setAttribute('label', name);
+                      graph.refresh();
+                    } 
 
                     const type = element.getAttribute("type");
                     if (["writeAction", "readAction"].includes(type)) {
@@ -165,16 +241,24 @@ let setup_elements = function setup_elements(graph, elements, custom_attributes,
                                 let arg = args[a];
                                 const doc = mxUtils.createXmlDocument();
                                 const node = doc.createElement(arg.name);
-                                node.setAttribute('label', arg.name);
-                                node.setAttribute('type', 'actionArgument');
-                                node.setAttribute('dataType', arg.type);
+                                node.setAttribute("label", arg.name);
+                                node.setAttribute("type", "actionArgument");
+                                node.setAttribute("dataType", arg.type);
 
                                 let geometry = new mxGeometry(x, 22, 10, 10);
                                 geometry.offset = new mxPoint(0, 0);
                                 geometry.relative = false;
-                                let connector = new mxCell(node, geometry, "shape=triangle;perimeter=trianglePerimeter;direction=north");
-                                graph.setCellStyles(mxConstants.STYLE_MOVABLE, '0', [connector]);
-                                graph.setCellStyles(mxConstants.STYLE_RESIZABLE, '0', [connector]);
+                                let connector = new mxCell(
+                                    node,
+                                    geometry,
+                                    "shape=triangle;perimeter=trianglePerimeter;direction=north"
+                                );
+                                graph.setCellStyles(mxConstants.STYLE_MOVABLE, "0", [
+                                    connector,
+                                ]);
+                                graph.setCellStyles(mxConstants.STYLE_RESIZABLE, "0", [
+                                    connector,
+                                ]);
                                 connector.setConnectable(true);
                                 connector.setVertex(true);
 
@@ -189,7 +273,19 @@ let setup_elements = function setup_elements(graph, elements, custom_attributes,
                         // node_name.setAttribute('type', class_name_type);
                         // node_name.setAttribute('label', '');
                         // const class_name = graph.insertVertex(element,null,node_name,0,0,100,20,'fillColor=#FFFFFF;selectable=0;fontColor=black;');
-                        // class_name.setConnectable(false);  
+                        // class_name.setConnectable(false);
+
+                        var parentDevice = graph.getSelectionCell(); 
+                        if(parentDevice){
+                            let graphUtil = new GraphUtil();
+                            let modelName="adaptation_behavior_hardware";  
+                            graphUtil.createRelationship(graph, modelName, parentDevice, element, new LogicalOperator_transitionRelationship());
+                            let newName=parentDevice.getAttribute('label') + '_' + element.getAttribute('label');
+                            graphUtil.renameElement(graph, element, newName);
+                            graph.setSelectionCell(parentDevice); 
+                            graph.refresh();
+
+                        }  
                     }
                     if (["controlAction"].includes(type)) {
                         //const device = element.getAttribute("device");
@@ -214,16 +310,24 @@ let setup_elements = function setup_elements(graph, elements, custom_attributes,
                                 let arg = args[a];
                                 const doc = mxUtils.createXmlDocument();
                                 const node = doc.createElement(arg.name);
-                                node.setAttribute('label', arg.name);
-                                node.setAttribute('type', 'actionArgument');
-                                node.setAttribute('dataType', arg.type);
+                                node.setAttribute("label", arg.name);
+                                node.setAttribute("type", "actionArgument");
+                                node.setAttribute("dataType", arg.type);
 
                                 let geometry = new mxGeometry(x, 22, 10, 10);
                                 geometry.offset = new mxPoint(0, 0);
                                 geometry.relative = false;
-                                let connector = new mxCell(node, geometry, "shape=triangle;perimeter=trianglePerimeter;direction=north");
-                                graph.setCellStyles(mxConstants.STYLE_MOVABLE, '0', [connector]);
-                                graph.setCellStyles(mxConstants.STYLE_RESIZABLE, '0', [connector]);
+                                let connector = new mxCell(
+                                    node,
+                                    geometry,
+                                    "shape=triangle;perimeter=trianglePerimeter;direction=north"
+                                );
+                                graph.setCellStyles(mxConstants.STYLE_MOVABLE, "0", [
+                                    connector,
+                                ]);
+                                graph.setCellStyles(mxConstants.STYLE_RESIZABLE, "0", [
+                                    connector,
+                                ]);
                                 connector.setConnectable(true);
                                 connector.setVertex(true);
 
@@ -238,52 +342,74 @@ let setup_elements = function setup_elements(graph, elements, custom_attributes,
                         // node_name.setAttribute('type', class_name_type);
                         // node_name.setAttribute('label', '');
                         // const class_name = graph.insertVertex(element,null,node_name,0,0,100,20,'fillColor=#FFFFFF;selectable=0;fontColor=black;');
-                        // class_name.setConnectable(false);  
+                        // class_name.setConnectable(false);
                     }
-                })
+                });
                 graph.setSelectionCells(new_cells);
 
                 //execute if there are clons for the current element
                 if (c_clon_cells != null) {
                     let type = new_cells[0].getAttribute("type");
-                    if (c_clon_cells[type]) { //clon cell in a new model
+                    if (c_clon_cells[type]) {
+                        //clon cell in a new model
                         graph.getModel().prefix = "clon"; //cloned cell contains clon prefix
                         //graph.getModel().nextId=graph.getModel().nextId-1;
                         graph.getModel().nextId = new_cells[0].getId();
                         let vertex2 = graph.getModel().cloneCell(new_cells[0]);
                         vertex2.setConnectable(true);
-                        vertex2.setAttribute('originalId', new_cells[0].getId());
+                        vertex2.setAttribute("originalId", new_cells[0].getId());
                         let parent2 = graph.getModel().getCell(c_clon_cells[type]);
-                        graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#DCDCDC", [vertex2]); //different background for a cloned cell
-                        graph.importCells([vertex2], 0, 0, parent2);
+                        graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#DCDCDC", [
+                            vertex2,
+                        ]); //different background for a cloned cell
+                        let importedCells=graph.importCells([vertex2], 0, 0, parent2);
                         graph.getModel().prefix = ""; //restart prefix
+
+                        if (type == "controlAction" || type == "writeAction" || type == "readAction") {
+                            let graphUtil = new GraphUtil();
+                            let modelName = "adaptation_behavior_states"; 
+                            let actionLifeLine = new ActionLifeLine();
+                            let actionLifeLineCells = graphUtil.createComponent(graph, actionLifeLine.getPrototype(), modelName, pt.x, pt.y + 75 );
+                            graphUtil.createRelationship( graph,  modelName, importedCells[0], actionLifeLineCells[0], new State_stateLifeLineRelationship());
+                            graphUtil.organizeModel(graph, modelName);
+                        }
+ 
+                        if (type == "variable") {
+                            let graphUtil = new GraphUtil();
+                            let modelName = "adaptation_behavior_transitions"; 
+                            graphUtil.organizeModel(graph, modelName);
+                        }
                     }
 
                     if (type == "controlAction") {
-                        if (c_clon_cells[type]) { //clon cell in a new model
+                        if (c_clon_cells[type]) {
+                            //clon cell in a new model
                             graph.getModel().prefix = "clon_0_"; //cloned cell contains clon prefix
                             //graph.getModel().nextId=graph.getModel().nextId-1;
                             graph.getModel().nextId = new_cells[0].getId();
                             let vertex2 = graph.getModel().cloneCell(new_cells[0]);
                             vertex2.setConnectable(true);
-                            vertex2.setAttribute('originalId', new_cells[0].getId());
-                            let parent2 = graph.getModel().getCell("adaptation_behavior_states");
-                            graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#DCDCDC", [vertex2]); //different background for a cloned cell
+                            vertex2.setAttribute("originalId", new_cells[0].getId());
+                            let parent2 = graph
+                                .getModel()
+                                .getCell("adaptation_behavior_states");
+                            graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#DCDCDC", [
+                                vertex2,
+                            ]); //different background for a cloned cell
                             graph.importCells([vertex2], 0, 0, parent2);
                             graph.getModel().prefix = ""; //restart prefix
                         }
                     }
                 }
             }
-
-        }
+        };
 
         let nose = prototype;
         let device = prototype.getAttribute("device");
 
-        let tbContainer = document.getElementById('tbContainer');
-        let mdiv = document.createElement('div');
-        let span = document.createElement('span');
+        let tbContainer = document.getElementById("tbContainer");
+        let mdiv = document.createElement("div");
+        let span = document.createElement("span");
         span.setAttribute("data-device", device);
         span.innerHTML = namepalette + "<br />";
         mdiv.appendChild(span);
@@ -296,6 +422,6 @@ let setup_elements = function setup_elements(graph, elements, custom_attributes,
         mdiv.appendChild(img);
         tbContainer.appendChild(mdiv);
     }
-}
+};
 
-export default setup_elements
+export default setup_elements;

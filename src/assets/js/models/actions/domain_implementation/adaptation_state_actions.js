@@ -686,7 +686,7 @@ var adaptation_state_actions = function adaptation_state_actions(graph, selected
       var sourceType = source.getAttribute("type");
       var targetType = target.getAttribute("type");
       var relName = source.getAttribute("label") + "_activities";
-      let phase = relation.getAttribute("phase");
+      let phase = target.getAttribute("phase");
 
       var item = dicElements.items["binding"][dicKey][relName];
       if (!item) {

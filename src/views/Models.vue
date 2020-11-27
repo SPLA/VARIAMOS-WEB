@@ -29,6 +29,7 @@
 
         <div class="button-area">
           <div class="button-unique" id="buttonSAVE"></div>
+          <div class="button-unique" id="buttonORGANIZE"></div>
           <div class="button-unique" id="buttonUNDO"></div>
           <div class="button-unique" id="buttonREDO"></div>
           <div class="button-unique" id="buttonSHOW"></div>
