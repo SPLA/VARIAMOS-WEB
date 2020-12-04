@@ -12,7 +12,7 @@ export function getElementById(graph, modelName, id) {
     }
   }
   return null;
-}
+} 
 
 export function getElementsByType(graph, modelName, elementType) {
   let ret = [];

@@ -7,42 +7,81 @@
       data-toggle="dropdown"
       aria-haspopup="true"
       aria-expanded="false"
-    >{{ $t("application_menu") }}</a>
-    <div id="application-menu" class="dropdown-menu" aria-labelledby="navbarDropdown">
+      >{{ $t("application_menu") }}</a
+    >
+    <div
+      id="application-menu"
+      class="dropdown-menu"
+      aria-labelledby="navbarDropdown"
+    >
       <a
         data-menudisplay="['feature','component','binding_feature_component']"
         @click="set_parameters()"
         class="dropdown-item"
-      >{{ $t("application_menu_set_app") }}</a>
+        >{{ $t("application_menu_set_app") }}</a
+      >
       <a
         data-menudisplay="['feature','component','binding_feature_component']"
         @click="execute_derivation()"
         class="dropdown-item"
-      >{{ $t("domain_implementation_execute") }}</a>
+        >{{ $t("domain_implementation_execute") }}</a
+      >
       <a
         data-menudisplay="['feature','component','binding_feature_component']"
         @click="customize_derivation()"
         class="dropdown-item"
-      >{{ $t("domain_implementation_customize") }}</a>
+        >{{ $t("domain_implementation_customize") }}</a
+      >
       <a
         data-menudisplay="['feature','component','binding_feature_component']"
         @click="verify_derivation()"
         class="dropdown-item"
-      >{{ $t("domain_implementation_verify") }}</a>
+        >{{ $t("domain_implementation_verify") }}</a
+      >
       <a
         data-menudisplay="['adaptation_state','adaptation_hardware','adaptation_behavior_hardware','adaptation_behavior_states','adaptation_behavior_transitions','control']"
         @click="adaptation_state_source_code_generation()"
         class="dropdown-item"
-      >Source code generation</a>
-      <component :is="dynamicComponent" :current_graph="current_graph"></component>
+        >Source code generation</a
+      >
+      <a
+        data-menudisplay="['adaptation_state','adaptation_hardware','adaptation_behavior_hardware','adaptation_behavior_states','adaptation_behavior_transitions','control']"
+        @click="adaptation_organize()"
+        class="dropdown-item"
+        >Organize Diagrams</a
+      >
+      <a
+        data-menudisplay="['adaptation_architecture']"
+        @click="adaptation_state_import_from_architecture()"
+        class="dropdown-item"
+        >Import from domain architecture model</a
+      >
+      <a
+        data-menudisplay="['adaptation_hardware']"
+        @click="adaptation_state_generate_hardware_from_architecture()"
+        class="dropdown-item"
+        >Generate from architecture</a
+      >    
+      <component
+        :is="dynamicComponent"
+        :current_graph="current_graph"
+      ></component>
     </div>
+    <vue-snotify></vue-snotify>
   </li>
 </template>
 
 <script>
+import Vue from "vue";
 import axios from "axios";
+
+import { GraphUtil } from "@/assets/js/common/graphutil";
+import Snotify, { SnotifyPosition, SnotifyToast } from "vue-snotify";
+import VueClipboard from "vue-clipboard2";
+
 import di_actions from "@/assets/js/models/actions/domain_implementation/di_actions.js";
 import "@/assets/js/chart/Chart.min.js";
+
 import {
   setupModal,
   modalH3,
@@ -50,9 +89,16 @@ import {
   modalInputTexts,
   modalCustomization,
   modalButton,
-  downloadFile
+  downloadFile,
 } from "../../assets/js/common/util.js";
+
+import "vue-snotify/styles/material.css";
 import adaptation_state_actions from "@/assets/js/models/actions/domain_implementation/adaptation_state_actions.js";
+
+VueClipboard.config.autoSetContainer = true;
+Vue.config.productionTip = false;
+Vue.use(Snotify);
+Vue.use(VueClipboard);
 
 export default {
   data: function() {
@@ -69,18 +115,18 @@ export default {
       customization_cus_pos: 0,
       customization_cus_max_pos: 0,
       customization_response: "",
-      errors: [] //errors
+      errors: [], //errors
     };
   },
   props: {
     current_graph: {
       type: Object,
-      required: true
+      required: true,
     },
     model_type: {
       type: String,
-      required: true
-    }
+      required: true,
+    },
   },
   computed: {
     // load dynamic application menu actions
@@ -100,9 +146,20 @@ export default {
           return null;
         }
       }
-    }
+    },
   },
   methods: {
+    // clipboard copy
+    doCopy(text) {
+      this.$copyText(text).then(
+        function(e) {
+          console.log(e);
+        },
+        function(e) {
+          console.log(e);
+        }
+      );
+    },
     //Start set parameters
     set_parameters() {
       let c_header = modalH3(this.$t("application_menu_set_app"));
@@ -136,17 +193,17 @@ export default {
             {
               data: this.model_data,
               p_pool: localStorage["domain_implementation_pool_path"],
-              p_derived: localStorage["domain_implementation_derived_path"]
+              p_derived: localStorage["domain_implementation_derived_path"],
             }
           )
-          .then(response => {
+          .then((response) => {
             let c_header = modalH3(
               this.$t("models_actions_derivation_response")
             );
             let c_body = modalSimpleText(response.data);
             setupModal(c_header, c_body);
           })
-          .catch(e => {
+          .catch((e) => {
             this.errors.push(e);
             let c_header = modalH3(this.$t("modal_error"), "error");
             console.log(this.$t("model_actions_backend_problem"));
@@ -179,17 +236,17 @@ export default {
               "ComponentImplementation/verify",
             {
               data: this.model_data,
-              p_derived: localStorage["domain_implementation_derived_path"]
+              p_derived: localStorage["domain_implementation_derived_path"],
             }
           )
-          .then(response => {
+          .then((response) => {
             let c_header = modalH3(
               this.$t("models_actions_derivation_response")
             );
             let c_body = modalSimpleText(response.data);
             setupModal(c_header, c_body);
           })
-          .catch(e => {
+          .catch((e) => {
             this.errors.push(e);
             let c_header = modalH3(this.$t("modal_error"), "error");
             console.log(this.$t("model_actions_backend_problem"));
@@ -231,10 +288,10 @@ export default {
                 {
                   data: this.model_data,
                   p_pool: localStorage["domain_implementation_pool_path"],
-                  p_derived: localStorage["domain_implementation_derived_path"]
+                  p_derived: localStorage["domain_implementation_derived_path"],
                 }
               )
-              .then(response => {
+              .then((response) => {
                 this.customization_response = response.data;
                 this.customization_comp_pos = 0;
                 this.customization_cus_pos = 0;
@@ -247,14 +304,14 @@ export default {
                   "Default content",
                   "New customized content",
                   "File to upload",
-                  "Notification"
+                  "Notification",
                 ];
                 let inputs = [
                   "current",
                   "default",
                   "customized",
                   "filetoupload",
-                  "notification"
+                  "notification",
                 ];
                 let c_body = modalCustomization(texts, inputs, default_vals);
                 let c_footer = modalButton(
@@ -266,7 +323,7 @@ export default {
                   "filetoupload"
                 ).onchange = this.send_file;
               })
-              .catch(e => {
+              .catch((e) => {
                 this.errors.push(e);
                 let c_header = modalH3(this.$t("modal_error"), "error");
                 console.log(this.$t("model_actions_backend_problem"));
@@ -360,10 +417,10 @@ export default {
                 {
                   data: this.model_data,
                   p_pool: localStorage["domain_implementation_pool_path"],
-                  p_derived: localStorage["domain_implementation_derived_path"]
+                  p_derived: localStorage["domain_implementation_derived_path"],
                 }
               )
-              .then(response => {
+              .then((response) => {
                 document.getElementById("Start/Next").disabled = false;
                 if (response.data == "") {
                   this.previous_dest = "";
@@ -381,7 +438,7 @@ export default {
                   document.getElementById("customized").value = response.data;
                 }
               })
-              .catch(e => {
+              .catch((e) => {
                 this.previous_dest = "";
                 document.getElementById("Start/Next").disabled = false;
               });
@@ -403,13 +460,13 @@ export default {
                 {
                   data: this.model_data,
                   p_pool: localStorage["domain_implementation_pool_path"],
-                  p_derived: localStorage["domain_implementation_derived_path"]
+                  p_derived: localStorage["domain_implementation_derived_path"],
                 }
               )
-              .then(response => {
+              .then((response) => {
                 //
               })
-              .catch(e => {
+              .catch((e) => {
                 this.previous_dest = "";
               });
           }
@@ -441,11 +498,11 @@ export default {
           formData,
           {
             headers: {
-              "Content-Type": undefined
-            }
+              "Content-Type": undefined,
+            },
           }
         )
-        .then(response => {
+        .then((response) => {
           if (response.data == "uploaded") {
             document.getElementById("notification").value =
               "File succesfully uploaded";
@@ -477,22 +534,32 @@ export default {
     },
     adaptation_state_source_code_generation() {
       try {
+        let vm = this;
         ///let serverUrl = localStorage["domain_implementation_main_path"] + "AdaptationStateImplementation/generateSourceCode";
         let serverUrl = localStorage["domain_implementation_main_path"];
+
+        if(serverUrl == undefined) {
+          vm.$snotify.error("Please set backend URL", "Error");
+          return;
+        }
+
         if (!serverUrl.endsWith("/")) {
           serverUrl += "/";
         }
+
         serverUrl += "json/test-api";
-        alert(serverUrl);
+        // alert(serverUrl);
+
         let directory = "MiProyecto"; // localStorage["domain_implementation_pool_path"];
         //alert(directory);
         let modelJson = adaptation_state_actions(
           this.current_graph,
           "serializeJson"
         );
+
         var strModelJson = JSON.stringify(modelJson);
-        //alert(strModelJson);
-        downloadFile("BindingStateHardwareModel.json", strModelJson);
+        // alert(strModelJson);
+        // downloadFile("BindingStateHardwareModel.json", strModelJson);
 
         var createCORSRequest = function(method, url) {
           var xhr = new XMLHttpRequest();
@@ -506,39 +573,121 @@ export default {
           } else {
             // CORS not supported.
             xhr = null;
+            return;
           }
-          return xhr;
+          return new Promise((resolve, reject) => {
+            xhr.onreadystatechange = function() {
+              if (xhr.readyState !== 4) return;
+              if (xhr.status >= 200 && xhr.status < 300) {
+                resolve(xhr);
+              } else {
+                reject({
+                  status: xhr.status,
+                  statusText: xhr.statusText,
+                });
+              }
+            };
+            xhr.send(strModelJson);
+          });
         };
 
         var url = serverUrl;
         var method = "POST";
-        var xhr = createCORSRequest(method, url);
 
-        xhr.onload = function() {
-          // Success code goes here.
-          //alert('bien');
-        };
+        let snotifyPromise = new Promise((resolve, reject) => {
+          createCORSRequest(method, url, snotifyPromise)
+            .then((xhr) =>
+              resolve({
+                title: "Completed",
+                body: "The code has been generated.",
+                config: {
+                  closeOnClick: true,
+                  timeout: 10000,
+                  showProgressBar: true,
+                  closeOnClick: false,
+                  pauseOnHover: true,
+                  buttons: [
+                    {
+                      text: "Copy",
+                      action: () => vm.doCopy(xhr.responseText),
+                      bold: true,
+                    },
+                    {
+                      text: "Get INO",
+                      action: () =>
+                        downloadFile("Arduino.ino", xhr.responseText),
+                      bold: true,
+                    },
+                    {
+                      text: "Get JSON",
+                      action: () => downloadFile("Arduino.json", strModelJson),
+                      bold: true,
+                    },
+                    {
+                      text: "Close",
+                      action: (toast) => vm.$snotify.remove(toast.id),
+                    },
+                  ],
+                },
+              })
+            )
+            .catch(() =>
+              reject({
+                title: "Error",
+                body: "We got an error!",
+                config: {
+                  closeOnClick: true,
+                },
+              })
+            );
+        });
 
-        xhr.onerror = function() {
-          // Error code goes here.
-          alert('Ha ocurrido un error en la solicitud.');
-        };
+        vm.$snotify.async("Generating code...", "Task", () => snotifyPromise);
 
-        xhr.onreadystatechange = function() {
-          if (xhr.readyState == 4 && xhr.status == 200) {
-            //alert("Respuesta: " + xhr.responseText);
-            downloadFile("Arduino.ino", xhr.responseText);
-          }
-        };
-
-        xhr.send(strModelJson);
       } catch (ex) {
         alert(ex);
       }
+
       return "";
-    }
-  }
+
+    },
+
+    adaptation_organize() {
+
+      try {
+
+        console.log(this.current_graph);
+
+        let graphUtil = new GraphUtil();
+        var arr = graphUtil.getElementsByType(this.current_graph, "adaptation_behavior_states", "stateLifeLine");
+
+        arr.forEach(vertex => {
+
+          let geometry = vertex.getGeometry();
+          geometry.x = 15;
+
+          vertex.setStyle("dashed=1;fillColor=#000080;strokeColor=#aaaaaa;");
+          this.current_graph.refresh();
+
+        });
+
+      } catch (ex) {
+        alert(ex);
+      }
+
+      return "";
+
+    },
+    adaptation_state_import_from_architecture() {
+      adaptation_state_actions(this.current_graph, "importFromArchitecture");
+    },
+    adaptation_state_generate_hardware_from_architecture() {
+      adaptation_state_actions(
+        this.current_graph,
+        "generateHardwareFromArchitecture"
+      );
+    },
+  },
 };
 </script>
-<style scoped>
-</style>
+<style scoped></style>

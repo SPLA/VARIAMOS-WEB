@@ -577,7 +577,7 @@ var adaptation_state_actions = function adaptation_state_actions(graph, selected
           dataType: "double",
           value:vertice.getAttribute("Proportional")
         };
-        item.id = dicElements.add("dummy", "control_configuration", action.label + "_" + "proportional", argument); 
+        item.id = dicElements.add("dummy", "control_configuration", action.label + "_" + "proportional", item); 
         action.configuration.push(item);
 
         var item = {
@@ -586,7 +586,7 @@ var adaptation_state_actions = function adaptation_state_actions(graph, selected
           dataType: "double",
           value:vertice.getAttribute("Integral")
         };
-        item.id = dicElements.add("dummy", "control_configuration", action.label + "_" + "integral", argument); 
+        item.id = dicElements.add("dummy", "control_configuration", action.label + "_" + "integral", item); 
         action.configuration.push(item);
 
         var item = {
@@ -595,7 +595,7 @@ var adaptation_state_actions = function adaptation_state_actions(graph, selected
           dataType: "double",
           value:vertice.getAttribute("Derivate")
         };
-        item.id = dicElements.add("dummy", "control_configuration", action.label + "_" + "derivate", argument);
+        item.id = dicElements.add("dummy", "control_configuration", action.label + "_" + "derivate", item);
         action.configuration.push(item);
       } 
     } 
@@ -686,7 +686,7 @@ var adaptation_state_actions = function adaptation_state_actions(graph, selected
       var sourceType = source.getAttribute("type");
       var targetType = target.getAttribute("type");
       var relName = source.getAttribute("label") + "_activities";
-      let phase = relation.getAttribute("phase");
+      let phase = target.getAttribute("phase");
 
       var item = dicElements.items["binding"][dicKey][relName];
       if (!item) {

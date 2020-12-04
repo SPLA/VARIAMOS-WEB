@@ -337,8 +337,11 @@ export default {
 			// if application folder is not open, change its context menu
 			else if(data[index].data.contextmenuIndex === 'application_folder' && !data[index].data.open)
 			{
-				//this.contextMenuData.menulists['application_folder'] = [getcontextmenulist()['create_adp'], getcontextmenulist()['rename'], getcontextmenulist()['delete_folder']];
 				this.contextMenuData.menulists['application_folder'] = [getcontextmenulist()['rename'], getcontextmenulist()['delete_folder']];
+			} 
+			else if(data[index].data.contextmenuIndex === 'adaptation_folder')
+			{
+				this.contextMenuData.menulists['adaptation_folder'] = [getcontextmenulist()['clone_adp'], getcontextmenulist()['rename'], getcontextmenulist()['delete_folder']];
 			}
 		},
 		// double click folder and project will trigger expand menu

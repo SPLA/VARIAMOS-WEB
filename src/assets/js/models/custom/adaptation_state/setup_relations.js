@@ -1,8 +1,48 @@
 
 import {getElementById, getElementsByType, getRelationsFromTypes, getRelationsFromSource, getRelationsToTarget } from '@/assets/js/common/graphutils'
+import { GraphUtil } from "@/assets/js/common/graphutil";
+import { Transition } from "@/assets/js/models/custom/adaptation_state/components/transition";
+import { LogicalOperator_transitionRelationship } from "@/assets/js/models/custom/adaptation_behavior_transitions/relationships/logicalOperator_transitionRelationship";
+
+import { LogicalOperator } from "@/assets/js/models/custom/adaptation_behavior_transitions/components/logicalOperator";
+import { Predicate } from "@/assets/js/models/custom/adaptation_behavior_transitions/components/predicate";
+import { Predicate_logicalOperatorRelationship } from "@/assets/js/models/custom/adaptation_behavior_transitions/relationships/predicate_logicalOperatorRelationship";
+
 
 let setupRelations = function setupRelations(graph, relations, relationStyles, constraintsRelations){
     graph.connectionHandler.insertEdge = function(parent, id, value, source, target, style){
+        let sourceType=source.getAttribute("type");
+        let targetType=target.getAttribute("type");
+        if(["state", "initialState"].includes(sourceType) && ["state", "initialState"].includes(targetType)){
+            let modelName="adaptation_state";  
+
+            let x = (source.getGeometry().x + target.getGeometry().x)/2; 
+            let y = (source.getGeometry().y + target.getGeometry().y)/2; 
+
+            let graphUtil = new GraphUtil();
+            let transition = new Transition();
+            let transitionCells = graphUtil.createComponent(graph, transition.getPrototype(), modelName, x, y, source.getAttribute("label") + '_' + target.getAttribute("label") );
+            
+            let transitionClonCells =graphUtil.cloneComponent(graph, transitionCells, "adaptation_behavior_transitions");
+
+            
+            graphUtil.createRelationship(graph, modelName, source, transitionCells[0], new LogicalOperator_transitionRelationship());
+            graphUtil.createRelationship(graph, modelName, transitionCells[0], target, new LogicalOperator_transitionRelationship());
+ 
+            modelName="adaptation_behavior_transitions"; 
+            let logicalOperator = new LogicalOperator();
+            let logicalOperatorCells = graphUtil.createComponent(graph, logicalOperator.getPrototype(), modelName, x + 150, y);
+            graphUtil.createRelationship(graph, modelName, logicalOperatorCells[0], transitionClonCells[0], new LogicalOperator_transitionRelationship());
+
+            let predicate = new Predicate();
+            let predicateCells = graphUtil.createComponent(graph, predicate.getPrototype(), modelName, x + 150 + 100, y, "to_" + source.getAttribute("label") + '_' + target.getAttribute("label"));
+            graphUtil.createRelationship(graph, modelName, predicateCells[0], logicalOperatorCells[0], new Predicate_logicalOperatorRelationship());
+            
+            graphUtil.organizeModel(graph, modelName);
+            
+            return;
+        }
+        
         let doc = mxUtils.createXmlDocument();
         let node = doc.createElement('rel_' + source.getAttribute("type") + '_' + target.getAttribute("type"));
         node.setAttribute('type', "relation");
@@ -60,9 +100,7 @@ let setupRelations = function setupRelations(graph, relations, relationStyles, c
                 }
             }
         }
-
-        let sourceType = source.getAttribute("type");
-        let targetType = target.getAttribute("type"); 
+        
         let transition=null;
         if((sourceType=="initialState" || sourceType=="state") && targetType=="transition"){ 
             transition=target;

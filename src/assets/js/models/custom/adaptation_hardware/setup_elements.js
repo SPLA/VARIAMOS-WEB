@@ -1,6 +1,8 @@
+import "vue";
 import { getBoard } from "./boards";
 import { getDevice } from "./devices";
-import {renameElementByType} from '@/assets/js/common/graphutils'
+import { renameElementByType } from '@/assets/js/common/graphutils'
+import { GraphUtil } from "@/assets/js/common/graphutil";
 
 let setup_elements = function setup_elements(graph, elements, custom_attributes, c_clon_cells, c_constraints_ic, toolbar, c_type) {
     if (elements == null) {
@@ -265,6 +267,7 @@ let setup_elements = function setup_elements(graph, elements, custom_attributes,
         // the graph. The cell argument points to the cell under
         // the mousepointer if there is one.
         let funct = function (graph, evt, cell) {
+
             let oncreation_allowed = true;
 
             if (c_constraints_ic != "") {
@@ -272,6 +275,15 @@ let setup_elements = function setup_elements(graph, elements, custom_attributes,
             }
 
             if (oncreation_allowed) {
+                var name="";
+                let promptName=prototype.getAttribute("promptName");
+                if(promptName=='true'){
+                  var name = prompt("Please enter element name", ""); 
+                  if (name == "") { 
+                      return;
+                  }
+                } 
+
                 graph.stopEditing(false);
                 let pt = graph.getPointForEvent(evt);
                 let vertex = graph.getModel().cloneCell(prototype);
@@ -281,21 +293,26 @@ let setup_elements = function setup_elements(graph, elements, custom_attributes,
                 let new_cells = graph.importCells([vertex], 0, 0, cell);
 
                 new_cells.forEach(element => {
-                    renameElementByType(graph, "adaptation_hardware", element);
-                    
-                    const type = element.getAttribute("type");  
+                    if(name==""){
+                      renameElementByType(graph, "adaptation_hardware", element);
+                    }else{
+                      element.setAttribute('label', name);
+                      graph.refresh();
+                    } 
+
+                    const type = element.getAttribute("type");
                     if (["board", "device"].includes(type)) {
                         let digitalPins = [];
                         let analogPins = [];
                         let pwmPins = [];
- 
+
                         if (["board"].includes(type)) {
                             let boardName = element.getAttribute("subtype");
                             let board = getBoard(boardName);
                             digitalPins = board.digitalPins;
                             analogPins = board.analogPins;
                             pwmPins = board.pwmPins;
-                        } 
+                        }
                         if (["device"].includes(type)) {
                             let deviceName = element.getAttribute("subtype");
                             let device = getDevice(deviceName);
@@ -304,9 +321,9 @@ let setup_elements = function setup_elements(graph, elements, custom_attributes,
                             pwmPins = device.pwmPins;
                         }
 
-                        
+
                         let x = 10;
-                        let y = 24; 
+                        let y = 24;
                         if (digitalPins) {
                             //x = 10;
                             //y += 20;
@@ -578,25 +595,57 @@ let setup_elements = function setup_elements(graph, elements, custom_attributes,
                         graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#DCDCDC", [vertex2]); //different background for a cloned cell
                         graph.importCells([vertex2], 0, 0, parent2);
                         graph.getModel().prefix = ""; //restart prefix
+
+                        if (type == "device") {
+                            let graphUtil = new GraphUtil();
+                            let modelName = "adaptation_behavior_hardware"; 
+                            graphUtil.organizeModel(graph, modelName);
+                        }
                     }
                 }
             }
 
         }
 
+        // let data = [
+        //     {
+        //         name: "Arduino UNO",
+        //         url:
+        //             "https://cdn.pixabay.com/photo/2017/03/23/12/32/arduino-2168193_1280.png",
+        //         imgWidth: 100,
+        //         selected: false,
+        //     },
+        //     {
+        //         name: "Arduino MEGA",
+        //         url:
+        //             "https://www.pngkey.com/png/full/207-2079814_bustedtheory-servo-motor-arduino-mega.png",
+        //         imgWidth: 50,
+        //         selected: true,
+        //     },
+        // ];
+
+        // document.getElementById("tbContainer").innerHTML +=
+        //     `<div class="col-6">
+        //         <p align="center">${data[1].name}</p>
+        //         <img src="${data[1].url}" alt="Arduino image" width="${data[1].imgWidth}" />
+        //     </div>`;
+
+        // Creates the image which is used as the drag icon (preview)
+        let img = toolbar.addMode(namepalette, image, funct);
+        mxUtils.makeDraggable(img, graph, funct); 
+        
         let tbContainer = document.getElementById('tbContainer');
         let mdiv = document.createElement('div');
         let span = document.createElement('span');
         span.innerHTML = namepalette + "<br />";
-        mdiv.appendChild(span);
-
-        // Creates the image which is used as the drag icon (preview)
-        let img = toolbar.addMode(namepalette, image, funct);
-        mxUtils.makeDraggable(img, graph, funct);
-
-        mdiv.classList.add("pallete-div");
+        mdiv.appendChild(span); 
+        mdiv.classList.add("col-6");
         mdiv.appendChild(img);
         tbContainer.appendChild(mdiv);
+
+        //graph.currentVueInstance.addPaletteItem("Grupo general", namepalette, img);
+
+        //graph.currentVueInstance.palette.test2();
     }
 
 

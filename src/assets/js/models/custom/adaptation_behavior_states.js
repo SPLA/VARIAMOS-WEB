@@ -97,9 +97,9 @@ let adaptation_behavior_states_main = function adaptation_behavior_states_main(g
 		let customAction = { src: projectPath + "images/models/adaptation_binding_state_hardware/customAction.png", wd: 100, hg: 35, type: "customAction", style: "strokeWidth=2", pname: "Custom action" };
 		let logicalOperator = { src: projectPath + "images/models/adaptation_binding_state_hardware/logicalOperator.png", wd: 100, hg: 35, type: "logicalOperator", style: "shape=ellipse", pname: "Logical operator" };
 		let predicate = { src: projectPath + "images/models/adaptation_binding_state_hardware/predicate.png", wd: 100, hg: 35, type: "predicate", style: "shape=predicate", pname: "Predicate" };
-		let stateLifeLine = { src: projectPath + "images/models/adaptation_binding_state_hardware/lifeLine.png", wd: 10, hg: 100, type: "stateLifeLine", style: "shape=lifeLine", pname: "StateLifeLine" };
-		let activityLifeLine = { src: projectPath + "images/models/adaptation_binding_state_hardware/lifeLine.png", wd: 10, hg: 100, type: "activityLifeLine", style: "shape=lifeLine", pname: "ActivityLifeLine" };
-		let actionLifeLine = { src: projectPath + "images/models/adaptation_binding_state_hardware/lifeLine.png", wd: 10, hg: 100, type: "actionLifeLine", style: "shape=lifeLine", pname: "ActionLifeLine" };
+		let stateLifeLine = { src: projectPath + "images/models/adaptation_binding_state_hardware/lifeLine.png", wd: 10, hg: 50, type: "stateLifeLine", style: "shape=lifeLine", pname: "StateLifeLine" };
+		let activityLifeLine = { src: projectPath + "images/models/adaptation_binding_state_hardware/lifeLine.png", wd: 10, hg: 50, type: "activityLifeLine", style: "shape=lifeLine", pname: "ActivityLifeLine" };
+		let actionLifeLine = { src: projectPath + "images/models/adaptation_binding_state_hardware/lifeLine.png", wd: 10, hg: 50, type: "actionLifeLine", style: "shape=lifeLine", pname: "ActionLifeLine" };
 
 		let elements = [];
 		elements[0] = activity;
@@ -199,6 +199,9 @@ let adaptation_behavior_states_main = function adaptation_behavior_states_main(g
 			"custom_attributes": [{
 				"name": "alias",
 				"def_value": "sll"
+			},{
+				"name": "phase",
+				"def_value": "while"
 			}]
 		};
 		attributes[11] = {
@@ -224,10 +227,7 @@ let adaptation_behavior_states_main = function adaptation_behavior_states_main(g
 			"source": ["state", "initialState"],
 			"rel_source_target": "and",
 			"target": ["stateLifeLine"],
-			"attributes": [{
-				"name": "phase",
-				"def_value": "begin"
-			}]
+			"attributes": []
 		};
 		relations[1] = {
 			"source": ["stateLifeLine"],
@@ -301,6 +301,10 @@ let adaptation_behavior_states_main = function adaptation_behavior_states_main(g
 			}, {
 				"attribute": "alias",
 				"input_type": "none"
+			},{ 
+				"attribute": "phase",
+				"input_type": "select",
+				"input_values": ["begin", "while", "end"]
 			}
 			],
 			"actionLifeLine": [{

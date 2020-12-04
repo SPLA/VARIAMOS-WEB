@@ -212,6 +212,9 @@ let adaptation_behavior_hardware_main = function adaptation_behavior_hardware_ma
 			"custom_attributes": [{
 				"name": "initialValue",
 				"def_value": "0"
+			},{
+				"name": "promptName",
+				"def_value": true
 			}]
 		};
 		attributes[7] = {
@@ -243,6 +246,9 @@ let adaptation_behavior_hardware_main = function adaptation_behavior_hardware_ma
 			}, {
 				"name": "value",
 				"def_value": "0"
+			},{
+				"name": "promptName",
+				"def_value": true
 			}]
 		};
 		attributes[11] = {
@@ -250,6 +256,9 @@ let adaptation_behavior_hardware_main = function adaptation_behavior_hardware_ma
 			"custom_attributes": [{
 				"name": "controlType",
 				"def_value": "continuous"
+			},{
+				"name": "promptName",
+				"def_value": true
 			}]
 		};
 		return attributes;
@@ -289,6 +298,10 @@ let adaptation_behavior_hardware_main = function adaptation_behavior_hardware_ma
 				"attribute": "dataType",
 				"input_type": "select",
 				"input_values": ["double", "float", "int", "digital", "string"]
+			},
+			{
+				"attribute": "promptName",
+				"input_type": "none"
 			}
 			],
 			"digitalVariable": [{
@@ -342,6 +355,10 @@ let adaptation_behavior_hardware_main = function adaptation_behavior_hardware_ma
 					"attribute": "controlType",
 					"input_type": "select",
 					"input_values": ["continuous", "discrete"]
+				},
+				{
+					"attribute": "promptName",
+					"input_type": "none"
 				}
 			],
 			"actionArgument": [
