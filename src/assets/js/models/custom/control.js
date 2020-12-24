@@ -75,14 +75,20 @@ let controlMain = function controlMain(graph)
             {
                 "name":"Derivate",
                 "def_value":"0"
-            }]
+            },
+            {
+                "name":"controllerType",
+				"def_value":"continuous"
+            }
+                
+        ]
         };
         attributes[1]={
             "types":["setpoint"],
             "custom_attributes":[{
                 "name":"SetPoint",
                 "def_value":"1"
-            },
+            },/*
             {
                 "name":"Time",
                 "def_value":"0"
@@ -90,7 +96,7 @@ let controlMain = function controlMain(graph)
             {
                 "name":"Tm",
                 "def_value":"100"
-            }]
+            }*/]
             
         };
         attributes[2]={
@@ -142,13 +148,20 @@ let controlMain = function controlMain(graph)
 				{
 					"attribute":"FilterType",
 					"input_type":"select",
-					"input_values":["Average","Recursive"],
+					"input_values":["None","Average","Recursive"],
 				}
             ],
             "plant":[
 				{
 					"attribute":"Delay",
                     "input_type":"checkbox",
+				}
+            ],
+            "controller":[
+				{
+					"attribute":"controllerType",
+                    "input_type":"select",
+                    "input_values":["continuous","dicrete"]
 				}
 			]
         }      

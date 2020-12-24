@@ -1,7 +1,7 @@
 import { setupModal, modalH3, modalButton } from '../../../common/util'
 
 let setupEvents = function setupEvents(graph){
-    const texts = ['Input change applied :  ',
+    const texts = ['Input change or setpoint applied :  ',
     'Delay[𝜃] :    ','Discrete Time :   '];
     const default_vals = ["","",""];
     const inputs=["idDeltaU",'idDelay',"idDiscrete"];
@@ -35,7 +35,6 @@ const ModalControl =(texts,inputs,default_vals) => {
       let td = document.createElement('td');
       let td2 = document.createElement('td');
       td.innerHTML=texts[i];
-      td.style.textAlign= "center"
       let texto = document.createElement("div");
       for (let i=0;i<7;i++) {
         texto.innerHTML += ' &nbsp;';
@@ -50,7 +49,9 @@ const ModalControl =(texts,inputs,default_vals) => {
       let input={}
       let td = document.createElement('td');
       let td2 = document.createElement('td');
+      td.style.textAlign= "center"
       input = document.createElement('input');
+      input.style.textAlign= "center"
       if (i==1) {
         input.type="checkbox";
         input.id=inputs[i];
