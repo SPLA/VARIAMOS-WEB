@@ -3,7 +3,7 @@
     <div class="border-bottom text-left"><h1 class="h2">{{ $t("home_variamos") }}</h1></div>
     <div class="div-text-area">{{ $t("about_variamos_desc") }}
       <br /><br />
-      <img src="@/assets/images/logo.png" />
+      <img src="@/assets/images/logo.png" height="160px" width="220px" />
     </div>
   </div>
 </template>

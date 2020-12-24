@@ -14,9 +14,12 @@ let setupElements = function setupElements(graph, elements, customAttributes, cC
         }
     }
 
-    function addVertex(graph, toolbar, icon, w, h, style, type, namepalette, customAttributes, cClonCells, cConstraintsIc){
+    function addVertex(graph, toolbar, icon, w, h, style, type, namepalette, customAttributes, cClonCells, cConstraintsIc) {
+
         let doc = mxUtils.createXmlDocument();
         let node = doc.createElement(type);
+
+        console.log("type " + type);
         node.setAttribute('label', type);
         node.setAttribute('type', type);
 
@@ -34,6 +37,11 @@ let setupElements = function setupElements(graph, elements, customAttributes, cC
         let vertex = new mxCell(node, new mxGeometry(0, 0, w, h), style);
         vertex.setConnectable(true);
         vertex.setVertex(true);
+
+        if(type === "stateLifeLine") {
+            console.log("setting color");
+            graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#DDDDDD", [vertex]);
+        }
 
         if(cConstraintsIc != null && cConstraintsIc[type]){
             addToolbarItem(graph, toolbar, vertex, icon, namepalette, cClonCells, cConstraintsIc[type]);
@@ -74,15 +82,16 @@ let setupElements = function setupElements(graph, elements, customAttributes, cC
                         graph.getModel().nextId=graph.getModel().nextId-1;
                         let vertex2 = graph.getModel().cloneCell(newCells[0]);
                         let parent2 = graph.getModel().getCell(cClonCells[type]);
-                        graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#DCDCDC", [vertex2]); //different background for a cloned cell
+                        graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#DDDDDD", [vertex2]); // #DCDCDC different background for a cloned cell
                         graph.importCells([vertex2], 0, 0, parent2);
                         graph.getModel().prefix = ""; //restart prefix
+                        console.log("sunday");
                     }
                 }
             }
 
         }
-        
+
         let tbContainer = document.getElementById('tbContainer');
         let mdiv = document.createElement('div');
         let span = document.createElement('span');

@@ -5,7 +5,7 @@ let setupElements = function setupElements(graph, elements, customAttributes, cC
         let span = document.createElement('span');
         span.innerHTML = global.messages["setup_elements_palette_no_elements"];
         tbContainer.appendChild(span);
-    }else{
+    } else {
         //add elements to the palette
         for (let i = 0; i < elements.length; i++) {
             addVertex(graph, toolbar, elements[i].src, elements[i].wd, elements[i].hg, elements[i].style, elements[i].type, elements[i].pname, customAttributes, cClonCells, cConstraintsIc);

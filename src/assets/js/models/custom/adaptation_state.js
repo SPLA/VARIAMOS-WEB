@@ -16,11 +16,11 @@ let adaptation_state_main = function adaptation_state_main(graph) {
 	function adaptation_state_constraints(graph) {
 		graph.multiplicities = []; //reset multiplicities 
 		graph.multiplicities.push(new mxMultiplicity(
-			true, "initialState", null, null, 0, 1000000, ["transition", "stateLifeLine"],
+			true, "initialState", null, null, 0, 1000000, ["transition", "stateLifeLine", "initialState", "state"],
 			"Only one connection allowed",
 			"The initialState only can be associated to transitions"));
 		graph.multiplicities.push(new mxMultiplicity(
-			true, "state", null, null, 0, 1000000, ["transition", "stateLifeLine"],
+			true, "state", null, null, 0, 1000000, ["transition", "stateLifeLine", "initialState", "state"],
 			"Only one connection allowed",
 			"The state only can be associated to transitions"));
 		graph.multiplicities.push(new mxMultiplicity(
@@ -34,8 +34,8 @@ let adaptation_state_main = function adaptation_state_main(graph) {
 	}
 
 	function adaptation_state_elements() {
-		let initialState = { src: projectPath + "images/models/adaptation_state/initialState.png", wd: 100, hg: 35, type: "initialState", style: "shape=initialState", pname: "Initial state" };
-		let state = { src: projectPath + "images/models/adaptation_state/state.png", wd: 100, hg: 35, type: "state", style: "shape=state", pname: "State" };
+		let initialState = { src: projectPath + "images/models/adaptation_state/initialState.png", wd: 100, hg: 35, type: "initialState", style: "shape=initialState", pname: "Initial state"  };
+		let state = { src: projectPath + "images/models/adaptation_state/state.png", wd: 100, hg: 35, type: "state", style: "shape=state", pname: "State"  };
 		let transition = { src: projectPath + "images/models/adaptation_state/transition.png", wd: 100, hg: 35, type: "transition", style: "shape=transition", pname: "Transition" };
 
 		let elements = [];
@@ -53,6 +53,9 @@ let adaptation_state_main = function adaptation_state_main(graph) {
 			"custom_attributes": [{
 				"name": "acceptance",
 				"def_value": "false"
+			},{
+				"name": "promptName",
+				"def_value": true
 			}]
 
 		};
@@ -61,6 +64,9 @@ let adaptation_state_main = function adaptation_state_main(graph) {
 			"custom_attributes": [{
 				"name": "acceptance",
 				"def_value": "true"
+			},{
+				"name": "promptName",
+				"def_value": true
 			}]
 
 		};
@@ -98,11 +104,19 @@ let adaptation_state_main = function adaptation_state_main(graph) {
 			"state": [{
 				"attribute": "acceptance",
 				"input_type": "checkbox"
+			},
+			{
+				"attribute": "promptName",
+				"input_type": "none"
 			}
 			],
 			"initialState": [{
 				"attribute": "acceptance",
 				"input_type": "checkbox"
+			},
+			{
+				"attribute": "promptName",
+				"input_type": "none"
 			}
 			],
 			"transition": [

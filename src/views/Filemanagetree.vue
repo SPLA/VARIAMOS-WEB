@@ -250,6 +250,17 @@ export default{
 			this.openmodal('#newAdaptation');
 		});
 		/**
+		 * open a modal to clone a new adaptation folder
+		 * @listens module:contextMenu~event:cloneadaption
+		 */
+		Bus.$on('cloneadaption', data => {  
+			this.newAdaptation.index = this.getIndexById(data.data.parentId);
+			this.newAdaptation.adapatationName = '';
+			this.newAdaptation.parentFolder = data.data.nodeName;
+			this.newAdaptation.parentId = data.data.parentId; 
+			this.openmodal('#newAdaptation');
+		});
+		/**
 		 * delete the folder and its children, remove this folder from localstorage
 		 * @listens module:contextMenu~event:deletedire
 		 */

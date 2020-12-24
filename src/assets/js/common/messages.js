@@ -20,6 +20,7 @@ const messages={
     "setup_buttons_zout":"-",
     "setup_buttons_zr":"R",
     "setup_buttons_delete":"Delete",
+    "setup_buttons_organize":"Organize",
 
     "setup_keys_remove_cloned":"It is not allowed to remove 'Cloned' elements directly",
 

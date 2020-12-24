@@ -47,6 +47,46 @@ export function modalSimpleText(text){
     return cSpan;
 }
 
+export function modalPickOne(data, defaultVals){
+    let table = document.createElement('table');
+    for(let i = 0; i < data.length; i++){
+        let tr = document.createElement('tr');
+        let td = document.createElement('td');
+        td.innerHTML=data[i]['name'];
+        tr.appendChild(td);
+        
+        let input = document.createElement('input');
+        input.value = "Load Example";
+		input.onclick = async function(e) {
+			await fetch('https://cors-anywhere.herokuapp.com/' + data[i]['url']).then(r => {
+				r.blob().then(data => {
+					let fileToLoad = new File([data], "file.xml");
+					let fileReader = new FileReader();
+					fileReader.onload = function(fileLoadedEvent) {
+						let textFromFileLoaded = fileLoadedEvent.target.result;
+						let model_code = document.getElementById('model_code');
+						model_code.value = textFromFileLoaded;
+						let event = new Event('change');
+						model_code.dispatchEvent(event);
+						location.reload();
+					}
+					fileReader.readAsText(fileToLoad, "UTF-8");
+				});
+			});
+			console.log("all fine");
+		}
+        input.type = "button";
+        input.id = data[i]['name'];
+        input.size = 40;
+        input.name = data[i]['name'];
+        let td2 = document.createElement('td');
+        td2.appendChild(input);
+        tr.appendChild(td2);
+        table.appendChild(tr);
+    }
+    return table;
+}
+
 export function modalInputTexts(texts, inputs, defaultVals){
     let table = document.createElement('table');
     for(let i = 0; i < texts.length; i++){

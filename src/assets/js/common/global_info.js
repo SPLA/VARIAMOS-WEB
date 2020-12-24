@@ -6,7 +6,7 @@ export function getModelInfo(){
     let info = [];
     //list of graphical models
     info["gmodels"] = ["feature", "component", "binding_feature_component", "istar", "classdiag", "adap_architecture",
-        "adaptation_hardware","adaptation_behavior_hardware","adaptation_state","adaptation_behavior_states","adaptation_behavior_transitions","control"];
+    "adaptation_architecture","adaptation_hardware","adaptation_behavior_hardware","adaptation_state","adaptation_behavior_states","adaptation_behavior_transitions","control"];
     //define feature model main info
     info["feature"] = {projFolders:["Domain"], label:"Feature"};
     //define component model main info
@@ -20,17 +20,19 @@ export function getModelInfo(){
     //define class diagram model main info
     info["classdiag"] = {projFolders:["Domain"], label:"Class Diagram"}
     //define adaptation_state model main info
-    info["adaptation_state"]={projFolders:["Application"],label:"State"};
+    info["adaptation_state"]={projFolders:["Adaptation"],label:"State"};
     //define adaptation_hardware model main info
-    info["adaptation_hardware"]={projFolders:["Application"],label:"Hardware"};
+    info["adaptation_hardware"]={projFolders:["Adaptation"],label:"Hardware"};
     //define adaptation_behavior_hardware model main info
-    info["adaptation_behavior_hardware"]={projFolders:["Application"],label:"Hardware behavior"};
+    info["adaptation_behavior_hardware"]={projFolders:["Adaptation"],label:"Hardware behavior"};
     //define adaptation_behavior_states model main info
-    info["adaptation_behavior_states"]={projFolders:["Application"],label:"States behavior"};
+    info["adaptation_behavior_states"]={projFolders:["Adaptation"],label:"States behavior"};
     //define adaptation_behavior_transitions model main info
-    info["adaptation_behavior_transitions"]={projFolders:["Application"],label:"Transitions behavior"};
+    info["adaptation_behavior_transitions"]={projFolders:["Adaptation"],label:"Transitions behavior"};
+    //define adaptation_behavior_transitions model main info
+    info["adaptation_architecture"]={projFolders:["Adaptation"],label:"Architecture"};
     //define control model main info
-    info["control"]={projFolders:["Application"],label:"Control"};
+    info["control"]={projFolders:["Adaptation"],label:"Control"};
     return info;
 }
 
@@ -82,7 +84,12 @@ export function getcontextmenulist(){
     info['create_adp'] = {
         fnHandler: 'createadaption',
         icoName: 'fa fa-folder',
-        btnName: 'New Adatption'
+        btnName: 'New Adaptation'
+    };
+    info['clone_adp'] = {
+        fnHandler: 'cloneadaption',
+        icoName: 'fa fa-folder',
+        btnName: 'Clone'
     };
     info['rename'] = {
         fnHandler: 'newname',

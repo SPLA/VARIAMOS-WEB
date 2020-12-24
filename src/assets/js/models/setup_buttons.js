@@ -1,6 +1,20 @@
 import * as svgpng from 'save-svg-as-png';
+import { GraphUtil } from "@/assets/js/common/graphutil";
 
 let setupButtons = function setupButtons(graph, undoManager, reused_functions, routePare, store){
+    /* begin buttonORGANIZE */
+    // Adds an option to ORGANIZE the graph
+    let buttonORGANIZE = document.getElementById('buttonORGANIZE');
+    buttonORGANIZE.innerHTML="";
+    buttonORGANIZE.appendChild(mxUtils.buttonWithIcon(global.messages["setup_buttons_organize"], function()
+    {
+        let graphUtil = new GraphUtil(); 
+        let model=graph.getDefaultParent(); 
+        let modelName = model.getId(); 
+        graphUtil.organizeModel(graph, modelName);
+    }, "code"));
+    /* end buttonORGANIZE */
+
     /* begin buttonxml */
     // Adds an option to view the XML of the graph
     let buttonXML = document.getElementById('buttonXML');
