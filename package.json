@@ -9,7 +9,7 @@
     "test:debug": "vue-cli-service test:unit --inspect-brk --watch"
   },
   "dependencies": {
-    "axios": "^0.18.1",
+    "axios": "^0.21.1",
     "bootstrap": "^4.4.1",
     "jquery": "^3.4.1",
     "jspdf": "^1.4.1",
