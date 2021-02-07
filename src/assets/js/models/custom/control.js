@@ -37,13 +37,13 @@ let controlMain = function controlMain(graph)
     }
 
     function controlElements(){
-        let  controller = {src:projectPath+"images/models/control/controller.png", wd:100, hg:40, style:"shape=rectangle", type:"controller", pname:"Controller"};
+        let  controller = {src:projectPath+"images/models/control/controller.png", wd:100, hg:40, style:"shape=controller", type:"controller", pname:"Controller"};
         let  plant = {src:projectPath+"images/models/control/plantControl.png", wd:100, hg:40, style:"shape=plant", type:"plant", pname:"Plant"};
-        let  transducer = {src:projectPath+"images/models/control/transducer.png", wd:100, hg:40, style:"shape=transducer", type:"transducer", pname:"Sensor"};
-        let  summingPoint   = {src:projectPath+"images/models/control/summing_point.PNG", wd:100, hg:40, style:"shape=ellipse", type:"summingPoint", pname:"Summing point"};
+        let  transducer = {src:projectPath+"images/models/control/sensor.png", wd:100, hg:40, style:"shape=transducer", type:"transducer", pname:"Sensor"};
+        let  summingPoint   = {src:projectPath+"images/models/control/summing_point.PNG", wd:100, hg:40, style:"shape=summing", type:"summingPoint", pname:"Summing point"};
         let  setpoint   = {src:projectPath+"images/models/control/setpoint.png", wd:100, hg:40, style:"shape=setpoint", type:"setpoint", pname:"Setpoint "};
-        let  outputSystem   = {src:projectPath+"images/models/control/measured-output.png", wd:100, hg:40, style:"shape=measured_output", type:"outputSystem", pname:"Process output "};
-        let  branchpoint   = {src:projectPath+"images/models/control/bifurcation.png", wd:100, hg:40, style:"shape=rhombus", type:"branchpoint", pname:"Branchpoint"};
+        let  outputSystem   = {src:projectPath+"images/models/control/measured.png", wd:100, hg:40, style:"shape=measured_output", type:"outputSystem", pname:"Process output "};
+        let  branchpoint   = {src:projectPath+"images/models/control/bifurcation.png", wd:100, hg:40, style:"shape=bifurcation", type:"branchpoint", pname:"Branchpoint"};
         let  filter = {src:projectPath+"images/models/control/filter.png", wd:100, hg:40, style:"shape=filter", type:"filter", pname:"Filter"};
 
 
@@ -75,14 +75,20 @@ let controlMain = function controlMain(graph)
             {
                 "name":"Derivate",
                 "def_value":"0"
-            }]
+            },
+            {
+                "name":"controllerType",
+				"def_value":"continuous"
+            }
+                
+        ]
         };
         attributes[1]={
             "types":["setpoint"],
             "custom_attributes":[{
                 "name":"SetPoint",
-                "def_value":"0"
-            },
+                "def_value":"1"
+            },/*
             {
                 "name":"Time",
                 "def_value":"0"
@@ -90,7 +96,7 @@ let controlMain = function controlMain(graph)
             {
                 "name":"Tm",
                 "def_value":"100"
-            }]
+            }*/]
             
         };
         attributes[2]={
@@ -142,13 +148,20 @@ let controlMain = function controlMain(graph)
 				{
 					"attribute":"FilterType",
 					"input_type":"select",
-					"input_values":["Average","Recursive"],
+					"input_values":["None","Average","Recursive"],
 				}
             ],
             "plant":[
 				{
 					"attribute":"Delay",
                     "input_type":"checkbox",
+				}
+            ],
+            "controller":[
+				{
+					"attribute":"controllerType",
+                    "input_type":"select",
+                    "input_values":["continuous","dicrete"]
 				}
 			]
         }      
