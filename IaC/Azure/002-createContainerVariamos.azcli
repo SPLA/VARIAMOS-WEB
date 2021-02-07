@@ -1,0 +1,15 @@
+az login
+
+$resourceGroupName = "variamosspla"
+$location = "eastus"
+$imageName = "danielgara/variamos"
+$port = 80
+$dsnNameLabel = "variamos"
+$containerName = "variamos"
+
+az group create --name $resourceGroupName --location $location
+az container create --resource-group $resourceGroupName --name $containerName --image $imageName --dns-name-label $dsnNameLabel --ports $port
+
+az container show --resource-group $resourceGroupName --name $containerName --query "{FQDN:ipAddress.fqdn,ProvisioningState:provisioningState}" --out table
+
+#http://variamos.eastus.azurecontainer.io
