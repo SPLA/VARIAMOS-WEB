@@ -2,7 +2,7 @@ az login
 
 $resourceGroupName = "variamosspla"
 $location = "eastus"
-$imageName = "danielgara/variamos"
+$imageName = "danielgara/variamos:latest"
 $port = 80
 $dsnNameLabel = "variamos"
 $containerName = "variamos"

@@ -11,3 +11,4 @@ Az CLI script for [Variamos](http://variamos.eastus.azurecontainer.io) deploymen
 # References
 
 [Quickstart: Deploy a container instance in Azure using the Azure CLI](https://docs.microsoft.com/en-us/azure/container-instances/container-instances-quickstart)
+[Container groups in Azure Container Instances](https://docs.microsoft.com/en-us/azure/container-instances/container-instances-container-groups)

@@ -1,0 +1,13 @@
+version: '3'
+services:
+  variamos-web:
+    image: jsoto25/variamos-web:latest
+    container_name: variamos-web
+    ports:
+        - "8090:8090"
+
+  variamos:
+    image: danielgara/variamos
+    container_name: variamos
+    ports:
+        - "8080:8080"
