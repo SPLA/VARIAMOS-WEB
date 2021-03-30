@@ -3,8 +3,8 @@ sudo docker build --rm -t variamos-vue .
 docker run -it -p 8080:80 --rm --name variamos-front variamos-vue
 
 #from docker hub
-docker run -it -p 8080:80 --rm --name variamos-front danielgara/variamos-web
+docker run -it -p 8080:80 --rm --name variamos-front jsoto25/variamos-web
 
 #with watch tower
 sudo docker run -d --name watchtower -v /var/run/docker.sock:/var/run/docker.sock v2tec/watchtower
-sudo docker run -d -p 80:80 --name variamos-front danielgara/variamos-web
+sudo docker run -d -p 80:80 --name variamos-front jsoto/variamos-web

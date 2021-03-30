@@ -1,13 +1,15 @@
+# Date: 20210330 
+# Description: Updates Variamos-Web Container in Azure Container Instance
+
 az login
 
 $resourceGroupName = "variamosspla"
 $location = "eastus"
-$imageName = "jsoto25/variamos-web:v3.0"
+$imageName = "jsoto25/variamos-web:latest"
 $port = 80
 $dsnNameLabel = "variamos-web"
 $containerName = "variamos-web"
 
-az group create --name $resourceGroupName --location $location
 az container create --resource-group $resourceGroupName --name $containerName --image $imageName --dns-name-label $dsnNameLabel --ports $port
 
 az container show --resource-group $resourceGroupName --name $containerName --query "{FQDN:ipAddress.fqdn,ProvisioningState:provisioningState}" --out table
