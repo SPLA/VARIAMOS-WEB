@@ -2,15 +2,15 @@ az login
 
 $resourceGroupName = "variamosspla"
 $location = "eastus"
-$imageName = "jsoto25/variamos-web:latest"
-$port = 80
-$dsnNameLabel = "variamosweb"
-$containerName = "variamosweb"
+$imageName = "magudeloz/variamos_microservice:latest"
+$port = 4000
+$dsnNameLabel = "variamosmicroservice02"
+$containerName = "variamosmicroservice02"
 
 az group create --name $resourceGroupName --location $location
 az container create --resource-group $resourceGroupName --name $containerName --image $imageName --dns-name-label $dsnNameLabel --ports $port
 
 az container show --resource-group $resourceGroupName --name $containerName --query "{FQDN:ipAddress.fqdn,ProvisioningState:provisioningState}" --out table
 
-#Old version http://variamos-web.eastus.azurecontainer.io 
-#latest version http://variamosweb.eastus.azurecontainer.io
+#old version variamosmicroservice.eastus.azurecontainer.io
+#new version http://variamosmicroservice02.eastus.azurecontainer.io
