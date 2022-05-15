@@ -63,12 +63,49 @@ let setupElements = function setupElements(graph, elements, customAttributes, cC
                 switch (newCells[0].getAttribute("type")) {
                     case "layer":
                         personalShapes(graph, 0, newCells[0]);
+                        let doc = mxUtils.createXmlDocument();
+                        let node = doc.createElement("layer");
+                        let geometry = new mxGeometry(0, 0, 600, 180);
+                        geometry.offset = new mxPoint(0, 0);
+                        geometry.relative = false;
+                        let connector = new mxCell(node, geometry, "");
+                        graph.setCellStyles(mxConstants.STYLE_MOVABLE, "0", [connector]);
+                        graph.setCellStyles(mxConstants.STYLE_RESIZABLE, "0", [connector]);
+                        connector.setConnectable(false);
+                        connector.setVertex(false);
+                        graph.addCell(connector, newCells[0]);
+            
                         break;
                     case "module":
                         personalShapes(graph,1, newCells[0]);
+                        
+                        doc = mxUtils.createXmlDocument();
+                        node = doc.createElement("module");
+                        geometry = new mxGeometry(0, 0, 300, 150);
+                        geometry.offset = new mxPoint(0, 0);
+                        geometry.relative = false;
+                        connector = new mxCell(node, geometry, "");
+                        graph.setCellStyles(mxConstants.STYLE_MOVABLE, "0", [connector]);
+                        graph.setCellStyles(mxConstants.STYLE_RESIZABLE, "0", [connector]);
+                        connector.setConnectable(false);
+                        connector.setVertex(false); 
+                        graph.addCell(connector, newCells[0]); 
+            
                         break;
                     case "package":
                         personalShapes(graph, 2, newCells[0]);
+                        doc = mxUtils.createXmlDocument();
+                        node = doc.createElement("package");
+                        geometry = new mxGeometry(0, 0, 200, 130);
+                        geometry.offset = new mxPoint(0, 0);
+                        geometry.relative = false;
+                        connector = new mxCell(node, geometry, "");
+                        graph.setCellStyles(mxConstants.STYLE_MOVABLE, "0", [connector]);
+                        graph.setCellStyles(mxConstants.STYLE_RESIZABLE, "0", [connector]);
+                        connector.setConnectable(false);
+                        connector.setVertex(false);
+                        graph.addCell(connector, newCells[0]);
+            
                         break;
                     case "device":
                         personalShapes(graph, 3, newCells[0]);
@@ -91,9 +128,22 @@ let setupElements = function setupElements(graph, elements, customAttributes, cC
                     case "computer":
                         personalShapes(graph, 9, newCells[0]);
                         break;
-                    case "environment":
+                    case "b_variable":
                         personalShapes(graph, 10, newCells[0]);
-                        break;                        
+                        break;         
+                    case "p_variable":
+                        personalShapes(graph, 11, newCells[0]);
+                        break;          
+                    case "e_variable":
+                        personalShapes(graph, 12, newCells[0]);
+                        break;
+                    case "port_in":
+                        personalShapes(graph, 13, newCells[0]);
+                        geometry = new mxGeometry(0, 16, 16, 16);
+                        break;    
+                    case "port_out":
+                        personalShapes(graph, 14, newCells[0]);
+                        break;                                                                                                                                                        
                     default:
                         break;
                 }
@@ -129,25 +179,24 @@ let setupElements = function setupElements(graph, elements, customAttributes, cC
     }
 
     function personalShapes(graph, pos, newCells){
-
         graph.setCellStyles(mxConstants.STYLE_VERTICAL_ALIGN, mxConstants.ALIGN_TOP, [newCells]);
         graph.setCellStyles(mxConstants.STYLE_FONTSIZE, 9, [newCells]);
         graph.setCellStyles(mxConstants.STYLE_ALIGN, mxConstants.ALIGN_CENTER, [newCells]);
         
         let overlayLeft = null;
         let overlayRigth = null;
-        
+         
         if(pos == 0 ){
             //image frame
             graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, "transparent", [newCells]);
-            overlayLeft = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/layerFrame.png', 16, 16), 'Overlay tooltip');
+            overlayLeft = new mxCellOverlay(new mxImage('images/models/adap_architecture/layer.png', 16, 16), 'Overlay tooltip');
             overlayLeft.offset = new mxPoint(10,10);
 
         }
         if(pos == 1 ){
             //image frame
             graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, "transparent", [newCells]);
-            overlayLeft = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/moduleFrame.png', 16, 16), 'Overlay tooltip');
+            overlayLeft = new mxCellOverlay(new mxImage('images/models/adap_architecture/module.png', 16, 16), 'Overlay tooltip');
             overlayRigth = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/paralelo.png', 16, 16), 'Overlay tooltip');
             overlayLeft.offset = new mxPoint(10,10);
         }
@@ -155,77 +204,97 @@ let setupElements = function setupElements(graph, elements, customAttributes, cC
         if(pos == 2 ){
             //image frame
             graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, "transparent", [newCells]);
-            overlayLeft = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/package.png', 16, 16), 'Overlay tooltip');
+            overlayLeft = new mxCellOverlay(new mxImage('images/models/adap_architecture/package.png', 16, 16), 'Overlay tooltip');
             overlayLeft.offset = new mxPoint(10,10);
-            
-
         }
         if(pos == 3 ){
             //image frame
-            graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, '#CCFFCC', [newCells]);
-            overlayLeft = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/devices.png', 16, 16), 'Overlay tooltip');
+            graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#FFFFFF", [newCells]);
+            overlayLeft = new mxCellOverlay(new mxImage('images/models/adap_architecture/device.png', 16, 16), 'Overlay tooltip');
             overlayRigth = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/electric.png', 16, 16), 'Overlay tooltip');
             overlayLeft.offset = new mxPoint(10,10);
-
         }
         if(pos == 4 ){
             //image frame
-            graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, '#CCFFCC', [newCells]);
-            overlayLeft = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/software.png', 16, 16), 'Overlay tooltip');
+            graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#FFFFFF", [newCells]);
+            overlayLeft = new mxCellOverlay(new mxImage('images/models/adap_architecture/software.png', 16, 16), 'Overlay tooltip');
             overlayRigth = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/os.png', 16, 16), 'Overlay tooltip');
             overlayLeft.offset = new mxPoint(10,10);
-
         }
         if(pos == 5 ){
             //image frame
-            graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, '#CCFFCC', [newCells]);
-            overlayLeft = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/sensor.png', 16, 16), 'Overlay tooltip');
+            graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#FFFFFF", [newCells]);
+            overlayLeft = new mxCellOverlay(new mxImage('images/models/adap_architecture/sensor.png', 16, 16), 'Overlay tooltip');
             overlayRigth = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/digital.png', 16, 16), 'Overlay tooltip');
             overlayLeft.offset = new mxPoint(10,10);
-
         }
         if(pos == 6 ){
             //image frame
-            graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, '#CCFFCC', [newCells]);
-            overlayLeft = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/actuator.png', 16, 16), 'Overlay tooltip');
+            graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#FFFFFF", [newCells]);
+            overlayLeft = new mxCellOverlay(new mxImage('images/models/adap_architecture/actuator.png', 16, 16), 'Overlay tooltip');
             overlayLeft.offset = new mxPoint(10,10);
-
         }
         if(pos == 7 ){
             //image frame
-            graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, '#CCFFCC', [newCells]);
-            overlayLeft = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/resource.png', 16, 16), 'Overlay tooltip');
+            graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#FFFFFF", [newCells]);
+            overlayLeft = new mxCellOverlay(new mxImage('images/models/adap_architecture/resource.png', 16, 16), 'Overlay tooltip');
             overlayRigth = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/cyber.png', 16, 16), 'Overlay tooltip');
             overlayLeft.offset = new mxPoint(10,10);
         }
         if(pos == 8 ){
             //image frame
-            graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, '#CCFFCC', [newCells]);
-            overlayLeft = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/network.png', 16, 16), 'Overlay tooltip');
+            graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#FFFFFF", [newCells]);
+            overlayLeft = new mxCellOverlay(new mxImage('images/models/adap_architecture/network.png', 16, 16), 'Overlay tooltip');
             overlayRigth = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/internet.png', 16, 16), 'Overlay tooltip');
             overlayLeft.offset = new mxPoint(10,10);
-
         }
         if(pos == 9 ){
             //image frame
-            graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, '#CCFFCC', [newCells]);
-            overlayLeft = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/computer.png', 16, 16), 'Overlay tooltip');
+            graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#FFFFFF", [newCells]);
+            overlayLeft = new mxCellOverlay(new mxImage('images/models/adap_architecture/computer.png', 16, 16), 'Overlay tooltip');
             overlayRigth = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/cloudComputer.png', 16, 16), 'Overlay tooltip');
             overlayLeft.offset = new mxPoint(10,10);
-
         }
         if(pos == 10 ){
             //image frame
-            graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, '#CCFFBB', [newCells]);
-            overlayLeft = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/environment.png', 16, 16), 'Overlay tooltip');
-            overlayRigth = new mxCellOverlay(new mxImage('images/models/adap_architecture/icons/natural.png', 16, 16), 'Overlay tooltip');
+            graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#FFFFFF", [newCells]);
+            overlayLeft = new mxCellOverlay(new mxImage('images/models/adap_architecture/b_variable.png', 16, 16), 'Overlay tooltip');
             overlayLeft.offset = new mxPoint(10,10);
-
+        }
+        if(pos == 11 ){
+          //image frame
+          graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#FFFFFF", [newCells]);
+          overlayLeft = new mxCellOverlay(new mxImage('images/models/adap_architecture/p_variable.png', 16, 16), 'Overlay tooltip');
+          overlayLeft.offset = new mxPoint(10,10);
+        }
+        if(pos == 12 ){
+          //image frame
+          graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#FFFFFF", [newCells]);
+          overlayLeft = new mxCellOverlay(new mxImage('images/models/adap_architecture/e_variable.png', 16, 16), 'Overlay tooltip');
+          overlayLeft.offset = new mxPoint(10,10);
+        }
+        if(pos == 13 ){
+          //image frame
+          newCells.setAttribute("label","");
+          graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#FFBB33", [newCells]);
+          graph.setCellStyles(mxConstants.STYLE_SHAPE, 'triangle', [newCells]);
+          graph.setCellStyles(mxConstants.STYLE_DIRECTION, 'north', [newCells]);
+          overlayLeft = new mxCellOverlay(new mxImage('images/models/adap_architecture/port_in.png', 16, 16), 'Overlay tooltip');
+          overlayLeft.offset = new mxPoint(18,18);
+        }
+        if(pos == 14 ){
+          //image frame
+          newCells.setAttribute("label","");
+          graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#FFBB33", [newCells]);
+          graph.setCellStyles(mxConstants.STYLE_SHAPE, 'triangle', [newCells]);
+          graph.setCellStyles(mxConstants.STYLE_DIRECTION, 'south', [newCells]);
+          overlayLeft = new mxCellOverlay(new mxImage('images/models/adap_architecture/port_out.png', 16, 16), 'Overlay tooltip');
+          overlayLeft.offset = new mxPoint(18,18);
         }
 
         if (overlayRigth != null){
             overlayRigth.align = mxConstants.ALIGN_RIGTH;
-			overlayRigth.verticalAlign = mxConstants.ALIGN_TOP;	
+			      overlayRigth.verticalAlign = mxConstants.ALIGN_TOP;	
             overlayRigth.offset = new mxPoint(-10,10);
             graph.addCellOverlay(newCells, overlayRigth);
         }
