@@ -46,7 +46,7 @@ Adaptation_behavior_hardwareOrganizer.prototype.organizeActions = function () {
     let deviceGeometry = device.getGeometry();
     deviceGeometry.x = this.deviceX;
     deviceGeometry.y = this.deviceY;
-    let relations = grapUtil.getRelationsFromSource(this.graph, this.modelName, device, ["readAction", "writeAction", "controlAction"]);
+    let relations = grapUtil.getRelationsFromSource(this.graph, this.modelName, device, ["readAction", "writeAction", "customAction", "controlAction"]);
     relations.forEach((relation) => {
       let source = relation.target;
       let sourceGeometry = source.getGeometry();
@@ -62,6 +62,7 @@ Adaptation_behavior_hardwareOrganizer.prototype.organizeActions = function () {
     }
   });
 
+  this.organizeCustomActions();
   this.organizeControlActions();
 
 };
@@ -82,6 +83,22 @@ Adaptation_behavior_hardwareOrganizer.prototype.organizeAction = function (actio
     // sourceGeometry.y = this.actionY+100;
   });
 }; 
+
+
+Adaptation_behavior_hardwareOrganizer.prototype.organizeCustomActions = function () { 
+  let grapUtil = new GraphUtil(); 
+  let y = 15;
+  let x = 15;
+  let dx = 15;
+  let dy = 15; 
+  var controlActions = grapUtil.getElementsByType(this.graph, this.modelName, "customAction");
+  controlActions.forEach((controlAction) => {
+    let controlActionGeometry = controlAction.getGeometry();
+    controlActionGeometry.x = this.actionX;
+    controlActionGeometry.y = this.actionY;
+    this.actionX += controlActionGeometry.width + dx ;
+  }); 
+};
 
 
 Adaptation_behavior_hardwareOrganizer.prototype.organizeControlActions = function () { 

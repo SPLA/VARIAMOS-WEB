@@ -559,7 +559,7 @@ export default {
 
         var strModelJson = JSON.stringify(modelJson);
         // alert(strModelJson);
-        // downloadFile("BindingStateHardwareModel.json", strModelJson);
+        //downloadFile("BindingStateHardwareModel.json", strModelJson);
 
         var createCORSRequest = function(method, url) {
           var xhr = new XMLHttpRequest();

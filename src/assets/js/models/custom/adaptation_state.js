@@ -54,6 +54,9 @@ let adaptation_state_main = function adaptation_state_main(graph) {
 				"name": "acceptance",
 				"def_value": "false"
 			},{
+				"name": "required",
+				"def_value": "true"
+			},{
 				"name": "promptName",
 				"def_value": true
 			}]
@@ -67,6 +70,14 @@ let adaptation_state_main = function adaptation_state_main(graph) {
 			},{
 				"name": "promptName",
 				"def_value": true
+			}]
+
+		};
+		attributes[2] = {
+			"types": ["transition"],
+			"custom_attributes": [{
+				"name": "required",
+				"def_value": "true"
 			}]
 
 		};
@@ -104,6 +115,9 @@ let adaptation_state_main = function adaptation_state_main(graph) {
 			"state": [{
 				"attribute": "acceptance",
 				"input_type": "checkbox"
+			},{
+				"attribute": "required",
+				"input_type": "checkbox"
 			},
 			{
 				"attribute": "promptName",
@@ -123,6 +137,9 @@ let adaptation_state_main = function adaptation_state_main(graph) {
 				{
 					"attribute": "sourceState",
 					"input_type": "disabled"
+				},{
+					"attribute": "required",
+					"input_type": "checkbox"
 				},
 				{
 					"attribute": "targetState",

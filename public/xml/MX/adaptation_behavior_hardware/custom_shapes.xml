@@ -461,11 +461,30 @@
 		<strokecolor color="#333333"/>
 		<fillcolor color="#ffffff"/>
 		<path>
-			<move x="0" y="50"/> 
+			<move x="0" y="25"/> 
 			<line x="100" y="0"/>  
 			<line x="100" y="100"/>  
 			<line x="0" y="100"/> 
-			<line x="0" y="50"/>   
+			<line x="0" y="25"/>   
+			<close/> 
+		</path>		
+	</background>
+	<foreground>
+		<fillstroke/>
+	</foreground>
+</shape>
+
+<shape name="customAction" aspect="variable"  strokewidth="7" >
+	<background>
+		<strokecolor color="#333333"/>
+		<fillcolor color="#ffffff"/>
+		<path>
+			<move x="0" y="0"/> 
+			<line x="50" y="25"/> 
+			<line x="100" y="0"/>  
+			<line x="100" y="100"/>  
+			<line x="0" y="100"/> 
+			<line x="0" y="0"/>  
 			<close/> 
 		</path>		
 	</background>

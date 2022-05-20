@@ -67,20 +67,10 @@ let adaptation_behavior_hardware_main = function adaptation_behavior_hardware_ma
 	}
 
 	function adaptation_behavior_hardware_elements() {
-		let activity = { src: projectPath + "images/models/adaptation_binding_state_hardware/activity.png", wd: 100, hg: 35, type: "activity", style: "shape=activity", pname: "Activity" };
 		let variable = { src: projectPath + "images/models/adaptation_binding_state_hardware/analogVariable.png", wd: 100, hg: 35, type: "variable", style: "shape=analogVariable", pname: "Variable" };
-		//let digitalVariable = { src: projectPath + "images/models/adaptation_binding_state_hardware/digitalVariable.png", wd: 100, hg: 35, type: "digitalVariable", style: "shape=digitalVariable", pname: "Digital variable" };
-		//let analogVariable = { src: projectPath + "images/models/adaptation_binding_state_hardware/analogVariable.png", wd: 100, hg: 35, type: "analogVariable", style: "shape=analogVariable", pname: "Analog variable" };
-		//let stringVariable = { src: projectPath + "images/models/adaptation_binding_state_hardware/stringVariable.png", wd: 100, hg: 35, type: "stringVariable", style: "shape=stringVariable", pname: "String variable" };
-		//let timer = { src: projectPath + "images/models/adaptation_binding_state_hardware/timer.png", wd: 100, hg: 35, type: "timer", style: "shape=timer", pname: "Timer" };
-		let readAction = { src: projectPath + "images/models/adaptation_binding_state_hardware/readAction.png", wd: 100, hg: 35, type: "readAction", style: "shape=readAction", pname: "Read action" };
-		let writeAction = { src: projectPath + "images/models/adaptation_binding_state_hardware/writeAction.png", wd: 100, hg: 35, type: "writeAction", style: "shape=writeAction", pname: "Write action" };
 		let controlAction = { src: projectPath + "images/models/adaptation_binding_state_hardware/controlAction.png", wd: 100, hg: 35, type: "controlAction", style: "shape=controlAction", pname: "Control action" };
-		let delayAction = { src: projectPath + "images/models/adaptation_binding_state_hardware/delayAction.png", wd: 100, hg: 35, type: "delayAction", style: "strokeWidth=2", pname: "Delay action" };
-		let customAction = { src: projectPath + "images/models/adaptation_binding_state_hardware/customAction.png", wd: 100, hg: 35, type: "customAction", style: "strokeWidth=2", pname: "Custom action" };
-		let logicalOperator = { src: projectPath + "images/models/adaptation_binding_state_hardware/logicalOperator.png", wd: 100, hg: 35, type: "logicalOperator", style: "shape=ellipse", pname: "Logical operator" };
-		let predicate = { src: projectPath + "images/models/adaptation_binding_state_hardware/predicate.png", wd: 100, hg: 35, type: "predicate", style: "shape=predicate", pname: "Predicate" };
-
+		let customAction = { src: projectPath + "images/models/adaptation_binding_state_hardware/customAction.png", wd: 100, hg: 35, type: "customAction", style: "shape=customAction", pname: "Custom action" };
+	 
 		let elements = [];
 		let index = 0;
 
@@ -89,6 +79,7 @@ let adaptation_behavior_hardware_main = function adaptation_behavior_hardware_ma
 		//elements[index++] = analogVariable;
 		//elements[index++] = stringVariable;
 		elements[index++] = controlAction;
+		elements[index++] = customAction;
 		//elements[index++] = timer;
 		//elements[index++] = writeAction;
 		//elements[index++] = readAction;
@@ -213,6 +204,9 @@ let adaptation_behavior_hardware_main = function adaptation_behavior_hardware_ma
 				"name": "initialValue",
 				"def_value": "0"
 			},{
+				"name": "required",
+				"def_value": "true"
+			},{
 				"name": "promptName",
 				"def_value": true
 			}]
@@ -257,8 +251,38 @@ let adaptation_behavior_hardware_main = function adaptation_behavior_hardware_ma
 				"name": "controlType",
 				"def_value": "continuous"
 			},{
+				"name": "required",
+				"def_value": "true"
+			},{
 				"name": "promptName",
 				"def_value": true
+			}]
+		};
+		attributes[12] = {
+			"types": ["customAction"],
+			"custom_attributes": [{
+				"name": "code",
+				"def_value": ""
+			},{
+				"name": "required",
+				"def_value": "true"
+			},{
+				"name": "promptName",
+				"def_value": true
+			}]
+		};
+		attributes[13] = {
+			"types": ["readAction"],
+			"custom_attributes": [{
+				"name": "required",
+				"def_value": "true"
+			}]
+		};
+		attributes[14] = {
+			"types": ["writeAction"],
+			"custom_attributes": [{
+				"name": "required",
+				"def_value": "true"
 			}]
 		};
 		return attributes;
@@ -334,6 +358,9 @@ let adaptation_behavior_hardware_main = function adaptation_behavior_hardware_ma
 				{
 					"attribute": "device",
 					"input_type": "disabled"
+				},{
+					"attribute": "required",
+					"input_type": "checkbox"
 				}
 			],
 			"readAction": [
@@ -348,6 +375,9 @@ let adaptation_behavior_hardware_main = function adaptation_behavior_hardware_ma
 				{
 					"attribute": "device",
 					"input_type": "disabled"
+				},{
+					"attribute": "required",
+					"input_type": "checkbox"
 				}
 			],
 			"controlAction": [
@@ -359,6 +389,18 @@ let adaptation_behavior_hardware_main = function adaptation_behavior_hardware_ma
 				{
 					"attribute": "promptName",
 					"input_type": "none"
+				},{
+					"attribute": "required",
+					"input_type": "checkbox"
+				}
+			],
+			"customAction": [
+				{
+					"attribute": "promptName",
+					"input_type": "none"
+				},{
+					"attribute": "required",
+					"input_type": "checkbox"
 				}
 			],
 			"actionArgument": [
@@ -369,6 +411,12 @@ let adaptation_behavior_hardware_main = function adaptation_behavior_hardware_ma
 				{
 					"attribute": "dataType",
 					"input_type": "disabled"
+				}
+			],
+			"timer": [ 
+				{
+					"attribute": "required",
+					"input_type": "checkbox"
 				}
 			]
 		}
@@ -443,6 +491,7 @@ let adaptation_behavior_hardware_main = function adaptation_behavior_hardware_ma
 		let clons = {};
 		clons = {
 			"controlAction": "control",
+			"customAction": "adaptation_behavior_states",
 			"readAction": "adaptation_behavior_states",
 			"writeAction": "adaptation_behavior_states",
 			"variable": "adaptation_behavior_transitions",
@@ -479,11 +528,11 @@ let adaptation_behavior_hardware_main = function adaptation_behavior_hardware_ma
 		relations[0] = {
 			"source": ["variable", "digitalVariable", "analogVariable", "timer", "analogActuator", "digitalActuator", "analogSensor", "digitalSensor"],
 			"rel_source_target": "and",
-			"target": ["readAction", "writeAction", "controlAction"],
+			"target": ["readAction", "writeAction", "controlAction", "customAction"],
 			"style": "strokeColor=#333333;strokeWidth=2;dashed=1;endFill=0;"
 		}
 		relations[1] = {
-			"source": ["readAction", "writeAction", "controlAction"],
+			"source": ["readAction", "writeAction", "controlAction", "customAction"],
 			"rel_source_target": "and",
 			"target": ["variable", "digitalVariable", "analogVariable", "timer", "analogActuator", "digitalActuator", "analogSensor", "digitalSensor"],
 			"style": "strokeColor=#333333;strokeWidth=2;dashed=1;endFill=1"
@@ -491,7 +540,7 @@ let adaptation_behavior_hardware_main = function adaptation_behavior_hardware_ma
 		relations[2] = {
 			"source": ["device"],
 			"rel_source_target": "and",
-			"target": ["readAction", "writeAction", "controlAction"],
+			"target": ["readAction", "writeAction", "controlAction", "customAction"],
 			"style": "strokeColor=#333333;strokeWidth=2;"
 		}
 		relations[3] = {

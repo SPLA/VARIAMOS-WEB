@@ -321,9 +321,18 @@ let setup_elements = function setup_elements(graph, elements, custom_attributes,
                             pwmPins = device.pwmPins;
                         }
 
+                        let w=element.geometry.width;
+
 
                         let x = 10;
-                        let y = 24;
+                        let y = 10;
+                        let ypwm=10;
+
+                        if(type=="device"){
+                            y+=14;
+                            x=(w/2)-5;
+                        }
+ 
                         if (digitalPins) {
                             //x = 10;
                             //y += 20;
@@ -346,10 +355,18 @@ let setup_elements = function setup_elements(graph, elements, custom_attributes,
                                 connector.setVertex(true);
 
                                 graph.addCell(connector, element);
-                                x += 15;
+                                y += 15;
+                                ypwm=y;
                             }
                         }
-
+ 
+                        if(type=="device"){
+                            y+=14;
+                            x=(w/2)-5;
+                        }else{
+                            y = 10; 
+                            x=w-20;
+                        }
                         if (analogPins) {
                             //x = 10;
                             //y += 20;
@@ -371,10 +388,16 @@ let setup_elements = function setup_elements(graph, elements, custom_attributes,
                                 connector.setVertex(true);
 
                                 graph.addCell(connector, element);
-                                x += 15;
+                                y += 15;
                             }
                         }
 
+                        x=10;
+                        y=ypwm; 
+                        if(type=="device"){
+                            y+=14;
+                            x=(w/2)-5;
+                        }
                         if (pwmPins) {
                             //x = 10;
                             //y += 20;
@@ -397,7 +420,7 @@ let setup_elements = function setup_elements(graph, elements, custom_attributes,
                                 connector.setVertex(true);
 
                                 graph.addCell(connector, element);
-                                x += 15;
+                                y += 15;
                             }
                         }
 

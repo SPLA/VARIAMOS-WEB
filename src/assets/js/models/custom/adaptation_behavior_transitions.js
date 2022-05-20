@@ -21,10 +21,10 @@ let adaptation_behavior_transitions_main = function adaptation_behavior_transiti
 			true, "logicalOperator", null, null, 0, 1, ["transition", "logicalOperator"],
 			"Only one connection allowed",
 			"The logicalOperator only can be associated to transition"));
-		graph.multiplicities.push(new mxMultiplicity(
-			true, "predicate", null, null, 0, 1, ["logicalOperator"],
-			"Only one connection allowed",
-			"The predicate only can be assigned to one logicalOperator"));
+		// graph.multiplicities.push(new mxMultiplicity(
+		// 	true, "predicate", null, null, 0, 1, ["logicalOperator"],
+		// 	"Only one connection allowed",
+		// 	"The predicate only can be assigned to one logicalOperator"));
 		// graph.multiplicities.push(new mxMultiplicity(
 		// 	true, "variable", null, null, 0, 1000000, ["predicate"],
 		// 	"Only one connection allowed",

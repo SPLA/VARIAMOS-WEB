@@ -367,7 +367,7 @@ let setup_elements = function setup_elements(
                         let importedCells=graph.importCells([vertex2], 0, 0, parent2);
                         graph.getModel().prefix = ""; //restart prefix
 
-                        if (type == "controlAction" || type == "writeAction" || type == "readAction") {
+                        if (type == "controlAction" || type == "customAction" ||type == "writeAction" || type == "readAction") {
                             let graphUtil = new GraphUtil();
                             let modelName = "adaptation_behavior_states"; 
                             let actionLifeLine = new ActionLifeLine();

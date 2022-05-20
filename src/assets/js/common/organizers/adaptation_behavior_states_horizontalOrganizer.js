@@ -1,12 +1,12 @@
 import { GraphUtil } from "@/assets/js/common/graphutil";
 
-export function Adaptation_behavior_statesOrganizer(graph) {
+export function Adaptation_behavior_states_horizontalOrganizer(graph) {
   this.graph = graph;
   this.minActivityll=1000000;
   this.maxActivityll=-1000000;
 }
 
-Adaptation_behavior_statesOrganizer.prototype.organizeComponents = function() {
+Adaptation_behavior_states_horizontalOrganizer.prototype.organizeComponents = function() {
   let graph = this.graph;
   let modelName = "adaptation_behavior_states";
   let modelCell = graph.getModel().getCell(modelName);
@@ -28,7 +28,7 @@ Adaptation_behavior_statesOrganizer.prototype.organizeComponents = function() {
     arr.forEach((component) => {
       let inserted=false;
       for (let i = 0; i < components.length; i++) {
-        if (component.getGeometry().y<components[i].getGeometry().y) {
+        if (component.getGeometry().x<components[i].getGeometry().x) {
           components.splice(i, 0, component);
           inserted=true;
           break;
@@ -42,13 +42,13 @@ Adaptation_behavior_statesOrganizer.prototype.organizeComponents = function() {
 
   let y = 15;
   let x = 15;
-  let dx = 10;
-  let dy = 15;
+  let dx = 5;
+  let dy = 30;
 
-  let llxs = [];
-  llxs["stateLifeLine"] = 0;
-  llxs["actionLifeLine"] = 0;
-  llxs["activityLifeLine"] = 0;
+  let llys = [];
+  llys["stateLifeLine"] = 0;
+  llys["actionLifeLine"] = 0;
+  llys["activityLifeLine"] = 0;
 
   for (let index = 0; index < components.length; index++) {
     let vertex = components[index];
@@ -56,9 +56,8 @@ Adaptation_behavior_statesOrganizer.prototype.organizeComponents = function() {
     // vertex.setStyle("dashed=1;fillColor=#000080;strokeColor=#aaaaaa;");
     geometry.x = x;
     geometry.y = y;
-    geometry.height = 25;
 
-    let llx = geometry.x + geometry.width;
+    let lly = geometry.y + geometry.height;
 
     let relations = grapUtil.getRelationsFromSource(graph, modelName, vertex, [
       "stateLifeLine",
@@ -69,19 +68,17 @@ Adaptation_behavior_statesOrganizer.prototype.organizeComponents = function() {
       let child = relation.target;
       let type = child.getAttribute("type"); 
       let childGeometry = child.getGeometry();
-      childGeometry.height=15;
-      childGeometry.y = y + geometry.height / 2 - childGeometry.height / 2;
-      childGeometry.x = llx + llxs[type] + dx;
-      childGeometry.width = dx*2;
-      llxs[type] += childGeometry.width + dx;
+      childGeometry.x = x + geometry.width / 2 - childGeometry.width / 2;
+      childGeometry.y = lly + llys[type] + dy;
+      llys[type] += childGeometry.height + dy;
  
       if(type=="activityLifeLine"){
-        this.minActivityll=Math.min(this.minActivityll, childGeometry.x);
-        this.maxActivityll=Math.max(this.maxActivityll, childGeometry.x+childGeometry.width);
+        this.minActivityll=Math.min(this.minActivityll, childGeometry.y);
+        this.maxActivityll=Math.max(this.maxActivityll, childGeometry.y+childGeometry.height);
       }
     });
- 
-    y += geometry.height + 5;
+
+    x += geometry.width + dx;
   }
 
   this.organizeLifeLines("activityLifeLine",["stateLifeLine"]);
@@ -90,7 +87,7 @@ Adaptation_behavior_statesOrganizer.prototype.organizeComponents = function() {
   graph.refresh();
 };
 
-Adaptation_behavior_statesOrganizer.prototype.organizeLifeLines = function(
+Adaptation_behavior_states_horizontalOrganizer.prototype.organizeLifeLines = function(
   targetType,
   sourceTypes
 ) {
@@ -117,22 +114,12 @@ Adaptation_behavior_statesOrganizer.prototype.organizeLifeLines = function(
       }
     });
     if(maxY>-1){
-      //targetGeometry.y = minY;
-      //targetGeometry.height=maxY-minY;
-      //targetGeometry.height=15;
+      targetGeometry.y = minY;
+      targetGeometry.height=maxY-minY;
     }
     if(target.getAttribute("type")=="actionLifeLine"){
-      //targetGeometry.y = this.minActivityll; 
-      //targetGeometry.height=this.maxActivityll-this.minActivityll;
-      //targetGeometry.height=15;
+      targetGeometry.y = this.minActivityll; 
+      targetGeometry.height=this.maxActivityll-this.minActivityll;
     }
-    if(target.getAttribute("type")=="activityLifeLine"){
-      targetGeometry.x=125;
-      targetGeometry.width=1000;
-    } 
-    if(target.getAttribute("type")=="actionLifeLine"){
-      targetGeometry.x=125;
-      targetGeometry.width=1000;
-    } 
   });
 };
