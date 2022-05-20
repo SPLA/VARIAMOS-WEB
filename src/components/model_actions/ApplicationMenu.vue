@@ -537,6 +537,7 @@ export default {
         let vm = this;
         ///let serverUrl = localStorage["domain_implementation_main_path"] + "AdaptationStateImplementation/generateSourceCode";
         let serverUrl = localStorage["domain_implementation_main_path"];
+        serverUrl = "http://209.126.10.31:8080/"
 
         if(serverUrl == undefined) {
           vm.$snotify.error("Please set backend URL", "Error");
