@@ -191,18 +191,18 @@
 		<strokecolor color="#333333"/>
 		<fillcolor color="#ffffff"/>
 		<path>
-			<move x="0" y="00"/>
+			<move x="0" y="0"/>
 			<line x="100" y="00"/>  
-			<line x="100" y="100"/> 
+			<line x="100" y="100"/>  
 			<line x="0" y="100"/> 
-			<line x="0" y="00"/> 
+			<line x="0" y="0"/> 
 			<close/>  
 			<fillstroke/>
 		</path>		
 	</background>
 	<foreground> 
-		<image src="./images/models/adaptation_hardware/actuator.png" x="1" y="3" w="15" h="35" />
-		<image src="./images/models/adaptation_hardware/analog.png" x="84" y="3" w="15" h="35" />	
+		 <image src="./images/models/adaptation_hardware/actuator.png" x="1" y="3" w="15" h="35" />
+		<!--<image src="./images/models/adaptation_hardware/analog.png" x="84" y="3" w="15" h="35" />	 -->
 	</foreground>
 </shape> 
 

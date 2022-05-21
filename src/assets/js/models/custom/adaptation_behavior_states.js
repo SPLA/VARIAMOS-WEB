@@ -218,6 +218,13 @@ let adaptation_behavior_states_main = function adaptation_behavior_states_main(g
 				"def_value": "anll"
 			}]
 		};
+		attributes[13] = {
+			"types": ["activity"],
+			"custom_attributes": [{
+				"name": "required",
+				"def_value": "true"
+			}]
+		};
 		return attributes;
 	}
 
@@ -293,6 +300,12 @@ let adaptation_behavior_states_main = function adaptation_behavior_states_main(g
 				"attribute": "operator",
 				"input_type": "select",
 				"input_values": ["=", ">", "<", ">=", "<=", "!="]
+			}
+			],
+			"activity": [
+				{
+				"attribute": "required",
+				"input_type": "checkbox"
 			}
 			],
 			"stateLifeLine": [{

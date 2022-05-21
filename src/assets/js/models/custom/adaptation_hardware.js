@@ -74,8 +74,8 @@ let adaptation_hardware_main = function adaptation_hardware_main(graph) {
 
             let boardComposition = {
                 src: shapeImagePath,
-                wd: 280,
-                hg: 180,
+                wd: 150,
+                hg: 100,
                 type: "board",
                 subtype: board.name,
                 style: "shape=board", // + board.name.toLowerCase(),
@@ -148,6 +148,13 @@ let adaptation_hardware_main = function adaptation_hardware_main(graph) {
                 "name": "boardType",
                 "def_value": "ArduinoUNO"
             }]
+        };
+        attributes[index++] = {
+            "types": ["device"],
+            "custom_attributes": [{
+				"name": "required",
+				"def_value": "true"
+			}]
         };
         // attributes[index++]={
         // 	"types":["device"],
@@ -301,6 +308,9 @@ let adaptation_hardware_main = function adaptation_hardware_main(graph) {
                 {
                     "attribute": "promptName",
                     "input_type": "none"
+                },{
+                    "attribute": "required",
+                    "input_type": "checkbox"
                 }
             ],
             "digital": [{

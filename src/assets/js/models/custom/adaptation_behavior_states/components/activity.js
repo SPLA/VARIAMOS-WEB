@@ -8,7 +8,13 @@ export function Activity() {
     "shape=activity",
     100,
     35,
-    []
+    [
+      {
+          "name": "required",
+          "def_value": "true",
+          input_type: "checkbox"
+      }
+    ]
   );
 }
 

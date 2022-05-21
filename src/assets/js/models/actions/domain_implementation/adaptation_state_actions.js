@@ -131,6 +131,7 @@ var adaptation_state_actions = function adaptation_state_actions(graph, selected
     var vertices = graphModel.getChildVertices(mainCell);
     var edges = graphModel.getChildEdges(mainCell);
 
+
     for (var i = 0; i < vertices.length; i++) {
       var vertice = vertices[i];
       var type = vertice.getAttribute("type");
@@ -144,6 +145,10 @@ var adaptation_state_actions = function adaptation_state_actions(graph, selected
         dicElements.add("machine", "state", label, state);
       }
       else if (type == "state") {
+        var required = vertice.getAttribute("required");
+        if (required != "true") {
+          continue;
+        }
         var state = {
           id: 0,
           type: type,
@@ -158,19 +163,53 @@ var adaptation_state_actions = function adaptation_state_actions(graph, selected
     var graphModel = graph.getModel();
     var mainCell = graphModel.getCell("adaptation_state");
     var vertices = graphModel.getChildVertices(mainCell);
-    var edges = graphModel.getChildEdges(mainCell);
+    var edges = graphModel.getChildEdges(mainCell); 
 
-    var dicTransitions = {};
+    var dicTransitions = {}; 
+
+    let noSource=[];
+    let noTarget=[];
 
     for (var i = 0; i < edges.length; i++) {
       var source = edges[i].source;
       var target = edges[i].target;
       var sourceType = source.getAttribute("type");
-      var targetType = target.getAttribute("type");
+      var targetType = target.getAttribute("type"); 
+
+      if (sourceType == "state" && targetType == "transition") { 
+        var required = source.getAttribute("required");
+        if (required != "true") { 
+          noSource.push(target);
+          continue;
+        } 
+      }
+      else if (sourceType == "transition" && targetType == "state") {
+        var required = target.getAttribute("required");
+        if (required != "true") { 
+          noTarget.push(source);
+          continue;
+        } 
+      }
+    }
+
+
+     
+    for (var i = 0; i < edges.length; i++) {
+      var source = edges[i].source;
+      var target = edges[i].target;
+      var sourceType = source.getAttribute("type");
+      var targetType = target.getAttribute("type"); 
 
       if ((sourceType == "initialState" || sourceType == "state") && targetType == "transition") {
         var labelState = source.getAttribute("label");
         var labelTransition = target.getAttribute("label");
+        var required = target.getAttribute("required");
+        if (required != "true") { 
+          continue;
+        } 
+        if (noSource.includes(target) || noTarget.includes(target)) {
+          continue;
+        } 
         var transition = dicTransitions[labelTransition];
         if (!transition) {
           transition = {
@@ -186,6 +225,13 @@ var adaptation_state_actions = function adaptation_state_actions(graph, selected
       else if (sourceType == "transition" && (targetType == "initialState" || targetType == "state")) {
         var labelState = target.getAttribute("label");
         var labelTransition = source.getAttribute("label");
+        var required = source.getAttribute("required");
+        if (required != "true") { 
+          continue;
+        } 
+        if (noSource.includes(source) || noTarget.includes(source)) {
+          continue;
+        } 
         var transition = dicTransitions[labelTransition];
         if (!transition) {
           transition = {
@@ -243,6 +289,10 @@ var adaptation_state_actions = function adaptation_state_actions(graph, selected
       let vertice = vertices[i];
       var label = vertice.getAttribute("label");
       var type = vertice.getAttribute("type");
+      var required = vertice.getAttribute("required");
+      if (required != "true") {
+        continue;
+      }
       var device = {
         id: "",
         label: label,
@@ -287,6 +337,10 @@ var adaptation_state_actions = function adaptation_state_actions(graph, selected
 
       let parentSource = source.parent;
       let parentTarget = target.parent;
+      var required = parentSource.getAttribute("required");
+      if (required != "true") {
+        continue;
+      }
 
       let pinDevice = null;
       let pinBoard = null;
@@ -470,6 +524,16 @@ var adaptation_state_actions = function adaptation_state_actions(graph, selected
       let vertice = vertices[i];
       var label = vertice.getAttribute("label");
       var type = vertice.getAttribute("type");
+      var required = vertice.getAttribute("required");
+      if (required != "true") {
+        continue;
+      }
+      var device=getActionDeviceParent(graph, vertice);
+      required = device.getAttribute("required");
+      if (required != "true") {
+        continue;
+      }
+
       var action = {
         id: "",
         label: label,
@@ -501,6 +565,15 @@ var adaptation_state_actions = function adaptation_state_actions(graph, selected
       let vertice = vertices[i];
       var label = vertice.getAttribute("label");
       var type = vertice.getAttribute("type");
+      var required = vertice.getAttribute("required");
+      if (required != "true") {
+        continue;
+      }
+      var device=getActionDeviceParent(graph,vertice);
+      required = device.getAttribute("required");
+      if (required != "true") {
+        continue;
+      }
       var action = {
         id: "",
         label: label,
@@ -532,6 +605,10 @@ var adaptation_state_actions = function adaptation_state_actions(graph, selected
       let vertice = vertices[i];
       var label = vertice.getAttribute("label");
       var type = vertice.getAttribute("type");
+      var required = vertice.getAttribute("required");
+      if (required != "true") {
+        continue;
+      }
       var controlType = vertice.getAttribute("controlType");
       if (!controlType) {
         controlType = "continuous";
@@ -549,13 +626,13 @@ var adaptation_state_actions = function adaptation_state_actions(graph, selected
       if (children) {
         for (let i = 0; i < children.length; i++) {
           let child = children[i];
-          let al=child.getAttribute("label");
-          let alabel=al;
-          if(["s","sp"].includes(alabel)){
-            alabel="setPoint";
+          let al = child.getAttribute("label");
+          let alabel = al;
+          if (["s", "sp"].includes(alabel)) {
+            alabel = "setPoint";
           }
-          else if(["m"].includes(alabel)){
-            alabel="measurement";
+          else if (["m"].includes(alabel)) {
+            alabel = "measurement";
           }
           var argument = {
             id: "",
@@ -570,48 +647,52 @@ var adaptation_state_actions = function adaptation_state_actions(graph, selected
 
       vertices = getElements(graph, "control", "controller");
       for (var i = 0; i < vertices.length; i++) {
-        let vertice = vertices[i]; 
+        let vertice = vertices[i];
         var item = {
           id: "",
           label: "proportional",
           dataType: "double",
-          value:vertice.getAttribute("Proportional")
+          value: vertice.getAttribute("Proportional")
         };
-        item.id = dicElements.add("dummy", "control_configuration", action.label + "_" + "proportional", item); 
+        item.id = dicElements.add("dummy", "control_configuration", action.label + "_" + "proportional", item);
         action.configuration.push(item);
 
         var item = {
           id: "",
           label: "Integral",
           dataType: "double",
-          value:vertice.getAttribute("Integral")
+          value: vertice.getAttribute("Integral")
         };
-        item.id = dicElements.add("dummy", "control_configuration", action.label + "_" + "integral", item); 
+        item.id = dicElements.add("dummy", "control_configuration", action.label + "_" + "integral", item);
         action.configuration.push(item);
 
         var item = {
           id: "",
           label: "derivate",
           dataType: "double",
-          value:vertice.getAttribute("Derivate")
+          value: vertice.getAttribute("Derivate")
         };
         item.id = dicElements.add("dummy", "control_configuration", action.label + "_" + "derivate", item);
         action.configuration.push(item);
-      } 
-    } 
+      }
+    }
   }
 
   function serializeHardwareRelationshipsAction_Result(graph, dicElements) {
     var dicKey = "relationship_action_result";
     dicElements.createType("binding", dicKey);
 
-    let relations = getRelationsFromTypes(graph, "adaptation_behavior_hardware", ["readAction","controlAction"], ["variable"]);
+    let relations = getRelationsFromTypes(graph, "adaptation_behavior_hardware", ["readAction", "controlAction"], ["variable"]);
     for (var i = 0; i < relations.length; i++) {
       var relation = relations[i];
       var source = relation.source;
       var target = relation.target;
       var sourceType = source.getAttribute("type");
       var targetType = target.getAttribute("type");
+      var required = source.getAttribute("required");
+      if (required != "true") {
+        continue;
+      }
 
       let relName = source.getAttribute("label") + "_" + target.getAttribute("label");
       var item = dicElements.items["binding"][dicKey][relName];
@@ -619,7 +700,7 @@ var adaptation_state_actions = function adaptation_state_actions(graph, selected
         var aid = "";
         if (sourceType == "readAction") {
           aid = dicElements.getId("binding", "readAction", source.getAttribute("label"));
-        }else{
+        } else {
           aid = dicElements.getId("binding", "controlAction", source.getAttribute("label"));
         }
         item = {
@@ -644,7 +725,12 @@ var adaptation_state_actions = function adaptation_state_actions(graph, selected
       var sourceType = source.getAttribute("type");
       var targetType = target.getAttribute("type");
 
+      let parentSource = source.parent;
       let parentTarget = target.parent;
+      var required = parentTarget.getAttribute("required");
+      if (required != "true") {
+        continue;
+      }
 
       let variable = source;
       let pinAction = null;
@@ -688,6 +774,14 @@ var adaptation_state_actions = function adaptation_state_actions(graph, selected
       var relName = source.getAttribute("label") + "_activities";
       let phase = target.getAttribute("phase");
 
+      if (sourceType=="state") {
+        let originalState=getOriginalElement(graph, "adaptation_state", source);
+        let required=originalState.getAttribute("required");
+        if (required!="true") {
+          continue;
+        } 
+      }
+      
       var item = dicElements.items["binding"][dicKey][relName];
       if (!item) {
         item = {
@@ -734,6 +828,11 @@ var adaptation_state_actions = function adaptation_state_actions(graph, selected
       var targetType = target.getAttribute("type");
       var relName = source.getAttribute("label") + "_" + target.getAttribute("label");
 
+      var required = source.getAttribute("required");
+      if (required != "true") {
+        continue;
+      }
+
       var item = dicElements.items["binding"][dicKey][relName];
       if (!item) {
         item = {
@@ -753,6 +852,23 @@ var adaptation_state_actions = function adaptation_state_actions(graph, selected
         let relationsActionLifeLine_Action = getRelationsToTarget(graph, "adaptation_behavior_states", actionLifeLine, ["readAction", "writeAction", "controlAction"]);
         if (relationsActionLifeLine_Action.length > 0) {
           let action = relationsActionLifeLine_Action[0].source;
+          required = action.getAttribute("required");
+          if (required != "true") {
+            continue;
+          }
+          if (["readAction", "writeAction"].includes(action.getAttribute("type"))) {
+            var originalAction = getOriginalElement(graph, "adaptation_behavior_hardware", action); 
+            let relationDevice_Action = getRelationsToTarget(graph, "adaptation_behavior_hardware", originalAction, ["device"]);
+            if (relationDevice_Action.length > 0) {
+              let device = relationDevice_Action[0].source;
+              var originalDevice = getOriginalElement(graph, "adaptation_hardware", device); 
+              required = originalDevice.getAttribute("required");
+              if (required != "true") {
+                continue;
+              }
+            }
+          }
+
           let relActivityAction = {};
           relActivityAction["action"] = dicElements.getId("binding", action.getAttribute("type"), action.getAttribute("label"));
           relActivityAction["actionType"] = action.getAttribute("type");
@@ -776,6 +892,16 @@ var adaptation_state_actions = function adaptation_state_actions(graph, selected
       var sourceType = source.getAttribute("type");
       var targetType = target.getAttribute("type");
       var relName = source.getAttribute("label") + "_" + target.getAttribute("label");
+
+      var required = source.getAttribute("required");
+      if (required != "true") {
+        continue;
+      }
+
+      required = target.getAttribute("required");
+      if (required != "true") {
+        continue;
+      }
 
       var item = dicElements.items["binding"][dicKey][relName];
       if (!item) {
@@ -860,6 +986,86 @@ var adaptation_state_actions = function adaptation_state_actions(graph, selected
     }
     return ret;
   }
+
+  function getElementsByLabel(graph, modelName, elementType, label) {
+    let ret = [];
+    var graphModel = graph.getModel();
+    var mainCell = graphModel.getCell(modelName);
+    var vertices = graphModel.getChildVertices(mainCell);
+    for (var i = 0; i < vertices.length; i++) {
+      var vertice = vertices[i];
+      var type = vertice.getAttribute("type");
+      if (type == elementType) {
+        var vlabel = vertice.getAttribute("label");
+        if (label == vlabel) {
+          ret.push(vertice);
+        }
+      }
+    }
+    return ret;
+  }
+
+  function getOriginalElement(graph, modelName, clonElement) {
+    var graphModel = graph.getModel();
+    var mainCell = graphModel.getCell(modelName);
+    var vertices = graphModel.getChildVertices(mainCell);
+    for (var i = 0; i < vertices.length; i++) {
+      var vertice = vertices[i];
+      if (clonElement.getAttribute("type") == vertice.getAttribute("type")) {
+        if (clonElement.getAttribute("label") == vertice.getAttribute("label")) {
+          return vertice;
+        }
+      }
+    }
+    return null;
+  }
+
+  function getTransitionSourceState(graph, transition) {
+    var graphModel = graph.getModel();
+    var mainCell = graphModel.getCell("adaptation_state");
+    var vertices = graphModel.getChildVertices(mainCell);
+    var edges = graphModel.getChildEdges(mainCell);  
+    for (var i = 0; i < edges.length; i++) {
+      var source = edges[i].source;
+      var target = edges[i].target;
+      if (target==transition) {
+        var sourceType = source.getAttribute("type");
+        var targetType = target.getAttribute("type");  
+        if (sourceType == "state" || sourceType == "initialState") { 
+          return source; 
+        } 
+      }
+    } 
+  }
+
+  function getTransitionTargetState(graph, transition) {
+    var graphModel = graph.getModel();
+    var mainCell = graphModel.getCell("adaptation_state");
+    var vertices = graphModel.getChildVertices(mainCell);
+    var edges = graphModel.getChildEdges(mainCell);  
+    for (var i = 0; i < edges.length; i++) {
+      var source = edges[i].source;
+      var target = edges[i].target;
+      if (source==transition) {
+        var sourceType = source.getAttribute("type");
+        var targetType = target.getAttribute("type");  
+        if (targetType == "state" || targetType == "initialState") { 
+          return target; 
+        } 
+      }
+    } 
+  }
+
+
+  function getActionDeviceParent(graph, action) { 
+    let relationDevice_Action = getRelationsToTarget(graph, "adaptation_behavior_hardware", action, ["device"]);
+    if (relationDevice_Action.length > 0) {
+      let device = relationDevice_Action[0].source;
+      let originalDevice = getOriginalElement(graph, "adaptation_hardware", device); 
+      return originalDevice;
+    }
+  }
+
 
   function serializeBindingRelationshipsActivity_WriteAction(graph, dicElements) {
     var graphModel = graph.getModel();
@@ -1062,6 +1268,29 @@ var adaptation_state_actions = function adaptation_state_actions(graph, selected
       var relName = source.getAttribute("label") + "_" + target.getAttribute("label");
       if (sourceType == "logicalOperator" && targetType == "transition") {
         var activity = source.getAttribute("label");
+
+        var transition=getOriginalElement(graph, "adaptation_state", target); 
+        var required = transition.getAttribute("required");
+        if (required != "true") { 
+          continue;
+        }  
+
+        var state=getTransitionSourceState(graph, transition);
+        if (state.getAttribute("type")=="state") {
+          required = state.getAttribute("required");
+          if (required != "true") { 
+            continue;
+          }  
+        }
+
+        state=getTransitionTargetState(graph, transition);
+        if (state.getAttribute("type")=="state") {
+          required = state.getAttribute("required");
+          if (required != "true") { 
+            continue;
+          }  
+        } 
+
         var item = dicElements.items["binding"][dicKey][relName];
         if (!item) {
           item = {
